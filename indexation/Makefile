@@ -6,6 +6,7 @@ sqlite:
 	mkdir -p database
 	g++ src/sqlite/create_database.cc -l sqlite3 -o bin/sqlite/create_database
 	g++ src/sqlite/indexation.cc -l sqlite3 -o bin/sqlite/indexation
+	g++ src/sqlite/search.cc -l sqlite3 -o bin/sqlite/search
 
 xapian:
 	mkdir -p bin/xapian

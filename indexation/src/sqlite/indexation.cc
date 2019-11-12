@@ -40,7 +40,7 @@ void insert_file(sqlite3 *db, const char *file_path, const char *file_name) {
         fprintf(stderr, "sqlite3_step error %d: %s\n", error, sqlite3_errmsg(db));
         exit(0);
     } else {
-        cout << "- Insert File{" << file_path <<  ", " << file_name << "} : OK" << endl;
+        cout << "- Insert File{" << file_path << ", " << file_name << "} : OK" << endl;
     }
 }
 
@@ -88,13 +88,35 @@ int main(int argc, char *argv[]) {
         return (0);
     }
 
-    const char *file_path = "/mnt/d/SteaMyProjects/CorpusHarvester/indexation/data/tweet1";
-    const char *file_name = "tweet1";
-    insert_file(db, file_path, file_name);
+    const char *tweet_file_path = "a/path/to/a/tweet/twt2";
+    const char *tweet_file_name = "twt2";
+    insert_file(db, tweet_file_path, tweet_file_name);
 
-    const char *tag_name = "type";
-    const char *tag_value = "tweet";
-    insert_tag(db, file_path, tag_name, tag_value);
+    const char *tweet_tag_name = "type";
+    const char *tweet_tag_value = "tweet";
+    insert_tag(db, tweet_file_path, tweet_tag_name, tweet_tag_value);
+
+    int tweet_content_length = 3;
+    const char *tweet_content_values[tweet_content_length] = {"Obiwan", "there", "Kenobi"};
+    const char *tweet_content = "content";
+    for (int i = 0; i < tweet_content_length; ++i) {
+        insert_tag(db, tweet_file_path, tweet_content, tweet_content_values[i]);
+    }
+
+    const char *image_file_path = "a/path/to/an/image/img2";
+    const char *image_file_name = "img2";
+    insert_file(db, image_file_path, image_file_name);
+
+    const char *image_tag_name = "type";
+    const char *image_tag_value = "image";
+    insert_tag(db, image_file_path, image_tag_name, image_tag_value);
+
+    int image_content_length = 2;
+    const char *image_content_values[image_content_length] = {"dog", "garden"};
+    const char *image_content = "content";
+    for (int i = 0; i < image_content_length; ++i) {
+        insert_tag(db, image_file_path, image_content, image_content_values[i]);
+    }
 
     sqlite3_close(db);
 }

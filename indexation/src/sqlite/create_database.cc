@@ -75,3 +75,4 @@ int main(int argc, char *argv[]) {
 
     sqlite3_close(db);
 }
+// select f.path, f.name from File f, Tag t where f.path = t.file_path and t.name = 'type' and t.value = 'tweet';
