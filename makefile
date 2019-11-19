@@ -24,13 +24,15 @@ run: ${MAIN}
 	${BINDIR}/${MAIN}
 
 ${MAIN} : ${OBJS}
-	mkdir -p ${BINDIR}
+	@mkdir -p ${BINDIR}
 	${CC} ${CFLAGS} ${INCLUDES} -o ${BINDIR}/${MAIN} ${OBJS} ${LFLAGS} ${LIBS}
 
 ${OBJDIR}/%.o: ${SRCDIR}/%.cpp
-	-clang-format -i -style=LLVM $<
-	-clang-format -i -style=LLVM ${INCDIR}/$*.h
-	mkdir -p ${OBJDIR}
+	@echo "Formatting $< and ${INCDIR}/$*.h, errors are normal."
+	@-clang-format -i -style=LLVM $<
+	@-clang-format -i -style=LLVM ${INCDIR}/$*.h
+	@echo "Formatting done."
+	@mkdir -p ${OBJDIR}
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
 clean:
