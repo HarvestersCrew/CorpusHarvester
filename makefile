@@ -8,7 +8,7 @@ INCDIR := include
 
 INCLUDES := -I${INCDIR}
 LFLAGS := -Llib
-LIBS :=
+LIBS := -lcurl
 
 
 SRCS := $(shell find $(SRCDIR) -type f -name *.cpp)
