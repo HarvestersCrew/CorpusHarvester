@@ -11,7 +11,7 @@ LFLAGS := -Llib
 LIBS := -lcurl
 
 
-SRCS := $(shell find $(SRCDIR) -type f -name *.cpp)
+SRCS := $(shell find $(SRCDIR) -type f -name "*.cpp")
 OBJS := $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SRCS:.cpp=.o))
 
 MAIN = harvester
