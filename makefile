@@ -27,7 +27,8 @@ ${MAIN} : ${OBJS}
 	@mkdir -p ${BINDIR}
 	${CC} ${CFLAGS} ${INCLUDES} -o ${BINDIR}/${MAIN} ${OBJS} ${LFLAGS} ${LIBS}
 
-${OBJDIR}/%.o: ${SRCDIR}/%.cpp
+.SECONDEXPANSION:
+${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
 	@echo "Formatting $< and ${INCDIR}/$*.h, errors are normal."
 	@-clang-format -i -style=LLVM $<
 	@-clang-format -i -style=LLVM ${INCDIR}/$*.h
