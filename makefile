@@ -18,14 +18,15 @@ MAIN = harvester
 
 .PHONY: clean
 
-all: ${MAIN}
+all: ${BINDIR}/${MAIN}
 
-run: ${MAIN}
-	${BINDIR}/${MAIN}
+run: ${BINDIR}/${MAIN}
+	@echo "Running $<...\n"
+	@$<
 
-${MAIN} : ${OBJS}
+${BINDIR}/${MAIN} : ${OBJS}
 	@mkdir -p ${BINDIR}
-	${CC} ${CFLAGS} ${INCLUDES} -o ${BINDIR}/${MAIN} ${OBJS} ${LFLAGS} ${LIBS}
+	${CC} ${CFLAGS} ${INCLUDES} -o $@ ${OBJS} ${LFLAGS} ${LIBS}
 
 .SECONDEXPANSION:
 ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
