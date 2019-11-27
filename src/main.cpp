@@ -2,8 +2,9 @@
 #include <iostream>
 
 int main(int argc, char const *argv[]) {
-  std::cout << "Hello world!" << std::endl;
   ApiTwitter api;
+  api.insert_settings("api_key", "test");
+  api.start();
   std::cout << api.get_required_settings_string() << std::endl;
   return 0;
 }
