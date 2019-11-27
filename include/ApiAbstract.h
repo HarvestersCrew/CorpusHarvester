@@ -8,7 +8,6 @@ class ApiAbstract {
 public:
   void start();
 
-  virtual void insert_settings(const std::string path_to_settings);
   virtual void insert_settings(const api_settings &settings);
   virtual void insert_settings(const std::string &key,
                                const std::string &value);

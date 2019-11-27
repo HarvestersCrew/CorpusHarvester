@@ -5,8 +5,6 @@ void ApiAbstract::start() {
     throw ApiRequiredSettingsNotFilledException();
 }
 
-void ApiAbstract::insert_settings(const std::string path_to_settings) {}
-
 void ApiAbstract::insert_settings(const api_settings &settings) {
   for (auto const &el : settings) {
     this->insert_settings(el.first, el.second);
