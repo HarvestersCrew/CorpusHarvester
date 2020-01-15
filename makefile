@@ -14,6 +14,8 @@ LIBS := -lcurl
 SRCS := $(shell find $(SRCDIR) -type f -name "*.cpp")
 OBJS := $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SRCS:.cpp=.o))
 
+OBJDIRS := $(dir $(OBJS))
+
 MAIN = harvester
 
 .PHONY: clean
@@ -30,6 +32,7 @@ ${BINDIR}/${MAIN} : ${OBJS}
 
 .SECONDEXPANSION:
 ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
+	@mkdir -p ${OBJDIRS}
 	@echo "Formatting $< and ${INCDIR}/$*.h, errors are normal."
 	@-clang-format -i -style=LLVM $<
 	@-clang-format -i -style=LLVM ${INCDIR}/$*.h

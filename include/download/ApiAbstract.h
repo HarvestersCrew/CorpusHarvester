@@ -1,6 +1,6 @@
-#include <exceptions.h>
 #include <string>
 #include <unordered_map>
+#include <utils/exceptions.h>
 
 using api_settings = std::unordered_map<std::string, std::string>;
 
