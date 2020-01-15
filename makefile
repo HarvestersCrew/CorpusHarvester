@@ -38,7 +38,7 @@ ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
 docker:
 	docker build -t ${MAIN} .
 	@mkdir -p ${BINDIR}
-	@echo "docker run --rm -it ${MAIN} \$$1" > ${BINDIR}/${MAIN}
+	@echo "docker run --name ${MAIN} --rm -it ${MAIN} \$$1" > ${BINDIR}/${MAIN}
 	@chmod +x ${BINDIR}/${MAIN}
 	@echo "You can now run '${BINDIR}/${MAIN}'".
 
