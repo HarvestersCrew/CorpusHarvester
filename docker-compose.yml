@@ -1,0 +1,9 @@
+version: '3'
+services:
+  gcc:
+    build: .
+    container_name: gcc
+    volumes:
+    - .:/project
+    - /project/bin
+    - /project/obj

@@ -37,6 +37,9 @@ ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
 	@mkdir -p ${OBJDIR}
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
+docker:
+	sudo docker-compose run --rm --name gcc gcc
+
 clean:
 	rm -rf ${BINDIR}
 	rm -rf ${OBJDIR}
