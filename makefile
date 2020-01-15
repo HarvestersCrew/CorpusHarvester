@@ -5,6 +5,7 @@ SRCDIR := src
 OBJDIR := obj
 BINDIR := bin
 INCDIR := include
+PWD := $(shell pwd)
 
 INCLUDES := -I${INCDIR}
 LFLAGS := -Llib
@@ -37,10 +38,10 @@ ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
 
 docker:
 	docker build -t ${MAIN} .
+	docker run --name ${MAIN} --rm --entrypoint "" -v ${PWD}:/project ${MAIN} rm -f ${BINDIR}/* && make && cp ${BINDIR}/${MAIN} ${BINDIR}/${MAIN}_docker
 	@mkdir -p ${BINDIR}
-	@echo "docker run --name ${MAIN} --rm -it ${MAIN} \$$1" > ${BINDIR}/${MAIN}
+	@echo "docker run --name ${MAIN} --rm -it -v ${PWD}:/project ${MAIN} \$$1" > ${BINDIR}/${MAIN}
 	@chmod +x ${BINDIR}/${MAIN}
-	@echo "You can now run '${BINDIR}/${MAIN}'".
 
 format:
 	@clang-format ${SRCS} ${INCS} -i -style=LLVM
