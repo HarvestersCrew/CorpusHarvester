@@ -12,19 +12,17 @@ LIBS := -lcurl
 
 
 SRCS := $(shell find $(SRCDIR) -type f -name "*.cpp")
+INCS := $(shell find $(INCDIR) -type f -name "*.h")
 OBJS := $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SRCS:.cpp=.o))
 
 OBJDIRS := $(dir $(OBJS))
 
 MAIN = harvester
 
-.PHONY: clean
+.PHONY: clean all run docker lint format
 
 all: ${BINDIR}/${MAIN}
-
-run: ${BINDIR}/${MAIN}
-	@echo "Running $<...\n"
-	@$<
+	@echo "You can now run '${BINDIR}/${MAIN}'".
 
 ${BINDIR}/${MAIN} : ${OBJS}
 	@mkdir -p ${BINDIR}
@@ -32,20 +30,20 @@ ${BINDIR}/${MAIN} : ${OBJS}
 
 .SECONDEXPANSION:
 ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
+	@echo "Checking $? formatting..."
+	@! clang-format $? -style=LLVM -output-replacements-xml | grep -c "<replacement " > /dev/null
 	@mkdir -p ${OBJDIRS}
-	@# @echo "Formatting $< and ${INCDIR}/$*.h, errors are normal."
-	@# @-clang-format -i -style=LLVM $<
-	@# @-clang-format -i -style=LLVM ${INCDIR}/$*.h
-	@# @echo "Formatting done."
-	@mkdir -p ${OBJDIR}
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
 docker:
-	@# sudo docker-compose run --rm --name gcc gcc
-	sudo docker build -t ${MAIN} .
-	mkdir -p ${BINDIR}
-	echo "sudo docker run --rm -it ${MAIN} \$$1" > ${BINDIR}/${MAIN}
-	chmod +x ${BINDIR}/${MAIN}
+	docker build -t ${MAIN} .
+	@mkdir -p ${BINDIR}
+	@echo "docker run --rm -it ${MAIN} \$$1" > ${BINDIR}/${MAIN}
+	@chmod +x ${BINDIR}/${MAIN}
+	@echo "You can now run '${BINDIR}/${MAIN}'".
+
+format:
+	@clang-format ${SRCS} ${INCS} -i -style=LLVM
 
 clean:
 	rm -rf ${BINDIR}/*
