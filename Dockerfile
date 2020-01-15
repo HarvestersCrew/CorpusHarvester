@@ -1,7 +1,7 @@
 FROM gcc:latest
 
 WORKDIR /project
-RUN PATH="/project/bin:$PATH"
-RUN export PATH
+COPY . .
+RUN make
 
-CMD [ "bash" ]
+ENTRYPOINT [ "bin/harvester" ]

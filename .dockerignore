@@ -1,0 +1,7 @@
+bin
+obj
+.vscode
+.dockerignore
+Dockerfile
+LICENSE
+README.md

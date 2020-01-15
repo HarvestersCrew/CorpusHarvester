@@ -3,4 +3,5 @@ CS Engineering School Project
 
 ## Development run
 
-`docker-compose run --rm --name gcc gcc` then `make` or variants and `harvester` to run the executable.
+- `make docker` and `bin/harvester` to run the executable through docker.
+- `make` and `bin/harvester` to run natively, but you'll have to install libraries.

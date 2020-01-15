@@ -33,16 +33,20 @@ ${BINDIR}/${MAIN} : ${OBJS}
 .SECONDEXPANSION:
 ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
 	@mkdir -p ${OBJDIRS}
-	@echo "Formatting $< and ${INCDIR}/$*.h, errors are normal."
-	@-clang-format -i -style=LLVM $<
-	@-clang-format -i -style=LLVM ${INCDIR}/$*.h
-	@echo "Formatting done."
+	@# @echo "Formatting $< and ${INCDIR}/$*.h, errors are normal."
+	@# @-clang-format -i -style=LLVM $<
+	@# @-clang-format -i -style=LLVM ${INCDIR}/$*.h
+	@# @echo "Formatting done."
 	@mkdir -p ${OBJDIR}
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
 docker:
-	sudo docker-compose run --rm --name gcc gcc
+	@# sudo docker-compose run --rm --name gcc gcc
+	sudo docker build -t ${MAIN} .
+	mkdir -p ${BINDIR}
+	echo "sudo docker run --rm -it ${MAIN} \$$1" > ${BINDIR}/${MAIN}
+	chmod +x ${BINDIR}/${MAIN}
 
 clean:
-	rm -rf ${BINDIR}
-	rm -rf ${OBJDIR}
+	rm -rf ${BINDIR}/*
+	rm -rf ${OBJDIR}/*
