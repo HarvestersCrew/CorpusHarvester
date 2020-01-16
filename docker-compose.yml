@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+
+  db:
+    image: mysql
+    container_name: db
+    volumes:
+        - harvester_db:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: 1234
+        MYSQL_DATABASE: harvester
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+        - 8080:8080
+    depends_on:
+        - db
+
+  harvester:
+    build: .
+    image: harvester
+    container_name: harvester
+    tty: true
+    volumes:
+        - type: bind
+          source: ./
+          target: /project
+          read_only: true
+        - harvester_bin:/project/bin/
+        - harvester_obj:/project/obj/
+    depends_on:
+        - db
+
+volumes:
+    harvester_bin:
+    harvester_obj:
+    harvester_db:

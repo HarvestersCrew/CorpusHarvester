@@ -20,7 +20,7 @@ OBJDIRS := $(dir $(OBJS))
 
 MAIN = harvester
 
-.PHONY: clean all run docker lint format
+.PHONY: clean all run docker docker_down format
 
 all: ${BINDIR}/${MAIN}
 	@echo "You can now run '${BINDIR}/${MAIN}'".
@@ -37,11 +37,16 @@ ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
 docker:
-	docker build -t ${MAIN} .
-	docker run --name ${MAIN} --rm --entrypoint "" -v ${PWD}:/project ${MAIN} rm -f ${BINDIR}/* && make && cp ${BINDIR}/${MAIN} ${BINDIR}/${MAIN}_docker
+	@echo "Upping docker-compose if not done..."
+	@docker-compose up -d
+	@echo "Building exec through Docker..."
+	@docker-compose exec harvester make
 	@mkdir -p ${BINDIR}
-	@echo "docker run --name ${MAIN} --rm -it -v ${PWD}:/project ${MAIN} \$$1" > ${BINDIR}/${MAIN}
+	@echo "docker-compose exec harvester ${BINDIR}/${MAIN} \$$1" > ${BINDIR}/${MAIN}
 	@chmod +x ${BINDIR}/${MAIN}
+
+docker_down:
+	docker-compose down
 
 format:
 	@clang-format ${SRCS} ${INCS} -i -style=LLVM
