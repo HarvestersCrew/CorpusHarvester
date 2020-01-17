@@ -1,10 +1,39 @@
 #include <download/apis/ApiTwitter.h>
 #include <iostream>
+#include "utils/client_request.h"
 
-int main(int argc, char const *argv[]) {
-  ApiTwitter api;
-  api.insert_settings("api_key", "test");
-  api.start();
-  std::cout << api.get_required_settings_string() << std::endl;
-  return 0;
+/**
+ * Get the command of the user.
+ *
+ * @param argc
+ * @param argv
+ * @return
+ */
+int main(int argc, char **argv) {
+
+    // We have no command.
+    if (argc == 1) {
+        std::cout << "Please specify your command !" << std::endl;
+        exit(0);
+    }
+
+    // Get all the parameters pass through the command line.
+    std::deque<std::string> cmdLineArgs(argv + 1, argv + argc);
+
+    // Get the first command and remove it form the deque array.
+    std::string firstCommand = cmdLineArgs.front();
+    cmdLineArgs.pop_front();
+
+    // We print the help menu.
+    if (firstCommand == "help" or firstCommand == "--help" or firstCommand == "-help") {
+        showHelpMenu();
+    }
+    else if (firstCommand == "create") {
+        createCorpus(cmdLineArgs);
+    } else {
+        std::cout << "The command '" << firstCommand << "' doesn't exit. Please check the available commands with 'help' !" << std::endl;
+        exit(0);
+    }
+
+    return 0;
 }
