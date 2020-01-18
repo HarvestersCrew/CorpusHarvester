@@ -31,7 +31,8 @@ ${BINDIR}/${MAIN} : ${OBJS}
 
 .SECONDEXPANSION:
 ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
-	@echo "Checking $? formatting..."
+	@echo "Checking $? formatting, 'clang-format' must be installed..."
+	@ clang-format --help 2>&1 > /dev/null
 	@! clang-format $? -style=LLVM -output-replacements-xml | grep -c "<replacement " > /dev/null
 	@mkdir -p ${OBJDIRS}
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
