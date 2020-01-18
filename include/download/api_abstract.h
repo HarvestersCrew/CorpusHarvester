@@ -8,13 +8,12 @@ using api_settings = std::unordered_map<std::string, std::string>;
 // Class used to abstract a source of data, also known as APIs.
 class ApiAbstract {
 public:
-  // Provides an abstracted way to check if the API is ready to be used.
-  void start();
-
   // Replaces the current settings with a copy of the one given.
   void insert_settings(const api_settings &settings);
   // Insert a setting with a key and a value.
   void insert_settings(const std::string &key, const std::string &value);
+  // Insert settings from a JSON file.
+  void insert_settings(const std::string &path);
 
   // String to define the name of the API.
   virtual std::string get_name() const = 0;

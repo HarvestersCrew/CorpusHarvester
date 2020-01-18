@@ -36,6 +36,5 @@ void createCorpus(const std::deque<std::string> &parameters) {
 
   ApiTwitter api;
   api.insert_settings("api_key", "test");
-  api.start();
   std::cout << api.get_required_settings_string() << std::endl;
 }

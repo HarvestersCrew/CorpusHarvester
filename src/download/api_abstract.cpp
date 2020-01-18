@@ -1,10 +1,5 @@
 #include "download/api_abstract.h"
 
-void ApiAbstract::start() {
-  if (!this->are_required_settings_filled())
-    throw ApiRequiredSettingsNotFilledException();
-}
-
 void ApiAbstract::insert_settings(const api_settings &settings) {
   for (auto const &el : settings) {
     this->insert_settings(el.first, el.second);
@@ -27,6 +22,8 @@ void ApiAbstract::insert_settings(const std::string &key,
   }
   throw ApiNoSettingCalledLikeThisException();
 }
+
+void ApiAbstract::insert_settings(const std::string &path) {}
 
 const api_settings &ApiAbstract::get_required_settings() const {
   return this->_required_settings;
