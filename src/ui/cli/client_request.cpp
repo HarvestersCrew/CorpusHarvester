@@ -1,6 +1,6 @@
-#include <download/apis/ApiTwitter.h>
+#include "ui/cli/client_request.h"
+#include "download/apis/ApiTwitter.h"
 #include <iostream>
-#include <ui/cli/client_request.h>
 
 void showHelpMenu() {
   // Create our corpus
