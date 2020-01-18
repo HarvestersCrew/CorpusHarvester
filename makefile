@@ -44,7 +44,8 @@ docker:
 	@echo "Building exec through Docker..."
 	@docker-compose exec harvester make
 	@mkdir -p ${BINDIR}
-	@echo "docker-compose exec harvester ${BINDIR}/${MAIN} \$$1" > ${BINDIR}/${MAIN}
+	@echo "#!/bin/bash" > ${BINDIR}/${MAIN}
+	@echo "docker-compose exec harvester ${BINDIR}/${MAIN} \$${@:1}" >> ${BINDIR}/${MAIN}
 	@chmod +x ${BINDIR}/${MAIN}
 
 docker_down:
