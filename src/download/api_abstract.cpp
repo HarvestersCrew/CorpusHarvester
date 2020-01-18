@@ -1,16 +1,16 @@
 #include "download/api_abstract.h"
 
+ApiAbstract::ApiAbstract() {
+  this->_settings["required"] = nullptr;
+  this->_settings["optional"] = nullptr;
+}
+
 template <class T>
 void ApiAbstract::insert_settings(const std::string &key, const T &value) {
-  if (this->_required_settings.contains(key)) {
-    this->_required_settings[key] = value;
-    return;
+  if (!this->_settings.contains(key)) {
+    throw ApiNoSettingCalledLikeThisException(key);
   }
-  if (this->_optionnal_settings.contains(key)) {
-    this->_optionnal_settings[key] = value;
-    return;
-  }
-  throw ApiNoSettingCalledLikeThisException(key);
+  this->_settings[key] = value;
 }
 
 void ApiAbstract::insert_settings(const std::string &path) {
@@ -30,12 +30,12 @@ void ApiAbstract::create_settings_file(const std::string &path) {
     throw std::runtime_error("Can't open provided file.");
 }
 
-const nlohmann::json &ApiAbstract::get_required_settings() const {
-  return this->_required_settings;
+const nlohmann::json &ApiAbstract::get_settings() const {
+  return this->_settings;
 }
 
 bool ApiAbstract::are_required_settings_filled() const {
-  for (auto const &el : this->_required_settings.items()) {
+  for (auto const &el : this->_settings["required"].items()) {
     if (el.value().is_null())
       return false;
   }
