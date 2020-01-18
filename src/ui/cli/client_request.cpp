@@ -13,14 +13,14 @@ void createCorpus(const std::deque<std::string> &parameters) {
 
   // If we don't have any parameters.
   if (parameters.empty()) {
-    std::cout << "Please specify the content's type of the corpus !"
+    std::cout << "Please specify the content's type of the corpus."
               << std::endl;
     exit(0);
   }
 
   // If the first command is help
   if (parameters.front() == "--help") {
-    std::cout << "Please specify the content type of our future corpus !"
+    std::cout << "Please specify the content type of our future corpus."
               << std::endl;
     exit(0);
   }

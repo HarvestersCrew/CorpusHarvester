@@ -12,11 +12,11 @@ int main(int argc, char **argv) {
 
   // We have no command.
   if (argc == 1) {
-    std::cout << "Please specify your command!" << std::endl;
+    std::cout << "Please specify your command." << std::endl;
     exit(0);
   }
 
-  // Get all the parameters pass through the command line.
+  // Get all the parameters passed through the command line.
   std::deque<std::string> cmdLineArgs(argv + 1, argv + argc);
 
   // Get the first command and remove it form the deque array.
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
   } else {
     std::cout
         << "The command '" << firstCommand
-        << "' doesn't exit. Please check the available commands with 'help' !"
+        << "' doesn't exit. Please check the available commands with 'help'."
         << std::endl;
     exit(0);
   }
