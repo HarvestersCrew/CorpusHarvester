@@ -38,6 +38,7 @@ ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
 docker:
+	@mkdir -p bin obj
 	@echo "Upping docker-compose if not done..."
 	@docker-compose up -d
 	@echo "Building exec through Docker..."
