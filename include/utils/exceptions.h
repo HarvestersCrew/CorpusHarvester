@@ -1,11 +1,13 @@
 #include <exception>
-
-class ApiRequiredSettingsNotFilledException : public std::exception {
-  const char *what() const throw() {
-    return "Required settings of API not filled.";
-  }
-};
+#include <iostream>
+#include <sstream>
+#include <string>
 
 class ApiNoSettingCalledLikeThisException : public std::exception {
-  const char *what() const throw() { return "Given setting key not existing."; }
+public:
+  ApiNoSettingCalledLikeThisException(std::string key);
+  const char *what() const throw();
+
+private:
+  std::string _msg;
 };

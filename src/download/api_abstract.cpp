@@ -1,45 +1,34 @@
 #include "download/api_abstract.h"
 
-void ApiAbstract::insert_settings(const api_settings &settings) {
-  for (auto const &el : settings) {
-    this->insert_settings(el.first, el.second);
+template <class T>
+void ApiAbstract::insert_settings(const std::string &key, const T &value) {
+  if (this->_required_settings.contains(key)) {
+    this->_required_settings[key] = value;
+    return;
+  }
+  if (this->_optionnal_settings.contains(key)) {
+    this->_optionnal_settings[key] = value;
+    return;
+  }
+  throw ApiNoSettingCalledLikeThisException(key);
+}
+
+void ApiAbstract::insert_settings(const std::string &path) {
+  std::ifstream in(path);
+  nlohmann::json j;
+  in >> j;
+  for (auto &[key, val] : j.items()) {
+    this->insert_settings(key, val);
   }
 }
 
-void ApiAbstract::insert_settings(const std::string &key,
-                                  const std::string &value) {
-  for (auto &el : this->_required_settings) {
-    if (!key.compare(el.first)) {
-      el.second = value;
-      return;
-    }
-  }
-  for (auto &el : this->_optionnal_settings) {
-    if (!key.compare(el.first)) {
-      el.second = value;
-      return;
-    }
-  }
-  throw ApiNoSettingCalledLikeThisException();
-}
-
-void ApiAbstract::insert_settings(const std::string &path) {}
-
-const api_settings &ApiAbstract::get_required_settings() const {
+const nlohmann::json &ApiAbstract::get_required_settings() const {
   return this->_required_settings;
 }
 
-std::string ApiAbstract::get_required_settings_string() const {
-  std::string str = "";
-  for (auto const &el : this->_required_settings) {
-    str += el.first + ": " + el.second + "\n";
-  }
-  return str;
-}
-
 bool ApiAbstract::are_required_settings_filled() const {
-  for (auto const &el : this->_required_settings) {
-    if (el.second.empty())
+  for (auto const &el : this->_required_settings.items()) {
+    if (el.value().is_null())
       return false;
   }
   return true;

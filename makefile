@@ -1,5 +1,5 @@
 CC := g++
-CFLAGS := -Wall
+CFLAGS := -Wall -std=c++17
 
 SRCDIR := src
 OBJDIR := obj
@@ -20,7 +20,7 @@ OBJDIRS := $(dir $(OBJS))
 
 MAIN = harvester
 
-.PHONY: clean all run docker docker_down format
+.PHONY: clean all run docker docker_down doker_clean format
 
 all: ${BINDIR}/${MAIN}
 	@echo "You can now run '${BINDIR}/${MAIN}'".
@@ -50,6 +50,9 @@ docker:
 
 docker_down:
 	docker-compose down
+
+docker_clean:
+	docker-compose exec harvester make clean
 
 format:
 	@clang-format ${SRCS} ${INCS} -i -style=LLVM

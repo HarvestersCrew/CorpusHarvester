@@ -35,6 +35,6 @@ void createCorpus(const std::deque<std::string> &parameters) {
   // TODO :; Call the indexation system and storage system.
 
   ApiTwitter api;
-  api.insert_settings("api_key", "test");
-  std::cout << api.get_required_settings_string() << std::endl;
+  api.insert_settings("settings/apis/twitter.json");
+  std::cout << api.get_required_settings() << std::endl;
 }
