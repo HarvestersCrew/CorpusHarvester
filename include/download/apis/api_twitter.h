@@ -1,4 +1,4 @@
-#include <download/ApiAbstract.h>
+#include "download/api_abstract.h"
 
 // Implementation of the Twitter API.
 class ApiTwitter : public ApiAbstract {

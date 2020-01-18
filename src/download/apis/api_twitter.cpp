@@ -1,4 +1,4 @@
-#include "download/apis/ApiTwitter.h"
+#include "download/apis/api_twitter.h"
 
 ApiTwitter::ApiTwitter() {
   this->_required_settings.insert(std::make_pair("api_key", ""));
