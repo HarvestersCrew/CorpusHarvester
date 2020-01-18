@@ -2,6 +2,7 @@
 #include "utils/json.hpp"
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 
@@ -13,6 +14,8 @@ public:
   void insert_settings(const std::string &key, const T &value);
   // Insert settings from a JSON file.
   void insert_settings(const std::string &path);
+
+  void create_settings_file(const std::string &path);
 
   // String to define the name of the API.
   virtual std::string get_name() const = 0;

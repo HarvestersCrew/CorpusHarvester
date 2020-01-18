@@ -15,11 +15,19 @@ void ApiAbstract::insert_settings(const std::string &key, const T &value) {
 
 void ApiAbstract::insert_settings(const std::string &path) {
   std::ifstream in(path);
+  if (in.fail())
+    throw std::runtime_error("Can't open provided file.");
   nlohmann::json j;
   in >> j;
   for (auto &[key, val] : j.items()) {
     this->insert_settings(key, val);
   }
+}
+
+void ApiAbstract::create_settings_file(const std::string &path) {
+  std::ofstream out(path);
+  if (out.fail())
+    throw std::runtime_error("Can't open provided file.");
 }
 
 const nlohmann::json &ApiAbstract::get_required_settings() const {
