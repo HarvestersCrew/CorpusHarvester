@@ -1,6 +1,7 @@
 #ifndef DOWNLOAD_MANAGER_H
 #define DOWNLOAD_MANAGER_H
 
+#include "utils/json.hpp"
 #include <curl/curl.h>
 #include <iostream>
 #include <sstream>
@@ -12,8 +13,8 @@ class download_manager {
 
 private:
   static unsigned int const FILENAME_LENGTH = 10;
-  std::vector<std::string> urls;
   CURL *curl;
+  nlohmann::json urls;
 
 public:
   download_manager();
