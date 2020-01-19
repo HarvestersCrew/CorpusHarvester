@@ -1,3 +1,4 @@
+#include "download/download_manager.h"
 #include "utils/exceptions.h"
 #include "utils/json.hpp"
 #include <fstream>
@@ -18,6 +19,8 @@ public:
 
   // Generate a JSON file of settings for this API.
   void create_settings_file(const std::string &path) const;
+
+  virtual void add_job(download_manager &dl) const;
 
   // String to define the name of the API.
   virtual std::string get_name() const = 0;
