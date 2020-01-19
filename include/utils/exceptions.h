@@ -3,11 +3,16 @@
 #include <sstream>
 #include <string>
 
-class ApiNoSettingCalledLikeThisException : public std::exception {
+class api_no_setting_exception : public std::exception {
 public:
-  ApiNoSettingCalledLikeThisException(std::string key);
+  api_no_setting_exception(std::string key);
   const char *what() const throw();
 
 private:
   std::string _msg;
+};
+
+class api_missing_settings_exception : public std::exception {
+public:
+  const char *what() const throw();
 };

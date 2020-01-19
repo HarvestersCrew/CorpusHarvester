@@ -7,10 +7,15 @@ api_abstract::api_abstract() {
 
 template <class T>
 void api_abstract::insert_settings(const std::string &key, const T &value) {
-  if (!this->_settings.contains(key)) {
-    throw ApiNoSettingCalledLikeThisException(key);
+  if (this->_settings["required"].contains(key)) {
+    this->_settings["required"][key] = value;
+    return;
   }
-  this->_settings[key] = value;
+  if (this->_settings["optional"].contains(key)) {
+    this->_settings["optional"][key] = value;
+    return;
+  }
+  throw api_no_setting_exception(key);
 }
 
 void api_abstract::insert_settings(const std::string &path) {
@@ -19,7 +24,10 @@ void api_abstract::insert_settings(const std::string &path) {
     throw std::runtime_error("Can't open provided file.");
   nlohmann::json j;
   in >> j;
-  for (auto &[key, val] : j.items()) {
+  for (auto &[key, val] : j["optional"].items()) {
+    this->insert_settings(key, val);
+  }
+  for (auto &[key, val] : j["required"].items()) {
     this->insert_settings(key, val);
   }
   in.close();
