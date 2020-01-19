@@ -22,12 +22,16 @@ void ApiAbstract::insert_settings(const std::string &path) {
   for (auto &[key, val] : j.items()) {
     this->insert_settings(key, val);
   }
+  in.close();
 }
 
 void ApiAbstract::create_settings_file(const std::string &path) {
-  std::ofstream out(path);
-  if (out.fail())
+  std::ofstream out;
+  out.open(path);
+  if (!out)
     throw std::runtime_error("Can't open provided file.");
+  out << this->_settings;
+  out.close();
 }
 
 const nlohmann::json &ApiAbstract::get_settings() const {

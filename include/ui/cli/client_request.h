@@ -5,7 +5,9 @@
 #ifndef CORPUSHARVESTER_CLIENT_REQUEST_H
 #define CORPUSHARVESTER_CLIENT_REQUEST_H
 
+#include "download/apis/api_twitter.h"
 #include <deque>
+#include <iostream>
 #include <string>
 
 /**

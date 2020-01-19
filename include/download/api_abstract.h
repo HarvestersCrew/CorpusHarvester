@@ -16,6 +16,7 @@ public:
   // Insert settings from a JSON file.
   void insert_settings(const std::string &path);
 
+  // Generate a JSON file of settings for this API.
   void create_settings_file(const std::string &path);
 
   // String to define the name of the API.
@@ -24,9 +25,10 @@ public:
   // Getter of settings.
   const nlohmann::json &get_settings() const;
 
+  // Check if all required settings are filled.
+  bool are_required_settings_filled() const;
+
 protected:
   // Settings to use API.
   nlohmann::json _settings;
-  // Check if all required settings are filled.
-  bool are_required_settings_filled() const;
 };

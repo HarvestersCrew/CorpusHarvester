@@ -1,6 +1,4 @@
 #include "ui/cli/client_request.h"
-#include "download/apis/api_twitter.h"
-#include <iostream>
 
 void showHelpMenu() {
   // Create our corpus
@@ -35,6 +33,8 @@ void createCorpus(const std::deque<std::string> &parameters) {
   // TODO :; Call the indexation system and storage system.
 
   ApiTwitter api;
-  // api.insert_settings("settings/apis/twitter.json");
+  api.insert_settings("settings/apis/twitter.json");
+  // api.create_settings_file("settings/apis/twitter.json");
+
   std::cout << api.get_settings() << std::endl;
 }
