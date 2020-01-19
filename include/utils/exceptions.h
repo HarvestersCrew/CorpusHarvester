@@ -1,3 +1,6 @@
+#ifndef EXCEPTIONS_H
+#define EXCEPTIONS_H
+
 #include <exception>
 #include <iostream>
 #include <sstream>
@@ -16,3 +19,5 @@ class api_missing_settings_exception : public std::exception {
 public:
   const char *what() const throw();
 };
+
+#endif

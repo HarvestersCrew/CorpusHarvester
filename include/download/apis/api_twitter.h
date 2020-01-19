@@ -1,3 +1,6 @@
+#ifndef API_TWITTER_H
+#define API_TWITTER_H
+
 #include "download/api_abstract.h"
 #include <sstream>
 
@@ -8,3 +11,5 @@ public:
   virtual std::string get_name() const;
   virtual void add_job(download_manager &dl) const;
 };
+
+#endif

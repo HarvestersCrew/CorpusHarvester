@@ -1,3 +1,6 @@
+#ifndef API_ABSTRACT_H
+#define API_ABSTRACT_H
+
 #include "download/download_manager.h"
 #include "utils/exceptions.h"
 #include "utils/json.hpp"
@@ -35,3 +38,5 @@ protected:
   // Settings to use API.
   nlohmann::json _settings;
 };
+
+#endif
