@@ -25,7 +25,7 @@ void ApiAbstract::insert_settings(const std::string &path) {
   in.close();
 }
 
-void ApiAbstract::create_settings_file(const std::string &path) {
+void ApiAbstract::create_settings_file(const std::string &path) const {
   std::ofstream out;
   out.open(path);
   if (!out)

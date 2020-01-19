@@ -17,7 +17,7 @@ public:
   void insert_settings(const std::string &path);
 
   // Generate a JSON file of settings for this API.
-  void create_settings_file(const std::string &path);
+  void create_settings_file(const std::string &path) const;
 
   // String to define the name of the API.
   virtual std::string get_name() const = 0;
