@@ -21,7 +21,7 @@ public:
   void insert_settings(const std::string &path);
 
   // Generate a JSON file of settings for this API.
-  void create_settings_file(const std::string &path) const;
+  void save_settings_file(const std::string &path) const;
 
   virtual void add_job(download_manager &dl) const;
 

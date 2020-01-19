@@ -33,7 +33,7 @@ void api_abstract::insert_settings(const std::string &path) {
   in.close();
 }
 
-void api_abstract::create_settings_file(const std::string &path) const {
+void api_abstract::save_settings_file(const std::string &path) const {
   std::ofstream out;
   out.open(path);
   if (!out)
