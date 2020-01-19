@@ -38,7 +38,11 @@ void createCorpus(const std::deque<std::string> &parameters) {
   // std::cout << api.get_settings() << std::endl;
 
   download_manager dl;
-  dl.add_url("https://www.google.com");
   dl.add_url("http://rpi.nocchi.me");
+  dl.add_url("https://api.twitter.com/1.1/search/tweets.json?q=cat",
+             {{"Authorization",
+               "Bearer "
+               "AAAAAAAAAAAAAAAAAAAAAFbXBwEAAAAAffCqNtEEVChsyKEOcep3UtaqDgM%"
+               "3DDQyQagZBPQgrd02E4cnboMTDJlbfkObhWscuvXq3iXplX3TEXu"}});
   dl.download_queue_to("/tmp");
 }

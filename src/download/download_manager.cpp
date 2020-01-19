@@ -15,6 +15,12 @@ bool download_manager::add_url(const std::string &url) {
   return true;
 }
 
+bool download_manager::add_url(const std::string &url,
+                               const nlohmann::json &headers) {
+  this->urls += {{"url", url}, {"headers", headers}};
+  return true;
+}
+
 bool download_manager::download_queue_to(const std::string &path) {
   FILE *f;
   for (nlohmann::json::iterator it = this->urls.begin();
@@ -34,6 +40,17 @@ bool download_manager::download_queue_to(const std::string &path) {
 
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, f);
+
+    if ((*it).contains("headers")) {
+      struct curl_slist *list = NULL;
+      for (auto &[key, val] : (*it)["headers"].items()) {
+        std::stringstream header;
+        header << key << ": " << val.get<std::string>();
+        list = curl_slist_append(list, header.str().c_str());
+      }
+      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+    }
+
     curl_easy_perform(curl);
     fclose(f);
     std::cout << "Downloaded " << url << " to " << path_with_filename.str()

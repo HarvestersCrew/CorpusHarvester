@@ -20,6 +20,7 @@ public:
   download_manager();
   ~download_manager();
   bool add_url(const std::string &url);
+  bool add_url(const std::string &url, const nlohmann::json &headers);
   bool download_queue_to(const std::string &path);
 };
 
