@@ -1,8 +1,8 @@
 #include "download/apis/api_twitter.h"
 
-ApiTwitter::ApiTwitter() : ApiAbstract() {
+api_twitter::api_twitter() : api_abstract() {
   this->_settings["required"]["bearer"] = nullptr;
   this->_settings["required"]["query"] = nullptr;
 }
 
-std::string ApiTwitter::get_name() const { return "Twitter"; }
+std::string api_twitter::get_name() const { return "Twitter"; }

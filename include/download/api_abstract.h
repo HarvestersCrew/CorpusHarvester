@@ -7,9 +7,9 @@
 #include <unordered_map>
 
 // Class used to abstract a source of data, also known as APIs.
-class ApiAbstract {
+class api_abstract {
 public:
-  ApiAbstract();
+  api_abstract();
   // Insert a setting with a key and a value.
   template <class T>
   void insert_settings(const std::string &key, const T &value);

@@ -32,7 +32,7 @@ void createCorpus(const std::deque<std::string> &parameters) {
   // TODO :: Call the twitter api for downloading the corresponding data.
   // TODO :; Call the indexation system and storage system.
 
-  ApiTwitter api;
+  api_twitter api;
   api.insert_settings("settings/apis/twitter.json");
   // api.create_settings_file("settings/apis/twitter.json");
 

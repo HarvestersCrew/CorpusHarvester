@@ -8,7 +8,7 @@
 #include <utils/utils.h>
 #include <vector>
 
-class DownloadManager {
+class download_manager {
 
 private:
   static unsigned int const FILENAME_LENGTH = 10;
@@ -16,8 +16,8 @@ private:
   CURL *curl;
 
 public:
-  DownloadManager();
-  ~DownloadManager();
+  download_manager();
+  ~download_manager();
   bool add_url(const std::string &url);
   bool download_queue_to(const std::string &path);
 };

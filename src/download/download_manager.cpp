@@ -1,21 +1,21 @@
 #include "download/download_manager.h"
 
-DownloadManager::DownloadManager() {
+download_manager::download_manager() {
   curl_global_init(CURL_GLOBAL_DEFAULT);
   this->curl = curl_easy_init();
 }
 
-DownloadManager::~DownloadManager() {
+download_manager::~download_manager() {
   curl_easy_cleanup(this->curl);
   curl_global_cleanup();
 }
 
-bool DownloadManager::add_url(const std::string &url) {
+bool download_manager::add_url(const std::string &url) {
   this->urls.push_back(url);
   return true;
 }
 
-bool DownloadManager::download_queue_to(const std::string &path) {
+bool download_manager::download_queue_to(const std::string &path) {
   FILE *f;
   for (std::vector<std::string>::iterator it = this->urls.begin();
        it != this->urls.end();) {
