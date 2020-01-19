@@ -42,11 +42,6 @@ void api_abstract::save_settings_file(const std::string &path) const {
   out.close();
 }
 
-void api_abstract::add_job(download_manager &dl) const {
-  if (!this->are_required_settings_filled())
-    throw api_missing_settings_exception();
-}
-
 const nlohmann::json &api_abstract::get_settings() const {
   return this->_settings;
 }

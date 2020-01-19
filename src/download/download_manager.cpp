@@ -10,52 +10,49 @@ download_manager::~download_manager() {
   curl_global_cleanup();
 }
 
-bool download_manager::add_url(const std::string &url) {
-  this->urls += {{"url", url}};
-  return true;
+void download_manager::download_to(const std::string &path,
+                                   const std::string &url) const {
+  this->download_to(path, url, nullptr);
+}
+void download_manager::download_to(const std::string &path,
+                                   const std::string &url,
+                                   const nlohmann::json &headers) const {
+  std::ofstream out;
+  out.open(path);
+  if (!out)
+    throw std::runtime_error("Can't open provided file.");
+  out << this->download(url, headers);
+  out.close();
 }
 
-bool download_manager::add_url(const std::string &url,
-                               const nlohmann::json &headers) {
-  this->urls += {{"url", url}, {"headers", headers}};
-  return true;
+std::string download_manager::download(const std::string &url) const {
+  return this->download(url, nullptr);
 }
 
-bool download_manager::download_queue_to(const std::string &path) {
-  FILE *f;
-  for (nlohmann::json::iterator it = this->urls.begin();
-       it != this->urls.end();) {
+std::string download_manager::download(const std::string &url,
+                                       const nlohmann::json &headers) const {
+  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
-    std::string url = (*it)["url"].get<std::string>();
-
-    std::stringstream path_with_filename;
-    path_with_filename << path << "/" << random_str(this->FILENAME_LENGTH);
-    f = fopen(path_with_filename.str().c_str(), "w");
-    if (!f) {
-      std::cout << "Can't write to " << path_with_filename.str()
-                << " file, skipping " << url << "..." << std::endl;
-      ++it;
-      continue;
+  if (!headers.is_null() && headers.is_array()) {
+    struct curl_slist *list = NULL;
+    for (auto &[key, val] : headers.items()) {
+      std::stringstream header;
+      header << key << ": " << val.get<std::string>();
+      list = curl_slist_append(list, header.str().c_str());
     }
-
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, f);
-
-    if ((*it).contains("headers")) {
-      struct curl_slist *list = NULL;
-      for (auto &[key, val] : (*it)["headers"].items()) {
-        std::stringstream header;
-        header << key << ": " << val.get<std::string>();
-        list = curl_slist_append(list, header.str().c_str());
-      }
-      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
-    }
-
-    curl_easy_perform(curl);
-    fclose(f);
-    std::cout << "Downloaded " << url << " to " << path_with_filename.str()
-              << std::endl;
-    this->urls.erase(it);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
   }
-  return true;
+
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
+                   download_manager::write_callback);
+  std::string readBuffer;
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+  curl_easy_perform(curl);
+  return readBuffer;
+}
+
+size_t download_manager::write_callback(void *contents, size_t size,
+                                        size_t nmemb, void *userp) {
+  ((std::string *)userp)->append((char *)contents, size * nmemb);
+  return size * nmemb;
 }

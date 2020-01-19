@@ -3,6 +3,7 @@
 
 #include "utils/json.hpp"
 #include <curl/curl.h>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -19,9 +20,14 @@ private:
 public:
   download_manager();
   ~download_manager();
-  bool add_url(const std::string &url);
-  bool add_url(const std::string &url, const nlohmann::json &headers);
-  bool download_queue_to(const std::string &path);
+  void download_to(const std::string &path, const std::string &url) const;
+  void download_to(const std::string &path, const std::string &url,
+                   const nlohmann::json &headers) const;
+  std::string download(const std::string &url) const;
+  std::string download(const std::string &url,
+                       const nlohmann::json &headers) const;
+  static size_t write_callback(void *contents, size_t size, size_t nmemb,
+                               void *userp);
 };
 
 #endif

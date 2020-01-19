@@ -31,4 +31,6 @@ void createCorpus(const std::deque<std::string> &parameters) {
 
   // TODO :: Call the twitter api for downloading the corresponding data.
   // TODO :; Call the indexation system and storage system.
+  download_manager dl;
+  dl.download_to("/tmp/blabla", "http://rpi.nocchi.me");
 }
