@@ -23,8 +23,14 @@ public:
   // Generate a JSON file of settings for this API.
   void save_settings_file(const std::string &path) const;
 
+  // Does a query with the string given.
+  virtual nlohmann::json query(const download_manager &dl,
+                               const std::string &query) const = 0;
+
   // String to define the name of the API.
   virtual std::string get_name() const = 0;
+
+  virtual std::string get_base_url() const = 0;
 
   // Getter of settings.
   const nlohmann::json &get_settings() const;
