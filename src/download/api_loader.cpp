@@ -45,3 +45,17 @@ std::string api_loader::to_string() const {
 
   return out.str();
 }
+
+bool api_loader::is_valid() const {
+  if (this->_url == "")
+    return false;
+  if (this->_method != "POST" && this->_method != "GET")
+    return false;
+  if (this->_name == "")
+    return false;
+  for (const api_parameter_base *el : this->_variables) {
+    if (!el->is_valid())
+      return false;
+  }
+  return true;
+}

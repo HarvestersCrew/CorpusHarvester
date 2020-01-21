@@ -12,6 +12,7 @@ class api_parameter_base {
 public:
   virtual ~api_parameter_base(){};
   virtual std::string to_string() const = 0;
+  virtual bool is_valid() const;
   enum from_type { REQUEST, RESPONSE };
 
 protected:
