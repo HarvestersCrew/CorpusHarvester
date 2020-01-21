@@ -1,12 +1,5 @@
 #include "ui/cli/client_request.h"
 
-void showHelpMenu() {
-  // Create our corpus
-  std::cout << "Possible Commands : " << std::endl;
-  std::cout << "create : Create a corpus." << std::endl;
-  std::cout << "--help : Show help menu." << std::endl;
-}
-
 void createCorpus(const std::deque<std::string> &parameters) {
 
   // If we don't have any parameters.

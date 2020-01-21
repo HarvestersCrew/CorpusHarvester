@@ -1,5 +1,7 @@
-#include "ui/cli/client_request.h"
+
 #include <iostream>
+
+#include "ui/cli/CommandLineInterface.h"
 
 /**
  * Get the command of the user.
@@ -19,23 +21,8 @@ int main(int argc, char **argv) {
   // Get all the parameters passed through the command line.
   std::deque<std::string> cmdLineArgs(argv + 1, argv + argc);
 
-  // Get the first command and remove it form the deque array.
-  std::string firstCommand = cmdLineArgs.front();
-  cmdLineArgs.pop_front();
-
-  // We print the help menu.
-  if (firstCommand == "help" or firstCommand == "--help" or
-      firstCommand == "-help") {
-    showHelpMenu();
-  } else if (firstCommand == "create") {
-    createCorpus(cmdLineArgs);
-  } else {
-    std::cout
-        << "The command '" << firstCommand
-        << "' doesn't exit. Please check the available commands with 'help'."
-        << std::endl;
-    exit(0);
-  }
+  CommandLineInterface cli = CommandLineInterface(cmdLineArgs);
+  cli.run();
 
   return 0;
 }
