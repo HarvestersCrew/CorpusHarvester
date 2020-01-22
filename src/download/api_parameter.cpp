@@ -19,22 +19,6 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json)
     this->_relevant.emplace(json.at("relevant").get<bool>());
 }
 
-bool api_parameter_base::is_valid() const {
-  if (this->_api_name == "")
-    return false;
-  if (this->_from == from_type::REQUEST) {
-    if (!this->_position.has_value() || (this->_position.value() != "header" &&
-                                         this->_position.value() != "body"))
-      return false;
-    if (!this->_required.has_value() || !this->_relevant.has_value())
-      return false;
-  } else {
-    if (!this->_name.has_value() || this->_name.value() == "")
-      return false;
-  }
-  return true;
-}
-
 api_parameter_base *api_parameter_factory::get(const nlohmann::json &j) {
   if (j.at("type").get<std::string>() == "int")
     return new api_parameter<int>(j);

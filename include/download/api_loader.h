@@ -24,7 +24,6 @@ public:
   api_loader(const std::string &path);
   ~api_loader();
   std::string to_string() const;
-  bool is_valid() const;
 };
 
 #endif
