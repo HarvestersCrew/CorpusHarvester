@@ -1,6 +1,10 @@
 # CorpusHarvester
 CS Engineering School Project
 
+## Requirements
+- MySql Connection/C++ : `sudo apt install libmysqlcppconn-dev`
+- libcurl : `sudo apt install libcurl4-openssl-dev`
+
 ## Makefile
 
 ### Build and run methods
