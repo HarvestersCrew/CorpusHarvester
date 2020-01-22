@@ -2,6 +2,7 @@
 #define API_LOADER_H
 
 #include "download/api_parameter.h"
+#include "utils/nlohmann/json-schema.hpp"
 #include "utils/nlohmann/json.hpp"
 #include <fstream>
 #include <iostream>

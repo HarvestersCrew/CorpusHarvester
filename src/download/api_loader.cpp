@@ -17,6 +17,14 @@ api_loader::~api_loader() {
 }
 
 void api_loader::init(const nlohmann::json &j) {
+
+  nlohmann::json_schema::json_validator validator;
+  std::ifstream schema_stream("data/api_schema.json");
+  nlohmann::json schema;
+  schema_stream >> schema;
+  validator.set_root_schema(schema);
+  validator.validate(j);
+
   this->_name = j.at("name").get<std::string>();
   this->_method = j.at("method").get<std::string>();
   this->_url = j.at("url").get<std::string>();
