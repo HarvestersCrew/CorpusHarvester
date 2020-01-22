@@ -2,4 +2,5 @@
 .vscode
 bin
 obj
-settings
+data/*
+!data/api_schema.json
