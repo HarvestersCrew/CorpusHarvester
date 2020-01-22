@@ -3,7 +3,7 @@
 
 #include "download/download_manager.h"
 #include "utils/exceptions.h"
-#include "utils/json.hpp"
+#include "utils/nlohmann/json.hpp"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>

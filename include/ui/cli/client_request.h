@@ -7,7 +7,7 @@
 
 #include "download/apis/api_twitter.h"
 #include "download/download_manager.h"
-#include "utils/json.hpp"
+#include "utils/nlohmann/json.hpp"
 #include <deque>
 #include <iostream>
 #include <string>

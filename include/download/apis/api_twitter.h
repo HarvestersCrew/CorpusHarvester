@@ -2,7 +2,7 @@
 #define API_TWITTER_H
 
 #include "download/api_abstract.h"
-#include "utils/json.hpp"
+#include "utils/nlohmann/json.hpp"
 #include <sstream>
 
 // Implementation of the Twitter API.
