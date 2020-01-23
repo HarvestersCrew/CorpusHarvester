@@ -12,7 +12,9 @@ api_loader::api_loader(const std::string &path) {
 }
 
 api_loader::~api_loader() {
-  for (api_parameter_base *el : this->_variables)
+  for (api_parameter_base *el : this->_requests)
+    delete el;
+  for (api_parameter_base *el : this->_responses)
     delete el;
 }
 
@@ -31,9 +33,10 @@ void api_loader::init(const nlohmann::json &j) {
   for (auto &el : j.at("path_to_results")) {
     this->_path_to_results.push_back(el.get<std::string>());
   }
-  for (auto &el : j.at("variables")) {
-    this->_variables.push_back(new api_parameter_base(el));
-  }
+  for (auto &el : j.at("request"))
+    this->_requests.push_back(new api_parameter_request(el));
+  for (auto &el : j.at("response"))
+    this->_responses.push_back(new api_parameter_response(el));
 }
 
 std::string api_loader::to_string() const {
@@ -47,7 +50,13 @@ std::string api_loader::to_string() const {
     out << "{" << el << "}";
   }
 
-  for (const api_parameter_base *el : this->_variables) {
+  out << std::endl << "Request parameters:";
+  for (const api_parameter_request *el : this->_requests) {
+    out << std::endl << el->to_string();
+  }
+
+  out << std::endl << "Response parameters:";
+  for (const api_parameter_response *el : this->_responses) {
     out << std::endl << el->to_string();
   }
 

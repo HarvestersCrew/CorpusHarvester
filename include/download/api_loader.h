@@ -16,7 +16,9 @@ private:
   std::string _method;
   std::string _name;
   std::vector<std::string> _path_to_results;
-  std::vector<api_parameter_base *> _variables;
+  std::vector<api_parameter_request *> _requests;
+  std::vector<api_parameter_response *> _responses;
+
   void init(const nlohmann::json &j);
 
 public:

@@ -9,24 +9,40 @@
 
 class api_parameter_base {
 
-public:
-  api_parameter_base(const nlohmann::json &json);
-  ~api_parameter_base(){};
-  std::string to_string() const;
+  friend class api_loader;
 
-  enum from_type { REQUEST, RESPONSE };
+public:
+  virtual std::string to_string() const;
   enum value_type { STRING, INT, INT64 };
 
-private:
+protected:
+  api_parameter_base(const nlohmann::json &json);
+  virtual ~api_parameter_base(){};
   std::string _api_name;
-  from_type _from;
   value_type _value_type;
-  std::optional<std::string> _position;
+};
+
+class api_parameter_request : public api_parameter_base {
+public:
+  api_parameter_request(const nlohmann::json &json);
+  virtual std::string to_string() const;
+
+private:
+  std::string _position;
+  bool _required;
+  bool _relevant;
   std::optional<std::string> _name;
-  std::optional<bool> _required;
-  std::optional<bool> _relevant;
   std::optional<std::string> _default_value;
   std::vector<std::string> _values;
+};
+
+class api_parameter_response : public api_parameter_base {
+public:
+  api_parameter_response(const nlohmann::json &json);
+  virtual std::string to_string() const;
+
+private:
+  std::string _name;
 };
 
 #endif
