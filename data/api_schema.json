@@ -131,6 +131,7 @@
                     "default_value": {
                         "$id": "#/properties/variables/items/properties/default_value",
                         "title": "Default value",
+                        "type": "string",
                         "examples": [
                             "ABC",
                             "53"
@@ -139,7 +140,12 @@
                     "values": {
                         "$id": "#/properties/variables/items/properties/values",
                         "title": "Values to choose from",
-                        "type": "array"
+                        "type": "array",
+                        "items": {
+                            "$id": "#/properties/variables/values/items",
+                            "type": "string",
+                            "title": "Possible values items"
+                        }
                     }
                 },
                 "oneOf": [

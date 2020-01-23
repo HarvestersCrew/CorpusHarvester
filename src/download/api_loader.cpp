@@ -32,7 +32,7 @@ void api_loader::init(const nlohmann::json &j) {
     this->_path_to_results.push_back(el.get<std::string>());
   }
   for (auto &el : j.at("variables")) {
-    this->_variables.push_back(api_parameter_factory::get(el));
+    this->_variables.push_back(new api_parameter_base(el));
   }
 }
 

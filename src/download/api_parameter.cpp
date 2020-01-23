@@ -17,20 +17,18 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json)
     this->_required.emplace(json.at("required").get<bool>());
   if (json.contains("relevant"))
     this->_relevant.emplace(json.at("relevant").get<bool>());
-}
-
-api_parameter_base *api_parameter_factory::get(const nlohmann::json &j) {
-  if (j.at("type").get<std::string>() == "int")
-    return new api_parameter<int>(j);
-  else if (j.at("type").get<std::string>() == "int64")
-    return new api_parameter<int64_t>(j);
-  else if (j.at("type").get<std::string>() == "string")
-    return new api_parameter<std::string>(j);
+  if (json.contains("default_value"))
+    this->_default_value.emplace(json.at("default_value").get<std::string>());
   else
-    throw std::runtime_error("Can't match parameter type.");
+    this->_default_value = std::nullopt;
+  if (json.contains("values")) {
+    for (auto &el : json.at("values")) {
+      this->_values.push_back(el.get<std::string>());
+    }
+  }
 }
 
-template <class T> std::string api_parameter<T>::to_string() const {
+std::string api_parameter_base::to_string() const {
   std::stringstream out;
   out << "------- api_name: " << this->_api_name << " -------" << std::endl;
   out << "from: "
@@ -63,22 +61,8 @@ template <class T> std::string api_parameter<T>::to_string() const {
     out << "no default_value" << std::endl;
 
   out << "values: [";
-  for (const T &el : this->_values)
+  for (const std::string &el : this->_values)
     out << el << ",";
   out << "]";
   return out.str();
-}
-
-template <class T>
-api_parameter<T>::api_parameter(const nlohmann::json &json)
-    : api_parameter_base::api_parameter_base(json) {
-  if (json.contains("default_value"))
-    this->_default_value.emplace(json.at("default_value").get<T>());
-  else
-    this->_default_value = std::nullopt;
-  if (json.contains("values")) {
-    for (auto &el : json.at("values")) {
-      this->_values.push_back(el.get<T>());
-    }
-  }
 }
