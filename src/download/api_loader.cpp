@@ -5,7 +5,7 @@ api_loader::api_loader(const nlohmann::json &j) { this->init(j); }
 api_loader::api_loader(const std::string &path) {
   std::ifstream in(path);
   if (in.fail())
-    throw std::runtime_error("Can't open provided file.");
+    throw std::runtime_error("Can't open provided file: " + path);
   nlohmann::json j;
   in >> j;
   this->init(j);
@@ -106,4 +106,29 @@ nlohmann::json api_loader::query(const nlohmann::json &params,
       nlohmann::json::parse(dl.download(url.str(), headers));
 
   return result;
+}
+
+nlohmann::json api_loader::parse(const std::string &path) const {
+  std::ifstream in(path);
+  if (in.fail())
+    throw std::runtime_error("Can't open provided file: " + path);
+  nlohmann::json j;
+  in >> j;
+  return this->parse(j);
+}
+
+nlohmann::json api_loader::parse(const nlohmann::json &result) const {
+  nlohmann::json results_array = result.get<nlohmann::json>();
+  nlohmann::json parsed_array = nlohmann::json::array();
+  for (const std::string &el : this->_path_to_results) {
+    results_array = results_array[el];
+  }
+  for (const auto &el : results_array) {
+    nlohmann::json parsed_el;
+    for (const api_parameter_response *param : this->_responses) {
+      parsed_el[param->_name] = el[param->_api_name];
+    }
+    parsed_array += parsed_el;
+  }
+  return parsed_array;
 }

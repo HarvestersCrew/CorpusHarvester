@@ -41,6 +41,8 @@ private:
 };
 
 class api_parameter_response : public api_parameter_base {
+  friend class api_loader;
+
 public:
   api_parameter_response(const nlohmann::json &json);
   virtual std::string to_string() const;

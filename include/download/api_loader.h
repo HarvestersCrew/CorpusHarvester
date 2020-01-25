@@ -32,6 +32,8 @@ public:
   std::string to_string() const;
   nlohmann::json query(const nlohmann::json &params,
                        const download_manager &dl) const;
+  nlohmann::json parse(const std::string &path) const;
+  nlohmann::json parse(const nlohmann::json &result) const;
 };
 
 #endif
