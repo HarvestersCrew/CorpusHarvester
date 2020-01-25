@@ -2,6 +2,7 @@
 #define API_PARAMETER_H
 
 #include "utils/nlohmann/json.hpp"
+#include <iostream>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -23,9 +24,12 @@ protected:
 };
 
 class api_parameter_request : public api_parameter_base {
+  friend class api_loader;
+
 public:
   api_parameter_request(const nlohmann::json &json);
   virtual std::string to_string() const;
+  bool is_value_valid(const std::string &val) const;
 
 private:
   std::string _position;

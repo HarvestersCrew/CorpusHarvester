@@ -2,10 +2,14 @@
 #define API_LOADER_H
 
 #include "download/api_parameter.h"
+#include "download/download_manager.h"
+#include "utils/exceptions.h"
 #include "utils/nlohmann/json-schema.hpp"
 #include "utils/nlohmann/json.hpp"
 #include <fstream>
 #include <iostream>
+#include <map>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -26,6 +30,7 @@ public:
   api_loader(const std::string &path);
   ~api_loader();
   std::string to_string() const;
+  void query(const nlohmann::json &params, const download_manager &dl) const;
 };
 
 #endif

@@ -33,9 +33,9 @@ std::string download_manager::download(const std::string &url,
                                        const nlohmann::json &headers) const {
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
-  if (!headers.is_null() && (headers.is_array() || headers.is_object())) {
+  if (!headers.is_null() && headers.is_object()) {
     struct curl_slist *list = NULL;
-    for (auto &[key, val] : headers.items()) {
+    for (const auto &[key, val] : headers.items()) {
       std::stringstream header;
       header << key << ": " << val.get<std::string>();
       list = curl_slist_append(list, header.str().c_str());

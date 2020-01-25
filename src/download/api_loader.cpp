@@ -62,3 +62,45 @@ std::string api_loader::to_string() const {
 
   return out.str();
 }
+
+void api_loader::query(const nlohmann::json &params,
+                       const download_manager &dl) const {
+  std::stringstream url;
+  url << this->_url;
+
+  nlohmann::json headers;
+  std::vector<std::string> body;
+
+  for (api_parameter_request *el : this->_requests) {
+
+    std::optional<std::string> val;
+    val = std::nullopt;
+
+    if (params.contains(el->_api_name)) {
+      if (!el->is_value_valid(params.at(el->_api_name).get<std::string>()))
+        throw std::runtime_error("Incompatible parameter.");
+      val.emplace(params.at(el->_api_name).get<std::string>());
+    } else if (el->_default_value.has_value())
+      val.emplace(el->_default_value.value());
+    else if (el->_required)
+      throw std::runtime_error("Required parameter not filled");
+
+    if (val.has_value()) {
+      if (el->_position == "body") {
+        body.push_back(el->_api_name + "=" + val.value());
+      } else if (el->_position == "header") {
+        headers[el->_api_name] = val.value();
+      } else
+        throw std::runtime_error("Unknown position");
+    }
+  }
+
+  if (body.size() > 0) {
+    url << "?";
+    url << body.at(0);
+    for (long unsigned int i = 1; i < body.size(); ++i)
+      url << "&" << body.at(i);
+  }
+
+  const std::string result = dl.download(url.str(), headers);
+}
