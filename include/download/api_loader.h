@@ -30,7 +30,8 @@ public:
   api_loader(const std::string &path);
   ~api_loader();
   std::string to_string() const;
-  void query(const nlohmann::json &params, const download_manager &dl) const;
+  nlohmann::json query(const nlohmann::json &params,
+                       const download_manager &dl) const;
 };
 
 #endif

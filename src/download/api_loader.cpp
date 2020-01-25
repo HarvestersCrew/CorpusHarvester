@@ -63,8 +63,8 @@ std::string api_loader::to_string() const {
   return out.str();
 }
 
-void api_loader::query(const nlohmann::json &params,
-                       const download_manager &dl) const {
+nlohmann::json api_loader::query(const nlohmann::json &params,
+                                 const download_manager &dl) const {
   std::stringstream url;
   url << this->_url;
 
@@ -102,5 +102,8 @@ void api_loader::query(const nlohmann::json &params,
       url << "&" << body.at(i);
   }
 
-  const std::string result = dl.download(url.str(), headers);
+  nlohmann::json result =
+      nlohmann::json::parse(dl.download(url.str(), headers));
+
+  return result;
 }
