@@ -5,9 +5,7 @@
 #ifndef CORPUSHARVESTER_CLIENT_REQUEST_H
 #define CORPUSHARVESTER_CLIENT_REQUEST_H
 
-#include "download/apis/api_twitter.h"
 #include "download/download_manager.h"
-#include "utils/nlohmann/json.hpp"
 #include <deque>
 #include <iostream>
 #include <string>
