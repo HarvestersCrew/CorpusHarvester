@@ -3,12 +3,7 @@
 api_loader::api_loader(const nlohmann::json &j) { this->init(j); }
 
 api_loader::api_loader(const std::string &path) {
-  std::ifstream in(path);
-  if (in.fail())
-    throw std::runtime_error("Can't open provided file: " + path);
-  nlohmann::json j;
-  in >> j;
-  this->init(j);
+  this->init(json_from_file(path));
 }
 
 api_loader::~api_loader() {
@@ -21,9 +16,7 @@ api_loader::~api_loader() {
 void api_loader::init(const nlohmann::json &j) {
 
   nlohmann::json_schema::json_validator validator;
-  std::ifstream schema_stream("data/api_schema.json");
-  nlohmann::json schema;
-  schema_stream >> schema;
+  nlohmann::json schema = json_from_file("data/api_schema.json");
   validator.set_root_schema(schema);
   validator.validate(j);
 
@@ -109,12 +102,7 @@ nlohmann::json api_loader::query(const nlohmann::json &params,
 }
 
 nlohmann::json api_loader::parse(const std::string &path) const {
-  std::ifstream in(path);
-  if (in.fail())
-    throw std::runtime_error("Can't open provided file: " + path);
-  nlohmann::json j;
-  in >> j;
-  return this->parse(j);
+  return this->parse(json_from_file(path));
 }
 
 nlohmann::json api_loader::parse(const nlohmann::json &result) const {
