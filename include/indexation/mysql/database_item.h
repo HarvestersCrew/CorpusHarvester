@@ -7,31 +7,31 @@
 
 class DatabaseItem {
 
-protected:	
-    int _id;
+protected:
+  int _id;
 
 public:
-	DatabaseItem(int id)  
-        : _id(id) {}
+  DatabaseItem() {}
 
-    virtual ~DatabaseItem() = default;
+  DatabaseItem(int id) : _id(id) {}
 
-    virtual std::string toString() const = 0;
+  virtual ~DatabaseItem() = default;
 
-    virtual void insert(sql::Connection *db) = 0;
+  virtual std::string toString() const = 0;
 
-    virtual void fillFromStatement(sql::ResultSet *res) = 0;
+  virtual void insert(sql::Connection *db) = 0;
 
-    static int getLastInsertedId(sql::Connection *db) {
-        sql::Statement *stmt = db->createStatement();
-        sql::ResultSet *res = stmt->executeQuery("SELECT LAST_INSERT_ID() AS id");
-        res->next();
-        return res->getInt("id"); 
-    }
+  virtual void fillFromStatement(sql::ResultSet *res) = 0;
 
+  static int getLastInsertedId(sql::Connection *db) {
+    sql::Statement *stmt = db->createStatement();
+    sql::ResultSet *res = stmt->executeQuery("SELECT LAST_INSERT_ID() AS id");
+    res->next();
+    return res->getInt("id");
+  }
 
-    int getId() const { return _id; };
-    void setId(int id) { _id = id; };
+  int getId() const { return _id; };
+  void setId(int id) { _id = id; };
 };
 
 #endif

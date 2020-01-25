@@ -7,40 +7,48 @@
 #include "indexation/mysql/database_item.h"
 #include "indexation/mysql/tag.h"
 
-#define FILE_CREATE_STATEMENT "CREATE TABLE IF NOT EXISTS File(id INTEGER NOT NULL,path TEXT NOT NULL,name TEXT NOT NULL,PRIMARY KEY (id));"
-#define GET_FILES_FROM_TAG "SELECT * FROM File f, Tag t WHERE f.id = t.file_id AND t.name = ? AND t.value = ?;"
+#define FILE_CREATE_STATEMENT                                                  \
+  "CREATE TABLE IF NOT EXISTS File(id INTEGER NOT NULL AUTO_INCREMENT,path "   \
+  "TEXT NOT "                                                                  \
+  "NULL,name TEXT NOT NULL,PRIMARY KEY (id));"
+#define GET_FILES_FROM_TAG                                                     \
+  "SELECT f.* FROM File f, Tag t WHERE f.id = t.file_id AND t.name "           \
+  "= "                                                                         \
+  "? AND "                                                                     \
+  "t.value = ?;"
 
-
-using std::string;
 using std::list;
+using std::string;
 using std::unique_ptr;
 
 class File : public DatabaseItem {
-	
-    string _path;
-    string _name;
-    int _size;
-    list<unique_ptr<Tag>> _tags;
 
+  string _path;
+  string _name;
+  int _size;
+  list<unique_ptr<Tag>> _tags;
+
+private:
 public:
-	File(string path, string name, int size, int id = -1);
+  File(string path, string name, int size, int id = -1);
 
-    File();
+  File();
 
-    ~File();
+  ~File();
 
-    string toString() const;
+  string toString() const;
 
-    void insert(sql::Connection *db);
+  void insert(sql::Connection *db);
 
-    void fillFromStatement(sql::ResultSet *res);
+  void fetchTags(sql::Connection *db);
 
-    void addTag(string name, string value);
+  void fillFromStatement(sql::ResultSet *res);
 
-    string getPath() const { return _path;}
-    string getName() const { return _name;}
-    int getSize() const { return _size;}
+  void addTag(string name, string value);
 
+  string getPath() const { return _path; }
+  string getName() const { return _name; }
+  int getSize() const { return _size; }
 };
 
 #endif

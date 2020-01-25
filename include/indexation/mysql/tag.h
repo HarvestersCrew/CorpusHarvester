@@ -6,32 +6,38 @@
 
 #include "indexation/mysql/database_item.h"
 
-#define TAG_CREATE_STATEMENT "CREATE TABLE IF NOT EXISTS Tag(id INTEGER,file_id INTEGER NOT NULL,name TEXT NOT NULL,value TEXT NOT NULL,PRIMARY KEY (id),FOREIGN KEY (file_id) REFERENCES File(id));"
+#define TAG_CREATE_STATEMENT                                                   \
+  "CREATE TABLE IF NOT EXISTS Tag(id INTEGER NOT NULL AUTO_INCREMENT,file_id " \
+  "INTEGER NOT NULL,name "                                                     \
+  "TEXT NOT NULL,value TEXT NOT NULL,PRIMARY KEY (id),FOREIGN KEY (file_id) "  \
+  "REFERENCES File(id));"
 
 using std::string;
 
 class Tag : public DatabaseItem {
-	
-    int _file_id;
-    string _name;
-    string _value;
+
+  int _file_id;
+  string _name;
+  string _value;
 
 public:
-	Tag(string name, string value, int id = -1, int file_id = -1);
+  Tag();
 
-    ~Tag();
+  Tag(string name, string value, int id = -1, int file_id = -1);
 
-    string toString() const;
+  ~Tag();
 
-    void insert(sql::Connection *db);
+  string toString() const;
 
-    void fillFromStatement(sql::ResultSet *res);
+  void insert(sql::Connection *db);
 
-    int getFileId() const { return _file_id; }
-    string getName() const { return _name; }
-    string getValue() const { return _value; }
+  void fillFromStatement(sql::ResultSet *res);
 
-    void setFileId(int file_id) { _file_id = file_id; }
+  int getFileId() const { return _file_id; }
+  string getName() const { return _name; }
+  string getValue() const { return _value; }
+
+  void setFileId(int file_id) { _file_id = file_id; }
 };
 
 #endif
