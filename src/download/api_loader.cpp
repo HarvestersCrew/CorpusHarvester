@@ -120,3 +120,8 @@ nlohmann::json api_loader::parse(const nlohmann::json &result) const {
   }
   return parsed_array;
 }
+
+nlohmann::json api_loader::query_and_parse(const nlohmann::json &params,
+                                           const download_manager &dl) const {
+  return this->parse(this->query(params, dl));
+}
