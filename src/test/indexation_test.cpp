@@ -7,10 +7,10 @@
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 
-#define FILE_COUNT 19
-#define TWEET_COUNT 13
+#define FILE_COUNT 50
+#define TWEET_COUNT 26
 #define TAG_COUNT 5
-#define VERBOSE false
+#define VERBOSE true
 #define EVEN_FILES FILE_COUNT / 2 + FILE_COUNT % 2
 #define EVEN_TWEETS TWEET_COUNT / 2 + FILE_COUNT % 2
 
@@ -71,7 +71,8 @@ void testIndexation() {
   list<File *> files;
   for (int i = 0; i < FILE_COUNT; i++) {
     string i_str = std::to_string(i);
-    File *file = new File("/stockage/file" + i_str, "file" + i_str, 200);
+    File *file =
+        new File("/stockage/file" + i_str, "file" + i_str, i + 100, "Tweeter");
     fillFileRandomly(file, i < TWEET_COUNT, i % 2 == 0);
     files.push_back(file);
   }
@@ -84,6 +85,9 @@ void testIndexation() {
   Assertion::assertEquals(__FUNCTION__, FILE_COUNT, resFiles->rowsCount());
   Assertion::assertEquals(__FUNCTION__, FILE_COUNT * TAG_COUNT,
                           resTags->rowsCount());
+  delete stmt;
+  delete resFiles;
+  delete resTags;
 }
 
 void testFetchTweets() {
@@ -103,15 +107,22 @@ void testFetchByName() {
   Assertion::assertEquals(__FUNCTION__, tweet->getName(), "file12");
 }
 
+void testFetchBySize() {
+  SearchBuilder *sb = new SearchBuilder(VERBOSE);
+  list<File *> tweets =
+      sb->fileColumnEquals("size", "110", "<=")->build(indexer.getDatabase());
+  Assertion::assertEquals(__FUNCTION__, 11, tweets.size());
+}
+
 void testFetchSpecificFiles() {
   SearchBuilder *sb = new SearchBuilder(VERBOSE);
-  list<File *> files = sb->fileTagEquals("isEven", "1")
+  list<File *> files = sb->fileTagEquals("isEven", "1", "=")
                            ->sqlAnd()
-                           ->fileTagEquals("type", "tweet")
+                           ->fileTagEquals("type", "tweet", "=")
                            ->sqlOr()
-                           ->fileTagEquals("subject", "kitty")
+                           ->fileTagEquals("subject", "kitty", "=")
                            ->sqlAnd()
-                           ->fileColumnEquals("name", "file8")
+                           ->fileColumnEquals("name", "file8", "=")
                            ->build(indexer.getDatabase());
   delete sb;
   Assertion::assertEquals(__FUNCTION__, 1, files.size());
@@ -119,13 +130,13 @@ void testFetchSpecificFiles() {
 
 void testFetchSpecificFiles2() {
   SearchBuilder *sb = new SearchBuilder(VERBOSE);
-  list<File *> files = sb->fileTagEquals("isEven", "1")
+  list<File *> files = sb->fileTagEquals("isEven", "1", "=")
                            ->sqlAnd()
-                           ->fileColumnEquals("name", "file6")
+                           ->fileColumnEquals("name", "file6", "=")
                            ->sqlAnd()
-                           ->fileTagEquals("subject", "kitty")
+                           ->fileTagEquals("subject", "kitty", "=")
                            ->sqlOr()
-                           ->fileTagEquals("subject", "tank")
+                           ->fileTagEquals("subject", "tank", "=")
                            ->build(indexer.getDatabase());
   delete sb;
   Assertion::assertEquals(__FUNCTION__, 1, files.size());
@@ -139,6 +150,7 @@ int main(int argc, char *argv[]) {
     Assertion::test(testFetchTweets, "testFetchTweets");
     Assertion::test(testFetchEvenFiles, "testFetchEvenFiles");
     Assertion::test(testFetchByName, "testFetchByName");
+    Assertion::test(testFetchBySize, "testFetchBySize");
     Assertion::test(testFetchSpecificFiles, "testFetchSpecificFiles");
     Assertion::test(testFetchSpecificFiles2, "testFetchSpecificFiles2");
   } catch (TestFailedException &e) {

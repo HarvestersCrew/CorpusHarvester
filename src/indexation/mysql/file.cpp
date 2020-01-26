@@ -10,8 +10,9 @@ using std::cout;
 using std::endl;
 using std::ostringstream;
 
-File::File(string path, string name, int size, int id)
-    : DatabaseItem(id), _path(path), _name(name), _tags() {}
+File::File(string path, string name, int size, string source, int id)
+    : DatabaseItem(id), _path(path), _name(name), _size(size), _source(source) {
+}
 
 File::File() : DatabaseItem(0), _path(""), _name(""), _tags() {}
 
@@ -24,7 +25,7 @@ File::~File() {
 string File::toString() const {
   ostringstream out;
   out << "File{_id=" << _id << ", _path=" << _path << ", _name=" << _name
-      << ", _tags=[";
+      << ", _size=" << _size << ", _source=" << _source << ", _tags=[";
   for (const auto &tag : _tags) {
     out << tag->toString();
   }
@@ -36,10 +37,11 @@ void File::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
   list<File *> files;
 
-  prep_stmt =
-      db->prepareStatement("INSERT INTO File (path, name) VALUES(?, ?)");
+  prep_stmt = db->prepareStatement(INSERT_FILE_STATEMENT);
   prep_stmt->setString(1, _path);
   prep_stmt->setString(2, _name);
+  prep_stmt->setInt(3, _size);
+  prep_stmt->setString(4, _source);
   prep_stmt->execute();
   delete prep_stmt;
 
@@ -64,12 +66,15 @@ void File::fetchTags(sql::Connection *db) {
     tag->fillFromStatement(res);
     _tags.push_back(unique_ptr<Tag>(tag));
   }
+  delete res;
 }
 
 void File::fillFromStatement(sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_path = res->getString("path");
   this->_name = res->getString("name");
+  this->_size = res->getInt("size");
+  this->_source = res->getString("source");
 }
 
 void File::addTag(string name, string value) {

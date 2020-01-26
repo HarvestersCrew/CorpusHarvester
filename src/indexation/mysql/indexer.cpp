@@ -35,14 +35,14 @@ void Indexer::insertDatabaseItem(DatabaseItem *item) const {
 
 list<File *> Indexer::getFilesFromTag(string tag_name, string tag_value) {
   SearchBuilder *sb = new SearchBuilder(_verbose);
-  list<File *> files = sb->fileTagEquals(tag_name, tag_value)->build(_db);
+  list<File *> files = sb->fileTagEquals(tag_name, tag_value, "=")->build(_db);
   delete sb;
   return files;
 }
 
 list<File *> Indexer::getFilesFromAttribute(string attribute, string value) {
   SearchBuilder *sb = new SearchBuilder(_verbose);
-  list<File *> files = sb->fileColumnEquals(attribute, value)->build(_db);
+  list<File *> files = sb->fileColumnEquals(attribute, value, "=")->build(_db);
   delete sb;
   return files;
 }
@@ -56,10 +56,12 @@ void Indexer::createDatabase(bool drop_table) {
     print("- Drop tables : OK", _verbose);
   }
 
+  stmt = _db->createStatement();
   stmt->execute(FILE_CREATE_STATEMENT);
   print("- Create File table : OK", _verbose);
   stmt->execute(TAG_CREATE_STATEMENT);
   print("- Create Tag table : OK", _verbose);
+  delete stmt;
 }
 
 void Indexer::indexation(list<File *> files) {

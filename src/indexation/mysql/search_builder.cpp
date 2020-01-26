@@ -36,21 +36,22 @@ SearchBuilder::SearchBuilder(bool verbose)
     : _statement(TO_REPLACE), _currentClauseOnlyOnFile(true),
       _verbose(verbose) {}
 
-SearchBuilder *SearchBuilder::fileTagEquals(string tag_name, string tag_value) {
+SearchBuilder *SearchBuilder::fileTagEquals(string tag_name, string tag_value,
+                                            string op) {
   _currentClauseOnlyOnFile = false;
-  _currentClause += "(t.name = ? AND t.value = ?)";
+  _currentClause += "(t.name = ? AND t.value " + op + " ?)";
   _preparedValues.push_back(tag_name);
   _preparedValues.push_back(tag_value);
   return this;
 }
 
 SearchBuilder *SearchBuilder::fileColumnEquals(string column_name,
-                                               string column_value) {
+                                               string column_value, string op) {
   if (_currentClauseOnlyOnFile) {
-    _firstSelect += "(f." + column_name + " = ?)";
+    _firstSelect += "(f." + column_name + " " + op + " ?)";
     _firstPreparedValues.push_back(column_value);
   } else {
-    _currentClause += "(f." + column_name + " = ?)";
+    _currentClause += "(f." + column_name + " " + op + " ?)";
     _preparedValues.push_back(column_value);
   }
   return this;
@@ -104,8 +105,6 @@ list<File *> SearchBuilder::build(sql::Connection *db) {
     file->fetchTags(db);
     files.push_back(file);
   }
-  delete prep_stmt;
-  delete res;
   return files;
 }
 
