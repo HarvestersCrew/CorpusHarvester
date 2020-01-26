@@ -1,0 +1,64 @@
+{
+    "name": "TheMovieDB - Movies",
+    "url": "https://api.themoviedb.org/3/search/movie",
+    "method": "GET",
+    "path_to_results": [
+        "results"
+    ],
+    "request": [
+        {
+            "type": "string",
+            "required": true,
+            "position": "body",
+            "relevant": false,
+            "api_name": "api_key"
+        },
+        {
+            "type": "string",
+            "api_name": "language",
+            "required": false,
+            "relevant": true,
+            "name": "language",
+            "position": "body",
+            "default_value": "en-us"
+        },
+        {
+            "type": "string",
+            "api_name": "query",
+            "required": true,
+            "position": "body",
+            "relevant": false
+        },
+        {
+            "type": "int",
+            "api_name": "page",
+            "required": false,
+            "position": "body",
+            "relevant": false
+        },
+        {
+            "type": "int",
+            "api_name": "primary_release_year",
+            "required": false,
+            "position": "body",
+            "relevant": false
+        }
+    ],
+    "response": [
+        {
+            "type": "string",
+            "api_name": "title",
+            "name": "title"
+        },
+        {
+            "type": "string",
+            "api_name": "overview",
+            "name": "synopsis"
+        },
+        {
+            "type": "string",
+            "api_name": "release_date",
+            "name": "date"
+        }
+    ]
+}
