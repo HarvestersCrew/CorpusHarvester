@@ -61,6 +61,7 @@ nlohmann::json api_loader::query(const nlohmann::json &params,
   std::stringstream url;
   url << this->_url;
 
+  nlohmann::json relevant_parameters;
   nlohmann::json headers;
   std::vector<std::string> body;
 
@@ -76,9 +77,15 @@ nlohmann::json api_loader::query(const nlohmann::json &params,
     } else if (el->_default_value.has_value())
       val.emplace(el->_default_value.value());
     else if (el->_required)
-      throw std::runtime_error("Required parameter not filled");
+      throw std::runtime_error("Required parameter not filled: " +
+                               el->_api_name);
 
     if (val.has_value()) {
+
+      if (el->_relevant && el->_name.has_value()) {
+        relevant_parameters[el->_name.value()] = val.value();
+      }
+
       if (el->_position == "body") {
         body.push_back(el->_api_name + "=" + val.value());
       } else if (el->_position == "header") {
@@ -98,15 +105,21 @@ nlohmann::json api_loader::query(const nlohmann::json &params,
   nlohmann::json result =
       nlohmann::json::parse(dl.download(url.str(), headers));
 
-  return result;
+  nlohmann::json result_and_relevant = {{"result", result},
+                                        {"relevant", relevant_parameters}};
+
+  return result_and_relevant;
 }
 
-nlohmann::json api_loader::parse(const std::string &path) const {
-  return this->parse(json_from_file(path));
+nlohmann::json api_loader::parse(const std::string &path,
+                                 const nlohmann::json &relevant) const {
+  return this->parse(
+      {{"result", json_from_file(path)}, {"relevant", relevant}});
 }
 
 nlohmann::json api_loader::parse(const nlohmann::json &result) const {
-  nlohmann::json results_array = result.get<nlohmann::json>();
+  nlohmann::json results_array = result.at("result").get<nlohmann::json>();
+  nlohmann::json relevant_array = result.at("relevant").get<nlohmann::json>();
   nlohmann::json parsed_array = nlohmann::json::array();
   for (const std::string &el : this->_path_to_results) {
     results_array = results_array[el];
@@ -115,6 +128,9 @@ nlohmann::json api_loader::parse(const nlohmann::json &result) const {
     nlohmann::json parsed_el;
     for (const api_parameter_response *param : this->_responses) {
       parsed_el[param->_name] = el[param->_api_name];
+    }
+    for (const auto &[key, val] : relevant_array.items()) {
+      parsed_el[key] = val;
     }
     parsed_array += parsed_el;
   }
