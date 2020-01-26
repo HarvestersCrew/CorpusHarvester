@@ -23,6 +23,8 @@ private:
 
   list<File *> getFilesFromTag(string tag_name, string tag_value);
 
+  list<File *> getFilesFromAttribute(string attribute, string value);
+
 public:
   Indexer(string db_name, bool verbose = false);
 
@@ -33,6 +35,8 @@ public:
   void indexation(list<File *> files);
 
   list<File *> fetchFromTag(string tag_name, string tag_value);
+
+  list<File *> fetchFromAttribute(string attribute, string value);
 
   sql::Connection *getDatabase() { return _db; }
 };

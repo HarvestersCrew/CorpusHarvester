@@ -3,12 +3,16 @@
 #include <sstream>
 
 #include "indexation/mysql/indexer.h"
+#include "indexation/mysql/search_builder.h"
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 
 #define FILE_COUNT 19
 #define TWEET_COUNT 13
 #define TAG_COUNT 5
+#define VERBOSE false
+#define EVEN_FILES FILE_COUNT / 2 + FILE_COUNT % 2
+#define EVEN_TWEETS TWEET_COUNT / 2 + FILE_COUNT % 2
 
 using std::cout;
 using std::endl;
@@ -16,7 +20,7 @@ using std::list;
 using std::ostringstream;
 using std::string;
 
-Indexer indexer("harvester", false);
+Indexer indexer("harvester", VERBOSE);
 
 void printSQLException(sql::SQLException &e) {
   cout << "# ERR: " << e.what();
@@ -34,7 +38,8 @@ void fillFileRandomly(File *file, bool tweet, bool isEven) {
     file->addTag("type", "article");
   }
   int tweet_subject_length = 3;
-  string tweet_subject_values[tweet_subject_length] = {"I'm", "a", "tweet"};
+  string tweet_subject_values[tweet_subject_length] = {"tank", "kitty",
+                                                       "crisquare"};
   for (int i = 0; i < tweet_subject_length; ++i) {
     file->addTag("subject", tweet_subject_values[i]);
   }
@@ -66,7 +71,7 @@ void testIndexation() {
   list<File *> files;
   for (int i = 0; i < FILE_COUNT; i++) {
     string i_str = std::to_string(i);
-    File *file = new File("/stockage/tweet" + i_str, "tweet" + i_str, 200);
+    File *file = new File("/stockage/file" + i_str, "file" + i_str, 200);
     fillFileRandomly(file, i < TWEET_COUNT, i % 2 == 0);
     files.push_back(file);
   }
@@ -88,8 +93,42 @@ void testFetchTweets() {
 
 void testFetchEvenFiles() {
   list<File *> tweets = indexer.fetchFromTag("isEven", "1");
-  Assertion::assertEquals(__FUNCTION__, FILE_COUNT / 2 + FILE_COUNT % 2,
-                          tweets.size());
+  Assertion::assertEquals(__FUNCTION__, EVEN_FILES, tweets.size());
+}
+
+void testFetchByName() {
+  list<File *> tweets = indexer.fetchFromAttribute("name", "file12");
+  Assertion::assertEquals(__FUNCTION__, 1, tweets.size());
+  File *tweet = *(tweets.begin());
+  Assertion::assertEquals(__FUNCTION__, tweet->getName(), "file12");
+}
+
+void testFetchSpecificFiles() {
+  SearchBuilder *sb = new SearchBuilder(VERBOSE);
+  list<File *> files = sb->fileTagEquals("isEven", "1")
+                           ->sqlAnd()
+                           ->fileTagEquals("type", "tweet")
+                           ->sqlOr()
+                           ->fileTagEquals("subject", "kitty")
+                           ->sqlAnd()
+                           ->fileColumnEquals("name", "file8")
+                           ->build(indexer.getDatabase());
+  delete sb;
+  Assertion::assertEquals(__FUNCTION__, 1, files.size());
+}
+
+void testFetchSpecificFiles2() {
+  SearchBuilder *sb = new SearchBuilder(VERBOSE);
+  list<File *> files = sb->fileTagEquals("isEven", "1")
+                           ->sqlAnd()
+                           ->fileColumnEquals("name", "file6")
+                           ->sqlAnd()
+                           ->fileTagEquals("subject", "kitty")
+                           ->sqlOr()
+                           ->fileTagEquals("subject", "tank")
+                           ->build(indexer.getDatabase());
+  delete sb;
+  Assertion::assertEquals(__FUNCTION__, 1, files.size());
 }
 
 int main(int argc, char *argv[]) {
@@ -99,6 +138,9 @@ int main(int argc, char *argv[]) {
     Assertion::test(testIndexation, "testIndexation");
     Assertion::test(testFetchTweets, "testFetchTweets");
     Assertion::test(testFetchEvenFiles, "testFetchEvenFiles");
+    Assertion::test(testFetchByName, "testFetchByName");
+    Assertion::test(testFetchSpecificFiles, "testFetchSpecificFiles");
+    Assertion::test(testFetchSpecificFiles2, "testFetchSpecificFiles2");
   } catch (TestFailedException &e) {
     cout << e.what() << endl;
   } catch (sql::SQLException &e) {

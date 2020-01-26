@@ -8,6 +8,7 @@
 #include "indexation/mysql/database_item.h"
 #include "indexation/mysql/file.h"
 #include "indexation/mysql/indexer.h"
+#include "indexation/mysql/search_builder.h"
 #include "utils/utils.h"
 
 using std::cout;
@@ -33,23 +34,16 @@ void Indexer::insertDatabaseItem(DatabaseItem *item) const {
 }
 
 list<File *> Indexer::getFilesFromTag(string tag_name, string tag_value) {
-  sql::PreparedStatement *prep_stmt;
-  sql::ResultSet *res;
-  list<File *> files;
+  SearchBuilder *sb = new SearchBuilder(_verbose);
+  list<File *> files = sb->fileTagEquals(tag_name, tag_value)->build(_db);
+  delete sb;
+  return files;
+}
 
-  prep_stmt = _db->prepareStatement(GET_FILES_FROM_TAG);
-  prep_stmt->setString(1, tag_name);
-  prep_stmt->setString(2, tag_value);
-  res = prep_stmt->executeQuery();
-
-  while (res->next()) {
-    File *file = new File();
-    file->fillFromStatement(res);
-    file->fetchTags(_db);
-    files.push_back(file);
-  }
-  delete prep_stmt;
-  delete res;
+list<File *> Indexer::getFilesFromAttribute(string attribute, string value) {
+  SearchBuilder *sb = new SearchBuilder(_verbose);
+  list<File *> files = sb->fileColumnEquals(attribute, value)->build(_db);
+  delete sb;
   return files;
 }
 
@@ -78,4 +72,9 @@ void Indexer::indexation(list<File *> files) {
 list<File *> Indexer::fetchFromTag(string tag_name, string tag_value) {
   openDatabase();
   return getFilesFromTag(tag_name, tag_value);
+}
+
+list<File *> Indexer::fetchFromAttribute(string attribute, string value) {
+  openDatabase();
+  return getFilesFromAttribute(attribute, value);
 }

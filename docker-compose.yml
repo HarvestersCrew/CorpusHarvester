@@ -4,8 +4,8 @@ services:
   db:
     image: mariadb
     container_name: db
-    volumes:
-        - harvester_db:/var/lib/mysql
+    # volumes:
+    #     - harvester_db:/var/lib/mysql
     environment:
         MYSQL_ROOT_PASSWORD: 1234
         MYSQL_DATABASE: harvester
