@@ -8,12 +8,14 @@
 #include "indexation/mysql/database_item.h"
 #include "indexation/mysql/file.h"
 #include "indexation/mysql/indexer.h"
+#include "utils/utils.h"
 
 using std::cout;
 using std::endl;
 using std::list;
 
-Indexer::Indexer(string db_name) : _db_name(db_name), _db(nullptr) {}
+Indexer::Indexer(string db_name, bool verbose)
+    : _db_name(db_name), _db(nullptr), _verbose(verbose) {}
 
 void Indexer::openDatabase() {
   if (_db == nullptr) {
@@ -21,13 +23,13 @@ void Indexer::openDatabase() {
     _db = driver->connect("db", "root", "1234");
     _db->setSchema(_db_name);
   } else {
-    cout << "Database is already opened" << endl;
+    print("Database is already opened", _verbose);
   }
 }
 
 void Indexer::insertDatabaseItem(DatabaseItem *item) const {
   item->insert(_db);
-  cout << "- Insert " << item->toString() << " : OK" << endl;
+  print("- Insert " + item->toString() + " : OK", _verbose);
 }
 
 list<File *> Indexer::getFilesFromTag(string tag_name, string tag_value) {
@@ -51,19 +53,19 @@ list<File *> Indexer::getFilesFromTag(string tag_name, string tag_value) {
   return files;
 }
 
-void Indexer::create_database(bool drop_table) {
+void Indexer::createDatabase(bool drop_table) {
   openDatabase();
   sql::Statement *stmt = _db->createStatement();
   if (drop_table) {
     stmt->execute(DROP_TAG_STATEMENT);
     stmt->execute(DROP_FILE_STATEMENT);
-    cout << "- Drop tables : OK" << endl;
+    print("- Drop tables : OK", _verbose);
   }
 
   stmt->execute(FILE_CREATE_STATEMENT);
-  cout << "- Create File table : OK" << endl;
+  print("- Create File table : OK", _verbose);
   stmt->execute(TAG_CREATE_STATEMENT);
-  cout << "- Create Tag table : OK" << endl;
+  print("- Create Tag table : OK", _verbose);
 }
 
 void Indexer::indexation(list<File *> files) {

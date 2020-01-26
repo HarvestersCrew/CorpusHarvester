@@ -3,7 +3,11 @@
 
 #include <string>
 
+using std::string;
+
 // Returns a random string of length len from a-z characters.
-std::string random_str(const unsigned int len);
+string random_str(const unsigned int len);
+
+void print(string toPrint, bool verbose);
 
 #endif

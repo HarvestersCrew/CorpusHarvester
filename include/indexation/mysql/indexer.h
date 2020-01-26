@@ -16,22 +16,25 @@ class Indexer {
 
   string _db_name;
   sql::Connection *_db;
+  bool _verbose;
 
 private:
-  void openDatabase();
-
   void insertDatabaseItem(DatabaseItem *item) const;
 
   list<File *> getFilesFromTag(string tag_name, string tag_value);
 
 public:
-  Indexer(string db_name);
+  Indexer(string db_name, bool verbose = false);
 
-  void create_database(bool drop_table);
+  void openDatabase();
+
+  void createDatabase(bool drop_table);
 
   void indexation(list<File *> files);
 
   list<File *> fetchFromTag(string tag_name, string tag_value);
+
+  sql::Connection *getDatabase() { return _db; }
 };
 
 #endif
