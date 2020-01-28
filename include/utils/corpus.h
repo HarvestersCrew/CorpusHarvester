@@ -3,7 +3,7 @@
 
 #include <list>
 
-#include "data.h"
+#include "File.h"
 
 class Corpus {
 private:
@@ -20,7 +20,7 @@ private:
   /**
    * List of all the data contained by the corpus.
    */
-  std::list<Data> data;
+  std::list<File> files;
 
 public:
   /**

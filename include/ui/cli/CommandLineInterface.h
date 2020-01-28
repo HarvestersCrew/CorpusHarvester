@@ -28,6 +28,13 @@ private:
    */
   void showHelpMenu();
 
+  /**
+   * Create a new Corpus.
+   *
+   * @return Corpus created
+   */
+  Corpus createCorpus();
+
 public:
   /**
    * ClientLineInterface Constructor.

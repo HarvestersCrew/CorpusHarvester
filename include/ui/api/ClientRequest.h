@@ -3,8 +3,8 @@
 
 #include <list>
 
+#include "utils/File.h"
 #include "utils/corpus.h"
-#include "utils/data.h"
 
 class ClientRequest {
 public:
@@ -56,9 +56,9 @@ public:
    * @param filters std::list<string> Filters for the data research.
    * @param orders std::list<string> Indicate how to order our data.
    *
-   * @return std::list<Corpus> List of all the data.
+   * @return std::list<File> List of all the data.
    */
-  virtual std::list<Data>
+  virtual std::list<File>
   visualisation_data(const std::list<std::string> &filters,
                      const std::list<std::string> &orders) = 0;
 };

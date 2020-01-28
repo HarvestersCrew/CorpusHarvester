@@ -6,6 +6,44 @@ CommandLineInterface::CommandLineInterface(
   this->arguments = arguments;
 }
 
+void CommandLineInterface::showHelpMenu() {
+  // Create our corpus
+  std::cout << "Possible Commands : " << std::endl;
+  std::cout << "create : Create a corpus." << std::endl;
+  std::cout << "--help : Show help menu." << std::endl;
+}
+
+Corpus CommandLineInterface::createCorpus() {
+
+  // If we don't have any parameters.
+  if (this->arguments.empty()) {
+    std::cout << "Please specify the content's type of the corpus."
+              << std::endl;
+    exit(0);
+  }
+
+  // If the first command is help
+  if (this->arguments.front() == "--help") {
+    std::cout << "Please specify the content type of our future corpus."
+              << std::endl;
+    exit(0);
+  }
+
+  // We get the content's type of our data.
+  std::string type = this->arguments.front();
+
+  // Create our corpus
+  std::cout << "Creation " << type << "'s corpus in progress..." << std::endl;
+
+  // TODO :: Call the twitter api for downloading the corresponding data.
+  // TODO :; Call the indexation system and storage system.
+  download_manager dl;
+  api_twitter api;
+  api.insert_settings("settings/apis/twitter.json");
+  auto res = api.query(dl, type);
+  std::cout << res << std::endl;
+}
+
 void CommandLineInterface::run() {
 
   // Get the first command and remove it form the deque array.
@@ -17,7 +55,8 @@ void CommandLineInterface::run() {
       firstCommand == "-help") {
     this->showHelpMenu();
   } else if (firstCommand == "create") {
-    //    createCorpus(cmdLineArgs);
+    Corpus corpus = this->createCorpus();
+    // TODO :: Print the corpus
   } else {
     std::cout
         << "The command '" << firstCommand
@@ -25,11 +64,4 @@ void CommandLineInterface::run() {
         << std::endl;
     exit(0);
   }
-}
-
-void CommandLineInterface::showHelpMenu() {
-  // Create our corpus
-  std::cout << "Possible Commands : " << std::endl;
-  std::cout << "create : Create a corpus." << std::endl;
-  std::cout << "--help : Show help menu." << std::endl;
 }

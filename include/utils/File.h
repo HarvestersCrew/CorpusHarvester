@@ -1,11 +1,8 @@
-//
-// Created by rere on 21/01/2020.
-//
 
 #ifndef CORPUSHARVESTER_DATA_H
 #define CORPUSHARVESTER_DATA_H
 
-class Data {
+class File {
 private:
   /**
    * Identification of the data.
