@@ -23,6 +23,9 @@ using std::list;
 using std::string;
 using std::unique_ptr;
 
+/**
+ * File class describes a File table in the database
+ */
 class File : public DatabaseItem {
 
   string _path;
@@ -31,7 +34,6 @@ class File : public DatabaseItem {
   string _source;
   list<unique_ptr<Tag>> _tags;
 
-private:
 public:
   File(string path, string name, int size, string source, int id = -1);
 
