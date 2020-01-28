@@ -21,7 +21,7 @@ class Indexer {
 private:
   void insertDatabaseItem(DatabaseItem *item) const;
 
-  list<File *> getFilesFromTag(string tag_name, string tag_value);
+  list<File *> getFilesFromTag(string tagName, string tagValue);
 
   list<File *> getFilesFromAttribute(string attribute, string value);
 
@@ -34,7 +34,7 @@ public:
 
   void indexation(list<File *> files);
 
-  list<File *> fetchFromTag(string tag_name, string tag_value);
+  list<File *> fetchFromTag(string tagName, string tagValue);
 
   list<File *> fetchFromAttribute(string attribute, string value);
 

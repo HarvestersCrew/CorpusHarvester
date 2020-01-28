@@ -20,6 +20,3 @@ Both those methods resolve in making an executable in `bin/harvester`. The first
 
 ## MySQL
 Using Docker, a web interface is running to play with the MySQL server from outside the Docker network, it is available [here](http://localhost:8080).
-
-- Singeleton de DB
-- Interface de builder

@@ -33,17 +33,17 @@ void Indexer::insertDatabaseItem(DatabaseItem *item) const {
   print("- Insert " + item->toString() + " : OK", _verbose);
 }
 
-list<File *> Indexer::getFilesFromTag(string tag_name, string tag_value) {
-  SearchBuilder *sb = new SearchBuilder(_verbose);
-  list<File *> files = sb->fileTagEquals(tag_name, tag_value, "=")->build(_db);
-  delete sb;
+list<File *> Indexer::getFilesFromTag(string tagName, string tagValue) {
+  SearchBuilder *sb = new SearchBuilder(_db, _verbose);
+  list<File *> files = sb->addTagCondition(tagName, tagValue, "=")->build();
+  ;
   return files;
 }
 
 list<File *> Indexer::getFilesFromAttribute(string attribute, string value) {
-  SearchBuilder *sb = new SearchBuilder(_verbose);
-  list<File *> files = sb->fileColumnEquals(attribute, value, "=")->build(_db);
-  delete sb;
+  SearchBuilder *sb = new SearchBuilder(_db, _verbose);
+  list<File *> files = sb->addCondition(attribute, value, "=")->build();
+  ;
   return files;
 }
 
@@ -71,9 +71,9 @@ void Indexer::indexation(list<File *> files) {
   }
 }
 
-list<File *> Indexer::fetchFromTag(string tag_name, string tag_value) {
+list<File *> Indexer::fetchFromTag(string tagName, string tagValue) {
   openDatabase();
-  return getFilesFromTag(tag_name, tag_value);
+  return getFilesFromTag(tagName, tagValue);
 }
 
 list<File *> Indexer::fetchFromAttribute(string attribute, string value) {

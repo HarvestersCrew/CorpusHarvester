@@ -10,7 +10,7 @@
 #define FILE_COUNT 50
 #define TWEET_COUNT 26
 #define TAG_COUNT 5
-#define VERBOSE true
+#define VERBOSE false
 #define EVEN_FILES FILE_COUNT / 2 + FILE_COUNT % 2
 #define EVEN_TWEETS TWEET_COUNT / 2 + FILE_COUNT % 2
 
@@ -108,37 +108,36 @@ void testFetchByName() {
 }
 
 void testFetchBySize() {
-  SearchBuilder *sb = new SearchBuilder(VERBOSE);
-  list<File *> tweets =
-      sb->fileColumnEquals("size", "110", "<=")->build(indexer.getDatabase());
+  SearchBuilder *sb = new SearchBuilder(indexer.getDatabase(), VERBOSE);
+  list<File *> tweets = sb->addCondition("size", "110", "<=")->build();
   Assertion::assertEquals(__FUNCTION__, 11, tweets.size());
 }
 
 void testFetchSpecificFiles() {
-  SearchBuilder *sb = new SearchBuilder(VERBOSE);
-  list<File *> files = sb->fileTagEquals("isEven", "1", "=")
-                           ->sqlAnd()
-                           ->fileTagEquals("type", "tweet", "=")
-                           ->sqlOr()
-                           ->fileTagEquals("subject", "kitty", "=")
-                           ->sqlAnd()
-                           ->fileColumnEquals("name", "file8", "=")
-                           ->build(indexer.getDatabase());
-  delete sb;
+  SearchBuilder *sb = new SearchBuilder(indexer.getDatabase(), VERBOSE);
+  list<File *> files = sb->addTagCondition("isEven", "1", "=")
+                           ->logicalAnd()
+                           ->addTagCondition("type", "tweet", "=")
+                           ->logicalOr()
+                           ->addTagCondition("subject", "kitty", "=")
+                           ->logicalAnd()
+                           ->addCondition("name", "file8", "=")
+                           ->build();
+  ;
   Assertion::assertEquals(__FUNCTION__, 1, files.size());
 }
 
 void testFetchSpecificFiles2() {
-  SearchBuilder *sb = new SearchBuilder(VERBOSE);
-  list<File *> files = sb->fileTagEquals("isEven", "1", "=")
-                           ->sqlAnd()
-                           ->fileColumnEquals("name", "file6", "=")
-                           ->sqlAnd()
-                           ->fileTagEquals("subject", "kitty", "=")
-                           ->sqlOr()
-                           ->fileTagEquals("subject", "tank", "=")
-                           ->build(indexer.getDatabase());
-  delete sb;
+  SearchBuilder *sb = new SearchBuilder(indexer.getDatabase(), VERBOSE);
+  list<File *> files = sb->addTagCondition("isEven", "1", "=")
+                           ->logicalAnd()
+                           ->addCondition("name", "file6", "=")
+                           ->logicalAnd()
+                           ->addTagCondition("subject", "kitty", "=")
+                           ->logicalOr()
+                           ->addTagCondition("subject", "tank", "=")
+                           ->build();
+  ;
   Assertion::assertEquals(__FUNCTION__, 1, files.size());
 }
 

@@ -18,76 +18,76 @@ void SearchBuilder::validCurrentClause(bool build) {
   if (_currentClauseOnlyOnFile) {
     _firstSelect += _currentClause + " AND ";
     if (build) {
-      _statement = std::regex_replace(_statement, std::regex("SELECT"),
-                                      "SELECT DISTINCT",
-                                      std::regex_constants::format_first_only);
+      _request =
+          std::regex_replace(_request, std::regex("SELECT"), "SELECT DISTINCT",
+                             std::regex_constants::format_first_only);
     }
   } else {
-    if (_statement != TO_REPLACE) {
-      _statement = "(" + _statement + ")";
+    if (_request != TO_REPLACE) {
+      _request = "(" + _request + ")";
     }
     string distinct = ((build) ? "DISTINCT " : "");
-    _statement = "SELECT " + distinct + "f.* FROM " + _statement +
-                 " f, Tag t WHERE f.id = t.file_id AND " + _currentClause;
+    _request = "SELECT " + distinct + "f.* FROM " + _request +
+               " f, Tag t WHERE f.id = t.file_id AND " + _currentClause;
   }
 }
 
-SearchBuilder::SearchBuilder(bool verbose)
-    : _statement(TO_REPLACE), _currentClauseOnlyOnFile(true),
-      _verbose(verbose) {}
+SearchBuilder::SearchBuilder(sql::Connection *db, bool verbose)
+    : RequestBuilder(), _request(TO_REPLACE), _currentClauseOnlyOnFile(true),
+      _verbose(verbose), _db(db) {}
 
-SearchBuilder *SearchBuilder::fileTagEquals(string tag_name, string tag_value,
-                                            string op) {
+SearchBuilder *SearchBuilder::addCondition(string conditionName,
+                                           string conditionValue, string op) {
+  if (_currentClauseOnlyOnFile) {
+    _firstSelect += "(f." + conditionName + " " + op + " ?)";
+    _firstPreparedValues.push_back(conditionValue);
+  } else {
+    _currentClause += "(f." + conditionName + " " + op + " ?)";
+    _preparedValues.push_back(conditionValue);
+  }
+  return this;
+}
+
+SearchBuilder *SearchBuilder::addTagCondition(string tagName, string tagValue,
+                                              string op) {
+
   _currentClauseOnlyOnFile = false;
   _currentClause += "(t.name = ? AND t.value " + op + " ?)";
-  _preparedValues.push_back(tag_name);
-  _preparedValues.push_back(tag_value);
+  _preparedValues.push_back(tagName);
+  _preparedValues.push_back(tagValue);
   return this;
 }
 
-SearchBuilder *SearchBuilder::fileColumnEquals(string column_name,
-                                               string column_value, string op) {
-  if (_currentClauseOnlyOnFile) {
-    _firstSelect += "(f." + column_name + " " + op + " ?)";
-    _firstPreparedValues.push_back(column_value);
-  } else {
-    _currentClause += "(f." + column_name + " " + op + " ?)";
-    _preparedValues.push_back(column_value);
-  }
-  return this;
-}
-
-SearchBuilder *SearchBuilder::sqlAnd() {
+SearchBuilder *SearchBuilder::logicalAnd() {
   validCurrentClause(false);
   _currentClause = "";
   _currentClauseOnlyOnFile = true;
   return this;
 }
 
-SearchBuilder *SearchBuilder::sqlOr() {
+SearchBuilder *SearchBuilder::logicalOr() {
   _currentClause += " OR ";
   return this;
 }
 
-list<File *> SearchBuilder::build(sql::Connection *db) {
+list<File *> SearchBuilder::build() {
   validCurrentClause(true);
   if (_firstSelect == "") {
     _firstSelect = "File";
   } else {
     _firstSelect += "1";
     _firstSelect = "SELECT * FROM File f WHERE " + _firstSelect;
-    if (_statement != TO_REPLACE) {
+    if (_request != TO_REPLACE) {
       _firstSelect = "(" + _firstSelect + ")";
     }
   }
-  _statement =
-      std::regex_replace(_statement, std::regex(TO_REPLACE), _firstSelect);
+  _request = std::regex_replace(_request, std::regex(TO_REPLACE), _firstSelect);
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   list<File *> files;
 
-  print(_statement, _verbose);
-  prep_stmt = db->prepareStatement(_statement);
+  print(_request, _verbose);
+  prep_stmt = _db->prepareStatement(_request);
   int i = 1;
   for (auto &preparedValue : _firstPreparedValues) {
     prep_stmt->setString(i, preparedValue);
@@ -102,14 +102,14 @@ list<File *> SearchBuilder::build(sql::Connection *db) {
   while (res->next()) {
     File *file = new File();
     file->fillFromStatement(res);
-    file->fetchTags(db);
+    file->fetchTags(_db);
     files.push_back(file);
   }
   return files;
 }
 
 void SearchBuilder::clear() {
-  _statement = TO_REPLACE;
+  _request = TO_REPLACE;
   _currentClause = "";
   _firstSelect = "";
   _currentClauseOnlyOnFile = true;

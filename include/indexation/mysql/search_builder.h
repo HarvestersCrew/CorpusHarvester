@@ -1,17 +1,18 @@
-#ifndef REQUEST_BUILDER_H
-#define REQUEST_BUILDER_H
+#ifndef SEARCH_BUILDER_H
+#define SEARCH_BUILDER_H
 
 #include <list>
-#include <sqlite3.h>
 #include <string>
+
+#include "indexation/mysql/request_builder.h"
 
 using std::list;
 using std::string;
 
-class SearchBuilder {
+class SearchBuilder : public RequestBuilder {
 
   /* Final statement to execute*/
-  string _statement;
+  string _request;
   /* SELECT clause that handles every conditions about File attributes*/
   string _firstSelect;
   /* Used to process the current clause */
@@ -24,23 +25,24 @@ class SearchBuilder {
    * conditions about File attributes */
   bool _currentClauseOnlyOnFile;
   bool _verbose;
+  sql::Connection *_db;
 
 private:
   void validCurrentClause(bool build);
 
 public:
-  SearchBuilder(bool verbose = false);
+  SearchBuilder(sql::Connection *db, bool verbose = false);
 
-  SearchBuilder *fileTagEquals(string tag_name, string tag_value, string op);
+  SearchBuilder *addCondition(string conditionName, string conditionValue,
+                              string op);
 
-  SearchBuilder *fileColumnEquals(string column_name, string column_value,
-                                  string op);
+  SearchBuilder *addTagCondition(string tagName, string tagValue, string op);
 
-  SearchBuilder *sqlAnd();
+  SearchBuilder *logicalAnd();
 
-  SearchBuilder *sqlOr();
+  SearchBuilder *logicalOr();
 
-  list<File *> build(sql::Connection *db);
+  list<File *> build();
 
   void clear();
 };
