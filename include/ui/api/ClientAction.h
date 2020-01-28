@@ -23,6 +23,12 @@ private:
    * flexible in the different interfaces (cli and UI).
    */
   virtual Corpus createCorpus() = 0;
+
+  /**
+   * Create a new api for downloading new data.
+   * TODO :: See for the parameter
+   */
+  virtual void createApi() = 0;
 };
 
 #endif // CORPUSHARVESTER_CLIENTACTION_H
