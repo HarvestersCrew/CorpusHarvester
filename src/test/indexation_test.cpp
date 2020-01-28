@@ -6,6 +6,7 @@
 #include "indexation/mysql/search_builder.h"
 #include "test/assertion.h"
 #include "utils/exceptions.h"
+#include "utils/utils.h"
 
 #define FILE_COUNT 50
 #define TWEET_COUNT 26
@@ -21,29 +22,6 @@ using std::ostringstream;
 using std::string;
 
 Indexer indexer("harvester", VERBOSE);
-
-void printSQLException(sql::SQLException &e) {
-  cout << "# ERR: " << e.what();
-  cout << " (MySQL error code: " << e.getErrorCode();
-  cout << ", SQLState: " << e.getSQLState() << " )" << endl;
-}
-
-void fillFileRandomly(File *file, bool tweet, bool isEven) {
-  ostringstream isEvenStream;
-  isEvenStream << isEven;
-  file->addTag("isEven", isEvenStream.str());
-  if (tweet) {
-    file->addTag("type", "tweet");
-  } else {
-    file->addTag("type", "article");
-  }
-  int tweet_subject_length = 3;
-  string tweet_subject_values[tweet_subject_length] = {"tank", "kitty",
-                                                       "crisquare"};
-  for (int i = 0; i < tweet_subject_length; ++i) {
-    file->addTag("subject", tweet_subject_values[i]);
-  }
-}
 
 /* TESTS */
 
