@@ -1,10 +1,11 @@
 #ifndef TAG_H
 #define TAG_H
 
-#include <cppconn/connection.h>
-#include <cppconn/resultset.h>
-
 #include "indexation/database_item.h"
+#include <cppconn/connection.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
+#include <sstream>
 
 #define TAG_CREATE_STATEMENT                                                   \
   "CREATE TABLE IF NOT EXISTS Tag(id INTEGER NOT NULL AUTO_INCREMENT,file_id " \

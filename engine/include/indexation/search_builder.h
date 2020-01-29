@@ -1,10 +1,16 @@
 #ifndef SEARCH_BUILDER_H
 #define SEARCH_BUILDER_H
 
-#include <list>
-#include <string>
-
+#include "indexation/file.h"
 #include "indexation/request_builder.h"
+#include "utils/utils.h"
+#include <cppconn/driver.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
+#include <iostream>
+#include <list>
+#include <regex>
+#include <string>
 
 using std::list;
 using std::string;

@@ -3,8 +3,13 @@
 
 #include "indexation/database_item.h"
 #include "indexation/file.h"
-
+#include "indexation/search_builder.h"
+#include "utils/utils.h"
 #include <cppconn/driver.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
+#include <iostream>
+#include <sstream>
 
 using std::list;
 using std::string;

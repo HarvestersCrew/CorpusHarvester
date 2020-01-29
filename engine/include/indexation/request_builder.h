@@ -1,10 +1,9 @@
 #ifndef REQUEST_BUILDER_H
 #define REQUEST_BUILDER_H
 
+#include "indexation/file.h"
 #include <list>
 #include <string>
-
-#include "indexation/file.h"
 
 using std::list;
 using std::string;

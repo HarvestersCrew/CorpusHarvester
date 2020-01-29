@@ -1,8 +1,4 @@
-#include <sstream>
-
-#include <cppconn/prepared_statement.h>
-
-#include "indexation/database_item.h"
+#include "indexation/tag.h"
 #include "indexation/file.h"
 
 using std::ostringstream;

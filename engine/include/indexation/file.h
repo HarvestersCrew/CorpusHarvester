@@ -1,11 +1,13 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include <cppconn/connection.h>
-#include <cppconn/resultset.h>
-
 #include "indexation/database_item.h"
 #include "indexation/tag.h"
+#include <cppconn/connection.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
+#include <mysql_connection.h>
+#include <sstream>
 
 #define FILE_CREATE_STATEMENT                                                  \
   "CREATE TABLE IF NOT EXISTS File(id INTEGER NOT NULL AUTO_INCREMENT,path "   \

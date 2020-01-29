@@ -1,15 +1,4 @@
-#include <iostream>
-#include <sstream>
-
-#include <cppconn/driver.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
-
-#include "indexation/database_item.h"
-#include "indexation/file.h"
 #include "indexation/indexer.h"
-#include "indexation/search_builder.h"
-#include "utils/utils.h"
 
 using std::cout;
 using std::endl;
