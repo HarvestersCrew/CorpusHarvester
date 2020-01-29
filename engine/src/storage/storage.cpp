@@ -3,11 +3,15 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "storage/command_exception.h"
+#include "indexation/file.h"
 #include "storage/storage.h"
+#include "utils/exceptions.h"
+
+using std::cout;
+using std::endl;
 
 Storage::Storage(const string root_folder_name)
-    : _root_folder_name((root_folder_name[root_folder_name.length()] == '/')
+    : _root_folder_name((root_folder_name[root_folder_name.length() - 1] == '/')
                             ? root_folder_name
                             : root_folder_name + "/") {}
 
@@ -41,14 +45,13 @@ string Storage::fileDestination(string file_name, string api_name) const {
   return dest_folder_path + file_name;
 }
 
-string Storage::storeFile(string file_path, string file_name,
-                          string api_name) const {
-  string file_destination = fileDestination(file_name, api_name);
-  string move_file_cmd = "mv " + file_path + " " + file_destination;
+void Storage::storeFile(File &file) const {
+  string file_destination = fileDestination(file.getName(), file.getSource());
+  string move_file_cmd = "mv " + file.getPath() + " " + file_destination;
   if (system(move_file_cmd.c_str()) == -1) {
     string error_message =
-        "Error moving : " + file_path + " to " + file_destination;
+        "Error moving : " + file.getPath() + " to " + file_destination;
     throw CommandException(error_message);
   }
-  return file_destination;
+  file.setPath(file_destination);
 }

@@ -55,7 +55,10 @@ public:
 
   string getPath() const { return _path; }
   string getName() const { return _name; }
+  string getSource() const { return _source; }
   int getSize() const { return _size; }
+
+  void setPath(string path) { _path = path; }
 };
 
 #endif

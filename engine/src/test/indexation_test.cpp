@@ -119,20 +119,20 @@ void testFetchSpecificFiles2() {
   Assertion::assertEquals(__FUNCTION__, 1, files.size());
 }
 
-int main(int argc, char *argv[]) {
-  cout << endl << "Indexation tests : " << endl;
-  try {
-    Assertion::test(testCreateDatabase, "testCreateDatabase");
-    Assertion::test(testIndexation, "testIndexation");
-    Assertion::test(testFetchTweets, "testFetchTweets");
-    Assertion::test(testFetchEvenFiles, "testFetchEvenFiles");
-    Assertion::test(testFetchByName, "testFetchByName");
-    Assertion::test(testFetchBySize, "testFetchBySize");
-    Assertion::test(testFetchSpecificFiles, "testFetchSpecificFiles");
-    Assertion::test(testFetchSpecificFiles2, "testFetchSpecificFiles2");
-  } catch (TestFailedException &e) {
-    cout << e.what() << endl;
-  } catch (sql::SQLException &e) {
-    printSQLException(e);
-  }
-}
+// int main(int argc, char *argv[]) {
+//   cout << endl << "Indexation tests : " << endl;
+//   try {
+//     Assertion::test(testCreateDatabase, "testCreateDatabase");
+//     Assertion::test(testIndexation, "testIndexation");
+//     Assertion::test(testFetchTweets, "testFetchTweets");
+//     Assertion::test(testFetchEvenFiles, "testFetchEvenFiles");
+//     Assertion::test(testFetchByName, "testFetchByName");
+//     Assertion::test(testFetchBySize, "testFetchBySize");
+//     Assertion::test(testFetchSpecificFiles, "testFetchSpecificFiles");
+//     Assertion::test(testFetchSpecificFiles2, "testFetchSpecificFiles2");
+//   } catch (TestFailedException &e) {
+//     cout << e.what() << endl;
+//   } catch (sql::SQLException &e) {
+//     printSQLException(e);
+//   }
+// }

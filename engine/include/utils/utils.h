@@ -9,6 +9,8 @@
 
 using std::string;
 
+std::string exec(string cmd);
+
 // Returns a random string of length len from a-z characters.
 string random_str(const unsigned int len);
 

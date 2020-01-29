@@ -4,8 +4,10 @@
 #include <exception>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
+using std::runtime_error;
 using std::string;
 
 class TestFailedException {
@@ -23,6 +25,12 @@ public:
                   "]";
     return what;
   }
+};
+
+class CommandException : public runtime_error {
+
+public:
+  CommandException(string &error_message) : runtime_error(error_message) {}
 };
 
 class api_no_setting_exception : public std::exception {

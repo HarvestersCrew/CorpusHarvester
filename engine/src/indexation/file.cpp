@@ -1,3 +1,9 @@
+#include <sstream>
+
+#include "mysql_connection.h"
+#include <cppconn/prepared_statement.h>
+
+#include "indexation/database_item.h"
 #include "indexation/file.h"
 
 using std::cout;
