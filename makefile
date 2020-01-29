@@ -9,7 +9,7 @@ PWD := $(shell pwd)
 
 INCLUDES := -I${INCDIR}
 LFLAGS := -Llib
-LIBS := -lcurl
+LIBS := -lcurl -lmysqlcppconn
 
 
 SRCS := $(shell find $(SRCDIR) -type f -name "*.cpp")
