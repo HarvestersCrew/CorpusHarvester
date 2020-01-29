@@ -4,7 +4,7 @@
 #include <list>
 #include <string>
 
-#include "indexation/mysql/file.h"
+#include "indexation/file.h"
 
 using std::list;
 using std::string;

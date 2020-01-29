@@ -2,8 +2,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "indexation/mysql/indexer.h"
-#include "indexation/mysql/search_builder.h"
+#include "indexation/indexer.h"
+#include "indexation/search_builder.h"
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 #include "utils/utils.h"

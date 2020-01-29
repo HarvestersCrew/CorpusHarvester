@@ -2,8 +2,8 @@
 
 #include <cppconn/prepared_statement.h>
 
-#include "indexation/mysql/database_item.h"
-#include "indexation/mysql/file.h"
+#include "indexation/database_item.h"
+#include "indexation/file.h"
 
 using std::ostringstream;
 using std::string;

@@ -4,7 +4,7 @@
 #include <list>
 #include <string>
 
-#include "indexation/mysql/request_builder.h"
+#include "indexation/request_builder.h"
 
 using std::list;
 using std::string;

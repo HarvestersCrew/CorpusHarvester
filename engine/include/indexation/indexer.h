@@ -1,8 +1,8 @@
 #ifndef INDEXER_H
 #define INDEXER_H
 
-#include "indexation/mysql/database_item.h"
-#include "indexation/mysql/file.h"
+#include "indexation/database_item.h"
+#include "indexation/file.h"
 
 #include <cppconn/driver.h>
 

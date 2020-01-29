@@ -5,10 +5,10 @@
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 
-#include "indexation/mysql/database_item.h"
-#include "indexation/mysql/file.h"
-#include "indexation/mysql/indexer.h"
-#include "indexation/mysql/search_builder.h"
+#include "indexation/database_item.h"
+#include "indexation/file.h"
+#include "indexation/indexer.h"
+#include "indexation/search_builder.h"
 #include "utils/utils.h"
 
 using std::cout;

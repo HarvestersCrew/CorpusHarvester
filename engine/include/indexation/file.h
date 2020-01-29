@@ -4,8 +4,8 @@
 #include <cppconn/connection.h>
 #include <cppconn/resultset.h>
 
-#include "indexation/mysql/database_item.h"
-#include "indexation/mysql/tag.h"
+#include "indexation/database_item.h"
+#include "indexation/tag.h"
 
 #define FILE_CREATE_STATEMENT                                                  \
   "CREATE TABLE IF NOT EXISTS File(id INTEGER NOT NULL AUTO_INCREMENT,path "   \

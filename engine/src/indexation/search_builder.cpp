@@ -1,8 +1,8 @@
 #include <iostream>
 #include <regex>
 
-#include "indexation/mysql/file.h"
-#include "indexation/mysql/search_builder.h"
+#include "indexation/file.h"
+#include "indexation/search_builder.h"
 #include "utils/utils.h"
 
 #include <cppconn/driver.h>

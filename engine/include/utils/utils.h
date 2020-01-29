@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-#include "indexation/mysql/file.h"
+#include "indexation/file.h"
 
 using std::string;
 
