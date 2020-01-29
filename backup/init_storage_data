@@ -1,0 +1,11 @@
+#!/bin/bash
+mkdir -p /tmp/storage_data
+if [[ $# -gt 0 ]]; then
+    for ((i = 0 ; i < $1 ; i++)); do
+        file_name=/tmp/storage_data/$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 10 | head -n 1)
+        touch $file_name
+        echo "I'm the file number "$i >> $file_name
+    done    
+else
+    echo "Usage : init_storage_data [FILE_COUNT]"
+fi
