@@ -31,6 +31,7 @@ services:
           read_only: true
         - harvester_bin:/project/bin/
         - harvester_obj:/project/obj/
+        - ./settings/:/project/settings/
     depends_on:
         - db
 

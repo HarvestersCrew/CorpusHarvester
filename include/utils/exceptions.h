@@ -3,6 +3,8 @@
 
 #include <exception>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 using std::string;
 
@@ -23,14 +25,18 @@ public:
   }
 };
 
-class ApiRequiredSettingsNotFilledException : public std::exception {
-  const char *what() const throw() {
-    return "Required settings of API not filled.";
-  }
+class api_no_setting_exception : public std::exception {
+public:
+  api_no_setting_exception(std::string key);
+  const char *what() const throw();
+
+private:
+  std::string _msg;
 };
 
-class ApiNoSettingCalledLikeThisException : public std::exception {
-  const char *what() const throw() { return "Given setting key not existing."; }
+class api_missing_settings_exception : public std::exception {
+public:
+  const char *what() const throw();
 };
 
 #endif

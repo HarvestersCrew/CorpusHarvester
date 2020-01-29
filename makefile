@@ -1,5 +1,5 @@
 CC := g++
-CFLAGS := -Wall
+CFLAGS := -Wall -std=c++17
 
 SRCDIR := src
 OBJDIR := obj
@@ -20,7 +20,7 @@ OBJDIRS := $(dir $(OBJS))
 
 MAIN = harvester
 
-.PHONY: clean all run docker docker_down format
+.PHONY: clean all run docker docker_down doker_clean format
 
 all: ${BINDIR}/${MAIN}
 	@echo "You can now run '${BINDIR}/${MAIN}'".
@@ -31,22 +31,28 @@ ${BINDIR}/${MAIN} : ${OBJS}
 
 .SECONDEXPANSION:
 ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
-	@echo "Checking $? formatting..."
+	@echo "Checking $? formatting, 'clang-format' must be installed..."
+	@ clang-format --help 2>&1 > /dev/null
 	@! clang-format $? -style=LLVM -output-replacements-xml | grep -c "<replacement " > /dev/null
 	@mkdir -p ${OBJDIRS}
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
 docker:
+	@mkdir -p bin obj
 	@echo "Upping docker-compose if not done..."
 	@docker-compose up -d
 	@echo "Building exec through Docker..."
 	@docker-compose exec harvester make
 	@mkdir -p ${BINDIR}
-	@echo "docker-compose exec harvester ${BINDIR}/${MAIN} \$$1" > ${BINDIR}/${MAIN}
+	@echo "#!/bin/bash" > ${BINDIR}/${MAIN}
+	@echo "docker-compose exec harvester ${BINDIR}/${MAIN} \$${@:1}" >> ${BINDIR}/${MAIN}
 	@chmod +x ${BINDIR}/${MAIN}
 
 docker_down:
 	docker-compose down
+
+docker_clean:
+	docker-compose exec harvester make clean
 
 format:
 	@clang-format ${SRCS} ${INCS} -i -style=LLVM

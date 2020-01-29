@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "utils/nlohmann/json.hpp"
+#include <fstream>
 #include <string>
 
 #include "indexation/mysql/file.h"
@@ -15,5 +17,7 @@ void fillFileRandomly(File *file, bool tweet, bool isEven);
 void printSQLException(sql::SQLException &e);
 
 void print(string toPrint, bool verbose);
+
+nlohmann::json json_from_file(const std::string &path);
 
 #endif

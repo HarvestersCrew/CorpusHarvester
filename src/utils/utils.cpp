@@ -1,3 +1,4 @@
+#include "utils/utils.h"
 #include <algorithm>
 #include <iostream>
 #include <random>
@@ -44,4 +45,13 @@ void printSQLException(sql::SQLException &e) {
   cout << "# ERR: " << e.what();
   cout << " (MySQL error code: " << e.getErrorCode();
   cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+}
+
+nlohmann::json json_from_file(const std::string &path) {
+  std::ifstream in(path);
+  if (in.fail())
+    throw std::runtime_error("Can't open file: " + path);
+  nlohmann::json res;
+  in >> res;
+  return res;
 }
