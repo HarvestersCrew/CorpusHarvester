@@ -37,15 +37,17 @@ void testStoreOneFile() {
   Assertion::assertEquals(__FUNCTION__, expectedDestination + "\n", ls);
 }
 
-int main(int argc, char const *argv[]) {
-  cout << endl << "Storage tests : " << endl;
-  try {
-    Assertion::test(testFileDestination, "testFileDestination");
-    Assertion::test(testStoreOneFile, "testStoreFiles");
-  } catch (const TestFailedException &e) {
-    cerr << e.what() << endl;
-  } catch (const CommandException &e) {
-    cerr << e.what() << endl;
-  }
-  return 0;
-}
+// // TODO :: Need to uncomment in order to start the test !
+// // TODO :: Change the way we start the test
+// int main(int argc, char const *argv[]) {
+//  cout << endl << "Storage tests : " << endl;
+//  try {
+//    Assertion::test(testFileDestination, "testFileDestination");
+//    Assertion::test(testStoreOneFile, "testStoreFiles");
+//  } catch (const TestFailedException &e) {
+//    cerr << e.what() << endl;
+//  } catch (const CommandException &e) {
+//    cerr << e.what() << endl;
+//  }
+//  return 0;
+//}
