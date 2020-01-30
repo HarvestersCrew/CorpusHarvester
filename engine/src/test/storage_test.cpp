@@ -13,7 +13,7 @@ using std::endl;
 
 string STORAGE_ROOT = "/tmp/";
 string STORED_PATH = STORAGE_ROOT + "stored/";
-string TEST_FILES_PATH = STORAGE_ROOT + "storage_data/";
+string TEMP_FILES_PATH = STORAGE_ROOT + "storage_data/";
 
 Storage storage(STORED_PATH);
 
@@ -29,7 +29,7 @@ void testFileDestination() {
 
 void testStoreOneFile() {
   system("/project/init_storage_data 100");
-  File file(TEST_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
+  File file(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
   storage.storeFile(file);
   string expectedDestination = STORED_PATH + "tweeter/t/tweet3";
   Assertion::assertEquals(__FUNCTION__, expectedDestination, file.getPath());
