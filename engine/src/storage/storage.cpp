@@ -45,12 +45,22 @@ string Storage::fileDestination(string file_name, string api_name) const {
   return dest_folder_path + file_name;
 }
 
-void Storage::storeFile(File &file) const {
+void Storage::moveFile(File &file) const {
   string file_destination = fileDestination(file.getName(), file.getSource());
   string move_file_cmd = "mv " + file.getPath() + " " + file_destination;
   if (system(move_file_cmd.c_str()) == -1) {
     string error_message =
         "Error moving : " + file.getPath() + " to " + file_destination;
+    throw CommandException(error_message);
+  }
+  file.setPath(file_destination);
+}
+
+void Storage::storeFile(string fileContent, File &file) const {
+  string file_destination = fileDestination(file.getName(), file.getSource());
+  string create_file_cmd = "touch " + file_destination;
+  if (system(create_file_cmd.c_str()) == -1) {
+    string error_message = "Error creating : " + file_destination;
     throw CommandException(error_message);
   }
   file.setPath(file_destination);

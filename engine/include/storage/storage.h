@@ -19,7 +19,9 @@ public:
 
   string fileDestination(string file_name, string api_name) const;
 
-  void storeFile(File &file) const;
+  void moveFile(File &file) const;
+
+  void storeFile(string fileContent, File &file) const;
 
   string getRootFolderName() const { return _root_folder_name; }
   void setRootFolderName(string root_folder_name) {

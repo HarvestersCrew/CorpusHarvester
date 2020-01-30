@@ -27,11 +27,20 @@ void testFileDestination() {
                           fileDest);
 }
 
-void testStoreOneFile() {
+void testMoveOneFile() {
   system("/project/init_storage_data 100");
   File file(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
-  storage.storeFile(file);
+  storage.moveFile(file);
   string expectedDestination = STORED_PATH + "tweeter/t/tweet3";
+  Assertion::assertEquals(__FUNCTION__, expectedDestination, file.getPath());
+  string ls = exec("ls " + expectedDestination);
+  Assertion::assertEquals(__FUNCTION__, expectedDestination + "\n", ls);
+}
+
+void testStoreOneFile() {
+  File file("", "jesuisunfichierquivientde", 200, "tmdb");
+  storage.storeFile("Bien le bonjour je suis un fichier de test", file);
+  string expectedDestination = STORED_PATH + "tmdb/j/jesuisunfichierquivientde";
   Assertion::assertEquals(__FUNCTION__, expectedDestination, file.getPath());
   string ls = exec("ls " + expectedDestination);
   Assertion::assertEquals(__FUNCTION__, expectedDestination + "\n", ls);
@@ -39,15 +48,16 @@ void testStoreOneFile() {
 
 // // TODO :: Need to uncomment in order to start the test !
 // // TODO :: Change the way we start the test
-// int main(int argc, char const *argv[]) {
-//  cout << endl << "Storage tests : " << endl;
-//  try {
-//    Assertion::test(testFileDestination, "testFileDestination");
-//    Assertion::test(testStoreOneFile, "testStoreFiles");
-//  } catch (const TestFailedException &e) {
-//    cerr << e.what() << endl;
-//  } catch (const CommandException &e) {
-//    cerr << e.what() << endl;
-//  }
-//  return 0;
-//}
+int main(int argc, char const *argv[]) {
+  cout << endl << "Storage tests : " << endl;
+  try {
+    Assertion::test(testFileDestination, "testFileDestination");
+    Assertion::test(testMoveOneFile, "testMoveOneFile");
+    Assertion::test(testStoreOneFile, "testStoreOneFile");
+  } catch (const TestFailedException &e) {
+    cerr << e.what() << endl;
+  } catch (const CommandException &e) {
+    cerr << e.what() << endl;
+  }
+  return 0;
+}
