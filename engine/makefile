@@ -12,7 +12,7 @@ LFLAGS := -Llib
 LIBS := -lcurl -lmysqlcppconn
 
 
-SRCS := $(shell find $(SRCDIR) -type f -name "*.cpp")
+SRCS := $(shell find $(SRCDIR)/*/ -type f -name "*.cpp")
 INCS := $(shell find $(INCDIR) -type f -name "*.h")
 OBJS := $(patsubst $(SRCDIR)/%,$(OBJDIR)/%,$(SRCS:.cpp=.o))
 
@@ -25,9 +25,9 @@ MAIN = harvester
 all: ${BINDIR}/${MAIN}
 	@echo "You can now run '${BINDIR}/${MAIN}'".
 
-${BINDIR}/${MAIN} : ${OBJS}
+${BINDIR}/% : ${OBJDIR}/%.o ${OBJS}
 	@mkdir -p ${BINDIR}
-	${CC} ${CFLAGS} ${INCLUDES} -o $@ ${OBJS} ${LFLAGS} ${LIBS}
+	${CC} ${CFLAGS} ${INCLUDES} -o $@ ${OBJS} $< ${LFLAGS} ${LIBS}
 
 .SECONDEXPANSION:
 ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
@@ -37,16 +37,18 @@ ${OBJDIR}/%.o: ${SRCDIR}/%.cpp $$(wildcard ${INCDIR}/$$*.h)
 	@mkdir -p ${OBJDIRS}
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
-docker:
+docker: docker/${MAIN}
+
+docker/%:
 	@mkdir -p bin obj
 	@echo "Upping docker-compose if not done..."
 	@docker-compose up -d
 	@echo "Building exec through Docker..."
-	@docker-compose exec harvester make
+	@docker-compose exec harvester make ${BINDIR}/$*
 	@mkdir -p ${BINDIR}
-	@echo "#!/bin/bash" > ${BINDIR}/${MAIN}
-	@echo "docker-compose exec harvester ${BINDIR}/${MAIN} \$${@:1}" >> ${BINDIR}/${MAIN}
-	@chmod +x ${BINDIR}/${MAIN}
+	@echo "#!/bin/bash" > ${BINDIR}/$*
+	@echo "docker-compose exec harvester ${BINDIR}/$* \$${@:1}" >> ${BINDIR}/$*
+	@chmod +x ${BINDIR}/$*
 
 docker_down:
 	docker-compose down

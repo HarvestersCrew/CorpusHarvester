@@ -10,9 +10,10 @@ CS Engineering School Project
 ### Build and run methods
 - `make`: builds the native executable, dependencies need to be resolved on the machine if something goes wrong.
 - `make docker`: starts a set of Docker containers and builds the executable in Docker.
+- `make docker/harvester` or `make docker/tests` to specify a build.
 - `make docker_down`: shutdowns the containers.
 
-Both those methods resolve in making an executable in `bin/harvester`. The first one is native to the machine, the second one is running through Docker. You may have to apply `sudo` to both Docker methods, depending on how you usually run it. Finally, the Docker executable passes through all parameters and should behave the same way as the native one.
+Both those methods resolve in making an executable in `bin/harvester` (or `bin/tests` for the tests). The first one is native to the machine, the second one is running through Docker. You may have to apply `sudo` to both Docker methods, depending on how you usually run it. Finally, the Docker executable passes through all parameters and should behave the same way as the native one.
 
 ### Phony methods
 - `make clean`: cleans `bin` and `obj` folders.
