@@ -103,7 +103,6 @@ void testFetchSpecificFiles() {
                            ->logicalAnd()
                            ->addCondition("name", "file8", "=")
                            ->build();
-  ;
   Assertion::assertEquals(__FUNCTION__, 1, files.size());
 }
 
@@ -117,8 +116,20 @@ void testFetchSpecificFiles2() {
                            ->logicalOr()
                            ->addTagCondition("subject", "tank", "=")
                            ->build();
-  ;
   Assertion::assertEquals(__FUNCTION__, 1, files.size());
+}
+
+void testFetchSpecificFiles3() {
+  SearchBuilder *sb = new SearchBuilder(indexer.getDatabase(), VERBOSE);
+  list<File *> files = sb->addCondition("name", "file6", "!=")
+                           ->logicalAnd()
+                           ->addTagCondition("type", "tweet", "=")
+                           ->logicalOr()
+                           ->addTagCondition("subject", "tank", "=")
+                           ->logicalAnd()
+                           ->addCondition("size", "112", "<")
+                           ->build();
+  Assertion::assertEquals(__FUNCTION__, 11, files.size());
 }
 
 void testCreateCorpus() {
@@ -150,6 +161,7 @@ int main(int argc, char *argv[]) {
     Assertion::test(testFetchBySize, "testFetchBySize");
     Assertion::test(testFetchSpecificFiles, "testFetchSpecificFiles");
     Assertion::test(testFetchSpecificFiles2, "testFetchSpecificFiles2");
+    Assertion::test(testFetchSpecificFiles3, "testFetchSpecificFiles3");
     Assertion::test(testCreateCorpus, "testCreateCorpus");
   } catch (TestFailedException &e) {
     cout << e.what() << endl;
