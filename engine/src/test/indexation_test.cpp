@@ -1,26 +1,4 @@
-#include <cstring>
-#include <iostream>
-#include <sstream>
-
-#include "indexation/indexer.h"
-#include "indexation/search_builder.h"
-#include "test/assertion.h"
-#include "utils/exceptions.h"
-#include "utils/utils.h"
-
-#define TABLES_COUNT 4
-#define FILE_COUNT 50
-#define TWEET_COUNT 26
-#define TAG_COUNT 5
-#define VERBOSE true
-#define EVEN_FILES FILE_COUNT / 2 + FILE_COUNT % 2
-#define EVEN_TWEETS TWEET_COUNT / 2 + FILE_COUNT % 2
-
-using std::cout;
-using std::endl;
-using std::list;
-using std::ostringstream;
-using std::string;
+#include "test/indexation_test.h"
 
 Indexer indexer("harvester", VERBOSE);
 
@@ -150,7 +128,7 @@ void testCreateCorpus() {
   Assertion::assertEquals(__FUNCTION__, 3, resFiles->rowsCount());
 }
 
-int main(int argc, char *argv[]) {
+void indexation_test() {
   cout << endl << "Indexation tests : " << endl;
   try {
     Assertion::test(testCreateDatabase, "testCreateDatabase");
