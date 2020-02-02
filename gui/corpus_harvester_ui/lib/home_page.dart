@@ -36,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<FileType> _typesFilters;
   List<bool> _typesCheckboxes;
   List<CorpusFile> _filteredList;
+  DateTime _selectedDate;
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _typesFilters = List.of(_types);
     _typesCheckboxes = [true, true, true];
     _filteredList = List.of(_filesList);
+    _selectedDate = null;
   }
 
   @override
@@ -205,8 +207,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: VerticalDivider(color: Colors.white, thickness: 2.0),
               ),
               SizedBox(width: 10),
-              Text("Date ", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+              //Text("Date ", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+              Icon(Icons.calendar_today, color: Colors.white),
               SizedBox(width: 10),
+              GestureDetector(
+                onTap: () async {
+                  showDatePicker(
+                    context: context,
+                    initialDate: _selectedDate != null ? _selectedDate : DateTime.now(),
+                    firstDate: DateTime(1970),
+                    lastDate: DateTime.now(),
+                    builder: (BuildContext context, Widget child) {
+                      return Center(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 2.5,
+                          height: MediaQuery.of(context).size.height / 2.5,
+                          child: child,
+                        )
+                      );
+                    },
+                  ).then((value) {
+                    setState(() {
+                      _selectedDate = value;
+                    });
+                    rebuildFilteredList();
+                  });
+                },
+                child: Row(
+                  children: <Widget>[
+                    Text(_selectedDate != null ? DateFormat('dd / MM / yyyy').format(_selectedDate) : "           ", style: TextStyle(color: Colors.white, fontSize: 20)),
+                    SizedBox(width: 10),
+                    Icon(Icons.arrow_drop_down, color: Colors.white)
+                  ],
+                ),                
+              )
             ],
           ),
         ),
@@ -310,8 +344,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> rebuildFilteredList() async {
     _filteredList.clear();
     for(CorpusFile cf in _filesList) {
-      if(_sourcesFilters.contains(cf.source) && _typesFilters.contains(cf.type)) _filteredList.add(cf);
+      if(_sourcesFilters.contains(cf.source) && _typesFilters.contains(cf.type) && checkDate(cf.date)) _filteredList.add(cf);
     }
     setState(() {});
+  }
+
+  bool checkDate(DateTime date) {
+    return _selectedDate == null || _selectedDate.difference(date).inDays == 0;
   }
 }
