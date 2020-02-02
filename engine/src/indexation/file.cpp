@@ -63,18 +63,19 @@ void File::fetchTags(sql::Connection *db) {
 
   while (res->next()) {
     Tag *tag = new Tag();
-    tag->fillFromStatement(res);
+    tag->fillFromStatement(db, res);
     _tags.push_back(unique_ptr<Tag>(tag));
   }
   delete res;
 }
 
-void File::fillFromStatement(sql::ResultSet *res) {
+void File::fillFromStatement(sql::Connection *db, sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_path = res->getString("path");
   this->_name = res->getString("name");
   this->_size = res->getInt("size");
   this->_source = res->getString("source");
+  fetchTags(db);
 }
 
 void File::addTag(string name, string value) {

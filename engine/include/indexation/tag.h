@@ -12,6 +12,9 @@
   "INTEGER NOT NULL,name "                                                     \
   "TEXT NOT NULL,value TEXT NOT NULL,PRIMARY KEY (id),FOREIGN KEY (file_id) "  \
   "REFERENCES File(id));"
+#define DROP_TAG_STATEMENT "DROP TABLE IF EXISTS Tag;"
+#define INSERT_TAG_STATEMENT                                                   \
+  "INSERT INTO Tag (file_id, name, value) VALUES(?, ?, ?)"
 
 using std::string;
 
@@ -32,7 +35,7 @@ public:
 
   void insert(sql::Connection *db);
 
-  void fillFromStatement(sql::ResultSet *res);
+  void fillFromStatement(sql::Connection *db, sql::ResultSet *res);
 
   int getFileId() const { return _file_id; }
   string getName() const { return _name; }

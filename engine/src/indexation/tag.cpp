@@ -22,8 +22,7 @@ void Tag::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
   list<File *> files;
 
-  prep_stmt = db->prepareStatement(
-      "INSERT INTO Tag (file_id, name, value) VALUES(?, ?, ?)");
+  prep_stmt = db->prepareStatement(INSERT_TAG_STATEMENT);
   prep_stmt->setInt(1, _file_id);
   prep_stmt->setString(2, _name);
   prep_stmt->setString(3, _value);
@@ -33,7 +32,7 @@ void Tag::insert(sql::Connection *db) {
   this->_id = DatabaseItem::getLastInsertedId(db);
 }
 
-void Tag::fillFromStatement(sql::ResultSet *res) {
+void Tag::fillFromStatement(sql::Connection *db, sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_file_id = res->getInt("file_id");
   this->_name = res->getString("name");

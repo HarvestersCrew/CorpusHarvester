@@ -17,8 +17,10 @@ using std::string;
 
 class SearchBuilder : public RequestBuilder {
 
-  /* Final statement to execute*/
-  string _request;
+  /* Left part of the final statement to execute*/
+  string _left_request;
+  /* Right part of the final statement to execute*/
+  string _right_request;
   /* SELECT clause that handles every conditions about File attributes*/
   string _firstSelect;
   /* Used to process the current clause */
@@ -27,6 +29,8 @@ class SearchBuilder : public RequestBuilder {
   list<string> _firstPreparedValues;
   /* List to store the values of the other clauses*/
   list<string> _preparedValues;
+  /* List to store the values of the current clause*/
+  list<string> _currentPreparedValues;
   /* Boolean used to know if the current clause to process is only composed of
    * conditions about File attributes */
   bool _currentClauseOnlyOnFile;
@@ -34,7 +38,7 @@ class SearchBuilder : public RequestBuilder {
   sql::Connection *_db;
 
 private:
-  void validCurrentClause(bool build);
+  void validCurrentClause();
 
 public:
   SearchBuilder(sql::Connection *db, bool verbose = false);

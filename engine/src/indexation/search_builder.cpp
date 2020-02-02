@@ -1,41 +1,34 @@
 #include "indexation/search_builder.h"
 
-#define TO_REPLACE "%s"
-
 using std::cout;
 using std::endl;
 
-void SearchBuilder::validCurrentClause(bool build) {
+SearchBuilder::SearchBuilder(sql::Connection *db, bool verbose)
+    : RequestBuilder(), _currentClauseOnlyOnFile(true), _verbose(verbose),
+      _db(db) {}
+
+void SearchBuilder::validCurrentClause() {
+  string distinct = "";
   if (_currentClauseOnlyOnFile) {
-    _firstSelect += _currentClause + " AND ";
-    if (build) {
-      _request =
-          std::regex_replace(_request, std::regex("SELECT"), "SELECT DISTINCT",
-                             std::regex_constants::format_first_only);
+    _firstSelect += "(" + _currentClause + ") AND ";
+    for (string pv : _currentPreparedValues) {
+      _firstPreparedValues.push_back(pv);
     }
   } else {
-    if (_request != TO_REPLACE) {
-      _request = "(" + _request + ")";
+    _left_request =
+        "(SELECT DISTINCT " + distinct + "f.* FROM " + _left_request;
+    _right_request +=
+        " f, Tag t WHERE f.id = t.file_id AND (" + _currentClause + "))";
+    for (string pv : _currentPreparedValues) {
+      _preparedValues.push_back(pv);
     }
-    string distinct = ((build) ? "DISTINCT " : "");
-    _request = "SELECT " + distinct + "f.* FROM " + _request +
-               " f, Tag t WHERE f.id = t.file_id AND " + _currentClause;
   }
 }
 
-SearchBuilder::SearchBuilder(sql::Connection *db, bool verbose)
-    : RequestBuilder(), _request(TO_REPLACE), _currentClauseOnlyOnFile(true),
-      _verbose(verbose), _db(db) {}
-
 SearchBuilder *SearchBuilder::addCondition(string conditionName,
                                            string conditionValue, string op) {
-  if (_currentClauseOnlyOnFile) {
-    _firstSelect += "(f." + conditionName + " " + op + " ?)";
-    _firstPreparedValues.push_back(conditionValue);
-  } else {
-    _currentClause += "(f." + conditionName + " " + op + " ?)";
-    _preparedValues.push_back(conditionValue);
-  }
+  _currentClause += "(f." + conditionName + " " + op + " ?)";
+  _currentPreparedValues.push_back(conditionValue);
   return this;
 }
 
@@ -44,14 +37,15 @@ SearchBuilder *SearchBuilder::addTagCondition(string tagName, string tagValue,
 
   _currentClauseOnlyOnFile = false;
   _currentClause += "(t.name = ? AND t.value " + op + " ?)";
-  _preparedValues.push_back(tagName);
-  _preparedValues.push_back(tagValue);
+  _currentPreparedValues.push_back(tagName);
+  _currentPreparedValues.push_back(tagValue);
   return this;
 }
 
 SearchBuilder *SearchBuilder::logicalAnd() {
-  validCurrentClause(false);
+  validCurrentClause();
   _currentClause = "";
+  _currentPreparedValues.clear();
   _currentClauseOnlyOnFile = true;
   return this;
 }
@@ -62,23 +56,24 @@ SearchBuilder *SearchBuilder::logicalOr() {
 }
 
 list<File *> SearchBuilder::build() {
-  validCurrentClause(true);
-  if (_firstSelect == "") {
-    _firstSelect = "File";
+  validCurrentClause();
+  string request;
+  if (_left_request == "") {
+    _firstSelect = "SELECT f.* FROM File f WHERE " + _firstSelect + "1";
   } else {
-    _firstSelect += "1";
-    _firstSelect = "SELECT * FROM File f WHERE " + _firstSelect;
-    if (_request != TO_REPLACE) {
-      _firstSelect = "(" + _firstSelect + ")";
+    if (_firstSelect == "") {
+      _firstSelect = "File";
+    } else {
+      _firstSelect = "(SELECT f.* FROM File f WHERE " + _firstSelect + "1)";
     }
   }
-  _request = std::regex_replace(_request, std::regex(TO_REPLACE), _firstSelect);
+  request = _left_request + _firstSelect + _right_request;
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   list<File *> files;
 
-  print(_request, _verbose);
-  prep_stmt = _db->prepareStatement(_request);
+  printIfVerbose(request, _verbose);
+  prep_stmt = _db->prepareStatement(request);
   int i = 1;
   for (auto &preparedValue : _firstPreparedValues) {
     prep_stmt->setString(i, preparedValue);
@@ -92,18 +87,19 @@ list<File *> SearchBuilder::build() {
 
   while (res->next()) {
     File *file = new File();
-    file->fillFromStatement(res);
-    file->fetchTags(_db);
+    file->fillFromStatement(_db, res);
     files.push_back(file);
   }
   return files;
 }
 
 void SearchBuilder::clear() {
-  _request = TO_REPLACE;
+  _left_request = "";
+  _right_request = "";
   _currentClause = "";
   _firstSelect = "";
   _currentClauseOnlyOnFile = true;
   _preparedValues.clear();
   _firstPreparedValues.clear();
+  _currentPreparedValues.clear();
 }

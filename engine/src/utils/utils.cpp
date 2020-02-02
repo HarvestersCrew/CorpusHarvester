@@ -53,7 +53,7 @@ void fillFileRandomly(File *file, bool tweet, bool isEven) {
   }
 }
 
-void print(string toPrint, bool verbose) {
+void printIfVerbose(string toPrint, bool verbose) {
   if (verbose) {
     std::cout << toPrint << std::endl;
   }

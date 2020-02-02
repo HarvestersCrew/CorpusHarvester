@@ -18,7 +18,7 @@ void fillFileRandomly(File *file, bool tweet, bool isEven);
 
 void printSQLException(sql::SQLException &e);
 
-void print(string toPrint, bool verbose);
+void printIfVerbose(string toPrint, bool verbose);
 
 nlohmann::json json_from_file(const std::string &path);
 

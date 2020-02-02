@@ -21,7 +21,7 @@ public:
 
   virtual void insert(sql::Connection *db) = 0;
 
-  virtual void fillFromStatement(sql::ResultSet *res) = 0;
+  virtual void fillFromStatement(sql::Connection *db, sql::ResultSet *res) = 0;
 
   static int getLastInsertedId(sql::Connection *db) {
     sql::Statement *stmt = db->createStatement();

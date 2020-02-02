@@ -48,16 +48,16 @@ void testStoreOneFile() {
 
 // // TODO :: Need to uncomment in order to start the test !
 // // TODO :: Change the way we start the test
-int main(int argc, char const *argv[]) {
-  cout << endl << "Storage tests : " << endl;
-  try {
-    Assertion::test(testFileDestination, "testFileDestination");
-    Assertion::test(testMoveOneFile, "testMoveOneFile");
-    Assertion::test(testStoreOneFile, "testStoreOneFile");
-  } catch (const TestFailedException &e) {
-    cerr << e.what() << endl;
-  } catch (const CommandException &e) {
-    cerr << e.what() << endl;
-  }
-  return 0;
-}
+// int main(int argc, char const *argv[]) {
+//   cout << endl << "Storage tests : " << endl;
+//   try {
+//     Assertion::test(testFileDestination, "testFileDestination");
+//     Assertion::test(testMoveOneFile, "testMoveOneFile");
+//     Assertion::test(testStoreOneFile, "testStoreOneFile");
+//   } catch (const TestFailedException &e) {
+//     cerr << e.what() << endl;
+//   } catch (const CommandException &e) {
+//     cerr << e.what() << endl;
+//   }
+//   return 0;
+// }

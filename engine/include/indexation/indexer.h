@@ -1,10 +1,12 @@
 #ifndef INDEXER_H
 #define INDEXER_H
 
+#include "indexation/corpus.h"
 #include "indexation/database_item.h"
 #include "indexation/file.h"
 #include "indexation/search_builder.h"
 #include "utils/utils.h"
+
 #include <cppconn/driver.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -13,9 +15,6 @@
 
 using std::list;
 using std::string;
-
-#define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
-#define DROP_TAG_STATEMENT "DROP TABLE IF EXISTS Tag;"
 
 class Indexer {
 
@@ -38,6 +37,8 @@ public:
   void createDatabase(bool drop_table);
 
   void indexation(list<File *> files);
+
+  void saveCorpus(Corpus &corpus);
 
   list<File *> fetchFromTag(string tagName, string tagValue);
 

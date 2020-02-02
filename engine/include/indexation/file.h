@@ -20,6 +20,7 @@
   "t.value = ?;"
 #define INSERT_FILE_STATEMENT                                                  \
   "INSERT INTO File (path, name, size, source) VALUES(?, ?, ?, ?)"
+#define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
 
 using std::list;
 using std::string;
@@ -49,7 +50,7 @@ public:
 
   void fetchTags(sql::Connection *db);
 
-  void fillFromStatement(sql::ResultSet *res);
+  void fillFromStatement(sql::Connection *db, sql::ResultSet *res);
 
   void addTag(string name, string value);
 
