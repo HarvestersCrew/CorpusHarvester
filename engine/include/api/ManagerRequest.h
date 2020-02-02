@@ -8,24 +8,21 @@
 
 class ManagerRequest {
 private:
-    /**
-     * Private Constructor. We want to have a Singleton.
-     */
-    ManagerRequest() {}
-    ManagerRequest(ManagerRequest const&); // Don't Implement
-    void operator=(ManagerRequest const&); // Don't implement
+  /**
+   * Private Constructor. We want to have a Singleton.
+   */
+  ManagerRequest() {}
 
 public:
-    /**
-     * Singleton Design Pattern.
-     */
-    ManagerRequest(ManagerRequest const&) = delete;
-    void operator=(ManagerRequest const&) = delete;
-
-    static ManagerRequest& getInstance() {
-        static ManagerRequest instance; // Guaranteed to be destroyed.
-        return instance;
-    }
+  /**
+   * Get the instance of the Manager Request.
+   *
+   * @return ManagerRequest instance
+   */
+  static ManagerRequest &getInstance() {
+    static ManagerRequest instance;
+    return instance;
+  }
 
   /**
    * Get all the corpus present in our database.
@@ -45,9 +42,9 @@ public:
    *
    * @return std::list<Corpus> List of all the corpus.
    */
-  virtual std::list<Corpus>
-  visualisation_corpus(const std::map<std::string, std::string> &filters,
-                       const std::map<std::string, std::string> &orders) = 0;
+  std::list<Corpus>
+  visualisation_corpus(std::map<std::string, std::string> &filters,
+                       std::map<std::string, std::string> &orders);
 
   /**
    * Get a corpus based on his name.
@@ -56,8 +53,7 @@ public:
    *
    * @return Corpus Object
    */
-  virtual std::optional<Corpus>
-  visualisation_corpus(const std::string name) = 0;
+  std::optional<Corpus> visualisation_corpus(const std::string name);
 
   /**
    * Get all the data present in our database.
@@ -77,9 +73,9 @@ public:
    *
    * @return std::list<File> List of all the data.
    */
-  virtual std::list<File>
+  std::list<File>
   visualisation_data(const std::map<std::string, std::string> &filters,
-                     const std::map<std::string, std::string> &orders) = 0;
+                     const std::map<std::string, std::string> &orders);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H
