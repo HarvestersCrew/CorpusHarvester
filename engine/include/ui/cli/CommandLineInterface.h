@@ -2,7 +2,7 @@
 #ifndef CORPUSHARVESTER_CLIENTLINEINTERFACE_H
 #define CORPUSHARVESTER_CLIENTLINEINTERFACE_H
 
-#include "ui/api/ClientAction.h"
+#include "api/ClientAction.h"
 
 #include <deque>
 #include <iostream>
