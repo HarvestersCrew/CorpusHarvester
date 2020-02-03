@@ -24,31 +24,51 @@
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
   "cf.file_id = f.id;"
 
+/**
+ * Corpus class describes a Corpus table in the database
+ */
 class Corpus : DatabaseItem {
 private:
   /**
-   * Title of the corpus.
+   * The title of the corpus.
    */
   std::string _title;
 
   /**
-   * Date of the creation of the corpus.
+   * The date of the creation of the corpus.
    */
   std::string _creation_date;
 
   /**
-   * List of all the data contained by the corpus.
+   * The list of all the data contained by the corpus.
    */
   std::list<File *> _files;
 
 public:
+  /**
+   * Default constructor
+  */
   Corpus();
 
+  /**
+   * Creates a Corpus object
+   * @param title the title of the corpus
+   * @param creation_date the creation date of the corpus
+   * @param files the corpus files
+   * @param id the id of the corpus in the database
+  */
   Corpus(std::string title, std::string creation_date, list<File *> files,
          int id = -1);
 
+  /**
+   * Default destructor
+  */
   ~Corpus();
 
+  /**
+   * Fills the _files attribute fetching the files linked to this corpus in the database
+   * @param db the database
+  */
   void fetchFiles(sql::Connection *db);
 
   std::string toString() const;
@@ -59,14 +79,12 @@ public:
 
   /**
    * Get the title of the corpus.
-   *
    * @return std::string the title of the corpus.
    */
   std::string getTitle() const { return _title; }
 
   /**
    * Set a title to the corpus.
-   *
    * @param title std::string the new name of the copus.
    */
   void setTitle(const std::string title) { _title = title; }

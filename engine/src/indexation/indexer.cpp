@@ -22,21 +22,6 @@ void Indexer::insertDatabaseItem(DatabaseItem *item) const {
   printIfVerbose("- Insert " + item->toString() + " : OK", _verbose);
 }
 
-list<File *> Indexer::getFilesFromTag(string tagName, string tagValue) {
-  SearchBuilder *sb = new SearchBuilder(_db, _verbose);
-  cout << "2" << endl;
-  list<File *> files = sb->addTagCondition(tagName, tagValue, "=")->build();
-  cout << "3" << endl;
-  return files;
-}
-
-list<File *> Indexer::getFilesFromAttribute(string attribute, string value) {
-  SearchBuilder *sb = new SearchBuilder(_db, _verbose);
-  list<File *> files = sb->addCondition(attribute, value, "=")->build();
-  ;
-  return files;
-}
-
 void Indexer::createDatabase(bool drop_table) {
   openDatabase();
   sql::Statement *stmt = _db->createStatement();
@@ -71,10 +56,14 @@ void Indexer::saveCorpus(Corpus &corpus) { corpus.insert(_db); }
 
 list<File *> Indexer::fetchFromTag(string tagName, string tagValue) {
   openDatabase();
-  return getFilesFromTag(tagName, tagValue);
+  SearchBuilder *sb = new SearchBuilder(_db, _verbose);
+  list<File *> files = sb->addTagCondition(tagName, tagValue, "=")->build();
+  return files;
 }
 
 list<File *> Indexer::fetchFromAttribute(string attribute, string value) {
   openDatabase();
-  return getFilesFromAttribute(attribute, value);
+  SearchBuilder *sb = new SearchBuilder(_db, _verbose);
+  list<File *> files = sb->addCondition(attribute, value, "=")->build();
+  return files;
 }
