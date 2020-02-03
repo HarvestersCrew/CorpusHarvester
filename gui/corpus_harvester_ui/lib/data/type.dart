@@ -1,5 +1,7 @@
-class FileType {
-  String typeName;
+import 'package:flutter/material.dart';
 
-  FileType(this.typeName);
+class FileType {
+  final String typeName;
+
+  FileType({@required this.typeName});
 }

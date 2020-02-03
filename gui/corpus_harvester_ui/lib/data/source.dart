@@ -1,5 +1,7 @@
-class Source {
-  String name;
+import 'package:flutter/material.dart';
 
-  Source(this.name);
+class Source {
+  final String name;
+
+  Source({@required this.name});
 }

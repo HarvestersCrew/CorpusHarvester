@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:example_flutter/creation_widget.dart';
+import 'package:example_flutter/history_widget.dart';
+import 'package:example_flutter/home_page.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
-
-import 'home_page.dart';
 
 void main() {
   // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
@@ -36,7 +37,12 @@ class MyApp extends StatelessWidget {
         // See https://github.com/flutter/flutter/wiki/Desktop-shells#fonts
         fontFamily: 'Roboto',
       ),
-      home: MyHomePage(),
+      home: HomePage(
+        leadings: <IconData>[Icons.create, Icons.history],
+        views: <Widget>[CreationWidget(), HistoryWidget()],
+      ),
     );
   }
 }
+
+

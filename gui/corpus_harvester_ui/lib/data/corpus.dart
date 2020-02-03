@@ -1,12 +1,18 @@
 import 'package:example_flutter/data/corpus_file.dart';
 import 'package:example_flutter/data/source.dart';
 import 'package:example_flutter/data/type.dart';
+import 'package:flutter/material.dart';
 
 class Corpus {
-  List<CorpusFile> files;
-  List<Source> sources;
-  List<FileType> types;
-  DateTime date;
+  final String name;
+  final List<CorpusFile> files;
+  final List<Source> sources;
+  final List<FileType> types;
+  final DateTime date;
 
-  Corpus({this.files, sources, types, date});
+  Corpus({@required this.name,
+          @required this.files, 
+          @required this.sources, 
+          @required this.types, 
+          @required this.date});
 }

@@ -1,11 +1,15 @@
 import 'package:example_flutter/data/source.dart';
 import 'package:example_flutter/data/type.dart';
+import 'package:flutter/material.dart';
 
 class CorpusFile {
-  String name;
-  Source source;
-  FileType type;
-  DateTime date;
+  final String name;
+  final Source source;
+  final FileType type;
+  final DateTime date;
 
-  CorpusFile(this.name, this.source, this.type, this.date);
+  CorpusFile({@required this.name, 
+              @required this.source, 
+              @required this.type, 
+              @required this.date});
 }
