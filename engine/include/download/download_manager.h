@@ -10,22 +10,59 @@
 #include <utils/utils.h>
 #include <vector>
 
+/**
+ * Wrapper class to ease HTTP downloads
+ */
 class download_manager {
 
 private:
-  static unsigned int const FILENAME_LENGTH = 10;
   CURL *curl;
-  nlohmann::json urls;
 
 public:
+  /**
+   * Initializes the cURL object
+   */
   download_manager();
+
+  /**
+   * Cleans up the cURL object
+   */
   ~download_manager();
+
+  /**
+   * Download the given URL to a file at path
+   * @param path file to store the result into*
+   * @param url url to download
+   */
   void download_to(const std::string &path, const std::string &url) const;
+
+  /**
+   * Download the given URL to a file at path with a list of headers as a JSON
+   * @param path file to store the result into*
+   * @param url url to download
+   * @param headers headers to use during the request
+   */
   void download_to(const std::string &path, const std::string &url,
                    const nlohmann::json &headers) const;
+
+  /**
+   * Retrieves the given URL
+   * @param url url to download
+   */
   std::string download(const std::string &url) const;
+
+  /**
+   * Retrieves the given URL with a list of headers as a JSON
+   * @param url url to download
+   * @param headers headers to use during the request
+   */
   std::string download(const std::string &url,
                        const nlohmann::json &headers) const;
+
+  /**
+   * Callback used to write content to buffer, model following the cURL callback
+   * example
+   */
   static size_t write_callback(void *contents, size_t size, size_t nmemb,
                                void *userp);
 };
