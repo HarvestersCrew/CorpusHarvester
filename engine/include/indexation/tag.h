@@ -20,43 +20,42 @@ using std::string;
 
 /**
  * Tag class describe a Tag table in the database
-*/
+ */
 class Tag : public DatabaseItem {
 
   /**
    * The id of the file this tag is linked to
-  */
+   */
   int _file_id;
 
   /**
    * The name of the tag
-  */
+   */
   string _name;
 
   /**
    * The value of the tag
-  */
+   */
   string _value;
 
 public:
-
   /**
    * Default constructor
-  */
+   */
   Tag();
 
   /**
    * Creates a Tag object
-   * @param name the name of the tag 
-   * @param value the value of the tag 
-   * @param id the id of the tag 
+   * @param name the name of the tag
+   * @param value the value of the tag
+   * @param id the id of the tag
    * @param file_id the id of the file this tag is linked to
-  */
+   */
   Tag(string name, string value, int id = -1, int file_id = -1);
 
   /**
    * Default destructor
-  */  
+   */
   ~Tag();
 
   string toString() const;

@@ -47,7 +47,7 @@ private:
 public:
   /**
    * Default constructor
-  */
+   */
   Corpus();
 
   /**
@@ -56,19 +56,20 @@ public:
    * @param creation_date the creation date of the corpus
    * @param files the corpus files
    * @param id the id of the corpus in the database
-  */
+   */
   Corpus(std::string title, std::string creation_date, list<File *> files,
          int id = -1);
 
   /**
    * Default destructor
-  */
+   */
   ~Corpus();
 
   /**
-   * Fills the _files attribute fetching the files linked to this corpus in the database
+   * Fills the _files attribute fetching the files linked to this corpus in the
+   * database
    * @param db the database
-  */
+   */
   void fetchFiles(sql::Connection *db);
 
   std::string toString() const;

@@ -16,43 +16,44 @@ using std::list;
 using std::string;
 
 /**
- * SearchBuilder class provide a way to create an SQL statement with the buidler design pattern using clauses method (set of ORs between ANDs)
-*/
+ * SearchBuilder class provide a way to create an SQL statement with the buidler
+ * design pattern using clauses method (set of ORs between ANDs)
+ */
 class SearchBuilder : public RequestBuilder {
 
   /**
    * Left part of the final statement to execute
-  */
+   */
   string _left_request;
 
-  /** 
+  /**
    * Right part of the final statement to execute
-  */
+   */
   string _right_request;
 
   /**
    * SELECT clause that handles every conditions about File attributes
-  */
+   */
   string _firstSelect;
 
   /**
-   * Used to process the current clause 
-  */
+   * Used to process the current clause
+   */
   string _currentClause;
 
   /**
    * List to store the values of the first SELECT clause
-  */
+   */
   list<string> _firstPreparedValues;
 
   /**
    * List to store the values of the other clauses
-  */
+   */
   list<string> _preparedValues;
 
   /**
    * List to store the values of the current clause
-  */
+   */
   list<string> _currentPreparedValues;
 
   /* Boolean used to know if the current clause to process is only composed of
@@ -61,31 +62,30 @@ class SearchBuilder : public RequestBuilder {
 
   /**
    * A boolean to allow to print in the function of this class
-  */
+   */
   bool _verbose;
 
   /**
    * The database (as a connection)
-  */
+   */
   sql::Connection *_db;
 
 private:
-
   /**
    * Chose where to add the current clause
-  */
+   */
   void validCurrentClause();
 
 public:
-  
   /**
    * Creates a SearchBuilder object
    * @param db the database
-   * @param verbose true to allow prints in the function of this class, false otherwise
-  */
+   * @param verbose true to allow prints in the function of this class, false
+   * otherwise
+   */
   SearchBuilder(sql::Connection *db, bool verbose = false);
 
-   /**
+  /**
    * Adds a condition to the request being built
    * @param conditionName the name of the condition
    * @param conditionValue the value of the condition

@@ -33,34 +33,33 @@ class File : public DatabaseItem {
 
   /**
    * The path of the file
-  */
+   */
   string _path;
 
   /**
    * The name of the file
-  */
+   */
   string _name;
 
   /**
    * The size of the file
-  */
+   */
   int _size;
 
   /**
    * The source of the file
-  */
+   */
   string _source;
 
   /**
    * The tags describing this file
-  */
+   */
   list<unique_ptr<Tag>> _tags;
 
 public:
-  
   /**
    * Default constructor
-  */
+   */
   File();
 
   /**
@@ -70,12 +69,12 @@ public:
    * @param size the size of the file
    * @param source the source of the file
    * @param id the id of the file in the database
-  */
+   */
   File(string path, string name, int size, string source, int id = -1);
 
   /**
    * Default destructor
-  */
+   */
   ~File();
 
   string toString() const;
@@ -85,16 +84,17 @@ public:
   void fillFromStatement(sql::Connection *db, sql::ResultSet *res);
 
   /**
-   * Fills the _tags attribute fetching the tags linked to this file in the database
+   * Fills the _tags attribute fetching the tags linked to this file in the
+   * database
    * @param db the database
-  */
+   */
   void fetchTags(sql::Connection *db);
 
   /**
    * Adds a tag in the list of tags
    * @param name the name of the tag
    * @param value the value of the tag
-  */
+   */
   void addTag(string name, string value);
 
   string getPath() const { return _path; }
