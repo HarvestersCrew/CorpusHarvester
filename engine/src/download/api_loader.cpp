@@ -56,14 +56,19 @@ std::string api_loader::to_string() const {
   return out.str();
 }
 
-nlohmann::json api_loader::query(const nlohmann::json &params,
-                                 const download_manager &dl) const {
+std::list<File *>
+api_loader::query_and_parse(const nlohmann::json &params,
+                            const download_manager &dl) const {
+
   std::stringstream url;
   url << this->_url;
 
   nlohmann::json relevant_parameters;
   nlohmann::json headers;
   std::vector<std::string> body;
+
+  std::list<File *> files;
+  nlohmann::json results_array;
 
   for (api_parameter_request *el : this->_requests) {
 
@@ -105,39 +110,22 @@ nlohmann::json api_loader::query(const nlohmann::json &params,
   nlohmann::json result =
       nlohmann::json::parse(dl.download(url.str(), headers));
 
-  nlohmann::json result_and_relevant = {{"result", result},
-                                        {"relevant", relevant_parameters}};
-
-  return result_and_relevant;
-}
-
-nlohmann::json api_loader::parse(const std::string &path,
-                                 const nlohmann::json &relevant) const {
-  return this->parse(
-      {{"result", json_from_file(path)}, {"relevant", relevant}});
-}
-
-nlohmann::json api_loader::parse(const nlohmann::json &result) const {
-  nlohmann::json results_array = result.at("result").get<nlohmann::json>();
-  nlohmann::json relevant_array = result.at("relevant").get<nlohmann::json>();
-  nlohmann::json parsed_array = nlohmann::json::array();
+  results_array = result.get<nlohmann::json>();
   for (const std::string &el : this->_path_to_results) {
     results_array = results_array[el];
   }
-  for (const auto &el : results_array) {
-    nlohmann::json parsed_el;
-    for (const api_parameter_response *param : this->_responses) {
-      parsed_el[param->_name] = el[param->_api_name];
-    }
-    for (const auto &[key, val] : relevant_array.items()) {
-      parsed_el[key] = val;
-    }
-    parsed_array += parsed_el;
-  }
-  return parsed_array;
-}
 
-nlohmann::json api_loader::query_and_parse(const nlohmann::json &params,
-                                           const download_manager &dl) const {
-  return this->parse(this->query(params, dl));
+  for (const auto &el : results_array) {
+    File *f = new File("", "", 0, this->_name);
+    for (const api_parameter_response *param : this->_responses) {
+      f->addTag(param->_name,
+                param->json_value_to_string(el[param->_api_name]));
+    }
+    for (const auto &[key, val] : relevant_parameters.items()) {
+      f->addTag(key, val.get<std::string>());
+    }
+    files.push_back(f);
+  }
+
+  return files;
 }

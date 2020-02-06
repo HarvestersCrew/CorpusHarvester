@@ -3,12 +3,14 @@
 
 #include "download/api_parameter.h"
 #include "download/download_manager.h"
+#include "indexation/file.h"
 #include "utils/exceptions.h"
 #include "utils/nlohmann/json-schema.hpp"
 #include "utils/nlohmann/json.hpp"
 #include "utils/utils.h"
 #include <fstream>
 #include <iostream>
+#include <list>
 #include <map>
 #include <optional>
 #include <sstream>
@@ -67,39 +69,13 @@ public:
   std::string to_string() const;
 
   /**
-   * Executes a query with the given parameters with the given download_manager
-   * object
-   * @param params JSON of parameters to insert in place of the default ones
-   * @param dl download manager
-   * @return nlohmann::json response of the API
-   */
-  nlohmann::json query(const nlohmann::json &params,
-                       const download_manager &dl) const;
-
-  /**
-   * Parse a response returned by the API from a file
-   * @param path path to the JSON file
-   * @param relevant relevant parameters to extract from query parameters
-   * @return nlohmann::json parsed response
-   */
-  nlohmann::json parse(const std::string &path,
-                       const nlohmann::json &relevant) const;
-
-  /**
-   * Parse a response by the API
-   * @param result Response sent by the API
-   * @return nlohmann::json Parsed response suitable for the Harvester
-   */
-  nlohmann::json parse(const nlohmann::json &result) const;
-
-  /**
    * Queries and parses
    * @param params JSON of parameters to insert in place of the default ones
    * @param dl download manager
-   * @return nlohmann::json Parsed response suitable for the Harvester
+   * @return std::list<File *> Parsed response suitable for the Harvester
    */
-  nlohmann::json query_and_parse(const nlohmann::json &params,
-                                 const download_manager &dl) const;
+  std::list<File *> query_and_parse(const nlohmann::json &params,
+                                    const download_manager &dl) const;
 };
 
 #endif
