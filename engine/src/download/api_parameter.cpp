@@ -22,6 +22,19 @@ std::string api_parameter_base::to_string() const {
   return out.str();
 }
 
+std::string
+api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
+  std::string result;
+  if (this->_value_type == value_type::INT64) {
+    result = std::to_string(val.get<int64_t>());
+  } else if (this->_value_type == value_type::INT) {
+    result = std::to_string(val.get<int>());
+  } else if (this->_value_type == value_type::STRING) {
+    result = val.get<std::string>();
+  }
+  return result;
+}
+
 api_parameter_request::api_parameter_request(const nlohmann::json &json)
     : api_parameter_base(json) {
   this->_position = json.at("position").get<std::string>();

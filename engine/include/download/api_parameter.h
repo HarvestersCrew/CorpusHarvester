@@ -22,6 +22,8 @@ public:
    */
   virtual std::string to_string() const;
 
+  virtual std::string json_value_to_string(const nlohmann::json &val) const;
+
   /** Value describing the type of the parameter */
   enum value_type { STRING, INT, INT64 };
 
