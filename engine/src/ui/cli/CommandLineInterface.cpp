@@ -39,6 +39,13 @@ Corpus CommandLineInterface::createCorpus() {
   // Create our corpus
   std::cout << "Creation " << type << "'s corpus in progress..." << std::endl;
 
+  download_manager dl;
+  api_loader twitter(std::string("data/twitter.json"));
+  std::list<File *> out =
+      twitter.query_and_parse({{"q", type},
+                               {"Authorization", "Bearer "
+                                                 "bearer_code"}},
+                              dl);
   // TODO :: Call the twitter api for downloading the corresponding data.
   // TODO :; Call the indexation system and storage system.
 }

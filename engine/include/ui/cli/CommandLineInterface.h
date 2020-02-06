@@ -2,8 +2,9 @@
 #ifndef CORPUSHARVESTER_CLIENTLINEINTERFACE_H
 #define CORPUSHARVESTER_CLIENTLINEINTERFACE_H
 
+#include "download/api_loader.h"
+#include "download/download_manager.h"
 #include "ui/api/ClientAction.h"
-
 #include <deque>
 #include <iostream>
 #include <string>
