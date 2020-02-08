@@ -41,13 +41,11 @@ Corpus CommandLineInterface::createCorpus() {
   // Download corresponding data
   download_manager dl;
   api_loader twitter(std::string("data/twitter.json"));
-  std::list<File *> out = twitter.query_and_parse(
-      {{"q", type},
-       {"Authorization",
-        "Bearer "
-        "AAAAAAAAAAAAAAAAAAAAAFbXBwEAAAAAffCqNtEEVChsyKEOcep3UtaqDgM%"
-        "3DDQyQagZBPQgrd02E4cnboMTDJlbfkObhWscuvXq3iXplX3TEXu"}},
-      dl);
+  std::list<File *> out =
+      twitter.query_and_parse({{"q", type},
+                               {"Authorization", "Bearer "
+                                                 "bearer_code"}},
+                              dl);
 
   // Index the downloaded data
   Indexer indexer("harvester", true);
