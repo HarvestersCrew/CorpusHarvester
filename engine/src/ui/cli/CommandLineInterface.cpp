@@ -54,7 +54,7 @@ Corpus CommandLineInterface::createCorpus() {
   storage.store_files(out);
 
   // Index the downloaded data
-  Indexer indexer("harvester", true);
+  Indexer indexer("harvester", false);
   indexer.createDatabase(true);
   indexer.indexation(out);
 
