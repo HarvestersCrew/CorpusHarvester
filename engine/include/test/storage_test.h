@@ -11,7 +11,7 @@ using std::cerr;
 using std::cout;
 using std::endl;
 
-void testFileDestination();
+void test_file_destination();
 void testMoveOneFile();
 void testStoreOneFile();
 void storage_test();

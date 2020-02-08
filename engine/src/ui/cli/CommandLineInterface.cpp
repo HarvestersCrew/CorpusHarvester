@@ -36,9 +36,9 @@ Corpus CommandLineInterface::createCorpus() {
   // We get the content's type of our data.
   std::string type = this->arguments.front();
 
-  // Create our corpus
   std::cout << "Creation " << type << "'s corpus in progress..." << std::endl;
 
+  // Download corresponding data
   download_manager dl;
   api_loader twitter(std::string("data/twitter.json"));
   std::list<File *> out =
@@ -46,8 +46,20 @@ Corpus CommandLineInterface::createCorpus() {
                                {"Authorization", "Bearer "
                                                  "bearer_code"}},
                               dl);
-  // TODO :: Call the twitter api for downloading the corresponding data.
-  // TODO :; Call the indexation system and storage system.
+
+  // Index the downloaded data
+  Indexer indexer("harvester", true);
+  indexer.createDatabase(true);
+  indexer.indexation(out);
+
+  // Request files which type is 'tweet'
+  list<File *> tweets = indexer.fetchFromTag("type", "tweet");
+
+  // Create our corpus from the fetch data and save it
+  std::string now = get_current_time();
+  Corpus corpus("Some tweets", now, tweets);
+  indexer.saveCorpus(corpus);
+  return corpus;
 }
 
 void CommandLineInterface::run() {
@@ -62,7 +74,7 @@ void CommandLineInterface::run() {
     this->showHelpMenu();
   } else if (firstCommand == "create") {
     Corpus corpus = this->createCorpus();
-    // TODO :: Print the corpus
+    std::cout << corpus.toString() << std::endl;
   } else {
     std::cout
         << "The command '" << firstCommand

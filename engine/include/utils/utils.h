@@ -2,12 +2,12 @@
 #define UTILS_H
 
 #include "utils/nlohmann/json.hpp"
+#include <ctime>
 #include <fstream>
+#include <iomanip>
 #include <string>
 
 #include "indexation/file.h"
-
-using std::string;
 
 std::string exec(string cmd);
 
@@ -21,5 +21,7 @@ void printSQLException(sql::SQLException &e);
 void printIfVerbose(string toPrint, bool verbose);
 
 nlohmann::json json_from_file(const std::string &path);
+
+std::string get_current_time();
 
 #endif

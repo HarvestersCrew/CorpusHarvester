@@ -4,6 +4,8 @@
 
 #include "download/api_loader.h"
 #include "download/download_manager.h"
+#include "indexation/file.h"
+#include "indexation/indexer.h"
 #include "ui/api/ClientAction.h"
 #include <deque>
 #include <iostream>

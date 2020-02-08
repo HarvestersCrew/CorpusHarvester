@@ -17,7 +17,7 @@ using std::list;
 using std::string;
 
 /**
- * Indexer class provides method to manage the indexation of the files in the
+ * Indexer class provides methods to manage the indexation of the files in the
  * database
  */
 class Indexer {

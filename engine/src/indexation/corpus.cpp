@@ -21,8 +21,12 @@ Corpus::~Corpus() {
 
 string Corpus::toString() const {
   ostringstream out;
-  out << "Corpus{_id=" << _id << ", title=" << _title
-      << ", _creation_date=" << _creation_date << "}";
+  out << "Corpus{_id=" << _id << ", _title=" << _title
+      << ", _creation_date=" << _creation_date << ", _files={";
+  for (auto &file : _files) {
+    out << file->toString() << ", ";
+  }
+  out << "}}";
   return out.str();
 }
 

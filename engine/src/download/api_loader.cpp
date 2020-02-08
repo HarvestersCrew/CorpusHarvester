@@ -116,15 +116,15 @@ api_loader::query_and_parse(const nlohmann::json &params,
   }
 
   for (const auto &el : results_array) {
-    File *f = new File("", "", 0, this->_name);
+    File *file = new File("", "", 0, this->_name);
     for (const api_parameter_response *param : this->_responses) {
-      f->addTag(param->_name,
-                param->json_value_to_string(el[param->_api_name]));
+      file->addTag(param->_name,
+                   param->json_value_to_string(el[param->_api_name]));
     }
     for (const auto &[key, val] : relevant_parameters.items()) {
-      f->addTag(key, val.get<std::string>());
+      file->addTag(key, val.get<std::string>());
     }
-    files.push_back(f);
+    files.push_back(file);
   }
 
   return files;

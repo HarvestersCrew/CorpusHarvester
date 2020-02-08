@@ -6,11 +6,11 @@ string TEMP_FILES_PATH = STORAGE_ROOT + "storage_data/";
 
 Storage storage(STORED_PATH);
 
-void testFileDestination() {
-  string fileDest = storage.fileDestination("imafilefrom", "tweeter");
+void test_file_destination() {
+  string fileDest = storage.file_destination("imafilefrom", "tweeter");
   Assertion::assertEquals(__FUNCTION__, STORED_PATH + "tweeter/i/imafilefrom",
                           fileDest);
-  fileDest = storage.fileDestination("andiamanotherfilefrom", "wikicommons");
+  fileDest = storage.file_destination("andiamanotherfilefrom", "wikicommons");
   Assertion::assertEquals(__FUNCTION__,
                           STORED_PATH + "wikicommons/a/andiamanotherfilefrom",
                           fileDest);
@@ -19,7 +19,7 @@ void testFileDestination() {
 void testMoveOneFile() {
   system("/project/init_storage_data 100");
   File file(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
-  storage.moveFile(file);
+  storage.move_file(file);
   string expectedDestination = STORED_PATH + "tweeter/t/tweet3";
   Assertion::assertEquals(__FUNCTION__, expectedDestination, file.getPath());
   string ls = exec("ls " + expectedDestination);
@@ -28,7 +28,7 @@ void testMoveOneFile() {
 
 void testStoreOneFile() {
   File file("", "jesuisunfichierquivientde", 200, "tmdb");
-  storage.storeFile("Bien le bonjour je suis un fichier de test", file);
+  storage.store_file("Bien le bonjour je suis un fichier de test", file);
   string expectedDestination = STORED_PATH + "tmdb/j/jesuisunfichierquivientde";
   Assertion::assertEquals(__FUNCTION__, expectedDestination, file.getPath());
   string ls = exec("ls " + expectedDestination);
@@ -40,7 +40,7 @@ void testStoreOneFile() {
 void storage_test() {
   cout << endl << "Storage tests : " << endl;
   try {
-    Assertion::test(testFileDestination, "testFileDestination");
+    Assertion::test(test_file_destination, "test_file_destination");
     Assertion::test(testMoveOneFile, "testMoveOneFile");
     Assertion::test(testStoreOneFile, "testStoreOneFile");
   } catch (const TestFailedException &e) {
