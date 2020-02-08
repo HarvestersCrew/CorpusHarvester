@@ -1,17 +1,17 @@
 #include "utils/utils.h"
+
 #include <algorithm>
 #include <array>
 #include <cstdio>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <random>
 #include <sstream>
 #include <stdexcept>
 #include <string>
-
-using std::cout;
-using std::endl;
-using std::ostringstream;
 
 std::string exec(string cmd_str) {
   const char *cmd = cmd_str.c_str();
@@ -37,7 +37,7 @@ std::string random_str(const unsigned int len) {
 }
 
 void fillFileRandomly(File *file, bool tweet, bool isEven) {
-  ostringstream isEvenStream;
+  std::ostringstream isEvenStream;
   isEvenStream << isEven;
   file->addTag("isEven", isEvenStream.str());
   if (tweet) {
@@ -60,9 +60,9 @@ void printIfVerbose(string toPrint, bool verbose) {
 }
 
 void printSQLException(sql::SQLException &e) {
-  cout << "# ERR: " << e.what();
-  cout << " (MySQL error code: " << e.getErrorCode();
-  cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+  std::cout << "# ERR: " << e.what();
+  std::cout << " (MySQL error code: " << e.getErrorCode();
+  std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
 }
 
 nlohmann::json json_from_file(const std::string &path) {
@@ -74,10 +74,10 @@ nlohmann::json json_from_file(const std::string &path) {
   return res;
 }
 
-std::string get_current_time() {
+std::string get_current_time(const char *patern) {
   auto t = std::time(nullptr);
   auto tm = *std::localtime(&t);
   std::ostringstream oss;
-  oss << std::put_time(&tm, "%d-%m-%Y %H:%M:%S");
+  oss << std::put_time(&tm, patern);
   return oss.str();
 }

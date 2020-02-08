@@ -41,7 +41,7 @@ void Indexer::createDatabase(bool drop_table) {
   stmt->execute(TAG_CREATE_STATEMENT);
   printIfVerbose("- Create Tag table : OK", _verbose);
   stmt->execute(CORPUS_FILES_CREATE_STATEMENT);
-  printIfVerbose("- Create CoprusFiles table : OK", _verbose);
+  printIfVerbose("- Create CorpusFiles table : OK", _verbose);
   delete stmt;
 }
 

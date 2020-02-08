@@ -18,21 +18,23 @@ void test_file_destination() {
 
 void testMoveOneFile() {
   system("/project/script/init_storage_data 100");
-  File file(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
+  File *file = new File(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
   storage.move_file(file);
   string expectedDestination = STORED_PATH + "tweeter/t/tweet3";
-  Assertion::assertEquals(__FUNCTION__, expectedDestination, file.getPath());
+  Assertion::assertEquals(__FUNCTION__, expectedDestination, file->getPath());
   string ls = exec("ls " + expectedDestination);
   Assertion::assertEquals(__FUNCTION__, expectedDestination + "\n", ls);
 }
 
 void testStoreOneFile() {
-  File file("", "jesuisunfichierquivientde", 200, "tmdb");
-  storage.store_file("Bien le bonjour je suis un fichier de test", file);
+  File *file = new File("", "jesuisunfichierquivientde", 200, "tmdb");
+  string content = "Bien le bonjour je suis un fichier de test";
+  file->setContent(content);
+  storage.store_file(file);
   string expectedDestination = STORED_PATH + "tmdb/j/jesuisunfichierquivientde";
-  Assertion::assertEquals(__FUNCTION__, expectedDestination, file.getPath());
-  string ls = exec("ls " + expectedDestination);
-  Assertion::assertEquals(__FUNCTION__, expectedDestination + "\n", ls);
+  Assertion::assertEquals(__FUNCTION__, expectedDestination, file->getPath());
+  string ls = exec("cat " + expectedDestination);
+  Assertion::assertEquals(__FUNCTION__, content + "\n", ls);
 }
 
 // // TODO :: Need to uncomment in order to start the test !

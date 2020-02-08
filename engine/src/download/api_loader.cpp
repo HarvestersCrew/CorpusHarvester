@@ -115,16 +115,28 @@ api_loader::query_and_parse(const nlohmann::json &params,
     results_array = results_array[el];
   }
 
+  std::string content;
+  std::string now;
+  int id = 0;
   for (const auto &el : results_array) {
-    File *file = new File("", "", 0, this->_name);
+    now = get_current_time("%d-%m-%Y");
+    std::ostringstream out;
+    out << now << "_" << id;
+    File *file = new File("", out.str(), 0, this->_name);
     for (const api_parameter_response *param : this->_responses) {
-      file->addTag(param->_name,
-                   param->json_value_to_string(el[param->_api_name]));
+      if (param->_name == "text") {
+        file->setContent(param->json_value_to_string(el[param->_api_name]));
+      } else {
+        file->addTag(param->_name,
+                     param->json_value_to_string(el[param->_api_name]));
+      }
     }
     for (const auto &[key, val] : relevant_parameters.items()) {
       file->addTag(key, val.get<std::string>());
     }
+
     files.push_back(file);
+    id++;
   }
 
   return files;

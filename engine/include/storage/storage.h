@@ -1,6 +1,9 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
+#include "indexation/file.h"
+#include "utils/exceptions.h"
+
 #include <string>
 
 using std::string;
@@ -21,14 +24,14 @@ private:
    * @param folder_path the path to create from the root folder
    * @return 0 if something went wrong, 1 otherwise
    */
-  int create_folders_in_root(string &folder_path) const;
+  int create_folders_in_root(string folder_path) const;
 
   /**
    * Checks if the given folder path exists fro mthe root folder
    * @param folder_path the path to create from the root folder
    * @return true if exists, false otherwise
    */
-  bool folder_exists_in_root(string &folder_path) const;
+  bool folder_exists_in_root(string folder_path) const;
 
 public:
   /**
@@ -51,14 +54,19 @@ public:
    * Moves the file from its current path to its destination in the storage
    * @param file the file to move
    */
-  void move_file(File &file) const;
+  void move_file(File *file) const;
 
   /**
    * Creates a file in the storage
-   * @param fileContent the content of the file
-   * @param file the file metadata
+   * @param file the file to store
    */
-  void store_file(string fileContent, File &file) const;
+  void store_file(File *file) const;
+
+  /**
+   * Creates the files in the storage
+   * @param files the files to store
+   */
+  void store_files(list<File *> files) const;
 
   string get_root_folder_name() const { return _root_folder_name; }
   void set_root_folder_name(string root_folder_name) {

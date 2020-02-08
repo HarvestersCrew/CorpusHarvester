@@ -7,6 +7,7 @@
 #include "indexation/file.h"
 #include "indexation/indexer.h"
 #include "indexation/search_builder.h"
+#include "storage/storage.h"
 #include "ui/api/ClientAction.h"
 #include <deque>
 #include <iostream>

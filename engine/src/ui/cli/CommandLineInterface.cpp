@@ -1,5 +1,6 @@
 
 #include "ui/cli/CommandLineInterface.h"
+#include "utils/utils.h"
 
 CommandLineInterface::CommandLineInterface(
     const std::deque<std::string> arguments) {
@@ -41,11 +42,16 @@ Corpus CommandLineInterface::createCorpus() {
   // Download corresponding data
   download_manager dl;
   api_loader twitter(std::string("data/twitter.json"));
-  std::list<File *> out =
-      twitter.query_and_parse({{"q", type},
-                               {"Authorization", "Bearer "
-                                                 "bearer_code"}},
-                              dl);
+  std::list<File *> out = twitter.query_and_parse(
+      {{"q", type},
+       {"Authorization",
+        "Bearer "
+        "bearer_code"}},
+      dl);
+
+  // Store the files
+  Storage storage("/tmp/stored/");
+  storage.store_files(out);
 
   // Index the downloaded data
   Indexer indexer("harvester", true);
@@ -54,14 +60,14 @@ Corpus CommandLineInterface::createCorpus() {
 
   // Request files which has at least one retweet and one favorite
   SearchBuilder sb = indexer.getSearchBuilder();
-  list<File *> tweets = sb.addTagCondition("retweet", "0", ">")
+  list<File *> tweets = sb.addTagCondition("retweet", "100", ">")
                             ->logicalAnd()
-                            ->addTagCondition("favorite", "0", ">")
+                            ->addCondition("id", "50", "<")
                             ->build();
 
   // Create our corpus from the fetch data and save it
-  std::string now = get_current_time();
-  Corpus corpus("retweets > 0 and favorite > 0", now, tweets);
+  std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
+  Corpus corpus("50 premiers avec retweets > 100", now, tweets);
   indexer.saveCorpus(corpus);
   return corpus;
 }

@@ -3,9 +3,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "indexation/file.h"
 #include "storage/storage.h"
-#include "utils/exceptions.h"
 
 using std::cout;
 using std::endl;
@@ -15,7 +13,7 @@ Storage::Storage(const string root_folder_name)
                             ? root_folder_name
                             : root_folder_name + "/") {}
 
-int Storage::create_folders_in_root(string &folder_path) const {
+int Storage::create_folders_in_root(string folder_path) const {
   string dest_folder_name = _root_folder_name + folder_path;
   string mkpath_cmd = "mkdir -p " + dest_folder_name;
   if (system(mkpath_cmd.c_str()) == -1) {
@@ -25,7 +23,7 @@ int Storage::create_folders_in_root(string &folder_path) const {
   }
 }
 
-bool Storage::folder_exists_in_root(string &folder_path) const {
+bool Storage::folder_exists_in_root(string folder_path) const {
   struct stat buffer;
   string dest = _root_folder_name + folder_path;
   return (stat(dest.c_str(), &buffer) == 0);
@@ -45,23 +43,27 @@ string Storage::file_destination(string file_name, string api_name) const {
   return dest_folder_path + file_name;
 }
 
-void Storage::move_file(File &file) const {
-  string file_dest = file_destination(file.getName(), file.getSource());
-  string move_file_cmd = "mv " + file.getPath() + " " + file_dest;
+void Storage::move_file(File *file) const {
+  string file_dest = file_destination(file->getName(), file->getSource());
+  string move_file_cmd = "mv " + file->getPath() + " " + file_dest;
   if (system(move_file_cmd.c_str()) == -1) {
     string error_message =
-        "Error moving : " + file.getPath() + " to " + file_dest;
+        "Error moving : " + file->getPath() + " to " + file_dest;
     throw CommandException(error_message);
   }
-  file.setPath(file_dest);
+  file->setPath(file_dest);
 }
 
-void Storage::store_file(string fileContent, File &file) const {
-  string file_dest = file_destination(file.getName(), file.getSource());
-  string create_file_cmd = "touch " + file_dest;
-  if (system(create_file_cmd.c_str()) == -1) {
-    string error_message = "Error creating : " + file_dest;
-    throw CommandException(error_message);
+void Storage::store_file(File *file) const {
+  string file_dest = file_destination(file->getName(), file->getSource());
+  std::ofstream outfile(file_dest);
+  outfile << file->getContent() << std::endl;
+  outfile.close();
+  file->setPath(file_dest);
+}
+
+void Storage::store_files(list<File *> files) const {
+  for (auto &file : files) {
+    store_file(file);
   }
-  file.setPath(file_dest);
 }

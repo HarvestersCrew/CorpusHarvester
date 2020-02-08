@@ -22,6 +22,6 @@ void printIfVerbose(string toPrint, bool verbose);
 
 nlohmann::json json_from_file(const std::string &path);
 
-std::string get_current_time();
+std::string get_current_time(const char *patern);
 
 #endif

@@ -52,6 +52,11 @@ class File : public DatabaseItem {
   string _source;
 
   /**
+   * The content of the file (not a database attribute)
+   */
+  string _content;
+
+  /**
    * The tags describing this file
    */
   list<unique_ptr<Tag>> _tags;
@@ -100,9 +105,11 @@ public:
   string getPath() const { return _path; }
   string getName() const { return _name; }
   string getSource() const { return _source; }
+  string getContent() const { return _content; }
   int getSize() const { return _size; }
 
   void setPath(string path) { _path = path; }
+  void setContent(string content) { _content = content; }
 };
 
 #endif
