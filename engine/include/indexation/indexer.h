@@ -94,6 +94,16 @@ public:
    */
   list<File *> fetchFromAttribute(string attribute, string value);
 
+  /**
+   * Creates a search builder to request files from the database used by this
+   * indexer
+   * @return a search builder
+   */
+  SearchBuilder getSearchBuilder() {
+    SearchBuilder sb(_db, _verbose);
+    return sb;
+  }
+
   sql::Connection *getDatabase() { return _db; }
 };
 

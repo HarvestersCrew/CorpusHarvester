@@ -17,7 +17,7 @@ void test_file_destination() {
 }
 
 void testMoveOneFile() {
-  system("/project/init_storage_data 100");
+  system("/project/script/init_storage_data 100");
   File file(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
   storage.move_file(file);
   string expectedDestination = STORED_PATH + "tweeter/t/tweet3";

@@ -25,9 +25,9 @@ File::~File() {
 string File::toString() const {
   ostringstream out;
   out << "File{_id=" << _id << ", _path=" << _path << ", _name=" << _name
-      << ", _size=" << _size << ", _source=" << _source << ", _tags=[";
+      << ", _size=" << _size << ", _source=" << _source << ", _tags=[\n\t";
   for (const auto &tag : _tags) {
-    out << tag->toString();
+    out << tag->toString() << "\n\t";
   }
   out << "]}";
   return out.str();

@@ -6,6 +6,7 @@
 #include "download/download_manager.h"
 #include "indexation/file.h"
 #include "indexation/indexer.h"
+#include "indexation/search_builder.h"
 #include "ui/api/ClientAction.h"
 #include <deque>
 #include <iostream>

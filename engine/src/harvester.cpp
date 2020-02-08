@@ -22,7 +22,11 @@ int main(int argc, char **argv) {
   std::deque<std::string> cmdLineArgs(argv + 1, argv + argc);
 
   CommandLineInterface cli = CommandLineInterface(cmdLineArgs);
-  cli.run();
+  try {
+    cli.run();
+  } catch (sql::SQLException &e) {
+    printSQLException(e);
+  }
 
   return 0;
 }

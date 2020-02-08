@@ -41,23 +41,29 @@ Corpus CommandLineInterface::createCorpus() {
   // Download corresponding data
   download_manager dl;
   api_loader twitter(std::string("data/twitter.json"));
-  std::list<File *> out =
-      twitter.query_and_parse({{"q", type},
-                               {"Authorization", "Bearer "
-                                                 "bearer_code"}},
-                              dl);
+  std::list<File *> out = twitter.query_and_parse(
+      {{"q", type},
+       {"Authorization",
+        "Bearer "
+        "AAAAAAAAAAAAAAAAAAAAAFbXBwEAAAAAffCqNtEEVChsyKEOcep3UtaqDgM%"
+        "3DDQyQagZBPQgrd02E4cnboMTDJlbfkObhWscuvXq3iXplX3TEXu"}},
+      dl);
 
   // Index the downloaded data
   Indexer indexer("harvester", true);
   indexer.createDatabase(true);
   indexer.indexation(out);
 
-  // Request files which type is 'tweet'
-  list<File *> tweets = indexer.fetchFromTag("type", "tweet");
+  // Request files which has at least one retweet and one favorite
+  SearchBuilder sb = indexer.getSearchBuilder();
+  list<File *> tweets = sb.addTagCondition("retweet", "0", ">")
+                            ->logicalAnd()
+                            ->addTagCondition("favorite", "0", ">")
+                            ->build();
 
   // Create our corpus from the fetch data and save it
   std::string now = get_current_time();
-  Corpus corpus("Some tweets", now, tweets);
+  Corpus corpus("retweets > 0 and favorite > 0", now, tweets);
   indexer.saveCorpus(corpus);
   return corpus;
 }
