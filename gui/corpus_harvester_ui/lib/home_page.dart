@@ -36,34 +36,45 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Row(
         children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width / 30,
-            color: Colors.blue,
-            child: ListView.builder(
-              itemCount: _leadings.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 30,
-                    height: MediaQuery.of(context).size.width / 30,
-                    child: Icon(_leadings.elementAt(index), size: 30, color: Colors.white),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        left: BorderSide(
-                          color: index == _focusedIndex ? Colors.white : Colors.blue,
-                          width: 5.0
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: 64.0
+            ),
+            child: Container(
+              width: MediaQuery.of(context).size.width / 30,
+              color: Colors.blue,
+              child: ListView.builder(
+                itemCount: _leadings.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 64.0,
+                        minHeight: 64.0
+                      ),
+                      child: Container(
+                      width: MediaQuery.of(context).size.width / 30,
+                      height: MediaQuery.of(context).size.width / 30,
+                      child: Icon(_leadings.elementAt(index), size: 30, color: Colors.white),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                            color: index == _focusedIndex ? Colors.white : Colors.blue,
+                            width: 5.0
+                          )
                         )
-                      )
+                      ),
+                    )
                     ),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      _focusedIndex = index;
-                    });
-                  },
-                );
-              }
-            )
+                    onTap: () {
+                      setState(() {
+                        _focusedIndex = index;
+                      });
+                    },
+                  );
+                }
+              )
+            ),
           ),
           Expanded(
             child: _views.elementAt(_focusedIndex)

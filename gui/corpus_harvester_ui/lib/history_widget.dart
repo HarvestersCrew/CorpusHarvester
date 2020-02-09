@@ -24,20 +24,23 @@ CorpusFile fileC = CorpusFile(name: "C.txt", source: twitterSource, type: txtTyp
 CorpusFile fileD = CorpusFile(name: "D.txt", source: twitterSource, type: txtType, date: DateTime.now());
 CorpusFile fileE = CorpusFile(name: "E.txt", source: wikiSource, type: txtType, date: DateTime.now());
 CorpusFile fileF = CorpusFile(name: "F.txt", source: wikiSource, type: txtType, date: DateTime.now());
-Corpus corpusA = Corpus(name: "Corpus A", date: DateTime.now().add(Duration(days: -2)), files: [fileA, fileC, fileE], sources: [twitterSource, wikiSource], types: [txtType]);
+CorpusFile fileLong = CorpusFile(name: "SuperlongfileLol.png", source: twitterSource, type: imgType, date: DateTime.now());
+Corpus corpusA = Corpus(name: "Corpus A", date: DateTime.now().add(Duration(days: -2)), files: [fileA, fileC, fileE, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong, fileLong], sources: [twitterSource, wikiSource], types: [txtType]);
 Corpus corpusB = Corpus(name: "Corpus Très très long !!!!", date: DateTime.now().add(Duration(days: -2)), files: [fileA, fileC, fileD], sources: [twitterSource], types: [txtType]);
 Corpus corpusC = Corpus(name: "Corpus C", date: DateTime.now(), files: [fileB, fileE, fileF], sources: [wikiSource], types: [txtType]);
 Corpus corpusD = Corpus(name: "Corpus D", date: DateTime.now(), files: [fileD, fileF], sources: [twitterSource, wikiSource], types: [txtType]);
-List<Corpus> corpusList = [corpusA, corpusB, corpusC, corpusD, corpusD, corpusD, corpusD, corpusD];
+List<Corpus> corpusList = [corpusA, corpusB, corpusC, corpusD];
 
 class _HistoryWidgetState extends State<HistoryWidget> {
 
   Map<DateTime, List<Corpus>> _filteredMap;
+  Corpus _selectedCorpus;
 
   @override
   void initState() {
     super.initState();
     _filteredMap = buildCorpusMap();
+    _selectedCorpus = null;
     print(_filteredMap);
   }
 
@@ -174,7 +177,38 @@ class _HistoryWidgetState extends State<HistoryWidget> {
           )
         ),
         Expanded(
-          child: Container()
+          child: _selectedCorpus != null ? ListView(
+            //crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(40.0),
+                child: Text(_selectedCorpus.name, textAlign: TextAlign.center, style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+              ),
+              Divider(thickness: 2.0),
+              SizedBox(height: 30.0),
+              Text("Criteria", textAlign: TextAlign.center, style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+              Padding(
+                padding: EdgeInsets.only(left: 40.0, right: 40.0, top: 30.0, bottom: 30.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("Type(s) : " + _selectedCorpus.buildTypesString(), style: TextStyle(fontSize: 20.0)),
+                        Text("Date : " + DateFormat('dd / MM / yyyy').format(_selectedCorpus.date).toString(), style: TextStyle(fontSize: 20.0)),
+                        Text("Source(s) : " + _selectedCorpus.buildSourcesString(), style: TextStyle(fontSize: 20.0)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Divider(thickness: 2.0),
+              SizedBox(height: 30.0),
+              Text("Corpus files", textAlign: TextAlign.center, style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+              buildFilesIcons(_selectedCorpus.files)
+            ],
+          ) : Container()
         )
       ],
     );
@@ -200,12 +234,9 @@ class _HistoryWidgetState extends State<HistoryWidget> {
       cards.add(
         new GestureDetector(
           child: Card(
+            color: corpus == _selectedCorpus ? Colors.blue[300] : Colors.white,
             elevation: 3.0,
             shape: RoundedRectangleBorder(
-              /*side: BorderSide(
-                color: Colors.blue,
-                width: 3
-              ),*/
               borderRadius: BorderRadius.circular(12.0),
             ),
             child: Padding(
@@ -215,12 +246,14 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                   minWidth: MediaQuery.of(context).size.width / 12,
                   maxWidth: MediaQuery.of(context).size.width / 12
                 ),
-                child: Text(corpus.name, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
+                child: Text(corpus.name, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: corpus == _selectedCorpus ? Colors.white : Colors.black)),
               ),
             )
           ),
           onTap: () {
-            
+            setState(() {
+              _selectedCorpus = _selectedCorpus == corpus ? null : corpus;
+            });
           },
         )
       );
@@ -230,4 +263,37 @@ class _HistoryWidgetState extends State<HistoryWidget> {
     );
   }
 
+  Widget buildFilesIcons(List<CorpusFile> files) {
+    List<Widget> icons = [];
+    for(CorpusFile file in files) {
+      icons.add(
+        new Padding(
+          padding: EdgeInsets.all(30.0),
+          child: Column(
+            children: <Widget>[
+              file.type.typeName == "Text" ? 
+                Icon(Icons.text_fields, size: 70.0) : 
+                file.type.typeName == "Image" ?
+                Icon(Icons.image, size: 70.0) : 
+                file.type.typeName == "Video" ?
+                  Icon(Icons.movie, size: 70.0) :
+                  Icon(Icons.insert_drive_file, size: 70.0),
+              ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 100.0,
+                    maxWidth: 100.0
+                  ),
+                  child: Text(file.name, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
+                )
+            ],
+          ),
+        )
+      );
+    }
+    return new Wrap(
+      children: icons
+    );
+  }
+
+  
 }

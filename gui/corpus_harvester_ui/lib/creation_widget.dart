@@ -250,51 +250,58 @@ class _CreationWidgetState extends State<CreationWidget> {
                 shrinkWrap: true,
                 itemCount: _filteredList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return new Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Container(
-                        width: 50,
-                          child: Checkbox(
-                          value: false, 
-                          onChanged: (value) {}
-                        ),
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey[200])
+                      )
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Container(
+                            width: 50,
+                              child: Checkbox(
+                              value: false, 
+                              onChanged: (value) {}
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width: (MediaQuery.of(context).size.width - ((MediaQuery.of(context).size.width / 30) + 150)) / 4.0,
+                                  alignment: Alignment.center,
+                                  child: Text(_filteredList.elementAt(index).name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                                ),
+                                Container(
+                                  width: (MediaQuery.of(context).size.width - ((MediaQuery.of(context).size.width / 30) + 150)) / 4.0,
+                                  alignment: Alignment.center,
+                                  child: Text(_filteredList.elementAt(index).source.name, style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                                ),
+                                Container(
+                                  width: (MediaQuery.of(context).size.width - ((MediaQuery.of(context).size.width / 30) + 150)) / 4.0,
+                                  alignment: Alignment.center,
+                                  child: Text(_filteredList.elementAt(index).type.typeName, style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                                ),
+                                Container(
+                                  width: (MediaQuery.of(context).size.width - ((MediaQuery.of(context).size.width / 30) + 150)) / 4.0,
+                                  alignment: Alignment.center,
+                                  child: Text(DateFormat('dd / MM / yyyy').format(_filteredList.elementAt(index).date), style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: 50,
+                            child: Icon(Icons.more_vert),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              width: (MediaQuery.of(context).size.width - ((MediaQuery.of(context).size.width / 30) + 150)) / 4.0,
-                              alignment: Alignment.center,
-                              child: Text(_filteredList.elementAt(index).name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                            ),
-                            Container(
-                              width: (MediaQuery.of(context).size.width - ((MediaQuery.of(context).size.width / 30) + 150)) / 4.0,
-                              alignment: Alignment.center,
-                              child: Text(_filteredList.elementAt(index).source.name, style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
-                            ),
-                            Container(
-                              width: (MediaQuery.of(context).size.width - ((MediaQuery.of(context).size.width / 30) + 150)) / 4.0,
-                              alignment: Alignment.center,
-                              child: Text(_filteredList.elementAt(index).type.typeName, style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
-                            ),
-                            Container(
-                              width: (MediaQuery.of(context).size.width - ((MediaQuery.of(context).size.width / 30) + 150)) / 4.0,
-                              alignment: Alignment.center,
-                              child: Text(DateFormat('dd / MM / yyyy').format(_filteredList.elementAt(index).date), style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 50,
-                        child: Icon(Icons.more_vert),
-                      ),
-                    ],
-                  ),
+                    ),
                   );
                 },
               ),

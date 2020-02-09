@@ -15,4 +15,28 @@ class Corpus {
           @required this.sources, 
           @required this.types, 
           @required this.date});
+
+  String buildSourcesString() {
+    String result = "";
+    if(sources.length == 0) result = "undefined";
+    else {
+      result += sources[0].name;
+      for(int i = 1; i < sources.length; i++) {
+        result += ", ${sources[i].name}";
+      }
+    }
+    return result;
+  }
+
+  String buildTypesString() {
+    String result = "";
+    if(types.length == 0) result = "undefined";
+    else {
+      result += types[0].typeName;
+      for(int i = 1; i < types.length; i++) {
+        result += ", ${types[i].typeName}";
+      }
+    }
+    return result;
+  }
 }
