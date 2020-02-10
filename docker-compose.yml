@@ -9,7 +9,7 @@ services:
     environment:
         MYSQL_ROOT_PASSWORD: 1234
         MYSQL_DATABASE: harvester
-      
+
 
   adminer:
     image: adminer
@@ -31,7 +31,6 @@ services:
           read_only: true
         - harvester_bin:/project/bin/
         - harvester_obj:/project/obj/
-        - ./settings/:/project/settings/
     depends_on:
         - db
 

@@ -1,5 +1,5 @@
 
-#include "ui/cli/CommandLineInterface.h"
+#include "CommandLineInterface.h"
 #include "utils/utils.h"
 
 CommandLineInterface::CommandLineInterface(
