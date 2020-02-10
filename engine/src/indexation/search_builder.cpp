@@ -34,9 +34,12 @@ SearchBuilder *SearchBuilder::addCondition(string conditionName,
 
 SearchBuilder *SearchBuilder::addTagCondition(string tagName, string tagValue,
                                               string op) {
-
   _currentClauseOnlyOnFile = false;
-  _currentClause += "(t.name = ? AND t.value " + op + " ?)";
+  if (op == "=") {
+    _currentClause += "(t.name = ? AND t.value = ?)";
+  } else {
+    _currentClause += "(t.name = ? AND cast(t.value as int) " + op + " ?)";
+  }
   _currentPreparedValues.push_back(tagName);
   _currentPreparedValues.push_back(tagValue);
   return this;

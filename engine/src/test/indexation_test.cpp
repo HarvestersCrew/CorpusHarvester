@@ -31,6 +31,7 @@ void testIndexation() {
     File *file =
         new File("/stockage/file" + i_str, "file" + i_str, i + 100, "Tweeter");
     fillFileRandomly(file, i < TWEET_COUNT, i % 2 == 0);
+    file->addTag("retweet", i_str);
     files.push_back(file);
   }
   indexer.indexation(files);
@@ -69,6 +70,12 @@ void testFetchBySize() {
   SearchBuilder *sb = new SearchBuilder(indexer.getDatabase(), VERBOSE);
   list<File *> tweets = sb->addCondition("size", "110", "<=")->build();
   Assertion::assertEquals(__FUNCTION__, 11, tweets.size());
+}
+
+void testFetchByTagLowerThan() {
+  SearchBuilder *sb = new SearchBuilder(indexer.getDatabase(), VERBOSE);
+  list<File *> tweets = sb->addTagCondition("retweet", "15", "<")->build();
+  Assertion::assertEquals(__FUNCTION__, 15, tweets.size());
 }
 
 void testFetchSpecificFiles() {
@@ -135,6 +142,7 @@ void indexation_test() {
     Assertion::test(testIndexation, "testIndexation");
     Assertion::test(testFetchTweets, "testFetchTweets");
     Assertion::test(testFetchEvenFiles, "testFetchEvenFiles");
+    Assertion::test(testFetchByTagLowerThan, "testFetchByTagLowerThan");
     Assertion::test(testFetchByName, "testFetchByName");
     Assertion::test(testFetchBySize, "testFetchBySize");
     Assertion::test(testFetchSpecificFiles, "testFetchSpecificFiles");

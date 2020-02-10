@@ -11,7 +11,7 @@
 #define TABLES_COUNT 4
 #define FILE_COUNT 50
 #define TWEET_COUNT 26
-#define TAG_COUNT 5
+#define TAG_COUNT 6
 #define VERBOSE true
 #define EVEN_FILES FILE_COUNT / 2 + FILE_COUNT % 2
 #define EVEN_TWEETS TWEET_COUNT / 2 + FILE_COUNT % 2
