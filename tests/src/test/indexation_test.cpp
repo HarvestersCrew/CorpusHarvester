@@ -49,7 +49,6 @@ void test_indexation() {
 }
 
 void test_fetch_tweets() {
-  cout << "1" << endl;
   list<File *> tweets = indexer.fetch_from_tag("type", "tweet");
   Assertion::assert_equals(__FUNCTION__, TWEET_COUNT, tweets.size());
 }

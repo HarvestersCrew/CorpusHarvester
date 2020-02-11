@@ -13,7 +13,7 @@ class Assertion {
 
 public:
   static void assert_contains(string functionName, int container_size,
-                             string container[], string contained) {
+                              string container[], string contained) {
     bool trouve = false;
     for (int i = 0; i < container_size; ++i) {
       if (container[i] == contained) {

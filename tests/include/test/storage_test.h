@@ -7,6 +7,8 @@
 #include "utils/exceptions.h"
 #include "utils/utils.h"
 
+#define INIT_DATA "/project/engine/script/init_storage_data 100"
+
 using std::cerr;
 using std::cout;
 using std::endl;
