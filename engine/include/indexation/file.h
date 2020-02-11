@@ -82,34 +82,34 @@ public:
    */
   ~File();
 
-  string toString() const;
+  string to_string() const;
 
   void insert(sql::Connection *db);
 
-  void fillFromStatement(sql::Connection *db, sql::ResultSet *res);
+  void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
   /**
    * Fills the _tags attribute fetching the tags linked to this file in the
    * database
    * @param db the database
    */
-  void fetchTags(sql::Connection *db);
+  void fetch_tags(sql::Connection *db);
 
   /**
    * Adds a tag in the list of tags
    * @param name the name of the tag
    * @param value the value of the tag
    */
-  void addTag(string name, string value);
+  void add_tag(string name, string value);
 
-  string getPath() const { return _path; }
-  string getName() const { return _name; }
-  string getSource() const { return _source; }
-  string getContent() const { return _content; }
-  int getSize() const { return _size; }
+  string get_path() const { return _path; }
+  string get_name() const { return _name; }
+  string get_source() const { return _source; }
+  string get_content() const { return _content; }
+  int get_size() const { return _size; }
 
-  void setPath(string path) { _path = path; }
-  void setContent(string content) { _content = content; }
+  void set_path(string path) { _path = path; }
+  void set_content(string content) { _content = content; }
 };
 
 #endif

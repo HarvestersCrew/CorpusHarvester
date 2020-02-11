@@ -14,11 +14,11 @@ std::string exec(string cmd);
 // Returns a random string of length len from a-z characters.
 string random_str(const unsigned int len);
 
-void fillFileRandomly(File *file, bool tweet, bool isEven);
+void fill_file_randomly(File *file, bool tweet, bool is_even);
 
-void printSQLException(sql::SQLException &e);
+void print_sql_exception(sql::SQLException &e);
 
-void printIfVerbose(string toPrint, bool verbose);
+void print_if_verbose(string to_print, bool verbose);
 
 nlohmann::json json_from_file(const std::string &path);
 

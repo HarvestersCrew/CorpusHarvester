@@ -18,25 +18,25 @@ public:
 
   /**
    * Adds a condition to the request being built
-   * @param conditionName the name of the condition
-   * @param conditionValue the value of the condition
+   * @param condition_name the name of the condition
+   * @param condition_value the value of the condition
    * @param op the logical operator between the name and the value
    * @return a pointer to itself
    */
-  virtual RequestBuilder *addCondition(string conditionName,
-                                       string conditionValue, string op) = 0;
+  virtual RequestBuilder *add_condition(string condition_name,
+                                        string conditionValue, string op) = 0;
 
   /**
    * Adds a logical And to the request being built
    * @return a pointer to itself
    */
-  virtual RequestBuilder *logicalAnd() = 0;
+  virtual RequestBuilder *logical_and() = 0;
 
   /**
    * Adds a logical Or to the request being built
    * @return a pointer to itself
    */
-  virtual RequestBuilder *logicalOr() = 0;
+  virtual RequestBuilder *logical_or() = 0;
 
   /**
    * Finalizes the request being built, executes it and return the files

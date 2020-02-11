@@ -44,22 +44,22 @@ string Storage::file_destination(string file_name, string api_name) const {
 }
 
 void Storage::move_file(File *file) const {
-  string file_dest = file_destination(file->getName(), file->getSource());
-  string move_file_cmd = "mv " + file->getPath() + " " + file_dest;
+  string file_dest = file_destination(file->get_name(), file->get_source());
+  string move_file_cmd = "mv " + file->get_path() + " " + file_dest;
   if (system(move_file_cmd.c_str()) == -1) {
     string error_message =
-        "Error moving : " + file->getPath() + " to " + file_dest;
+        "Error moving : " + file->get_path() + " to " + file_dest;
     throw CommandException(error_message);
   }
-  file->setPath(file_dest);
+  file->set_path(file_dest);
 }
 
 void Storage::store_file(File *file) const {
-  string file_dest = file_destination(file->getName(), file->getSource());
+  string file_dest = file_destination(file->get_name(), file->get_source());
   std::ofstream outfile(file_dest);
-  outfile << file->getContent() << std::endl;
+  outfile << file->get_content() << std::endl;
   outfile.close();
-  file->setPath(file_dest);
+  file->set_path(file_dest);
 }
 
 void Storage::store_files(list<File *> files) const {

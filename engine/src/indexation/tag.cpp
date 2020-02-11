@@ -11,7 +11,7 @@ Tag::Tag(string name, string value, int id, int file_id)
 
 Tag::~Tag() {}
 
-string Tag::toString() const {
+string Tag::to_string() const {
   ostringstream out;
   out << "Tag{_id=" << _id << ", file_id=" << _file_id << ", _name=" << _name
       << ", _value=" << _value << "}";
@@ -29,10 +29,10 @@ void Tag::insert(sql::Connection *db) {
   prep_stmt->execute();
   delete prep_stmt;
 
-  this->_id = DatabaseItem::getLastInsertedId(db);
+  this->_id = DatabaseItem::get_last_inserted_id(db);
 }
 
-void Tag::fillFromStatement(sql::Connection *db, sql::ResultSet *res) {
+void Tag::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_file_id = res->getInt("file_id");
   this->_name = res->getString("name");

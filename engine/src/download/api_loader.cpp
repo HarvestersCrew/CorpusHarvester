@@ -125,14 +125,14 @@ api_loader::query_and_parse(const nlohmann::json &params,
     File *file = new File("", out.str(), 0, this->_name);
     for (const api_parameter_response *param : this->_responses) {
       if (param->_name == "text") {
-        file->setContent(param->json_value_to_string(el[param->_api_name]));
+        file->set_content(param->json_value_to_string(el[param->_api_name]));
       } else {
-        file->addTag(param->_name,
-                     param->json_value_to_string(el[param->_api_name]));
+        file->add_tag(param->_name,
+                      param->json_value_to_string(el[param->_api_name]));
       }
     }
     for (const auto &[key, val] : relevant_parameters.items()) {
-      file->addTag(key, val.get<std::string>());
+      file->add_tag(key, val.get<std::string>());
     }
 
     files.push_back(file);

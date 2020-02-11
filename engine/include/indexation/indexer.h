@@ -42,7 +42,7 @@ private:
    * Inserts the given item in the database
    * @param item the item to insert in the database
    */
-  void insertDatabaseItem(DatabaseItem *item) const;
+  void insert_database_item(DatabaseItem *item) const;
 
 public:
   /**
@@ -56,14 +56,14 @@ public:
   /**
    * Opens the database if not already opened
    */
-  void openDatabase();
+  void open_database();
 
   /**
    * Creates the database
    * @param drop_table if true, drop the tables existing in the database before
    * creating the new ones
    */
-  void createDatabase(bool drop_table);
+  void create_database(bool drop_table);
 
   /**
    * Indexes the given files in the database
@@ -75,36 +75,36 @@ public:
    * Saves the given corpus in the database
    * @param the corpus to save
    */
-  void saveCorpus(Corpus &corpus);
+  void save_corpus(Corpus &corpus);
 
   /**
    * Filters the files in the database that own the single given tag
-   * @param tagName the name of the tag
-   * @param tagValue the value of the tag
+   * @param tag_name the name of the tag
+   * @param tag_value the value of the tag
    * return a list of all the files matching the condition
    */
-  list<File *> fetchFromTag(string tagName, string tagValue);
+  list<File *> fetch_from_tag(string tag_name, string tag_value);
 
   /**
    * Filters the files in the database where the given attribute (one column in
    * the database) has the given value
-   * @param tagName the name of the tag
-   * @param tagValue the value of the tag
+   * @param tag_name the name of the tag
+   * @param tag_value the value of the tag
    * return a list of all the files matching the condition
    */
-  list<File *> fetchFromAttribute(string attribute, string value);
+  list<File *> fetch_from_attribute(string attribute, string value);
 
   /**
    * Creates a search builder to request files from the database used by this
    * indexer
    * @return a search builder
    */
-  SearchBuilder getSearchBuilder() {
+  SearchBuilder get_search_builder() {
     SearchBuilder sb(_db, _verbose);
     return sb;
   }
 
-  sql::Connection *getDatabase() { return _db; }
+  sql::Connection *get_database() { return _db; }
 };
 
 #endif

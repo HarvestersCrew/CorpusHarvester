@@ -12,7 +12,7 @@ using std::string;
 class Assertion {
 
 public:
-  static void assertContains(string functionName, int container_size,
+  static void assert_contains(string functionName, int container_size,
                              string container[], string contained) {
     bool trouve = false;
     for (int i = 0; i < container_size; ++i) {
@@ -26,13 +26,14 @@ public:
     }
   }
 
-  static void assertEquals(string functionName, string expected, string found) {
+  static void assert_equals(string functionName, string expected,
+                            string found) {
     if (expected != found) {
       throw TestFailedException(functionName, expected, found);
     }
   }
 
-  static void assertEquals(string functionName, int expected, int found) {
+  static void assert_equals(string functionName, int expected, int found) {
     if (expected != found) {
       throw TestFailedException(functionName, std::to_string(expected),
                                 std::to_string(found));

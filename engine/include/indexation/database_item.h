@@ -37,7 +37,7 @@ public:
    * Converts the object in a string that describe it
    * @return a string describing the object
    */
-  virtual std::string toString() const = 0;
+  virtual std::string to_string() const = 0;
 
   /**
    * Inserts the object in the given database
@@ -50,22 +50,23 @@ public:
    * @param db the database
    * @param the result of an SQL statement
    */
-  virtual void fillFromStatement(sql::Connection *db, sql::ResultSet *res) = 0;
+  virtual void fill_from_statement(sql::Connection *db,
+                                   sql::ResultSet *res) = 0;
 
   /**
    * Gets the id of the last inserted object in the database
    * @param db the database
    * @return the id of the last inserted object in the database
    */
-  static int getLastInsertedId(sql::Connection *db) {
+  static int get_last_inserted_id(sql::Connection *db) {
     sql::Statement *stmt = db->createStatement();
     sql::ResultSet *res = stmt->executeQuery("SELECT LAST_INSERT_ID() AS id");
     res->next();
     return res->getInt("id");
   }
 
-  int getId() const { return _id; };
-  void setId(int id) { _id = id; };
+  int get_id() const { return _id; };
+  void set_id(int id) { _id = id; };
 };
 
 #endif // DATABASE_ITEM_H

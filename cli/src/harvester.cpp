@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   try {
     cli.run();
   } catch (sql::SQLException &e) {
-    printSQLException(e);
+    print_sql_exception(e);
   }
 
   return 0;

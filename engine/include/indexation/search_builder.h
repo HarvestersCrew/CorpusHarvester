@@ -34,31 +34,31 @@ class SearchBuilder : public RequestBuilder {
   /**
    * SELECT clause that handles every conditions about File attributes
    */
-  string _firstSelect;
+  string _first_select;
 
   /**
    * Used to process the current clause
    */
-  string _currentClause;
+  string _current_clause;
 
   /**
    * List to store the values of the first SELECT clause
    */
-  list<string> _firstPreparedValues;
+  list<string> _first_prepared_values;
 
   /**
    * List to store the values of the other clauses
    */
-  list<string> _preparedValues;
+  list<string> _prepared_values;
 
   /**
    * List to store the values of the current clause
    */
-  list<string> _currentPreparedValues;
+  list<string> _current_prepared_values;
 
   /* Boolean used to know if the current clause to process is only composed of
    * conditions about File attributes */
-  bool _currentClauseOnlyOnFile;
+  bool _current_clause_only_on_file;
 
   /**
    * A boolean to allow to print in the function of this class
@@ -74,7 +74,7 @@ private:
   /**
    * Chose where to add the current clause
    */
-  void validCurrentClause();
+  void valid_current_clause();
 
 public:
   /**
@@ -87,19 +87,20 @@ public:
 
   /**
    * Adds a condition to the request being built
-   * @param conditionName the name of the condition
-   * @param conditionValue the value of the condition
+   * @param condition_name the name of the condition
+   * @param condition_value the value of the condition
    * @param op the logical operator between the name and the value
    * @return a pointer to itself
    */
-  SearchBuilder *addTagCondition(string tagName, string tagValue, string op);
+  SearchBuilder *add_tag_condition(string tag_name, string tag_value,
+                                   string op);
 
-  SearchBuilder *addCondition(string conditionName, string conditionValue,
-                              string op);
+  SearchBuilder *add_condition(string condition_name, string condition_value,
+                               string op);
 
-  SearchBuilder *logicalAnd();
+  SearchBuilder *logical_and();
 
-  SearchBuilder *logicalOr();
+  SearchBuilder *logical_or();
 
   list<File *> build();
 

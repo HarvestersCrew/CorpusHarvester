@@ -54,20 +54,20 @@ Corpus CommandLineInterface::createCorpus() {
 
   // Index the downloaded data
   Indexer indexer("harvester", false);
-  indexer.createDatabase(true);
+  indexer.create_database(true);
   indexer.indexation(out);
 
   // Request files which has at least one retweet and one favorite
-  SearchBuilder sb = indexer.getSearchBuilder();
-  list<File *> tweets = sb.addTagCondition("retweet", "100", ">")
-                            ->logicalAnd()
-                            ->addCondition("id", "50", "<")
+  SearchBuilder sb = indexer.get_search_builder();
+  list<File *> tweets = sb.add_tag_condition("retweet", "100", ">")
+                            ->logical_and()
+                            ->add_condition("id", "50", "<")
                             ->build();
 
   // Create our corpus from the fetch data and save it
   std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
   Corpus corpus("50 premiers avec retweets > 100", now, tweets);
-  indexer.saveCorpus(corpus);
+  indexer.save_corpus(corpus);
   return corpus;
 }
 
@@ -83,7 +83,7 @@ void CommandLineInterface::run() {
     this->showHelpMenu();
   } else if (firstCommand == "create") {
     Corpus corpus = this->createCorpus();
-    std::cout << corpus.toString() << std::endl;
+    std::cout << corpus.to_string() << std::endl;
   } else {
     std::cout
         << "The command '" << firstCommand

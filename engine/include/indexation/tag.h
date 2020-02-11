@@ -58,17 +58,17 @@ public:
    */
   ~Tag();
 
-  string toString() const;
+  string to_string() const;
 
   void insert(sql::Connection *db);
 
-  void fillFromStatement(sql::Connection *db, sql::ResultSet *res);
+  void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
-  int getFileId() const { return _file_id; }
-  string getName() const { return _name; }
-  string getValue() const { return _value; }
+  int get_file_id() const { return _file_id; }
+  string get_name() const { return _name; }
+  string get_value() const { return _value; }
 
-  void setFileId(int file_id) { _file_id = file_id; }
+  void set_file_id(int file_id) { _file_id = file_id; }
 };
 
 #endif

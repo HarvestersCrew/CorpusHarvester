@@ -8,33 +8,33 @@ Storage storage(STORED_PATH);
 
 void test_file_destination() {
   string fileDest = storage.file_destination("imafilefrom", "tweeter");
-  Assertion::assertEquals(__FUNCTION__, STORED_PATH + "tweeter/i/imafilefrom",
-                          fileDest);
+  Assertion::assert_equals(__FUNCTION__, STORED_PATH + "tweeter/i/imafilefrom",
+                           fileDest);
   fileDest = storage.file_destination("andiamanotherfilefrom", "wikicommons");
-  Assertion::assertEquals(__FUNCTION__,
-                          STORED_PATH + "wikicommons/a/andiamanotherfilefrom",
-                          fileDest);
+  Assertion::assert_equals(__FUNCTION__,
+                           STORED_PATH + "wikicommons/a/andiamanotherfilefrom",
+                           fileDest);
 }
 
-void testMoveOneFile() {
+void test_move_one_file() {
   system("/project/script/init_storage_data 100");
   File *file = new File(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
   storage.move_file(file);
   string expectedDestination = STORED_PATH + "tweeter/t/tweet3";
-  Assertion::assertEquals(__FUNCTION__, expectedDestination, file->getPath());
+  Assertion::assert_equals(__FUNCTION__, expectedDestination, file->get_path());
   string ls = exec("ls " + expectedDestination);
-  Assertion::assertEquals(__FUNCTION__, expectedDestination + "\n", ls);
+  Assertion::assert_equals(__FUNCTION__, expectedDestination + "\n", ls);
 }
 
-void testStoreOneFile() {
+void test_store_one_file() {
   File *file = new File("", "jesuisunfichierquivientde", 200, "tmdb");
   string content = "Bien le bonjour je suis un fichier de test";
-  file->setContent(content);
+  file->set_content(content);
   storage.store_file(file);
   string expectedDestination = STORED_PATH + "tmdb/j/jesuisunfichierquivientde";
-  Assertion::assertEquals(__FUNCTION__, expectedDestination, file->getPath());
+  Assertion::assert_equals(__FUNCTION__, expectedDestination, file->get_path());
   string ls = exec("cat " + expectedDestination);
-  Assertion::assertEquals(__FUNCTION__, content + "\n", ls);
+  Assertion::assert_equals(__FUNCTION__, content + "\n", ls);
 }
 
 // // TODO :: Need to uncomment in order to start the test !
@@ -43,8 +43,8 @@ void storage_test() {
   cout << endl << "Storage tests : " << endl;
   try {
     Assertion::test(test_file_destination, "test_file_destination");
-    Assertion::test(testMoveOneFile, "testMoveOneFile");
-    Assertion::test(testStoreOneFile, "testStoreOneFile");
+    Assertion::test(test_move_one_file, "test_move_one_file");
+    Assertion::test(test_store_one_file, "test_store_one_file");
   } catch (const TestFailedException &e) {
     cerr << e.what() << endl;
   } catch (const CommandException &e) {

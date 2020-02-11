@@ -70,25 +70,25 @@ public:
    * database
    * @param db the database
    */
-  void fetchFiles(sql::Connection *db);
+  void fetch_files(sql::Connection *db);
 
-  std::string toString() const;
+  std::string to_string() const;
 
   void insert(sql::Connection *db);
 
-  void fillFromStatement(sql::Connection *db, sql::ResultSet *res);
+  void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
   /**
    * Get the title of the corpus.
    * @return std::string the title of the corpus.
    */
-  std::string getTitle() const { return _title; }
+  std::string get_title() const { return _title; }
 
   /**
    * Set a title to the corpus.
    * @param title std::string the new name of the copus.
    */
-  void setTitle(const std::string title) { _title = title; }
+  void set_title(const std::string title) { _title = title; }
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H

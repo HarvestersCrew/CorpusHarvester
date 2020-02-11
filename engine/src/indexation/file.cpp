@@ -22,12 +22,12 @@ File::~File() {
   }
 }
 
-string File::toString() const {
+string File::to_string() const {
   ostringstream out;
   out << "File{_id=" << _id << ", _path=" << _path << ", _name=" << _name
       << ", _size=" << _size << ", _source=" << _source << ", _tags=[\n\t";
   for (const auto &tag : _tags) {
-    out << tag->toString() << "\n\t";
+    out << tag->to_string() << "\n\t";
   }
   out << "]}";
   return out.str();
@@ -45,14 +45,14 @@ void File::insert(sql::Connection *db) {
   prep_stmt->execute();
   delete prep_stmt;
 
-  this->_id = DatabaseItem::getLastInsertedId(db);
+  this->_id = DatabaseItem::get_last_inserted_id(db);
   for (const auto &tag : _tags) {
-    tag->setFileId(this->_id);
+    tag->set_file_id(this->_id);
     tag->insert(db);
   }
 }
 
-void File::fetchTags(sql::Connection *db) {
+void File::fetch_tags(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
 
@@ -63,21 +63,21 @@ void File::fetchTags(sql::Connection *db) {
 
   while (res->next()) {
     Tag *tag = new Tag();
-    tag->fillFromStatement(db, res);
+    tag->fill_from_statement(db, res);
     _tags.push_back(unique_ptr<Tag>(tag));
   }
   delete res;
 }
 
-void File::fillFromStatement(sql::Connection *db, sql::ResultSet *res) {
+void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_path = res->getString("path");
   this->_name = res->getString("name");
   this->_size = res->getInt("size");
   this->_source = res->getString("source");
-  fetchTags(db);
+  fetch_tags(db);
 }
 
-void File::addTag(string name, string value) {
+void File::add_tag(string name, string value) {
   _tags.push_back(unique_ptr<Tag>(new Tag(name, value)));
 }

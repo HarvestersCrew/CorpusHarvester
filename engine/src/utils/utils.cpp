@@ -36,30 +36,30 @@ std::string random_str(const unsigned int len) {
   return res;
 }
 
-void fillFileRandomly(File *file, bool tweet, bool isEven) {
-  std::ostringstream isEvenStream;
-  isEvenStream << isEven;
-  file->addTag("isEven", isEvenStream.str());
+void fill_file_randomly(File *file, bool tweet, bool is_even) {
+  std::ostringstream is_evenStream;
+  is_evenStream << is_even;
+  file->add_tag("is_even", is_evenStream.str());
   if (tweet) {
-    file->addTag("type", "tweet");
+    file->add_tag("type", "tweet");
   } else {
-    file->addTag("type", "article");
+    file->add_tag("type", "article");
   }
   int tweet_subject_length = 3;
   string tweet_subject_values[tweet_subject_length] = {"tank", "kitty",
                                                        "crisquare"};
   for (int i = 0; i < tweet_subject_length; ++i) {
-    file->addTag("subject", tweet_subject_values[i]);
+    file->add_tag("subject", tweet_subject_values[i]);
   }
 }
 
-void printIfVerbose(string toPrint, bool verbose) {
+void print_if_verbose(string to_print, bool verbose) {
   if (verbose) {
-    std::cout << toPrint << std::endl;
+    std::cout << to_print << std::endl;
   }
 }
 
-void printSQLException(sql::SQLException &e) {
+void print_sql_exception(sql::SQLException &e) {
   std::cout << "# ERR: " << e.what();
   std::cout << " (MySQL error code: " << e.getErrorCode();
   std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
