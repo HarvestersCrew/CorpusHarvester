@@ -62,6 +62,9 @@ docker/up:
 	@chmod -R a+w $(BINDIR)
 	docker-compose up -d
 
+docker/down:
+	docker-compose down
+
 docker/clean: docker/up clean
 	docker-compose exec harvester make clean
 
