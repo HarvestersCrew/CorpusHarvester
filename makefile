@@ -9,6 +9,7 @@ ENGINEDIR := engine
 
 EXES := cli tests
 EXESPATH := $(patsubst %,$(BINDIR)/%, $(EXES))
+DOCKERS := $(patsubst %, docker/%, $(EXES))
 
 INCLUDES := $(patsubst %,-I%,$(shell find ../ -type d -name $(INCDIR)))
 LFLAGS := -Llib
@@ -21,6 +22,8 @@ OBJS := $(patsubst ./$(SRCDIR)/%,$(OBJDIR)/%,$(SRCS:.cpp=.o))
 OBJDIRS := $(dir $(OBJS))
 
 PWD := $(shell pwd)
+
+.PHONY: docker, docker/%
 
 all: $(EXESPATH)
 
@@ -51,3 +54,19 @@ format:
 clean:
 	rm -rf $(BINDIR)/*
 	rm -rf $(shell find -type d -name $(OBJDIR))
+
+docker: $(DOCKERS)
+
+docker/up:
+	@mkdir -p $(BINDIR)
+	@chmod -R a+w $(BINDIR)
+	docker-compose up -d
+
+docker/clean: docker/up clean
+	docker-compose exec harvester make clean
+
+docker/%: docker/up
+	docker-compose exec harvester make ${BINDIR}/$*
+	@echo "#!/bin/bash" > ${BINDIR}/$*
+	@echo "docker-compose exec harvester ${BINDIR}/$* \$${@:1}" >> ${BINDIR}/$*
+	@chmod a+wx ${BINDIR}/$*

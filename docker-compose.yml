@@ -28,13 +28,12 @@ services:
         - type: bind
           source: ./
           target: /project
-          read_only: true
+          # read_only: true
         - harvester_bin:/project/bin/
-        - harvester_obj:/project/obj/
     depends_on:
         - db
 
 volumes:
     harvester_bin:
-    harvester_obj:
+    harvester_obj3:
     harvester_db:
