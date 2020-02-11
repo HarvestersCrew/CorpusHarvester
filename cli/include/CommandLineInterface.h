@@ -29,19 +29,19 @@ private:
   /**
    * Print in the user terminal all the possible actions.
    */
-  void showHelpMenu();
+  void show_help_menu();
 
   /**
    * Create a new Corpus.
    *
    * @return Corpus created
    */
-  Corpus createCorpus();
+  Corpus create_corpus();
 
   /**
    * Create a new API.
    */
-  void createApi();
+  void create_api();
 
 public:
   /**

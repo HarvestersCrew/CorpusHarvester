@@ -24,6 +24,7 @@ using std::string;
 
 void test_create_database();
 void test_indexation();
+void test_create_database2();
 void test_fetch_tweets();
 void test_fetch_even_files();
 void test_fetch_by_name();
@@ -33,4 +34,6 @@ void test_fetch_specific_files();
 void test_fetch_specific_files2();
 void test_fetch_specific_files3();
 void test_create_corpus();
+void test_wrong_search();
+void test_wrong_search2();
 void indexation_test();

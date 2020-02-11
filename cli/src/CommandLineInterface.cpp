@@ -7,18 +7,18 @@ CommandLineInterface::CommandLineInterface(
   this->arguments = arguments;
 }
 
-void CommandLineInterface::showHelpMenu() {
+void CommandLineInterface::show_help_menu() {
   // Create our corpus
   std::cout << "Possible Commands : " << std::endl;
   std::cout << "create : Create a corpus." << std::endl;
   std::cout << "--help : Show help menu." << std::endl;
 }
 
-void CommandLineInterface::createApi() {
+void CommandLineInterface::create_api() {
   // TODO :: Creation of a new corpus
 }
 
-Corpus CommandLineInterface::createCorpus() {
+Corpus CommandLineInterface::create_corpus() {
 
   // If we don't have any parameters.
   if (this->arguments.empty()) {
@@ -37,7 +37,8 @@ Corpus CommandLineInterface::createCorpus() {
   // We get the content's type of our data.
   std::string type = this->arguments.front();
 
-  std::cout << "Creation " << type << "'s corpus in progress..." << std::endl;
+  std::cout << "Creation of " << type << "'s corpus in progress..."
+            << std::endl;
 
   // Download corresponding data
   download_manager dl;
@@ -80,9 +81,9 @@ void CommandLineInterface::run() {
   // We print the help menu.
   if (firstCommand == "help" or firstCommand == "--help" or
       firstCommand == "-help") {
-    this->showHelpMenu();
+    this->show_help_menu();
   } else if (firstCommand == "create") {
-    Corpus corpus = this->createCorpus();
+    Corpus corpus = this->create_corpus();
     std::cout << corpus.to_string() << std::endl;
   } else {
     std::cout

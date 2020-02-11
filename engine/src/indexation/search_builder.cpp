@@ -93,6 +93,8 @@ list<File *> SearchBuilder::build() {
     file->fill_from_statement(_db, res);
     files.push_back(file);
   }
+  delete prep_stmt;
+  delete res;
   return files;
 }
 

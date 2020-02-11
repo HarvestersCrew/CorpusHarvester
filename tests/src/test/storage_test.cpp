@@ -37,8 +37,6 @@ void test_store_one_file() {
   Assertion::assert_equals(__FUNCTION__, content + "\n", ls);
 }
 
-// // TODO :: Need to uncomment in order to start the test !
-// // TODO :: Change the way we start the test
 void storage_test() {
   cout << endl << "Storage tests : " << endl;
   try {

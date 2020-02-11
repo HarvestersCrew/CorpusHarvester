@@ -10,7 +10,7 @@ private:
    * Show a help menu that indicate to the user all the possible actions
    * available.
    */
-  virtual void showHelpMenu() = 0;
+  virtual void show_help_menu() = 0;
 
   /**
    * Create a new corpus with data in the system.
@@ -22,13 +22,13 @@ private:
    * TODO :: Need to see if the parameters will be fixed in order to be more
    * flexible in the different interfaces (cli and UI).
    */
-  virtual Corpus createCorpus() = 0;
+  virtual Corpus create_corpus() = 0;
 
   /**
    * Create a new api for downloading new data.
    * TODO :: See for the parameter
    */
-  virtual void createApi() = 0;
+  virtual void create_api() = 0;
 };
 
 #endif // CORPUSHARVESTER_CLIENTACTION_H

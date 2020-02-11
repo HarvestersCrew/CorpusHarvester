@@ -12,7 +12,7 @@ using std::string;
 class Assertion {
 
 public:
-  static void assert_contains(string functionName, int container_size,
+  static void assert_contains(string function_name, int container_size,
                               string container[], string contained) {
     bool trouve = false;
     for (int i = 0; i < container_size; ++i) {
@@ -22,27 +22,31 @@ public:
       }
     }
     if (!trouve) {
-      throw TestFailedException(functionName, contained, "");
+      throw TestFailedException(function_name, contained, "");
     }
   }
 
-  static void assert_equals(string functionName, string expected,
+  static void assert_equals(string function_name, string expected,
                             string found) {
     if (expected != found) {
-      throw TestFailedException(functionName, expected, found);
+      throw TestFailedException(function_name, expected, found);
     }
   }
 
-  static void assert_equals(string functionName, int expected, int found) {
+  static void assert_equals(string function_name, int expected, int found) {
     if (expected != found) {
-      throw TestFailedException(functionName, std::to_string(expected),
+      throw TestFailedException(function_name, std::to_string(expected),
                                 std::to_string(found));
     }
   }
 
-  static void test(void (*func)(void), string functionName) {
+  static void assert_throw(string function_name, string exception_name) {
+    throw TestFailedException(function_name, exception_name, "nothing");
+  }
+
+  static void test(void (*func)(void), string function_name) {
     func();
-    cout << "[OK] " << functionName << "()" << endl;
+    cout << "[OK] " << function_name << "()" << endl;
   }
 };
 
