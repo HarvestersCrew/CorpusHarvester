@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include "ui/cli/CommandLineInterface.h"
+#include "CommandLineInterface.h"
 
 /**
  * Get the command of the user.
