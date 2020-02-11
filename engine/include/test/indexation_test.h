@@ -22,8 +22,8 @@ using std::list;
 using std::ostringstream;
 using std::string;
 
-void testCreateDatabase();
-void testIndexation();
+void test_create_database();
+void test_indexation();
 void testFetchTweets();
 void testFetchEvenFiles();
 void testFetchByName();
