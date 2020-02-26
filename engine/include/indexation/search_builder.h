@@ -66,6 +66,11 @@ class SearchBuilder : public RequestBuilder {
   bool _verbose;
 
   /**
+   * A description of the filters applied in the search request
+   */
+  string _filters;
+
+  /**
    * The database (as a connection)
    */
   sql::Connection *_db;
@@ -105,6 +110,8 @@ public:
   list<File *> build();
 
   void clear();
+
+  string getFilters() { return _filters; }
 };
 
 #endif

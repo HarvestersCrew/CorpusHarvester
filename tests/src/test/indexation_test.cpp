@@ -99,6 +99,7 @@ void test_fetch_by_name() {
 void test_fetch_by_size() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
   list<File *> tweets = sb->add_condition("size", "110", "<=")->build();
+  Assertion::assert_equals(__FUNCTION__, "size <= 110", sb->getFilters());
   Assertion::assert_equals(__FUNCTION__, 11, tweets.size());
 }
 
@@ -118,6 +119,10 @@ void test_fetch_specific_files() {
                            ->logical_and()
                            ->add_condition("name", "file8", "=")
                            ->build();
+  Assertion::assert_equals(
+      __FUNCTION__,
+      "is_even = 1 AND type = tweet OR subject = kitty AND name = file8",
+      sb->getFilters());
   Assertion::assert_equals(__FUNCTION__, 1, files.size());
 }
 
@@ -155,7 +160,7 @@ void test_create_corpus() {
                            ->logical_or()
                            ->add_condition("name", "file3", "=")
                            ->build();
-  Corpus corpus("file 6/8/3", "01/02/2020", files);
+  Corpus corpus("file 6/8/3", "01/02/2020", files, sb->getFilters());
   indexer.save_corpus(corpus);
   sql::Connection *db = indexer.get_database();
   sql::Statement *stmt = db->createStatement();

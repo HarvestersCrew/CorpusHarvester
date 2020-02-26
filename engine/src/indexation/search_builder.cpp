@@ -29,6 +29,7 @@ SearchBuilder *SearchBuilder::add_condition(string condition_name,
                                             string condition_value, string op) {
   _current_clause += "(f." + condition_name + " " + op + " ?)";
   _current_prepared_values.push_back(condition_value);
+  _filters += condition_name + " " + op + " " + condition_value;
   return this;
 }
 
@@ -42,6 +43,7 @@ SearchBuilder *SearchBuilder::add_tag_condition(string tag_name,
   }
   _current_prepared_values.push_back(tag_name);
   _current_prepared_values.push_back(tag_value);
+  _filters += tag_name + " " + op + " " + tag_value;
   return this;
 }
 
@@ -50,11 +52,13 @@ SearchBuilder *SearchBuilder::logical_and() {
   _current_clause = "";
   _current_prepared_values.clear();
   _current_clause_only_on_file = true;
+  _filters += " AND ";
   return this;
 }
 
 SearchBuilder *SearchBuilder::logical_or() {
   _current_clause += " OR ";
+  _filters += " OR ";
   return this;
 }
 
@@ -103,6 +107,7 @@ void SearchBuilder::clear() {
   _right_request = "";
   _current_clause = "";
   _first_select = "";
+  _filters = "";
   _current_clause_only_on_file = true;
   _prepared_values.clear();
   _first_prepared_values.clear();

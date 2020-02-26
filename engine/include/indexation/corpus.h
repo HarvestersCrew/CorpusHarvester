@@ -8,9 +8,10 @@
 #define CORPUS_CREATE_STATEMENT                                                \
   "CREATE TABLE IF NOT EXISTS Corpus(id INTEGER NOT NULL "                     \
   "AUTO_INCREMENT,title "                                                      \
-  "TEXT NOT NULL,creation_date TEXT NOT NULL, PRIMARY KEY (id));"
+  "TEXT NOT NULL,creation_date TEXT NOT NULL,filters TEXT NOT NULL, PRIMARY "  \
+  "KEY (id));"
 #define INSERT_CORPUS_STATEMENT                                                \
-  "INSERT INTO Corpus (title, creation_date) VALUES(?, ?)"
+  "INSERT INTO Corpus (title, creation_date, filters) VALUES(?, ?, ?)"
 #define DROP_CORPUS_STATEMENT "DROP TABLE IF EXISTS Corpus;"
 
 #define CORPUS_FILES_CREATE_STATEMENT                                          \
@@ -44,6 +45,11 @@ private:
    */
   std::list<File *> _files;
 
+  /**
+   * A description of the filters that were used to create this corpus
+   */
+  std::string _used_filters;
+
 public:
   /**
    * Default constructor
@@ -55,10 +61,11 @@ public:
    * @param title the title of the corpus
    * @param creation_date the creation date of the corpus
    * @param files the corpus files
+   * @param used_filters the corpus filters description
    * @param id the id of the corpus in the database
    */
   Corpus(std::string title, std::string creation_date, list<File *> files,
-         int id = -1);
+         std::string used_filters, int id = -1);
 
   /**
    * Default destructor

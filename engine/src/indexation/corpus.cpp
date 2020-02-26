@@ -9,9 +9,10 @@ using std::string;
 
 Corpus::Corpus() {}
 
-Corpus::Corpus(string title, string creation_date, list<File *> files, int id)
+Corpus::Corpus(string title, string creation_date, list<File *> files,
+               string used_filters, int id)
     : DatabaseItem(id), _title(title), _creation_date(creation_date),
-      _files(files) {}
+      _files(files), _used_filters(used_filters) {}
 
 Corpus::~Corpus() {
   for (auto &file : _files) {
@@ -26,7 +27,7 @@ string Corpus::to_string() const {
   for (auto &file : _files) {
     out << file->to_string() << "\n";
   }
-  out << "]}";
+  out << "], _used_filters=" << _used_filters << "}";
   return out.str();
 }
 
@@ -36,6 +37,7 @@ void Corpus::insert(sql::Connection *db) {
   prep_stmt = db->prepareStatement(INSERT_CORPUS_STATEMENT);
   prep_stmt->setString(1, _title);
   prep_stmt->setString(2, _creation_date);
+  prep_stmt->setString(3, _used_filters);
   prep_stmt->execute();
 
   this->_id = DatabaseItem::get_last_inserted_id(db);
@@ -69,5 +71,6 @@ void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_title = res->getString("title");
   this->_creation_date = res->getString("creation_date");
+  this->_used_filters = res->getString("filters");
   fetch_files(db);
 }
