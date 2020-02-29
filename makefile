@@ -27,7 +27,7 @@ PWD := $(shell pwd)
 
 all: $(EXESPATH)
 
-$(BINDIR)/%:
+$(BINDIR)/%: $(SRCS) $(INCS)
 	make -C $(ENGINEDIR) -f $(PWD)/makefile build
 	make -C $* -f $(PWD)/makefile build
 	make link/$*
