@@ -6,11 +6,33 @@ api_loader::api_loader(const std::string &schema_path) {
   this->init(json_from_file(schema_path));
 }
 
+api_loader::api_loader(const std::string &schema_path,
+                       const std::string &default_values_path)
+    : api_loader(schema_path) {
+  nlohmann::json default_values = json_from_file(default_values_path);
+  for (auto &el : default_values.items()) {
+    this->set_parameter_request_default_value(el.key(),
+                                              el.value().get<std::string>());
+  }
+}
+
 api_loader::~api_loader() {
   for (api_parameter_base *el : this->_requests)
     delete el;
   for (api_parameter_base *el : this->_responses)
     delete el;
+}
+
+void api_loader::set_parameter_request_default_value(const std::string &key,
+                                                     const std::string &val) {
+  for (api_parameter_request *p : this->_requests) {
+    if (p->_api_name == key) {
+      p->set_default_value(val);
+      return;
+    }
+  }
+  throw std::runtime_error("Default parameter \"" + key +
+                           "\" not found in schema.");
 }
 
 void api_loader::init(const nlohmann::json &j) {

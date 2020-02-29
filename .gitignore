@@ -5,3 +5,4 @@ obj
 data/storage_data
 stored
 backup
+*.env.json

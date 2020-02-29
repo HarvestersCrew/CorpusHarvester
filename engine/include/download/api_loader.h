@@ -55,13 +55,30 @@ public:
   api_loader(const nlohmann::json &j);
 
   /**
-   * Creates the object from a JSON describing the API at path
+   * Creates the object from a JSON describing the API at schema_path
    * @param schema_path path to the JSON file (pass it as std::string, not a C
    * char string)
    */
   api_loader(const std::string &schema_path);
 
+  /**
+   * Creates the object from a JSON describing the API at schema_path and loads
+   * additionnal default values from default_values_path
+   * @param schema_path path to the JSON file (pass it as std::string, not a C
+   * char string)
+   * @param default_values_path path to the JSON file
+   */
+  api_loader(const std::string &schema_path,
+             const std::string &default_values_path);
+
   ~api_loader();
+
+  /**
+   * @param key key of the default value
+   * @param val default value to set
+   */
+  void set_parameter_request_default_value(const std::string &key,
+                                           const std::string &val);
 
   /**
    * Returns a string to print the object

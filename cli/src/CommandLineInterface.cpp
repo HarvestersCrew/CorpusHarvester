@@ -42,12 +42,9 @@ Corpus CommandLineInterface::create_corpus() {
 
   // Download corresponding data
   download_manager dl;
-  api_loader twitter(std::string("data/twitter.json"));
-  std::list<File *> out =
-      twitter.query_and_parse({{"q", type},
-                               {"Authorization", "Bearer "
-                                                 "bearer_code"}},
-                              dl);
+  api_loader twitter(std::string("data/twitter.json"),
+                     std::string("data/twitter.env.json"));
+  std::list<File *> out = twitter.query_and_parse({{"q", type}}, dl);
 
   // Store the files
   Storage storage("/tmp/stored/");
