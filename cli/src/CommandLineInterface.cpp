@@ -67,7 +67,7 @@ Corpus CommandLineInterface::create_corpus() {
 
   // Create our corpus from the fetch data and save it
   std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
-  Corpus corpus("50 premiers avec retweets > 100", now, tweets);
+  Corpus corpus("50 premiers avec retweets > 100", now, tweets, "");
   indexer.save_corpus(corpus);
   return corpus;
 }
