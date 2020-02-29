@@ -56,10 +56,10 @@ public:
 
   /**
    * Creates the object from a JSON describing the API at path
-   * @param path path to the JSON file (pass it as std::string, not a C char
-   * string)
+   * @param schema_path path to the JSON file (pass it as std::string, not a C
+   * char string)
    */
-  api_loader(const std::string &path);
+  api_loader(const std::string &schema_path);
 
   ~api_loader();
 

@@ -67,6 +67,12 @@ public:
    */
   bool is_value_valid(const std::string &val) const;
 
+  /**
+   * Adds the given value as a default value
+   * @param val value to set as default
+   */
+  void set_default_value(const std::string &val);
+
 private:
   /** Position of the parameter in the HTTP request (body, header...) */
   std::string _position;

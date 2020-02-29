@@ -2,8 +2,8 @@
 
 api_loader::api_loader(const nlohmann::json &j) { this->init(j); }
 
-api_loader::api_loader(const std::string &path) {
-  this->init(json_from_file(path));
+api_loader::api_loader(const std::string &schema_path) {
+  this->init(json_from_file(schema_path));
 }
 
 api_loader::~api_loader() {

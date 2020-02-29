@@ -55,12 +55,10 @@ api_parameter_request::api_parameter_request(const nlohmann::json &json)
   }
 
   if (json.contains("default_value")) {
-    if (!this->is_value_valid(json.at("default_value").get<std::string>()))
-      throw std::runtime_error("Default value incompatible");
-    this->_default_value = json.at("default_value").get<std::string>();
-
-  } else
+    this->set_default_value(json.at("default_value").get<std::string>());
+  } else {
     this->_default_value = std::nullopt;
+  }
 }
 
 std::string api_parameter_request::to_string() const {
@@ -107,6 +105,12 @@ bool api_parameter_request::is_value_valid(const std::string &val) const {
   } else if (this->_value_type == value_type::STRING) {
   }
   return true;
+}
+
+void api_parameter_request::set_default_value(const std::string &val) {
+  if (!this->is_value_valid(val))
+    throw std::runtime_error("Default value incompatible");
+  this->_default_value = val;
 }
 
 api_parameter_response::api_parameter_response(const nlohmann::json &json)
