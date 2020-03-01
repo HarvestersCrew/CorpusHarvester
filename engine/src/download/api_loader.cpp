@@ -214,7 +214,7 @@ void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
                                    const download_manager &dl) const {
   switch (this->_api_type) {
   case api_loader::api_type::TEXT:
-    this->manage_text(param->json_value_to_string(result_to_manage), param,
+    this->manage_text(param->json_value_to_string(result_to_manage),
                       file_to_save_to);
     break;
   case api_loader::api_type::IMAGE:
@@ -228,7 +228,6 @@ void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
 }
 
 void api_loader::manage_text(const std::string &api_result,
-                             const api_parameter_response *param,
                              File *file_to_save_to) const {
   file_to_save_to->set_content(this->_response_main_appends.value_or("") +
                                api_result);

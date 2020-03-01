@@ -81,3 +81,23 @@ void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
 void File::add_tag(string name, string value) {
   _tags.push_back(unique_ptr<Tag>(new Tag(name, value)));
 }
+
+void File::store(const string &path) const {
+  if (!this->get_binary()) {
+
+    std::ofstream outfile(path);
+    outfile << this->get_content_str() << std::endl;
+    outfile.close();
+
+  } else {
+
+    std::vector<char> vec_content = this->get_content_bin();
+    char buf[vec_content.size()];
+    for (size_t i = 0; i < vec_content.size(); ++i) {
+      buf[i] = vec_content.at(i);
+    }
+    std::ofstream outfile(path, std::ios::out | std::ios::binary);
+    outfile.write(buf, vec_content.size());
+    outfile.close();
+  }
+}

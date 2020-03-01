@@ -130,12 +130,9 @@ public:
    * Manages the saving of a text by the API.
    * Follows a call to manage_main_value
    * @param api_result given value by the API
-   * @param param definition of the given value
    * @param file_to_save_to file to save results to
    */
-  void manage_text(const std::string &api_result,
-                   const api_parameter_response *param,
-                   File *file_to_save_to) const;
+  void manage_text(const std::string &api_result, File *file_to_save_to) const;
 
   /**
    * Manages the retrieval of a media from the API.

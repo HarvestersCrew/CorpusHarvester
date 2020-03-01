@@ -6,6 +6,7 @@
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
+#include <fstream>
 #include <mysql_connection.h>
 #include <sstream>
 #include <vector>
@@ -109,6 +110,8 @@ public:
   void set_binary(bool bin) { _binary = bin; }
   void set_content(string content) { _content = content; }
   void set_bin_content(std::vector<char> content) { _bin_content = content; }
+
+  void store(const string &path) const;
 };
 
 #endif
