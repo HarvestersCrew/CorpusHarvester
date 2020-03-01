@@ -110,6 +110,16 @@ public:
    */
   std::list<File *> query_and_parse(const nlohmann::json &params,
                                     const download_manager &dl) const;
+
+  /**
+   * Manage the retrieval of the main value of the API (text, image...)
+   * @param result_to_manage JSON object corresponding to the object
+   * @param param definition of the given result
+   * @param file_to_save_to file to save results to
+   */
+  void manage_main_value(const nlohmann::json &result_to_manage,
+                         const api_parameter_response *param,
+                         File *file_to_save_to) const;
 };
 
 #endif
