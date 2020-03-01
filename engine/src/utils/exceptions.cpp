@@ -14,6 +14,10 @@ const char *api_missing_settings_exception::what() const throw() {
   return "Missing setting to call an API.";
 }
 
+const char *api_unrecognized_settings_exception::what() const throw() {
+  return "An API setting was unrecognized.";
+}
+
 const char *download_no_200_exception::what() const throw() {
   return "Web call didn't succeed.";
 }

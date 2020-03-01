@@ -7,30 +7,29 @@
 #include <stdexcept>
 #include <string>
 
-using std::runtime_error;
-using std::string;
-
 class TestFailedException {
-  string _functionName;
-  string _expected;
-  string _found;
+  std::string _functionName;
+  std::string _expected;
+  std::string _found;
 
 public:
-  TestFailedException(string functionName, string expected, string found)
+  TestFailedException(std::string functionName, std::string expected,
+                      std::string found)
       : _functionName(functionName), _expected(expected), _found(found) {}
 
-  string what() const throw() {
-    string what = "[ERROR] Test of function " + _functionName +
-                  "() failed : expected [" + _expected + "], got [" + _found +
-                  "]";
+  std::string what() const throw() {
+    std::string what = "[ERROR] Test of function " + _functionName +
+                       "() failed : expected [" + _expected + "], got [" +
+                       _found + "]";
     return what;
   }
 };
 
-class CommandException : public runtime_error {
+class CommandException : public std::runtime_error {
 
 public:
-  CommandException(string &error_message) : runtime_error(error_message) {}
+  CommandException(std::string &error_message)
+      : std::runtime_error(error_message) {}
 };
 
 class api_no_setting_exception : public std::exception {
@@ -43,6 +42,11 @@ private:
 };
 
 class api_missing_settings_exception : public std::exception {
+public:
+  const char *what() const throw();
+};
+
+class api_unrecognized_settings_exception : public std::exception {
 public:
   const char *what() const throw();
 };
