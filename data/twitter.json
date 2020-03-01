@@ -2,6 +2,7 @@
     "name": "Twitter",
     "url": "https://api.twitter.com/1.1/search/tweets.json",
     "method": "GET",
+    "api_type": "text",
     "path_to_results": [
         "statuses"
     ],

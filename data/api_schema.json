@@ -7,6 +7,7 @@
         "name",
         "url",
         "method",
+        "api_type",
         "path_to_results",
         "request",
         "response"
@@ -36,6 +37,15 @@
             "enum": [
                 "GET",
                 "POST"
+            ]
+        },
+        "api_type": {
+            "$id": "#/properties/api_type",
+            "type": "string",
+            "title": "Type of main value got from API",
+            "enum": [
+                "text",
+                "image"
             ]
         },
         "path_to_results": {
