@@ -36,6 +36,14 @@ std::string random_str(const unsigned int len) {
   return res;
 }
 
+std::string vec_to_string(const std::vector<char> &vec) {
+  std::string str;
+  for (char c : vec) {
+    str += c;
+  }
+  return str;
+}
+
 void fill_file_randomly(File *file, bool tweet, bool is_even) {
   std::ostringstream is_evenStream;
   is_evenStream << is_even;

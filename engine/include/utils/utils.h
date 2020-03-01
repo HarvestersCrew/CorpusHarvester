@@ -1,18 +1,20 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "indexation/file.h"
 #include "utils/nlohmann/json.hpp"
 #include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <string>
-
-#include "indexation/file.h"
+#include <vector>
 
 std::string exec(string cmd);
 
 // Returns a random string of length len from a-z characters.
-string random_str(const unsigned int len);
+std::string random_str(const unsigned int len);
+
+std::string vec_to_string(const std::vector<char> &vec);
 
 void fill_file_randomly(File *file, bool tweet, bool is_even);
 

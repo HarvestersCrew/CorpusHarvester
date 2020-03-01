@@ -43,23 +43,27 @@ std::string download_manager::download(const std::string &url,
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
   }
 
+  std::vector<char> read_buffer;
+
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
                    download_manager::write_callback);
-  std::string readBuffer;
-  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &read_buffer);
   curl_easy_perform(curl);
 
   long response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
   if (response_code != 200) {
     throw download_no_200_exception();
   }
 
-  return readBuffer;
+  return vec_to_string(read_buffer);
 }
 
-size_t download_manager::write_callback(void *contents, size_t size,
+size_t download_manager::write_callback(char *contents, size_t size,
                                         size_t nmemb, void *userp) {
-  ((std::string *)userp)->append((char *)contents, size * nmemb);
+  for (size_t i = 0; i < nmemb; ++i) {
+    ((std::vector<char> *)userp)->push_back(contents[i]);
+  }
   return size * nmemb;
 }

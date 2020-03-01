@@ -42,31 +42,35 @@ Corpus CommandLineInterface::create_corpus() {
 
   // Download corresponding data
   download_manager dl;
-  api_loader twitter(std::string("data/twitter.json"),
-                     std::string("data/twitter.env.json"));
-  std::list<File *> out = twitter.query_and_parse({{"q", type}}, dl);
+  // api_loader twitter(std::string("data/twitter.json"),
+  //                    std::string("data/twitter.env.json"));
+  // std::list<File *> out = twitter.query_and_parse({{"q", type}}, dl);
+  api_loader tmdb(std::string("data/tmdb_poster.json"),
+                  std::string("data/tmdb.env.json"));
+  std::cout << tmdb.to_string() << std::endl;
+  std::list<File *> out = tmdb.query_and_parse({{"query", "star wars"}}, dl);
 
   // Store the files
   Storage storage("/tmp/stored/");
   storage.store_files(out);
 
-  // Index the downloaded data
-  Indexer indexer("harvester", false);
-  indexer.create_database(true);
-  indexer.indexation(out);
+  // // Index the downloaded data
+  // Indexer indexer("harvester", false);
+  // indexer.create_database(true);
+  // indexer.indexation(out);
 
-  // Request files which has at least one retweet and one favorite
-  SearchBuilder sb = indexer.get_search_builder();
-  list<File *> tweets = sb.add_tag_condition("retweet", "100", ">")
-                            ->logical_and()
-                            ->add_condition("id", "50", "<")
-                            ->build();
+  // // Request files which has at least one retweet and one favorite
+  // SearchBuilder sb = indexer.get_search_builder();
+  // list<File *> tweets = sb.add_tag_condition("retweet", "100", ">")
+  //                           ->logical_and()
+  //                           ->add_condition("id", "50", "<")
+  //                           ->build();
 
-  // Create our corpus from the fetch data and save it
-  std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
-  Corpus corpus("50 premiers avec retweets > 100", now, tweets, "");
-  indexer.save_corpus(corpus);
-  return corpus;
+  // // Create our corpus from the fetch data and save it
+  // std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
+  // Corpus corpus("50 premiers avec retweets > 100", now, tweets, "");
+  // indexer.save_corpus(corpus);
+  // return corpus;
 }
 
 void CommandLineInterface::run() {

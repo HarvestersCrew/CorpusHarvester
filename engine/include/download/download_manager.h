@@ -64,7 +64,7 @@ public:
    * Callback used to write content to buffer, model following the cURL callback
    * example
    */
-  static size_t write_callback(void *contents, size_t size, size_t nmemb,
+  static size_t write_callback(char *contents, size_t size, size_t nmemb,
                                void *userp);
 };
 
