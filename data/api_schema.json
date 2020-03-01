@@ -211,7 +211,8 @@
                         "enum": [
                             "string",
                             "int",
-                            "int64"
+                            "int64",
+                            "image_link"
                         ]
                     },
                     "api_name": {

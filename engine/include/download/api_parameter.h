@@ -8,6 +8,11 @@
 #include <string>
 #include <vector>
 
+#define API_PARAMETER_INT "int"
+#define API_PARAMETER_INT64 "int64"
+#define API_PARAMETER_STRING "string"
+#define API_PARAMETER_IMAGE_LINK "image_link"
+
 /**
  * Common class for request and response parameters
  */
@@ -22,10 +27,20 @@ public:
    */
   virtual std::string to_string() const;
 
+  /**
+   * Gets the string associated to the parameter type
+   */
+  virtual std::string get_type_string() const;
+
+  /**
+   * Converts the given JSON value to a string based on its type
+   * @param val JSON value to convert
+   * @return std::string string associated to the value
+   */
   virtual std::string json_value_to_string(const nlohmann::json &val) const;
 
   /** Value describing the type of the parameter */
-  enum value_type { STRING, INT, INT64 };
+  enum value_type { STRING, INT, INT64, IMAGE_LINK };
 
 protected:
   /**

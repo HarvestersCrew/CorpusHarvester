@@ -50,6 +50,8 @@ void api_loader::init(const nlohmann::json &j) {
   std::string given_api_type = j.at("api_type").get<std::string>();
   if (given_api_type == API_TYPE_TXT) {
     this->_api_type = api_loader::api_type::TEXT;
+  } else if (given_api_type == API_TYPE_IMG) {
+    this->_api_type = api_loader::api_type::IMAGE;
   } else {
     throw api_unrecognized_settings_exception("api_type", given_api_type);
   }
@@ -206,7 +208,6 @@ void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
     file_to_save_to->set_content(param->json_value_to_string(result_to_manage));
     break;
   case api_loader::api_type::IMAGE:
-    break;
   default:
     throw std::runtime_error("Saving type " + this->api_type_string() +
                              " is unsupported currently.");

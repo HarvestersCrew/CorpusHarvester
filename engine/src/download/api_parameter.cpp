@@ -4,12 +4,14 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
 
   this->_api_name = json.at("api_name").get<std::string>();
 
-  if (json.at("type").get<std::string>() == "string") {
+  if (json.at("type").get<std::string>() == API_PARAMETER_STRING) {
     this->_value_type = value_type::STRING;
-  } else if (json.at("type").get<std::string>() == "int") {
+  } else if (json.at("type").get<std::string>() == API_PARAMETER_INT) {
     this->_value_type = value_type::INT;
-  } else if (json.at("type").get<std::string>() == "int64") {
+  } else if (json.at("type").get<std::string>() == API_PARAMETER_INT64) {
     this->_value_type = value_type::INT64;
+  } else if (json.at("type").get<std::string>() == API_PARAMETER_IMAGE_LINK) {
+    this->_value_type = value_type::IMAGE_LINK;
   } else {
     throw std::runtime_error("Unrecognized type for parameter.");
   }
@@ -18,8 +20,28 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
 std::string api_parameter_base::to_string() const {
   std::stringstream out;
   out << "------- api_name: " << this->_api_name << " -------" << std::endl;
-  out << "value_type: " << this->_value_type;
+  out << "value_type: " << this->get_type_string();
   return out.str();
+}
+
+std::string api_parameter_base::get_type_string() const {
+  switch (this->_value_type) {
+  case api_parameter_base::value_type::INT:
+    return API_PARAMETER_INT;
+    break;
+  case api_parameter_base::value_type::INT64:
+    return API_PARAMETER_INT64;
+    break;
+  case api_parameter_base::value_type::STRING:
+    return API_PARAMETER_STRING;
+    break;
+  case api_parameter_base::value_type::IMAGE_LINK:
+    return API_PARAMETER_IMAGE_LINK;
+    break;
+  default:
+    throw std::runtime_error("Unsupported parameter type to string.");
+    break;
+  }
 }
 
 std::string
@@ -30,6 +52,8 @@ api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
   } else if (this->_value_type == value_type::INT) {
     result = std::to_string(val.get<int>());
   } else if (this->_value_type == value_type::STRING) {
+    result = val.get<std::string>();
+  } else if (this->_value_type == value_type::IMAGE_LINK) {
     result = val.get<std::string>();
   }
   return result;
@@ -103,6 +127,7 @@ bool api_parameter_request::is_value_valid(const std::string &val) const {
     }
 
   } else if (this->_value_type == value_type::STRING) {
+  } else if (this->_value_type == value_type::IMAGE_LINK) {
   }
   return true;
 }
