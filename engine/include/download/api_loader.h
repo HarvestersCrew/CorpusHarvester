@@ -17,10 +17,18 @@
 #include <string>
 #include <vector>
 
+#define API_TYPE_TXT "text"
+#define API_TYPE_IMG "image"
+
 /**
  * API class, used to load API settings and use its tags
  */
 class api_loader {
+
+public:
+  /** Enum used to define the type of the main API value */
+  enum api_type { TEXT, IMAGE };
+
 private:
   /** Base URL of the API to call queries on */
   std::string _url;
@@ -30,6 +38,9 @@ private:
 
   /** Name of the API */
   std::string _name;
+
+  /** API type */
+  api_type _api_type;
 
   /** Path to an array of objects in resulting JSON */
   std::vector<std::string> _path_to_results;
@@ -84,6 +95,9 @@ public:
    * Returns a string to print the object
    */
   std::string to_string() const;
+
+  /** Gets the official string of the API type used in JSON */
+  std::string api_type_string() const;
 
   /**
    * Queries and parses

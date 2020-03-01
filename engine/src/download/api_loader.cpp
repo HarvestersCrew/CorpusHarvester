@@ -45,6 +45,14 @@ void api_loader::init(const nlohmann::json &j) {
   this->_name = j.at("name").get<std::string>();
   this->_method = j.at("method").get<std::string>();
   this->_url = j.at("url").get<std::string>();
+
+  std::string given_api_type = j.at("api_type").get<std::string>();
+  if (given_api_type == API_TYPE_TXT) {
+    this->_api_type = api_loader::api_type::TEXT;
+  } else {
+    throw api_unrecognized_settings_exception("api_type", given_api_type);
+  }
+
   for (auto &el : j.at("path_to_results")) {
     this->_path_to_results.push_back(el.get<std::string>());
   }
@@ -59,6 +67,7 @@ std::string api_loader::to_string() const {
   out << "name: " << this->_name << std::endl;
   out << "method: " << this->_method << std::endl;
   out << "url: " << this->_url << std::endl;
+  out << "api_type: " << this->api_type_string() << std::endl;
 
   out << "path to result: ";
   for (const std::string &el : this->_path_to_results) {
@@ -76,6 +85,21 @@ std::string api_loader::to_string() const {
   }
 
   return out.str();
+}
+
+std::string api_loader::api_type_string() const {
+  switch (this->_api_type) {
+  case api_loader::api_type::TEXT:
+    return API_TYPE_TXT;
+    break;
+  case api_loader::api_type::IMAGE:
+    return API_TYPE_IMG;
+    break;
+  default:
+    throw std::runtime_error(
+        "API type not yet recognized or implemented in string method");
+    break;
+  }
 }
 
 std::list<File *>
