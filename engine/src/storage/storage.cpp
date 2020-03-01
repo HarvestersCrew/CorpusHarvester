@@ -70,7 +70,7 @@ void Storage::store_file(File *file) const {
     for (size_t i = 0; i < vec_content.size(); ++i) {
       buf[i] = vec_content.at(i);
     }
-    std::fstream outfile(file_dest);
+    std::ofstream outfile(file_dest, std::ios::out | std::ios::binary);
     outfile.write(buf, vec_content.size());
     outfile.close();
   }

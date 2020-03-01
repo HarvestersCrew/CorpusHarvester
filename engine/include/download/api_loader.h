@@ -119,10 +119,12 @@ public:
    * @param result_to_manage JSON object corresponding to the object
    * @param param definition of the given result
    * @param file_to_save_to file to save results to
+   * @param dl download manager
    */
   void manage_main_value(const nlohmann::json &result_to_manage,
                          const api_parameter_response *param,
-                         File *file_to_save_to) const;
+                         File *file_to_save_to,
+                         const download_manager &dl) const;
 
   /**
    * Manages the saving of a text by the API.
@@ -141,10 +143,11 @@ public:
    * @param path_api given value by the API
    * @param param definition of the given value
    * @param file_to_save_to file to save results to
+   * @param dl download manager
    */
   void manage_media(const std::string &path_api,
-                    const api_parameter_response *param,
-                    File *file_to_save_to) const;
+                    const api_parameter_response *param, File *file_to_save_to,
+                    const download_manager &dl) const;
 };
 
 #endif

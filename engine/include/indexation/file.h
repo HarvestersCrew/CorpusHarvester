@@ -106,6 +106,7 @@ public:
   int get_size() const { return _size; }
 
   void set_path(string path) { _path = path; }
+  void set_binary(bool bin) { _binary = bin; }
   void set_content(string content) { _content = content; }
   void set_bin_content(std::vector<char> content) { _bin_content = content; }
 };

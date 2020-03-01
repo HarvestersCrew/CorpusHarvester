@@ -47,7 +47,6 @@ Corpus CommandLineInterface::create_corpus() {
   // std::list<File *> out = twitter.query_and_parse({{"q", type}}, dl);
   api_loader tmdb(std::string("data/tmdb_poster.json"),
                   std::string("data/tmdb.env.json"));
-  std::cout << tmdb.to_string() << std::endl;
   std::list<File *> out = tmdb.query_and_parse({{"query", "star wars"}}, dl);
 
   // Store the files

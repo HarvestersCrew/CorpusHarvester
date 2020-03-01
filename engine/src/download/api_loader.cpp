@@ -191,7 +191,7 @@ api_loader::query_and_parse(const nlohmann::json &params,
     File *file = new File("", out.str(), 0, this->_name);
     for (const api_parameter_response *param : this->_responses) {
       if (param->_name == this->_response_main_item) {
-        this->manage_main_value(el[param->_api_name], param, file);
+        this->manage_main_value(el[param->_api_name], param, file, dl);
       } else {
         file->add_tag(param->_name,
                       param->json_value_to_string(el[param->_api_name]));
@@ -210,7 +210,8 @@ api_loader::query_and_parse(const nlohmann::json &params,
 
 void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
                                    const api_parameter_response *param,
-                                   File *file_to_save_to) const {
+                                   File *file_to_save_to,
+                                   const download_manager &dl) const {
   switch (this->_api_type) {
   case api_loader::api_type::TEXT:
     this->manage_text(param->json_value_to_string(result_to_manage), param,
@@ -218,7 +219,7 @@ void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
     break;
   case api_loader::api_type::IMAGE:
     this->manage_media(param->json_value_to_string(result_to_manage), param,
-                       file_to_save_to);
+                       file_to_save_to, dl);
     break;
   default:
     throw std::runtime_error("Saving type " + this->api_type_string() +
@@ -235,12 +236,15 @@ void api_loader::manage_text(const std::string &api_result,
 
 void api_loader::manage_media(const std::string &path_api,
                               const api_parameter_response *param,
-                              File *file_to_save_to) const {
+                              File *file_to_save_to,
+                              const download_manager &dl) const {
   if (param->_value_type != api_parameter_base::value_type::IMAGE_LINK) {
     throw std::runtime_error("Can't manage this API (" + this->_name +
                              ") media type.");
   }
 
   std::string url = this->_response_main_appends.value_or("") + path_api;
-  std::cout << url << std::endl;
+  std::vector<char> res = dl.download(url);
+  file_to_save_to->set_bin_content(res);
+  file_to_save_to->set_binary(true);
 }
