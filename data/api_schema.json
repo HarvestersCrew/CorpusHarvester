@@ -17,6 +17,7 @@
         "name": {
             "$id": "#/properties/name",
             "type": "string",
+            "pattern": "^[\\w]+$",
             "title": "API name",
             "examples": [
                 "Twitter",

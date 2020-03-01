@@ -1,7 +1,9 @@
 {
-    "name": "TheMovieDB - Movies",
+    "name": "TheMovieDB_Synopsis",
     "url": "https://api.themoviedb.org/3/search/movie",
     "method": "GET",
+    "api_type": "text",
+    "response_main_item": "synopsis",
     "path_to_results": [
         "results"
     ],
