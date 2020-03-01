@@ -240,4 +240,7 @@ void api_loader::manage_media(const std::string &path_api,
     throw std::runtime_error("Can't manage this API (" + this->_name +
                              ") media type.");
   }
+
+  std::string url = this->_response_main_appends.value_or("") + path_api;
+  std::cout << url << std::endl;
 }
