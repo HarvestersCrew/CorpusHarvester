@@ -45,6 +45,7 @@ void api_loader::init(const nlohmann::json &j) {
   this->_name = j.at("name").get<std::string>();
   this->_method = j.at("method").get<std::string>();
   this->_url = j.at("url").get<std::string>();
+  this->_response_main_item = j.at("response_main_item").get<std::string>();
 
   std::string given_api_type = j.at("api_type").get<std::string>();
   if (given_api_type == API_TYPE_TXT) {
@@ -60,6 +61,14 @@ void api_loader::init(const nlohmann::json &j) {
     this->_requests.push_back(new api_parameter_request(el));
   for (auto &el : j.at("response"))
     this->_responses.push_back(new api_parameter_response(el));
+
+  bool main_attribute_found = false;
+  for (api_parameter_response *el : this->_responses) {
+    if (el->_name == this->_response_main_item)
+      main_attribute_found = true;
+  }
+  if (!main_attribute_found)
+    throw api_missing_settings_exception();
 }
 
 std::string api_loader::to_string() const {
@@ -68,6 +77,7 @@ std::string api_loader::to_string() const {
   out << "method: " << this->_method << std::endl;
   out << "url: " << this->_url << std::endl;
   out << "api_type: " << this->api_type_string() << std::endl;
+  out << "main value name: " << this->_response_main_item << std::endl;
 
   out << "path to result: ";
   for (const std::string &el : this->_path_to_results) {

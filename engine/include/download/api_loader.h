@@ -42,6 +42,9 @@ private:
   /** API type */
   api_type _api_type;
 
+  /** API main response value */
+  std::string _response_main_item;
+
   /** Path to an array of objects in resulting JSON */
   std::vector<std::string> _path_to_results;
 
