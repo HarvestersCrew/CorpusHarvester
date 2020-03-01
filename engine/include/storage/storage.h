@@ -3,7 +3,8 @@
 
 #include "indexation/file.h"
 #include "utils/exceptions.h"
-
+#include <fstream>
+#include <ostream>
 #include <string>
 
 using std::string;

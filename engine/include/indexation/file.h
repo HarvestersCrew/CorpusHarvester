@@ -8,6 +8,7 @@
 #include <cppconn/resultset.h>
 #include <mysql_connection.h>
 #include <sstream>
+#include <vector>
 
 #define FILE_CREATE_STATEMENT                                                  \
   "CREATE TABLE IF NOT EXISTS File(id INTEGER NOT NULL AUTO_INCREMENT,path "   \
@@ -31,34 +32,28 @@ using std::unique_ptr;
  */
 class File : public DatabaseItem {
 
-  /**
-   * The path of the file
-   */
+  /** The path of the file */
   string _path;
 
-  /**
-   * The name of the file
-   */
+  /** The name of the file */
   string _name;
 
-  /**
-   * The size of the file
-   */
+  /** The size of the file */
   int _size;
 
-  /**
-   * The source of the file
-   */
+  /** The source of the file */
   string _source;
 
-  /**
-   * The content of the file (not a database attribute)
-   */
+  /** The content of the file (not a database attribute) */
   string _content;
 
-  /**
-   * The tags describing this file
-   */
+  /** Binary content of file */
+  std::vector<char> _bin_content;
+
+  /** Whether the content is binary */
+  bool _binary = false;
+
+  /** The tags describing this file */
   list<unique_ptr<Tag>> _tags;
 
 public:
@@ -105,11 +100,14 @@ public:
   string get_path() const { return _path; }
   string get_name() const { return _name; }
   string get_source() const { return _source; }
-  string get_content() const { return _content; }
+  bool get_binary() const { return _binary; }
+  std::vector<char> get_content_bin() const { return _bin_content; }
+  string get_content_str() const { return _content; }
   int get_size() const { return _size; }
 
   void set_path(string path) { _path = path; }
   void set_content(string content) { _content = content; }
+  void set_bin_content(std::vector<char> content) { _bin_content = content; }
 };
 
 #endif

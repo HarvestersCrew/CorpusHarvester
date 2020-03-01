@@ -21,16 +21,17 @@ void download_manager::download_to(const std::string &path,
   out.open(path);
   if (!out)
     throw std::runtime_error("Can't open provided file.");
-  out << this->download(url, headers);
+  out << vec_to_string(this->download(url, headers));
   out.close();
 }
 
-std::string download_manager::download(const std::string &url) const {
+std::vector<char> download_manager::download(const std::string &url) const {
   return this->download(url, nullptr);
 }
 
-std::string download_manager::download(const std::string &url,
-                                       const nlohmann::json &headers) const {
+std::vector<char>
+download_manager::download(const std::string &url,
+                           const nlohmann::json &headers) const {
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
   if (!headers.is_null() && headers.is_object()) {
@@ -57,7 +58,7 @@ std::string download_manager::download(const std::string &url,
     throw download_no_200_exception();
   }
 
-  return vec_to_string(read_buffer);
+  return read_buffer;
 }
 
 size_t download_manager::write_callback(char *contents, size_t size,

@@ -56,9 +56,25 @@ void Storage::move_file(File *file) const {
 
 void Storage::store_file(File *file) const {
   string file_dest = file_destination(file->get_name(), file->get_source());
-  std::ofstream outfile(file_dest);
-  outfile << file->get_content() << std::endl;
-  outfile.close();
+
+  if (!file->get_binary()) {
+
+    std::ofstream outfile(file_dest);
+    outfile << file->get_content_str() << std::endl;
+    outfile.close();
+
+  } else {
+
+    std::vector<char> vec_content = file->get_content_bin();
+    char buf[vec_content.size()];
+    for (size_t i = 0; i < vec_content.size(); ++i) {
+      buf[i] = vec_content.at(i);
+    }
+    std::fstream outfile(file_dest);
+    outfile.write(buf, vec_content.size());
+    outfile.close();
+  }
+
   file->set_path(file_dest);
 }
 
