@@ -47,7 +47,15 @@ public:
 };
 
 class api_unrecognized_settings_exception : public std::exception {
+private:
+  std::string _msg;
+
 public:
+  api_unrecognized_settings_exception()
+      : _msg("An API setting was unrecognized.") {}
+  api_unrecognized_settings_exception(const std::string &key,
+                                      const std::string &val)
+      : _msg("An API setting value was unrecognized: " + key + " = " + val) {}
   const char *what() const throw();
 };
 
