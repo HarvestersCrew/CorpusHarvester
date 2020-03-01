@@ -201,5 +201,14 @@ api_loader::query_and_parse(const nlohmann::json &params,
 void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
                                    const api_parameter_response *param,
                                    File *file_to_save_to) const {
-  file_to_save_to->set_content(param->json_value_to_string(result_to_manage));
+  switch (this->_api_type) {
+  case api_loader::api_type::TEXT:
+    file_to_save_to->set_content(param->json_value_to_string(result_to_manage));
+    break;
+  case api_loader::api_type::IMAGE:
+    break;
+  default:
+    throw std::runtime_error("Saving type " + this->api_type_string() +
+                             " is unsupported currently.");
+  }
 }
