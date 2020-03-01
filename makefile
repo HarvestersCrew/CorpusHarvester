@@ -42,10 +42,10 @@ build: $(OBJS)
 
 .SECONDEXPANSION:
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $$(wildcard $(INCDIR)/$$*.h)
-	@echo "Checking $? formatting, 'clang-format' must be installed..."
+	@echo "Checking $? formatting, 'clang-format' must be installed, call 'make format' if it fails here..."
 	@ clang-format --help 2>&1 > /dev/null
 	@! clang-format $? -style=LLVM -output-replacements-xml | grep -c "<replacement " > /dev/null
-	@mkdir -p $(OBJDIRS)
+	mkdir -p $(OBJDIRS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 format:
