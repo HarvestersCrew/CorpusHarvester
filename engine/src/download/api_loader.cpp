@@ -56,6 +56,12 @@ void api_loader::init(const nlohmann::json &j) {
     throw api_unrecognized_settings_exception("api_type", given_api_type);
   }
 
+  this->_response_main_appends = std::nullopt;
+  if (j.contains("response_main_appends")) {
+    this->_response_main_appends =
+        j.at("response_main_appends").get<std::string>();
+  }
+
   for (auto &el : j.at("path_to_results")) {
     this->_path_to_results.push_back(el.get<std::string>());
   }
@@ -80,6 +86,8 @@ std::string api_loader::to_string() const {
   out << "url: " << this->_url << std::endl;
   out << "api_type: " << this->api_type_string() << std::endl;
   out << "main value name: " << this->_response_main_item << std::endl;
+  out << "main value append: "
+      << this->_response_main_appends.value_or("no value") << std::endl;
 
   out << "path to result: ";
   for (const std::string &el : this->_path_to_results) {
@@ -205,11 +213,31 @@ void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
                                    File *file_to_save_to) const {
   switch (this->_api_type) {
   case api_loader::api_type::TEXT:
-    file_to_save_to->set_content(param->json_value_to_string(result_to_manage));
+    this->manage_text(param->json_value_to_string(result_to_manage), param,
+                      file_to_save_to);
     break;
   case api_loader::api_type::IMAGE:
+    this->manage_media(param->json_value_to_string(result_to_manage), param,
+                       file_to_save_to);
+    break;
   default:
     throw std::runtime_error("Saving type " + this->api_type_string() +
                              " is unsupported currently.");
+  }
+}
+
+void api_loader::manage_text(const std::string &api_result,
+                             const api_parameter_response *param,
+                             File *file_to_save_to) const {
+  file_to_save_to->set_content(this->_response_main_appends.value_or("") +
+                               api_result);
+}
+
+void api_loader::manage_media(const std::string &path_api,
+                              const api_parameter_response *param,
+                              File *file_to_save_to) const {
+  if (param->_value_type != api_parameter_base::value_type::IMAGE_LINK) {
+    throw std::runtime_error("Can't manage this API (" + this->_name +
+                             ") media type.");
   }
 }

@@ -45,6 +45,9 @@ private:
   /** API main response value */
   std::string _response_main_item;
 
+  /** Value to append to main response if it is a string */
+  std::optional<std::string> _response_main_appends;
+
   /** Path to an array of objects in resulting JSON */
   std::vector<std::string> _path_to_results;
 
@@ -120,6 +123,28 @@ public:
   void manage_main_value(const nlohmann::json &result_to_manage,
                          const api_parameter_response *param,
                          File *file_to_save_to) const;
+
+  /**
+   * Manages the saving of a text by the API.
+   * Follows a call to manage_main_value
+   * @param api_result given value by the API
+   * @param param definition of the given value
+   * @param file_to_save_to file to save results to
+   */
+  void manage_text(const std::string &api_result,
+                   const api_parameter_response *param,
+                   File *file_to_save_to) const;
+
+  /**
+   * Manages the retrieval of a media from the API.
+   * Follows a call to manage_main_value
+   * @param path_api given value by the API
+   * @param param definition of the given value
+   * @param file_to_save_to file to save results to
+   */
+  void manage_media(const std::string &path_api,
+                    const api_parameter_response *param,
+                    File *file_to_save_to) const;
 };
 
 #endif

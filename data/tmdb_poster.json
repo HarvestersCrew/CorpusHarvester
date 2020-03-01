@@ -4,6 +4,7 @@
     "method": "GET",
     "api_type": "image",
     "response_main_item": "poster",
+    "response_main_appends": "https://image.tmdb.org/t/p/original/",
     "path_to_results": [
         "results"
     ],

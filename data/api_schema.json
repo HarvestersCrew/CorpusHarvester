@@ -61,6 +61,15 @@
                 "tweet"
             ]
         },
+        "response_main_appends": {
+            "$id": "#/properties/response_main_appends",
+            "type": "string",
+            "title": "Value to append to each response main value",
+            "examples": [
+                "http://image_api/",
+                "Main tweet: "
+            ]
+        },
         "path_to_results": {
             "$id": "#/properties/path_to_results",
             "type": "array",
