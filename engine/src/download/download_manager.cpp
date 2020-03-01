@@ -48,6 +48,13 @@ std::string download_manager::download(const std::string &url,
   std::string readBuffer;
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
   curl_easy_perform(curl);
+
+  long response_code;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+  if (response_code != 200) {
+    throw download_no_200_exception();
+  }
+
   return readBuffer;
 }
 

@@ -1,6 +1,7 @@
 #ifndef DOWNLOAD_MANAGER_H
 #define DOWNLOAD_MANAGER_H
 
+#include "utils/exceptions.h"
 #include "utils/nlohmann/json.hpp"
 #include <curl/curl.h>
 #include <fstream>

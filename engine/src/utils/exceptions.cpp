@@ -13,3 +13,7 @@ const char *api_no_setting_exception::what() const throw() {
 const char *api_missing_settings_exception::what() const throw() {
   return "Missing setting to call an API.";
 }
+
+const char *download_no_200_exception::what() const throw() {
+  return "Web call didn't succeed.";
+}
