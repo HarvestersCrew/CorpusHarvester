@@ -73,6 +73,16 @@ void File::add_tag(std::string name, std::string value) {
   _tags.push_back(std::unique_ptr<Tag>(new Tag(name, value)));
 }
 
+void File::set_content(std::string content) {
+  _content = content;
+  this->set_size(content.size() + 1);
+}
+
+void File::set_bin_content(std::vector<char> content) {
+  _bin_content = content;
+  this->set_size(content.size());
+}
+
 void File::store(const std::string &path) const {
   if (!this->get_binary()) {
 

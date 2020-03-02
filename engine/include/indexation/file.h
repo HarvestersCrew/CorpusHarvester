@@ -105,8 +105,9 @@ public:
 
   void set_path(std::string path) { _path = path; }
   void set_binary(bool bin) { _binary = bin; }
-  void set_content(std::string content) { _content = content; }
-  void set_bin_content(std::vector<char> content) { _bin_content = content; }
+  void set_content(std::string content);
+  void set_bin_content(std::vector<char> content);
+  void set_size(int size) { _size = size; }
 
   void store(const std::string &path) const;
 };
