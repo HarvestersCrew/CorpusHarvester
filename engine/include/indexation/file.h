@@ -24,8 +24,6 @@
   "INSERT INTO File (path, name, size, source) VALUES(?, ?, ?, ?)"
 #define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
 
-using std::list;
-using std::string;
 using std::unique_ptr;
 
 /**
@@ -34,19 +32,19 @@ using std::unique_ptr;
 class File : public DatabaseItem {
 
   /** The path of the file */
-  string _path;
+  std::string _path;
 
   /** The name of the file */
-  string _name;
+  std::string _name;
 
   /** The size of the file */
   int _size;
 
   /** The source of the file */
-  string _source;
+  std::string _source;
 
   /** The content of the file (not a database attribute) */
-  string _content;
+  std::string _content;
 
   /** Binary content of file */
   std::vector<char> _bin_content;
@@ -55,7 +53,7 @@ class File : public DatabaseItem {
   bool _binary = false;
 
   /** The tags describing this file */
-  list<unique_ptr<Tag>> _tags;
+  std::list<unique_ptr<Tag>> _tags;
 
 public:
   /**
@@ -71,7 +69,8 @@ public:
    * @param source the source of the file
    * @param id the id of the file in the database
    */
-  File(string path, string name, int size, string source, int id = -1);
+  File(std::string path, std::string name, int size, std::string source,
+       int id = -1);
 
   /**
    * Default destructor
@@ -96,22 +95,22 @@ public:
    * @param name the name of the tag
    * @param value the value of the tag
    */
-  void add_tag(string name, string value);
+  void add_tag(std::string name, std::string value);
 
-  string get_path() const { return _path; }
-  string get_name() const { return _name; }
-  string get_source() const { return _source; }
+  std::string get_path() const { return _path; }
+  std::string get_name() const { return _name; }
+  std::string get_source() const { return _source; }
   bool get_binary() const { return _binary; }
   std::vector<char> get_content_bin() const { return _bin_content; }
-  string get_content_str() const { return _content; }
+  std::string get_content_str() const { return _content; }
   int get_size() const { return _size; }
 
-  void set_path(string path) { _path = path; }
+  void set_path(std::string path) { _path = path; }
   void set_binary(bool bin) { _binary = bin; }
-  void set_content(string content) { _content = content; }
+  void set_content(std::string content) { _content = content; }
   void set_bin_content(std::vector<char> content) { _bin_content = content; }
 
-  void store(const string &path) const;
+  void store(const std::string &path) const;
 };
 
 #endif

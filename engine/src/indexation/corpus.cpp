@@ -9,7 +9,7 @@ using std::string;
 
 Corpus::Corpus() {}
 
-Corpus::Corpus(string title, string creation_date, list<File *> files,
+Corpus::Corpus(string title, string creation_date, std::list<File *> files,
                string used_filters, int id)
     : DatabaseItem(id), _title(title), _creation_date(creation_date),
       _files(files), _used_filters(used_filters) {}

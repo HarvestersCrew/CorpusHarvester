@@ -10,7 +10,8 @@ using std::cout;
 using std::endl;
 using std::ostringstream;
 
-File::File(string path, string name, int size, string source, int id)
+File::File(std::string path, std::string name, int size, std::string source,
+           int id)
     : DatabaseItem(id), _path(path), _name(name), _size(size), _source(source) {
 }
 
@@ -22,7 +23,7 @@ File::~File() {
   }
 }
 
-string File::to_string() const {
+std::string File::to_string() const {
   ostringstream out;
   out << "File{_id=" << _id << ", _path=" << _path << ", _name=" << _name
       << ", _size=" << _size << ", _source=" << _source << ", _tags=[\n\t";
@@ -35,7 +36,7 @@ string File::to_string() const {
 
 void File::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
-  list<File *> files;
+  std::list<File *> files;
 
   prep_stmt = db->prepareStatement(INSERT_FILE_STATEMENT);
   prep_stmt->setString(1, _path);
@@ -78,11 +79,11 @@ void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   fetch_tags(db);
 }
 
-void File::add_tag(string name, string value) {
+void File::add_tag(std::string name, std::string value) {
   _tags.push_back(unique_ptr<Tag>(new Tag(name, value)));
 }
 
-void File::store(const string &path) const {
+void File::store(const std::string &path) const {
   if (!this->get_binary()) {
 
     std::ofstream outfile(path);

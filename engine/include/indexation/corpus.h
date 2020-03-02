@@ -64,7 +64,7 @@ public:
    * @param used_filters the corpus filters description
    * @param id the id of the corpus in the database
    */
-  Corpus(std::string title, std::string creation_date, list<File *> files,
+  Corpus(std::string title, std::string creation_date, std::list<File *> files,
          std::string used_filters, int id = -1);
 
   /**
