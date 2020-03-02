@@ -21,6 +21,8 @@
 #define INSERT_CORPUS_FILES_STATEMENT                                          \
   "INSERT INTO CorpusFiles (corpus_id, file_id) VALUES(?, ?)"
 #define DROP_CORPUS_FILES_STATEMENT "DROP TABLE IF EXISTS CorpusFiles;"
+#define GET_ALL_CORPUS "SELECT * FROM Corpus"
+#define GET_ALL_CORPUS_FILES "SELECT * FROM CorpusFiles"
 #define GET_CORPUS_FILES_STATEMENT                                             \
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
   "cf.file_id = f.id;"
@@ -57,6 +59,14 @@ public:
   Corpus();
 
   /**
+   * Creates a Corpus object without files
+   * @param title the title of the corpus
+   * @param creation_date the creation date of the corpus
+   * @param id the id of the corpus in the database
+   */
+  Corpus(std::string title, std::string creation_date, int id = -1);
+
+  /**
    * Creates a Corpus object
    * @param title the title of the corpus
    * @param creation_date the creation date of the corpus
@@ -83,6 +93,8 @@ public:
 
   void insert(sql::Connection *db);
 
+  void fill_attribute_from_statement(sql::ResultSet *res);
+
   void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
   /**
@@ -96,6 +108,10 @@ public:
    * @param title std::string the new name of the copus.
    */
   void set_title(const std::string title) { _title = title; }
+
+  bool has_file() { return !_files.empty(); }
+
+  static std::list<Corpus *> get_all_corpus(sql::Connection *db);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H

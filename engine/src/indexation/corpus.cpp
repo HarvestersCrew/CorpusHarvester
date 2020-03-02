@@ -4,15 +4,16 @@
 #include "indexation/corpus.h"
 #include "indexation/file.h"
 
-using std::ostringstream;
-using std::string;
-
 Corpus::Corpus() {}
 
 Corpus::Corpus(string title, string creation_date, std::list<File *> files,
                string used_filters, int id)
     : DatabaseItem(id), _title(title), _creation_date(creation_date),
       _files(files), _used_filters(used_filters) {}
+
+Corpus::Corpus(string title, string creation_date, int id)
+    : DatabaseItem(id), _title(title), _creation_date(creation_date), _files(),
+      _used_filters("") {}
 
 Corpus::~Corpus() {
   for (auto &file : _files) {
@@ -21,7 +22,7 @@ Corpus::~Corpus() {
 }
 
 string Corpus::to_string() const {
-  ostringstream out;
+  std::ostringstream out;
   out << "Corpus{_id=" << _id << ", _title=" << _title
       << ", _creation_date=" << _creation_date << ", _files=[\n";
   for (auto &file : _files) {
@@ -67,10 +68,32 @@ void Corpus::fetch_files(sql::Connection *db) {
   delete res;
 }
 
-void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
+void Corpus::fill_attribute_from_statement(sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_title = res->getString("title");
   this->_creation_date = res->getString("creation_date");
   this->_used_filters = res->getString("filters");
+}
+
+void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
+  fill_attribute_from_statement(res);
   fetch_files(db);
+}
+
+std::list<Corpus *> Corpus::get_all_corpus(sql::Connection *db) {
+  sql::PreparedStatement *prep_stmt;
+  sql::ResultSet *res;
+  std::list<Corpus *> corpuses;
+
+  prep_stmt = db->prepareStatement(GET_ALL_CORPUS);
+  res = prep_stmt->executeQuery();
+  delete prep_stmt;
+
+  while (res->next()) {
+    Corpus *corpus = new Corpus();
+    corpus->fill_attribute_from_statement(res);
+    corpuses.push_back(corpus);
+  }
+  delete res;
+  return corpuses;
 }
