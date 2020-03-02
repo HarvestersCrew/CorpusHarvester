@@ -161,12 +161,19 @@ void test_create_corpus() {
                            ->add_condition("name", "file3", "=")
                            ->build();
   Corpus corpus("file 6/8/3", "01/02/2020", files, sb->getFilters());
+  Corpus corpus2("empty", "02/03/2020");
   indexer.save_corpus(corpus);
+  indexer.save_corpus(corpus2);
   sql::Connection *db = indexer.get_database();
+  sql::ResultSet *res_files;
   sql::Statement *stmt = db->createStatement();
-  sql::ResultSet *res_files = stmt->executeQuery("SELECT * FROM Corpus");
-  Assertion::assert_equals(__FUNCTION__, 1, res_files->rowsCount());
-  res_files = stmt->executeQuery("SELECT * FROM CorpusFiles");
+  list<Corpus *> corpuses = Corpus::get_all_corpuses(db);
+  Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());
+  Corpus *first_element = *corpuses.begin();
+  Assertion::assert_equals(__FUNCTION__, "file 6/8/3",
+                           first_element->get_title());
+  Assertion::assert_false(__FUNCTION__, first_element->has_file());
+  res_files = stmt->executeQuery(GET_ALL_CORPUS_FILES);
   Assertion::assert_equals(__FUNCTION__, 3, res_files->rowsCount());
   delete stmt;
   delete res_files;

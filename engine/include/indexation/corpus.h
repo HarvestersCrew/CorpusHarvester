@@ -111,7 +111,7 @@ public:
 
   bool has_file() { return !_files.empty(); }
 
-  static std::list<Corpus *> get_all_corpus(sql::Connection *db);
+  static std::list<Corpus *> get_all_corpuses(sql::Connection *db);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H

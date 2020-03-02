@@ -80,7 +80,7 @@ void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   fetch_files(db);
 }
 
-std::list<Corpus *> Corpus::get_all_corpus(sql::Connection *db) {
+std::list<Corpus *> Corpus::get_all_corpuses(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   std::list<Corpus *> corpuses;
