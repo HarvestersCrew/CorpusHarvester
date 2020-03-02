@@ -2,6 +2,7 @@
 #define API_LOADER_H
 
 #include "download/api_parameter.h"
+#include "download/download_item.h"
 #include "download/download_manager.h"
 #include "indexation/file.h"
 #include "utils/exceptions.h"

@@ -10,35 +10,21 @@ download_manager::~download_manager() {
   curl_global_cleanup();
 }
 
-void download_manager::download_to(const std::string &path,
-                                   const std::string &url) const {
-  this->download_to(path, url, nullptr);
-}
-void download_manager::download_to(const std::string &path,
-                                   const std::string &url,
-                                   const nlohmann::json &headers) const {
-  std::ofstream out;
-  out.open(path);
-  if (!out)
-    throw std::runtime_error("Can't open provided file.");
-  out << vec_to_string(this->download(url, headers));
-  out.close();
-}
+std::vector<char> download_manager::download(const download_item &dli) const {
 
-std::vector<char> download_manager::download(const std::string &url) const {
-  return this->download(url, nullptr);
-}
+  // IF GET TYPE, WHICH IS CURRENTLY ALWAYS
+  std::string url = dli.get_url();
+  if (dli.get_parameters().size() != 0) {
+    url += "?" + this->build_body_query(dli);
+  }
 
-std::vector<char>
-download_manager::download(const std::string &url,
-                           const nlohmann::json &headers) const {
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
-  if (!headers.is_null() && headers.is_object()) {
+  if (dli.get_headers().size() != 0) {
     struct curl_slist *list = NULL;
-    for (const auto &[key, val] : headers.items()) {
+    for (auto el : dli.get_headers()) {
       std::stringstream header;
-      header << key << ": " << val.get<std::string>();
+      header << el.first << ": " << el.second;
       list = curl_slist_append(list, header.str().c_str());
     }
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);

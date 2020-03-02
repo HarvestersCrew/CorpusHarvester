@@ -126,12 +126,9 @@ std::list<File *>
 api_loader::query_and_parse(const nlohmann::json &params,
                             const download_manager &dl) const {
 
-  std::stringstream url;
-  url << this->_url;
+  download_item dl_item(this->_url);
 
   nlohmann::json relevant_parameters;
-  nlohmann::json headers;
-  std::vector<std::string> body;
 
   std::list<File *> files;
   nlohmann::json results_array;
@@ -158,23 +155,15 @@ api_loader::query_and_parse(const nlohmann::json &params,
       }
 
       if (el->_position == "body") {
-        body.push_back(el->_api_name + "=" + val.value());
+        dl_item.set_parameter(el->_api_name, val.value());
       } else if (el->_position == "header") {
-        headers[el->_api_name] = val.value();
+        dl_item.set_header(el->_api_name, val.value());
       } else
         throw std::runtime_error("Unknown position");
     }
   }
 
-  if (body.size() > 0) {
-    url << "?";
-    url << body.at(0);
-    for (long unsigned int i = 1; i < body.size(); ++i)
-      url << "&" << body.at(i);
-  }
-
-  nlohmann::json result =
-      nlohmann::json::parse(dl.download(url.str(), headers));
+  nlohmann::json result = nlohmann::json::parse(dl.download(dl_item));
 
   results_array = result.get<nlohmann::json>();
   for (const std::string &el : this->_path_to_results) {
