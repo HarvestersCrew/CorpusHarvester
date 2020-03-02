@@ -2,11 +2,6 @@
 #define REQUEST_BUILDER_H
 
 #include "indexation/file.h"
-#include <list>
-#include <string>
-
-using std::list;
-using std::string;
 
 /**
  * This interface describe a request builder using the design patern Builder
@@ -23,8 +18,9 @@ public:
    * @param op the logical operator between the name and the value
    * @return a pointer to itself
    */
-  virtual RequestBuilder *add_condition(string condition_name,
-                                        string conditionValue, string op) = 0;
+  virtual RequestBuilder *add_condition(std::string condition_name,
+                                        std::string conditionValue,
+                                        std::string op) = 0;
 
   /**
    * Adds a logical And to the request being built
@@ -43,7 +39,7 @@ public:
    * matching it
    * @return the list of all files matching the built request
    */
-  virtual list<File *> build() = 0;
+  virtual std::list<File *> build() = 0;
 
   /**
    * Clears the builder

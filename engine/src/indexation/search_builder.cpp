@@ -1,18 +1,15 @@
 #include "indexation/search_builder.h"
 
-using std::cout;
-using std::endl;
-
 SearchBuilder::SearchBuilder(sql::Connection *db, bool verbose)
     : RequestBuilder(), _first_prepared_values(0), _prepared_values(0),
       _current_prepared_values(0), _current_clause_only_on_file(true),
       _verbose(verbose), _db(db) {}
 
 void SearchBuilder::valid_current_clause() {
-  string distinct = "";
+  std::string distinct = "";
   if (_current_clause_only_on_file) {
     _first_select += "(" + _current_clause + ") AND ";
-    for (string pv : _current_prepared_values) {
+    for (std::string pv : _current_prepared_values) {
       _first_prepared_values.push_back(pv);
     }
   } else {
@@ -20,22 +17,24 @@ void SearchBuilder::valid_current_clause() {
         "(SELECT DISTINCT " + distinct + "f.* FROM " + _left_request;
     _right_request +=
         " f, Tag t WHERE f.id = t.file_id AND (" + _current_clause + "))";
-    for (string pv : _current_prepared_values) {
+    for (std::string pv : _current_prepared_values) {
       _prepared_values.push_back(pv);
     }
   }
 }
 
-SearchBuilder *SearchBuilder::add_condition(string condition_name,
-                                            string condition_value, string op) {
+SearchBuilder *SearchBuilder::add_condition(std::string condition_name,
+                                            std::string condition_value,
+                                            std::string op) {
   _current_clause += "(f." + condition_name + " " + op + " ?)";
   _current_prepared_values.push_back(condition_value);
   _filters += condition_name + " " + op + " " + condition_value;
   return this;
 }
 
-SearchBuilder *SearchBuilder::add_tag_condition(string tag_name,
-                                                string tag_value, string op) {
+SearchBuilder *SearchBuilder::add_tag_condition(std::string tag_name,
+                                                std::string tag_value,
+                                                std::string op) {
   _current_clause_only_on_file = false;
   if (op == "=") {
     _current_clause += "(t.name = ? AND t.value = ?)";
@@ -63,9 +62,9 @@ SearchBuilder *SearchBuilder::logical_or() {
   return this;
 }
 
-list<File *> SearchBuilder::build() {
+std::list<File *> SearchBuilder::build() {
   valid_current_clause();
-  string request;
+  std::string request;
   if (_left_request == "") {
     _first_select = "SELECT f.* FROM File f WHERE " + _first_select + "1";
   } else {
@@ -78,7 +77,7 @@ list<File *> SearchBuilder::build() {
   request = _left_request + _first_select + _right_request;
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
-  list<File *> files;
+  std::list<File *> files;
 
   print_if_verbose(request, _verbose);
   prep_stmt = _db->prepareStatement(request);

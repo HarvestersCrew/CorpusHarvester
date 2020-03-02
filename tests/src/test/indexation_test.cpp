@@ -1,7 +1,7 @@
 #include "test/indexation_test.h"
 
 Indexer indexer("harvester", VERBOSE);
-string tables[] = {"Corpus", "File", "Tag", "CorpusFiles"};
+std::string tables[] = {"Corpus", "File", "Tag", "CorpusFiles"};
 
 /* TESTS */
 
@@ -12,7 +12,7 @@ void test_create_database() {
   sql::ResultSet *res_show = stmt->executeQuery("SHOW TABLES");
 
   int row_count = 0;
-  string table;
+  std::string table;
   sql::ResultSet *res_select;
   // Tests if no unexpected tables were created and if the expected one are
   // empty
@@ -35,9 +35,9 @@ void test_create_database() {
 }
 
 void test_indexation() {
-  list<File *> files;
+  std::list<File *> files;
   for (int i = 0; i < FILE_COUNT; i++) {
-    string i_str = std::to_string(i);
+    std::string i_str = std::to_string(i);
     File *file =
         new File("/stockage/file" + i_str, "file" + i_str, i + 100, "Tweeter");
     fill_file_randomly(file, i < TWEET_COUNT, i % 2 == 0);
@@ -63,7 +63,7 @@ void test_indexation() {
 void test_create_database2() {
   sql::Connection *db = indexer.get_database();
   sql::Statement *stmt = db->createStatement();
-  string request;
+  std::string request;
   for (int i = 0; i < TABLES_COUNT - 1; i++) {
     request += tables[i] + ", ";
   }
@@ -80,17 +80,17 @@ void test_create_database2() {
 }
 
 void test_fetch_tweets() {
-  list<File *> tweets = indexer.fetch_from_tag("type", "tweet");
+  std::list<File *> tweets = indexer.fetch_from_tag("type", "tweet");
   Assertion::assert_equals(__FUNCTION__, TWEET_COUNT, tweets.size());
 }
 
 void test_fetch_even_files() {
-  list<File *> tweets = indexer.fetch_from_tag("is_even", "1");
+  std::list<File *> tweets = indexer.fetch_from_tag("is_even", "1");
   Assertion::assert_equals(__FUNCTION__, EVEN_FILES, tweets.size());
 }
 
 void test_fetch_by_name() {
-  list<File *> tweets = indexer.fetch_from_attribute("name", "file12");
+  std::list<File *> tweets = indexer.fetch_from_attribute("name", "file12");
   Assertion::assert_equals(__FUNCTION__, 1, tweets.size());
   File *tweet = *(tweets.begin());
   Assertion::assert_equals(__FUNCTION__, tweet->get_name(), "file12");
@@ -98,76 +98,77 @@ void test_fetch_by_name() {
 
 void test_fetch_by_size() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  list<File *> tweets = sb->add_condition("size", "110", "<=")->build();
-  Assertion::assert_equals(__FUNCTION__, "size <= 110", sb->getFilters());
+  std::list<File *> tweets = sb->add_condition("size", "110", "<=")->build();
+  Assertion::assert_equals(__FUNCTION__, "size <= 110", sb->get_filters());
   Assertion::assert_equals(__FUNCTION__, 11, tweets.size());
 }
 
 void test_fetch_by_tag_lt() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  list<File *> tweets = sb->add_tag_condition("retweet", "15", "<")->build();
+  std::list<File *> tweets =
+      sb->add_tag_condition("retweet", "15", "<")->build();
   Assertion::assert_equals(__FUNCTION__, 15, tweets.size());
 }
 
 void test_fetch_specific_files() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  list<File *> files = sb->add_tag_condition("is_even", "1", "=")
-                           ->logical_and()
-                           ->add_tag_condition("type", "tweet", "=")
-                           ->logical_or()
-                           ->add_tag_condition("subject", "kitty", "=")
-                           ->logical_and()
-                           ->add_condition("name", "file8", "=")
-                           ->build();
+  std::list<File *> files = sb->add_tag_condition("is_even", "1", "=")
+                                ->logical_and()
+                                ->add_tag_condition("type", "tweet", "=")
+                                ->logical_or()
+                                ->add_tag_condition("subject", "kitty", "=")
+                                ->logical_and()
+                                ->add_condition("name", "file8", "=")
+                                ->build();
   Assertion::assert_equals(
       __FUNCTION__,
       "is_even = 1 AND type = tweet OR subject = kitty AND name = file8",
-      sb->getFilters());
+      sb->get_filters());
   Assertion::assert_equals(__FUNCTION__, 1, files.size());
 }
 
 void test_fetch_specific_files2() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  list<File *> files = sb->add_tag_condition("is_even", "1", "=")
-                           ->logical_and()
-                           ->add_condition("name", "file6", "=")
-                           ->logical_and()
-                           ->add_tag_condition("subject", "kitty", "=")
-                           ->logical_or()
-                           ->add_tag_condition("subject", "tank", "=")
-                           ->build();
+  std::list<File *> files = sb->add_tag_condition("is_even", "1", "=")
+                                ->logical_and()
+                                ->add_condition("name", "file6", "=")
+                                ->logical_and()
+                                ->add_tag_condition("subject", "kitty", "=")
+                                ->logical_or()
+                                ->add_tag_condition("subject", "tank", "=")
+                                ->build();
   Assertion::assert_equals(__FUNCTION__, 1, files.size());
 }
 
 void test_fetch_specific_files3() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  list<File *> files = sb->add_condition("name", "file6", "!=")
-                           ->logical_and()
-                           ->add_tag_condition("type", "tweet", "=")
-                           ->logical_or()
-                           ->add_tag_condition("subject", "tank", "=")
-                           ->logical_and()
-                           ->add_condition("size", "112", "<")
-                           ->build();
+  std::list<File *> files = sb->add_condition("name", "file6", "!=")
+                                ->logical_and()
+                                ->add_tag_condition("type", "tweet", "=")
+                                ->logical_or()
+                                ->add_tag_condition("subject", "tank", "=")
+                                ->logical_and()
+                                ->add_condition("size", "112", "<")
+                                ->build();
   Assertion::assert_equals(__FUNCTION__, 11, files.size());
 }
 
 void test_create_corpus() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  list<File *> files = sb->add_condition("name", "file6", "=")
-                           ->logical_or()
-                           ->add_condition("name", "file8", "=")
-                           ->logical_or()
-                           ->add_condition("name", "file3", "=")
-                           ->build();
-  Corpus corpus("file 6/8/3", "01/02/2020", files, sb->getFilters());
+  std::list<File *> files = sb->add_condition("name", "file6", "=")
+                                ->logical_or()
+                                ->add_condition("name", "file8", "=")
+                                ->logical_or()
+                                ->add_condition("name", "file3", "=")
+                                ->build();
+  Corpus corpus("file 6/8/3", "01/02/2020", files, sb->get_filters());
   Corpus corpus2("empty", "02/03/2020");
   indexer.save_corpus(corpus);
   indexer.save_corpus(corpus2);
   sql::Connection *db = indexer.get_database();
   sql::ResultSet *res_files;
   sql::Statement *stmt = db->createStatement();
-  list<Corpus *> corpuses = Corpus::get_all_corpuses(db);
+  std::list<Corpus *> corpuses = Corpus::get_all_corpuses(db);
   Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());
   Corpus *first_element = *corpuses.begin();
   Assertion::assert_equals(__FUNCTION__, "file 6/8/3",
@@ -207,7 +208,7 @@ void test_wrong_search2() {
 }
 
 void indexation_test() {
-  cout << endl << "Indexation tests : " << endl;
+  std::cout << std::endl << "Indexation tests : " << std::endl;
   try {
     Assertion::test(test_create_database, "test_create_database");
     Assertion::test(test_indexation, "test_indexation");
@@ -224,7 +225,7 @@ void indexation_test() {
     Assertion::test(test_wrong_search, "test_wrong_search");
     Assertion::test(test_wrong_search2, "test_wrong_search2");
   } catch (TestFailedException &e) {
-    cout << e.what() << endl;
+    std::cout << e.what() << std::endl;
   } catch (sql::SQLException &e) {
     print_sql_exception(e);
   }

@@ -16,12 +16,6 @@
 #define EVEN_FILES FILE_COUNT / 2 + FILE_COUNT % 2
 #define EVEN_TWEETS TWEET_COUNT / 2 + FILE_COUNT % 2
 
-using std::cout;
-using std::endl;
-using std::list;
-using std::ostringstream;
-using std::string;
-
 void test_create_database();
 void test_indexation();
 void test_create_database2();

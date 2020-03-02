@@ -1,18 +1,15 @@
 #include "indexation/tag.h"
 #include "indexation/file.h"
 
-using std::ostringstream;
-using std::string;
-
 Tag::Tag() {}
 
-Tag::Tag(string name, string value, int id, int file_id)
+Tag::Tag(std::string name, std::string value, int id, int file_id)
     : DatabaseItem(id), _file_id(file_id), _name(name), _value(value) {}
 
 Tag::~Tag() {}
 
-string Tag::to_string() const {
-  ostringstream out;
+std::string Tag::to_string() const {
+  std::ostringstream out;
   out << "Tag{_id=" << _id << ", file_id=" << _file_id << ", _name=" << _name
       << ", _value=" << _value << "}";
   return out.str();
@@ -37,4 +34,5 @@ void Tag::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   this->_file_id = res->getInt("file_id");
   this->_name = res->getString("name");
   this->_value = res->getString("value");
+  db->isClosed();
 }

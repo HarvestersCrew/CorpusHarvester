@@ -1,10 +1,6 @@
 #include "indexation/indexer.h"
 
-using std::cout;
-using std::endl;
-using std::list;
-
-Indexer::Indexer(string db_name, bool verbose)
+Indexer::Indexer(std::string db_name, bool verbose)
     : _db_name(db_name), _db(nullptr), _verbose(verbose) {}
 
 void Indexer::open_database() {
@@ -45,7 +41,7 @@ void Indexer::create_database(bool drop_table) {
   delete stmt;
 }
 
-void Indexer::indexation(list<File *> files) {
+void Indexer::indexation(std::list<File *> files) {
   open_database();
   for (File *file : files) {
     insert_database_item(file);
@@ -54,16 +50,19 @@ void Indexer::indexation(list<File *> files) {
 
 void Indexer::save_corpus(Corpus &corpus) { corpus.insert(_db); }
 
-list<File *> Indexer::fetch_from_tag(string tag_name, string tag_value) {
+std::list<File *> Indexer::fetch_from_tag(std::string tag_name,
+                                          std::string tag_value) {
   open_database();
   SearchBuilder *sb = new SearchBuilder(_db, _verbose);
-  list<File *> files = sb->add_tag_condition(tag_name, tag_value, "=")->build();
+  std::list<File *> files =
+      sb->add_tag_condition(tag_name, tag_value, "=")->build();
   return files;
 }
 
-list<File *> Indexer::fetch_from_attribute(string attribute, string value) {
+std::list<File *> Indexer::fetch_from_attribute(std::string attribute,
+                                                std::string value) {
   open_database();
   SearchBuilder *sb = new SearchBuilder(_db, _verbose);
-  list<File *> files = sb->add_condition(attribute, value, "=")->build();
+  std::list<File *> files = sb->add_condition(attribute, value, "=")->build();
   return files;
 }

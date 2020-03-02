@@ -75,7 +75,7 @@ public:
    */
   ~File();
 
-  string to_string() const;
+  std::string to_string() const;
 
   void insert(sql::Connection *db);
 

@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-std::string exec(string cmd);
+std::string exec(std::string cmd);
 
 // Returns a random string of length len from a-z characters.
 std::string random_str(const unsigned int len);
@@ -20,7 +20,7 @@ void fill_file_randomly(File *file, bool tweet, bool is_even);
 
 void print_sql_exception(sql::SQLException &e);
 
-void print_if_verbose(string to_print, bool verbose);
+void print_if_verbose(std::string to_print, bool verbose);
 
 nlohmann::json json_from_file(const std::string &path);
 

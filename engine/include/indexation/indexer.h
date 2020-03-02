@@ -13,9 +13,6 @@
 #include <iostream>
 #include <sstream>
 
-using std::list;
-using std::string;
-
 /**
  * Indexer class provides methods to manage the indexation of the files in the
  * database
@@ -25,7 +22,7 @@ class Indexer {
   /**
    * The name of the database
    */
-  string _db_name;
+  std::string _db_name;
 
   /**
    * The database (as a connection)
@@ -51,7 +48,7 @@ public:
    * @param verbose true to allow prints in the function of this class, false
    * otherwise
    */
-  Indexer(string db_name, bool verbose = false);
+  Indexer(std::string db_name, bool verbose = false);
 
   /**
    * Opens the database if not already opened
@@ -69,7 +66,7 @@ public:
    * Indexes the given files in the database
    * @param files the files to index
    */
-  void indexation(list<File *> files);
+  void indexation(std::list<File *> files);
 
   /**
    * Saves the given corpus in the database
@@ -83,7 +80,7 @@ public:
    * @param tag_value the value of the tag
    * return a list of all the files matching the condition
    */
-  list<File *> fetch_from_tag(string tag_name, string tag_value);
+  std::list<File *> fetch_from_tag(std::string tag_name, std::string tag_value);
 
   /**
    * Filters the files in the database where the given attribute (one column in
@@ -92,7 +89,8 @@ public:
    * @param tag_value the value of the tag
    * return a list of all the files matching the condition
    */
-  list<File *> fetch_from_attribute(string attribute, string value);
+  std::list<File *> fetch_from_attribute(std::string attribute,
+                                         std::string value);
 
   /**
    * Creates a search builder to request files from the database used by this

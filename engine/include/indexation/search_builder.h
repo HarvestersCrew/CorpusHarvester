@@ -8,12 +8,7 @@
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 #include <iostream>
-#include <list>
 #include <regex>
-#include <string>
-
-using std::list;
-using std::string;
 
 /**
  * SearchBuilder class provide a way to create an SQL statement with the buidler
@@ -24,37 +19,37 @@ class SearchBuilder : public RequestBuilder {
   /**
    * Left part of the final statement to execute
    */
-  string _left_request;
+  std::string _left_request;
 
   /**
    * Right part of the final statement to execute
    */
-  string _right_request;
+  std::string _right_request;
 
   /**
    * SELECT clause that handles every conditions about File attributes
    */
-  string _first_select;
+  std::string _first_select;
 
   /**
    * Used to process the current clause
    */
-  string _current_clause;
+  std::string _current_clause;
 
   /**
    * List to store the values of the first SELECT clause
    */
-  list<string> _first_prepared_values;
+  std::list<std::string> _first_prepared_values;
 
   /**
    * List to store the values of the other clauses
    */
-  list<string> _prepared_values;
+  std::list<std::string> _prepared_values;
 
   /**
    * List to store the values of the current clause
    */
-  list<string> _current_prepared_values;
+  std::list<std::string> _current_prepared_values;
 
   /* Boolean used to know if the current clause to process is only composed of
    * conditions about File attributes */
@@ -68,7 +63,7 @@ class SearchBuilder : public RequestBuilder {
   /**
    * A description of the filters applied in the search request
    */
-  string _filters;
+  std::string _filters;
 
   /**
    * The database (as a connection)
@@ -97,21 +92,21 @@ public:
    * @param op the logical operator between the name and the value
    * @return a pointer to itself
    */
-  SearchBuilder *add_tag_condition(string tag_name, string tag_value,
-                                   string op);
+  SearchBuilder *add_tag_condition(std::string tag_name, std::string tag_value,
+                                   std::string op);
 
-  SearchBuilder *add_condition(string condition_name, string condition_value,
-                               string op);
+  SearchBuilder *add_condition(std::string condition_name,
+                               std::string condition_value, std::string op);
 
   SearchBuilder *logical_and();
 
   SearchBuilder *logical_or();
 
-  list<File *> build();
+  std::list<File *> build();
 
   void clear();
 
-  string getFilters() { return _filters; }
+  std::string get_filters() { return _filters; }
 };
 
 #endif

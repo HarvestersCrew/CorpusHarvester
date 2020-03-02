@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <string>
 
-std::string exec(string cmd_str) {
+std::string exec(std::string cmd_str) {
   const char *cmd = cmd_str.c_str();
   std::array<char, 128> buffer;
   std::string result;
@@ -54,14 +54,14 @@ void fill_file_randomly(File *file, bool tweet, bool is_even) {
     file->add_tag("type", "article");
   }
   int tweet_subject_length = 3;
-  string tweet_subject_values[tweet_subject_length] = {"tank", "kitty",
-                                                       "crisquare"};
+  std::string tweet_subject_values[tweet_subject_length] = {"tank", "kitty",
+                                                            "crisquare"};
   for (int i = 0; i < tweet_subject_length; ++i) {
     file->add_tag("subject", tweet_subject_values[i]);
   }
 }
 
-void print_if_verbose(string to_print, bool verbose) {
+void print_if_verbose(std::string to_print, bool verbose) {
   if (verbose) {
     std::cout << to_print << std::endl;
   }
