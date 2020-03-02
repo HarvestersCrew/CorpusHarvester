@@ -5,6 +5,7 @@
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
+#include <list>
 #include <sstream>
 
 #define TAG_CREATE_STATEMENT                                                   \

@@ -20,7 +20,7 @@ string Tag::to_string() const {
 
 void Tag::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
-  list<File *> files;
+  std::list<File *> files;
 
   prep_stmt = db->prepareStatement(INSERT_TAG_STATEMENT);
   prep_stmt->setInt(1, _file_id);
