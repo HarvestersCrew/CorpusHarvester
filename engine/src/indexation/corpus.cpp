@@ -6,12 +6,12 @@
 
 Corpus::Corpus() {}
 
-Corpus::Corpus(string title, string creation_date, std::list<File *> files,
-               string used_filters, int id)
+Corpus::Corpus(std::string title, std::string creation_date,
+               std::list<File *> files, std::string used_filters, int id)
     : DatabaseItem(id), _title(title), _creation_date(creation_date),
       _files(files), _used_filters(used_filters) {}
 
-Corpus::Corpus(string title, string creation_date, int id)
+Corpus::Corpus(std::string title, std::string creation_date, int id)
     : DatabaseItem(id), _title(title), _creation_date(creation_date), _files(),
       _used_filters("") {}
 
@@ -21,7 +21,7 @@ Corpus::~Corpus() {
   }
 }
 
-string Corpus::to_string() const {
+std::string Corpus::to_string() const {
   std::ostringstream out;
   out << "Corpus{_id=" << _id << ", _title=" << _title
       << ", _creation_date=" << _creation_date << ", _files=[\n";
