@@ -68,3 +68,22 @@ size_t download_manager::write_callback(char *contents, size_t size,
   }
   return size * nmemb;
 }
+
+std::string download_manager::build_body_query(const download_item &dli) const {
+  std::stringstream ss;
+  const std::map<std::string, std::string> &query = dli.get_parameters();
+  if (query.size() != 0) {
+    bool first = true;
+
+    for (auto el : query) {
+      char *key = curl_easy_escape(this->curl, el.first.c_str(), 0);
+      char *val = curl_easy_escape(this->curl, el.second.c_str(), 0);
+      if (!first) {
+        ss << "&";
+      }
+      ss << key << "=" << val;
+      first = false;
+    }
+  }
+  return ss.str();
+}

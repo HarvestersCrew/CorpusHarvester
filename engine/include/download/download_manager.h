@@ -1,11 +1,13 @@
 #ifndef DOWNLOAD_MANAGER_H
 #define DOWNLOAD_MANAGER_H
 
+#include "download/download_item.h"
 #include "utils/exceptions.h"
 #include "utils/nlohmann/json.hpp"
 #include <curl/curl.h>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
 #include <utils/utils.h>
@@ -66,6 +68,8 @@ public:
    */
   static size_t write_callback(char *contents, size_t size, size_t nmemb,
                                void *userp);
+
+  std::string build_body_query(const download_item &dli) const;
 };
 
 #endif
