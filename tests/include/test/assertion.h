@@ -40,6 +40,18 @@ public:
     }
   }
 
+  static void assert_true(string function_name, bool found) {
+    if (!found) {
+      throw TestFailedException(function_name, "true", std::to_string(found));
+    }
+  }
+
+  static void assert_false(string function_name, bool found) {
+    if (found) {
+      throw TestFailedException(function_name, "false", std::to_string(found));
+    }
+  }
+
   static void assert_throw(string function_name, string exception_name) {
     throw TestFailedException(function_name, exception_name, "nothing");
   }
