@@ -4,8 +4,9 @@ using std::cout;
 using std::endl;
 
 SearchBuilder::SearchBuilder(sql::Connection *db, bool verbose)
-    : RequestBuilder(), _current_clause_only_on_file(true), _verbose(verbose),
-      _db(db) {}
+    : RequestBuilder(), _first_prepared_values(0), _prepared_values(0),
+      _current_prepared_values(0), _current_clause_only_on_file(true),
+      _verbose(verbose), _db(db) {}
 
 void SearchBuilder::valid_current_clause() {
   string distinct = "";
