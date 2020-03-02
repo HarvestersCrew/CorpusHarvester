@@ -1,14 +1,4 @@
-#include <sstream>
-
-#include "mysql_connection.h"
-#include <cppconn/prepared_statement.h>
-
-#include "indexation/database_item.h"
 #include "indexation/file.h"
-
-using std::cout;
-using std::endl;
-using std::ostringstream;
 
 File::File(std::string path, std::string name, int size, std::string source,
            int id)
@@ -24,7 +14,7 @@ File::~File() {
 }
 
 std::string File::to_string() const {
-  ostringstream out;
+  std::ostringstream out;
   out << "File{_id=" << _id << ", _path=" << _path << ", _name=" << _name
       << ", _size=" << _size << ", _source=" << _source << ", _tags=[\n\t";
   for (const auto &tag : _tags) {
@@ -65,7 +55,7 @@ void File::fetch_tags(sql::Connection *db) {
   while (res->next()) {
     Tag *tag = new Tag();
     tag->fill_from_statement(db, res);
-    _tags.push_back(unique_ptr<Tag>(tag));
+    _tags.push_back(std::unique_ptr<Tag>(tag));
   }
   delete res;
 }
@@ -80,7 +70,7 @@ void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
 }
 
 void File::add_tag(std::string name, std::string value) {
-  _tags.push_back(unique_ptr<Tag>(new Tag(name, value)));
+  _tags.push_back(std::unique_ptr<Tag>(new Tag(name, value)));
 }
 
 void File::store(const std::string &path) const {

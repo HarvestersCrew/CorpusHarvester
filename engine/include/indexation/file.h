@@ -24,8 +24,6 @@
   "INSERT INTO File (path, name, size, source) VALUES(?, ?, ?, ?)"
 #define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
 
-using std::unique_ptr;
-
 /**
  * File class describes a File table in the database
  */
@@ -53,7 +51,7 @@ class File : public DatabaseItem {
   bool _binary = false;
 
   /** The tags describing this file */
-  std::list<unique_ptr<Tag>> _tags;
+  std::list<std::unique_ptr<Tag>> _tags;
 
 public:
   /**
