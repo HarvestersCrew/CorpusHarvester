@@ -179,7 +179,8 @@ api_loader::query_and_parse(const nlohmann::json &params,
     out << now << "_" << id;
 
     try {
-      File *file = new File("", out.str(), 0, this->_name);
+      // TODO set format
+      File *file = new File("", out.str(), 0, this->_name, "");
       for (const api_parameter_response *param : this->_responses) {
         if (param->_name == this->_response_main_item) {
           this->manage_main_value(el[param->_api_name], param, file, dl);

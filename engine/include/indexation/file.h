@@ -14,14 +14,14 @@
 #define FILE_CREATE_STATEMENT                                                  \
   "CREATE TABLE IF NOT EXISTS File(id INTEGER NOT NULL AUTO_INCREMENT,path "   \
   "TEXT NOT NULL,name TEXT NOT NULL,size INTEGER, source TEXT NOT NULL, "      \
-  "PRIMARY KEY (id));"
+  "format TEXT NOT NULL, PRIMARY KEY (id));"
 #define GET_FILES_FROM_TAG                                                     \
   "SELECT f.* FROM File f, Tag t WHERE f.id = t.file_id AND t.name "           \
   "= "                                                                         \
   "? AND "                                                                     \
   "t.value = ?;"
 #define INSERT_FILE_STATEMENT                                                  \
-  "INSERT INTO File (path, name, size, source) VALUES(?, ?, ?, ?)"
+  "INSERT INTO File (path, name, size, source, format) VALUES(?, ?, ?, ?, ?)"
 #define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
 
 /**
@@ -41,6 +41,9 @@ class File : public DatabaseItem {
   /** The source of the file */
   std::string _source;
 
+  /** The format of the file */
+  std::string _format;
+
   /** The content of the file (not a database attribute) */
   std::string _content;
 
@@ -51,7 +54,7 @@ class File : public DatabaseItem {
   bool _binary = false;
 
   /** The tags describing this file */
-  std::list<std::unique_ptr<Tag>> _tags;
+  std::list<Tag *> _tags;
 
 public:
   /**
@@ -65,10 +68,11 @@ public:
    * @param name the name of the file
    * @param size the size of the file
    * @param source the source of the file
+   * @param format the format of the file
    * @param id the id of the file in the database
    */
   File(std::string path, std::string name, int size, std::string source,
-       int id = -1);
+       std::string format, int id = -1);
 
   /**
    * Default destructor
@@ -103,6 +107,7 @@ public:
   std::string get_content_str() const { return _content; }
   int get_size() const { return _size; }
 
+  void set_format(std::string format) { _format = format; }
   void set_path(std::string path) { _path = path; }
   void set_binary(bool bin) { _binary = bin; }
   void set_content(std::string content);

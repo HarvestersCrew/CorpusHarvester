@@ -18,7 +18,8 @@ void test_file_destination() {
 
 void test_move_one_file() {
   system(INIT_DATA);
-  File *file = new File(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter");
+  File *file =
+      new File(TEMP_FILES_PATH + "tweet3", "tweet3", 200, "tweeter", ".txt");
   storage.move_file(file);
   std::string expectedDestination = STORED_PATH + "tweeter/t/tweet3";
   Assertion::assert_equals(__FUNCTION__, expectedDestination, file->get_path());
@@ -27,7 +28,7 @@ void test_move_one_file() {
 }
 
 void test_store_one_file() {
-  File *file = new File("", "jesuisunfichierquivientde", 200, "tmdb");
+  File *file = new File("", "jesuisunfichierquivientde", 200, "tmdb", ".txt");
   std::string content = "Bien le bonjour je suis un fichier de test";
   file->set_content(content);
   storage.store_file(file);

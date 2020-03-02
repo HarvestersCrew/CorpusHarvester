@@ -38,8 +38,8 @@ void test_indexation() {
   std::list<File *> files;
   for (int i = 0; i < FILE_COUNT; i++) {
     std::string i_str = std::to_string(i);
-    File *file =
-        new File("/stockage/file" + i_str, "file" + i_str, i + 100, "Tweeter");
+    File *file = new File("/stockage/file" + i_str, "file" + i_str, i + 100,
+                          "Tweeter", ".txt");
     fill_file_randomly(file, i < TWEET_COUNT, i % 2 == 0);
     file->add_tag("retweet", i_str);
     files.push_back(file);
