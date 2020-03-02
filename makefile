@@ -23,14 +23,16 @@ OBJDIRS := $(dir $(OBJS))
 
 PWD := $(shell pwd)
 
+THREADS := $(shell nproc --all)
+
 .PHONY: docker, docker/%
 
 all: $(EXESPATH)
 
 $(BINDIR)/%: $(SRCS) $(INCS)
-	make -C $(ENGINEDIR) -f $(PWD)/makefile build
-	make -C $* -f $(PWD)/makefile build
-	make link/$*
+	$(MAKE) -j$(THREADS) -C $(ENGINEDIR) -f $(PWD)/makefile build
+	$(MAKE) -j$(THREADS) -C $* -f $(PWD)/makefile build
+	$(MAKE) -j$(THREADS) link/$*
 
 link/%:
 	@mkdir -p $(BINDIR)
@@ -72,10 +74,10 @@ docker/reset:
 	docker network rm $(docker network ls | tail -n+2 | awk '{if($2 !~ /bridge|none|host/){ print $1 }}')
 
 docker/clean: docker/up clean
-	docker-compose exec harvester make clean
+	docker-compose exec harvester $(MAKE) clean
 
 docker/%: docker/up
-	docker-compose exec harvester make ${BINDIR}/$*
+	docker-compose exec harvester $(MAKE) ${BINDIR}/$*
 	@echo "#!/bin/bash" > ${BINDIR}/$*
 	@echo "docker-compose exec harvester ${BINDIR}/$* \$${@:1}" >> ${BINDIR}/$*
 	@chmod a+wx ${BINDIR}/$*
