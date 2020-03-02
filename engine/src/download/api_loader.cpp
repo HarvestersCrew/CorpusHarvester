@@ -177,20 +177,27 @@ api_loader::query_and_parse(const nlohmann::json &params,
     now = get_current_time("%d-%m-%Y");
     std::ostringstream out;
     out << now << "_" << id;
-    File *file = new File("", out.str(), 0, this->_name);
-    for (const api_parameter_response *param : this->_responses) {
-      if (param->_name == this->_response_main_item) {
-        this->manage_main_value(el[param->_api_name], param, file, dl);
-      } else {
-        file->add_tag(param->_name,
-                      param->json_value_to_string(el[param->_api_name]));
+
+    try {
+      File *file = new File("", out.str(), 0, this->_name);
+      for (const api_parameter_response *param : this->_responses) {
+        if (param->_name == this->_response_main_item) {
+          this->manage_main_value(el[param->_api_name], param, file, dl);
+        } else {
+          file->add_tag(param->_name,
+                        param->json_value_to_string(el[param->_api_name]));
+        }
       }
-    }
-    for (const auto &[key, val] : relevant_parameters.items()) {
-      file->add_tag(key, val.get<std::string>());
+      for (const auto &[key, val] : relevant_parameters.items()) {
+        file->add_tag(key, val.get<std::string>());
+      }
+
+      files.push_back(file);
+    } catch (const std::exception &e) {
+      std::cerr << "Unexpected exception while parsing a result: " << e.what()
+                << std::endl;
     }
 
-    files.push_back(file);
     id++;
   }
 
