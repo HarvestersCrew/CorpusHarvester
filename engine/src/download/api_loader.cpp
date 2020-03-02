@@ -228,6 +228,7 @@ void api_loader::manage_text(const std::string &api_result,
                              File *file_to_save_to) const {
   file_to_save_to->set_content(this->_response_main_appends.value_or("") +
                                api_result);
+  file_to_save_to->set_format("txt");
 }
 
 void api_loader::manage_media(const std::string &path_api,
@@ -243,4 +244,11 @@ void api_loader::manage_media(const std::string &path_api,
   std::vector<char> res = dl.download(url);
   file_to_save_to->set_bin_content(res);
   file_to_save_to->set_binary(true);
+
+  int idx = path_api.rfind('.');
+  std::string format;
+  if (idx) {
+    format = path_api.substr(idx + 1);
+  }
+  file_to_save_to->set_format(format);
 }
