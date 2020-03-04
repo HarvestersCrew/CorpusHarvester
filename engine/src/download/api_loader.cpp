@@ -56,12 +56,6 @@ void api_loader::init(const nlohmann::json &j) {
     throw api_unrecognized_settings_exception("api_type", given_api_type);
   }
 
-  this->_response_main_appends = std::nullopt;
-  if (j.contains("response_main_appends")) {
-    this->_response_main_appends =
-        j.at("response_main_appends").get<std::string>();
-  }
-
   for (auto &el : j.at("path_to_results")) {
     this->_path_to_results.push_back(el.get<std::string>());
   }
@@ -77,6 +71,21 @@ void api_loader::init(const nlohmann::json &j) {
   }
   if (!main_attribute_found)
     throw api_missing_settings_exception();
+
+  if (j.contains("response_url_prepends")) {
+    for (const auto &el : j.at("response_url_prepends")) {
+      if (el.at("is_parameter_name").get<bool>()) {
+        std::string param_name = el.at("value").get<std::string>();
+        if (!this->does_request_parameter_exist(param_name) &&
+            !this->does_response_parameter_exist(param_name)) {
+          throw api_no_setting_exception(param_name);
+        }
+      }
+      this->response_url_prepends.push_back(
+          std::make_pair(el.at("value").get<std::string>(),
+                         el.at("is_parameter_name").get<bool>()));
+    }
+  }
 }
 
 std::string api_loader::to_string() const {
@@ -86,12 +95,17 @@ std::string api_loader::to_string() const {
   out << "url: " << this->_url << std::endl;
   out << "api_type: " << this->api_type_string() << std::endl;
   out << "main value name: " << this->_response_main_item << std::endl;
-  out << "main value append: "
-      << this->_response_main_appends.value_or("no value") << std::endl;
 
   out << "path to result: ";
   for (const std::string &el : this->_path_to_results) {
     out << "{" << el << "}";
+  }
+  out << std::endl;
+
+  out << "response url prepend: " << std::endl;
+  for (std::pair<std::string, bool> el : this->response_url_prepends) {
+    out << "value: \"" << el.first << "\", is_parameter: " << el.second
+        << std::endl;
   }
 
   out << std::endl << "Request parameters:";
@@ -226,8 +240,8 @@ void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
 
 void api_loader::manage_text(const std::string &api_result,
                              File *file_to_save_to) const {
-  file_to_save_to->set_content(this->_response_main_appends.value_or("") +
-                               api_result);
+  // file_to_save_to->set_content(this->_response_main_appends.value_or("") +
+  //                              api_result);
   file_to_save_to->set_format("txt");
 }
 
@@ -240,7 +254,8 @@ void api_loader::manage_media(const std::string &path_api,
                              ") media type.");
   }
 
-  std::string url = this->_response_main_appends.value_or("") + path_api;
+  // std::string url = this->_response_main_appends.value_or("") + path_api;
+  std::string url("");
   std::vector<char> res = dl.download(url);
   file_to_save_to->set_bin_content(res);
   file_to_save_to->set_binary(true);
@@ -251,4 +266,22 @@ void api_loader::manage_media(const std::string &path_api,
     format = path_api.substr(idx + 1);
   }
   file_to_save_to->set_format(format);
+}
+
+bool api_loader::does_request_parameter_exist(const std::string &name) const {
+  for (api_parameter_request *el : this->_requests) {
+    if (el->_api_name == name) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool api_loader::does_response_parameter_exist(const std::string &name) const {
+  for (api_parameter_response *el : this->_responses) {
+    if (el->_api_name == name) {
+      return true;
+    }
+  }
+  return false;
 }

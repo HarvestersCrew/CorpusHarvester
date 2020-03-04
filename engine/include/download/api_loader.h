@@ -16,6 +16,7 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #define API_TYPE_TXT "text"
@@ -46,8 +47,9 @@ private:
   /** API main response value */
   std::string _response_main_item;
 
-  /** Value to append to main response if it is a string */
-  std::optional<std::string> _response_main_appends;
+  /** Values to prepend to URL responses, string is the value and bool is if it
+   * is a parameter's name or a direct string */
+  std::vector<std::pair<std::string, bool>> response_url_prepends;
 
   /** Path to an array of objects in resulting JSON */
   std::vector<std::string> _path_to_results;
@@ -146,6 +148,20 @@ public:
   void manage_media(const std::string &path_api,
                     const api_parameter_response *param, File *file_to_save_to,
                     const download_manager &dl) const;
+
+  /**
+   * Checks if a request API parameter is named as is
+   * @param name API name to search for
+   * @return bool whether it was found
+   */
+  bool does_request_parameter_exist(const std::string &name) const;
+
+  /**
+   * Checks if a response API parameter is named as is
+   * @param name API name to search for
+   * @return bool whether it was found
+   */
+  bool does_response_parameter_exist(const std::string &name) const;
 };
 
 #endif
