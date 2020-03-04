@@ -74,16 +74,15 @@ void api_loader::init(const nlohmann::json &j) {
 
   if (j.contains("response_url_prepends")) {
     for (const auto &el : j.at("response_url_prepends")) {
+      std::string param_name = el.at("value").get<std::string>();
       if (el.at("is_parameter_name").get<bool>()) {
-        std::string param_name = el.at("value").get<std::string>();
-        if (!this->does_request_parameter_exist(param_name) &&
-            !this->does_response_parameter_exist(param_name)) {
+        if (!this->find_request_parameter(param_name).has_value() &&
+            !this->find_response_parameter(param_name).has_value()) {
           throw api_no_setting_exception(param_name);
         }
       }
       this->response_url_prepends.push_back(
-          std::make_pair(el.at("value").get<std::string>(),
-                         el.at("is_parameter_name").get<bool>()));
+          std::make_pair(param_name, el.at("is_parameter_name").get<bool>()));
     }
   }
 }
@@ -240,8 +239,7 @@ void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
 
 void api_loader::manage_text(const std::string &api_result,
                              File *file_to_save_to) const {
-  // file_to_save_to->set_content(this->_response_main_appends.value_or("") +
-  //                              api_result);
+  file_to_save_to->set_content(api_result);
   file_to_save_to->set_format("txt");
 }
 
@@ -254,8 +252,7 @@ void api_loader::manage_media(const std::string &path_api,
                              ") media type.");
   }
 
-  // std::string url = this->_response_main_appends.value_or("") + path_api;
-  std::string url("");
+  std::string url = this->response_url_prepend(path_api);
   std::vector<char> res = dl.download(url);
   file_to_save_to->set_bin_content(res);
   file_to_save_to->set_binary(true);
@@ -268,20 +265,37 @@ void api_loader::manage_media(const std::string &path_api,
   file_to_save_to->set_format(format);
 }
 
-bool api_loader::does_request_parameter_exist(const std::string &name) const {
+std::optional<api_parameter_request *>
+api_loader::find_request_parameter(const std::string &name) const {
   for (api_parameter_request *el : this->_requests) {
     if (el->_api_name == name) {
-      return true;
+      return el;
     }
   }
-  return false;
+  return {};
 }
 
-bool api_loader::does_response_parameter_exist(const std::string &name) const {
+std::optional<api_parameter_response *>
+api_loader::find_response_parameter(const std::string &name) const {
   for (api_parameter_response *el : this->_responses) {
     if (el->_api_name == name) {
-      return true;
+      return el;
     }
   }
-  return false;
+  return {};
+}
+
+std::string api_loader::response_url_prepend(std::string url) const {
+  for (int i = this->response_url_prepends.size() - 1; i >= 0; --i) {
+    const std::pair<std::string, bool> &el = this->response_url_prepends.at(i);
+    std::string prep("");
+    if (el.second) {
+      throw std::runtime_error(
+          "Using response value as prepend not yet implemented");
+    } else {
+      prep = el.first;
+    }
+    url = prep + url;
+  }
+  return url;
 }

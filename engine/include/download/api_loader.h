@@ -150,18 +150,29 @@ public:
                     const download_manager &dl) const;
 
   /**
-   * Checks if a request API parameter is named as is
+   * Gets a request parameter named as
    * @param name API name to search for
-   * @return bool whether it was found
+   * @return std::optional<api_parameter_request *> optional containing maybe
+   * the parameter pointer
    */
-  bool does_request_parameter_exist(const std::string &name) const;
+  std::optional<api_parameter_request *>
+  find_request_parameter(const std::string &name) const;
 
   /**
-   * Checks if a response API parameter is named as is
+   * Gets a response parameter named as
    * @param name API name to search for
-   * @return bool whether it was found
+   * @return std::optional<api_parameter_request *> optional containing maybe
+   * the parameter pointer
    */
-  bool does_response_parameter_exist(const std::string &name) const;
+  std::optional<api_parameter_response *>
+  find_response_parameter(const std::string &name) const;
+
+  /**
+   * Returns the prepended URL designed by the API
+   * @param url URL to prepend
+   * @return std::string URL prepended
+   */
+  std::string response_url_prepend(std::string url) const;
 };
 
 #endif
