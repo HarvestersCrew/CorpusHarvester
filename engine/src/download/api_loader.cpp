@@ -179,7 +179,6 @@ api_loader::query_and_parse(const nlohmann::json &params,
     out << now << "_" << id;
 
     try {
-      // TODO set format
       File *file = new File("", out.str(), 0, this->_name, "");
       for (const api_parameter_response *param : this->_responses) {
         if (param->_name == this->_response_main_item) {
@@ -194,9 +193,10 @@ api_loader::query_and_parse(const nlohmann::json &params,
       }
 
       files.push_back(file);
-    } catch (const std::exception &e) {
-      std::cerr << "Unexpected exception while parsing a result: " << e.what()
-                << std::endl;
+    } catch (...) {
+      std::exception_ptr e = std::current_exception();
+      std::cerr << "Unexpected exception while parsing a result: "
+                << e.__cxa_exception_type()->name() << std::endl;
     }
 
     id++;
