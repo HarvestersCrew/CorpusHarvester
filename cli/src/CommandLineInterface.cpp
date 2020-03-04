@@ -2,6 +2,8 @@
 #include "CommandLineInterface.h"
 #include "utils/utils.h"
 
+#include <typeinfo>
+
 CommandLineInterface::CommandLineInterface(
     const std::deque<std::string> arguments) {
   this->arguments = arguments;
@@ -53,23 +55,43 @@ Corpus CommandLineInterface::create_corpus() {
   Storage storage("/tmp/stored/");
   storage.store_files(out);
 
-  // // Index the downloaded data
-  // Indexer indexer("harvester", false);
-  // indexer.create_database(true);
-  // indexer.indexation(out);
+  // Index the downloaded data
+  Indexer indexer("harvester", false);
+  indexer.create_database(true);
+  indexer.indexation(out);
 
-  // // Request files which has at least one retweet and one favorite
-  // SearchBuilder sb = indexer.get_search_builder();
-  // list<File *> tweets = sb.add_tag_condition("retweet", "100", ">")
-  //                           ->logical_and()
-  //                           ->add_condition("id", "50", "<")
-  //                           ->build();
+  // Request files which has at least one retweet and one favorite
+  SearchBuilder sb = indexer.get_search_builder();
+  std::list<File *> tweets = sb.add_tag_condition("retweet", "100", ">")
+                                 ->logical_and()
+                                 ->add_condition("id", "50", "<")
+                                 ->build();
 
-  // // Create our corpus from the fetch data and save it
-  // std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
-  // Corpus corpus("50 premiers avec retweets > 100", now, tweets, "");
-  // indexer.save_corpus(corpus);
-  // return corpus;
+  // Create our corpus from the fetch data and save it
+  std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
+  Corpus corpus("50 premiers avec retweets > 100", now, tweets, "");
+  indexer.save_corpus(corpus);
+
+  return corpus;
+}
+
+std::list<Corpus *> CommandLineInterface::list_corpus() {
+
+  // TODO ::  Add some parameters for using filtering in the request.
+
+  // If the first command is help
+  if (this->arguments.front() == "--help") {
+    std::cout << "Some filters ae available ." << std::endl;
+    exit(0);
+  }
+
+  Indexer indexer("harvester", 0);
+  sql::Connection *db = indexer.get_database();
+
+  // TODO :: Problem here
+  std::list<Corpus *> corpus = Corpus::get_all_corpuses(db);
+
+  return corpus;
 }
 
 void CommandLineInterface::run() {
@@ -85,6 +107,16 @@ void CommandLineInterface::run() {
   } else if (firstCommand == "create") {
     Corpus corpus = this->create_corpus();
     std::cout << corpus.to_string() << std::endl;
+  } else if (firstCommand == "corpus") {
+
+    std::list<Corpus *> corpusList = this->list_corpus();
+    std::cout << "Number of available corpus : " << corpusList.size()
+              << std::endl;
+
+    for (const Corpus *corpus : corpusList) {
+      std::cout << corpus->header_string() << std::endl;
+    }
+
   } else {
     std::cout
         << "The command '" << firstCommand

@@ -21,6 +21,13 @@ Corpus::~Corpus() {
   }
 }
 
+std::string Corpus::header_string() const {
+  std::ostringstream out;
+  out << "Corpus{_id=" << _id << ", _title=" << _title
+      << ", _creation_date=" << _creation_date << "}";
+  return out.str();
+}
+
 std::string Corpus::to_string() const {
   std::ostringstream out;
   out << "Corpus{_id=" << _id << ", _title=" << _title

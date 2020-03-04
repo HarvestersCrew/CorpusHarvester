@@ -39,6 +39,13 @@ private:
   Corpus create_corpus();
 
   /**
+   * Show all the corpus created
+   *
+   * @return list of corpus
+   */
+  std::list<Corpus *> list_corpus();
+
+  /**
    * Create a new API.
    */
   void create_api();

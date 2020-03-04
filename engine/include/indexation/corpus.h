@@ -91,6 +91,8 @@ public:
 
   std::string to_string() const;
 
+  std::string header_string() const;
+
   void insert(sql::Connection *db);
 
   void fill_attribute_from_statement(sql::ResultSet *res);
