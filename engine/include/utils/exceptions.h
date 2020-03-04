@@ -60,7 +60,13 @@ public:
 };
 
 class download_no_200_exception : public std::exception {
+private:
+  std::string _msg;
+
 public:
+  download_no_200_exception() : _msg("HTTP call didn't succeed.") {}
+  download_no_200_exception(int http_code)
+      : _msg("HTTP call didn't succeed: " + http_code) {}
   const char *what() const throw();
 };
 

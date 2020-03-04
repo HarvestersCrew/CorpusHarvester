@@ -19,5 +19,5 @@ const char *api_unrecognized_settings_exception::what() const throw() {
 }
 
 const char *download_no_200_exception::what() const throw() {
-  return "Web call didn't succeed.";
+  return this->_msg.c_str();
 }
