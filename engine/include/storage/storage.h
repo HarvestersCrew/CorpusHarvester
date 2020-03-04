@@ -3,12 +3,9 @@
 
 #include "indexation/file.h"
 #include "utils/exceptions.h"
-#include <bits/stdc++.h>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <string>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 /**
  * Storage class provides methods to store the files in the file system
@@ -26,7 +23,7 @@ private:
    * @param folder_path the path to create from the root folder
    * @return 0 if something went wrong, 1 otherwise
    */
-  int create_folders_in_root(std::string folder_path) const;
+  bool create_folders_in_root(std::string folder_path) const;
 
   /**
    * Checks if the given folder path exists fro mthe root folder
