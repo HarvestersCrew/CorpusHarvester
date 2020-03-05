@@ -61,32 +61,6 @@
                 "tweet"
             ]
         },
-        "response_url_prepends": {
-            "$id": "#/properties/response_url_prepends",
-            "type": "array",
-            "title": "Values and / or parameters to prepend to a response URL",
-            "items": {
-                "$id": "#/properties/response_url_prepends/items",
-                "type": "object",
-                "title": "Each value to append to a response URL",
-                "required": [
-                    "is_parameter_name",
-                    "value"
-                ],
-                "properties": {
-                    "is_parameter_name": {
-                        "$id": "#/properties/response_url_prepends/items/is_parameter_name",
-                        "type": "boolean",
-                        "title": "If the given string is the name of a parameter (else take the string as is)"
-                    },
-                    "value": {
-                        "$id": "#/properties/response_url_prepends/items/value",
-                        "type": "string",
-                        "title": "Value to use"
-                    }
-                }
-            }
-        },
         "path_to_results": {
             "$id": "#/properties/path_to_results",
             "type": "array",
@@ -234,6 +208,32 @@
                             "text",
                             "retweets"
                         ]
+                    },
+                    "string_prepends": {
+                        "$id": "#/properties/response/items/properties/string_prepends",
+                        "type": "array",
+                        "title": "Values and / or parameters to prepend to a response URL",
+                        "items": {
+                            "$id": "#/properties/response/items/properties/string_prepends/items",
+                            "type": "object",
+                            "title": "Each value to append to a response URL",
+                            "required": [
+                                "is_parameter_name",
+                                "value"
+                            ],
+                            "properties": {
+                                "is_parameter_name": {
+                                    "$id": "#/properties/response/items/properties/string_prepends/items/is_parameter_name",
+                                    "type": "boolean",
+                                    "title": "If the given string is the name of a parameter (else take the string as is)"
+                                },
+                                "value": {
+                                    "$id": "#/properties/response/items/properties/string_prepends/items/value",
+                                    "type": "string",
+                                    "title": "Value to use"
+                                }
+                            }
+                        }
                     }
                 }
             }

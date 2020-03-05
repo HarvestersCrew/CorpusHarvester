@@ -71,20 +71,6 @@ void api_loader::init(const nlohmann::json &j) {
   }
   if (!main_attribute_found)
     throw api_missing_settings_exception();
-
-  if (j.contains("response_url_prepends")) {
-    for (const auto &el : j.at("response_url_prepends")) {
-      std::string param_name = el.at("value").get<std::string>();
-      if (el.at("is_parameter_name").get<bool>()) {
-        if (!this->find_request_parameter(param_name).has_value() &&
-            !this->find_response_parameter(param_name).has_value()) {
-          throw api_no_setting_exception(param_name);
-        }
-      }
-      this->response_url_prepends.push_back(
-          std::make_pair(param_name, el.at("is_parameter_name").get<bool>()));
-    }
-  }
 }
 
 std::string api_loader::to_string() const {
@@ -100,12 +86,6 @@ std::string api_loader::to_string() const {
     out << "{" << el << "}";
   }
   out << std::endl;
-
-  out << "response url prepend: " << std::endl;
-  for (std::pair<std::string, bool> el : this->response_url_prepends) {
-    out << "value: \"" << el.first << "\", is_parameter: " << el.second
-        << std::endl;
-  }
 
   out << std::endl << "Request parameters:";
   for (const api_parameter_request *el : this->_requests) {
@@ -226,10 +206,10 @@ api_loader::query_and_parse(const nlohmann::json &params,
 void api_loader::manage_main_value(const response_item &result_to_manage,
                                    File *file_to_save_to,
                                    const download_manager &dl) const {
-  auto main_result =
+  std::pair<const api_parameter_response *, std::string> main_result =
       result_to_manage.get_named_parameter(this->_response_main_item);
-  auto main_result_param = main_result.first;
-  auto main_result_value = main_result.second;
+  const api_parameter_response *main_result_param = main_result.first;
+  std::string main_result_value = main_result.second;
   switch (this->_api_type) {
   case api_loader::api_type::TEXT:
     this->manage_text(main_result_value, file_to_save_to);
@@ -259,8 +239,7 @@ void api_loader::manage_media(const std::string &path_api,
                              ") media type.");
   }
 
-  std::string url = this->response_url_prepend(path_api);
-  std::vector<char> res = dl.download(url);
+  std::vector<char> res = dl.download(path_api);
   file_to_save_to->set_bin_content(res);
   file_to_save_to->set_binary(true);
 
@@ -291,24 +270,3 @@ api_loader::find_response_parameter(const std::string &name) const {
   }
   return {};
 }
-
-std::string api_loader::response_url_prepend(std::string url) const {
-  for (int i = this->response_url_prepends.size() - 1; i >= 0; --i) {
-    const std::pair<std::string, bool> &el = this->response_url_prepends.at(i);
-    std::string prep("");
-    if (el.second) {
-      throw std::runtime_error(
-          "Using response value as prepend not yet implemented");
-    } else {
-      prep = el.first;
-    }
-    url = prep + url;
-  }
-  return url;
-}
-
-// nlohmann::json api_loader::get_param_value_from_single_json_response(
-//     const nlohmann::json single_response,
-//     const api_parameter_response *param) const {
-//   return single_response.at(param->_api_name);
-// }

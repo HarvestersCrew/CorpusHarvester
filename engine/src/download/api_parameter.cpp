@@ -138,13 +138,27 @@ void api_parameter_request::set_default_value(const std::string &val) {
 
 api_parameter_response::api_parameter_response(const nlohmann::json &json)
     : api_parameter_base(json) {
-  this->_name = json.at("name").get<std::string>();
+
+  if (json.contains("string_prepends")) {
+    for (const auto &el : json.at("string_prepends")) {
+      std::string param_name = el.at("value").get<std::string>();
+      this->_string_prepends.push_back(
+          std::make_pair(param_name, el.at("is_parameter_name").get<bool>()));
+    }
+  }
 }
 
 std::string api_parameter_response::to_string() const {
   std::string base = api_parameter_base::to_string();
   std::stringstream out;
   out << base << std::endl;
-  out << "name: " << this->_name;
+  out << "name: " << this->_name << std::endl;
+  out << "string prepend: [" << std::endl;
+  for (std::pair<std::string, bool> el : this->_string_prepends) {
+    out << "value: \"" << el.first << "\", is_parameter: " << el.second
+        << std::endl;
+  }
+  out << "]";
+
   return out.str();
 }

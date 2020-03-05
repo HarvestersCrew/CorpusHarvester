@@ -48,10 +48,6 @@ private:
   /** API main response value */
   std::string _response_main_item;
 
-  /** Values to prepend to URL responses, string is the value and bool is if it
-   * is a parameter's name or a direct string */
-  std::vector<std::pair<std::string, bool>> response_url_prepends;
-
   /** Path to an array of objects in resulting JSON */
   std::vector<std::string> _path_to_results;
 
@@ -166,17 +162,6 @@ public:
    */
   std::optional<api_parameter_response *>
   find_response_parameter(const std::string &name) const;
-
-  /**
-   * Returns the prepended URL designed by the API
-   * @param url URL to prepend
-   * @return std::string URL prepended
-   */
-  std::string response_url_prepend(std::string url) const;
-
-  // nlohmann::json get_param_value_from_single_json_response(
-  //     const nlohmann::json single_response,
-  //     const api_parameter_response *param) const;
 };
 
 #endif

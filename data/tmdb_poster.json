@@ -4,12 +4,6 @@
     "method": "GET",
     "api_type": "image",
     "response_main_item": "poster",
-    "response_url_prepends": [
-        {
-            "is_parameter_name": false,
-            "value": "https://image.tmdb.org/t/p/original"
-        }
-    ],
     "path_to_results": [
         "results"
     ],
@@ -61,7 +55,13 @@
         {
             "type": "image_link",
             "api_name": "poster_path",
-            "name": "poster"
+            "name": "poster",
+            "string_prepends": [
+                {
+                    "is_parameter_name": false,
+                    "value": "https://image.tmdb.org/t/p/original"
+                }
+            ]
         },
         {
             "type": "string",

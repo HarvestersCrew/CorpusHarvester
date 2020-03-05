@@ -115,6 +115,11 @@ class api_parameter_response : public api_parameter_base {
   friend class download_item;
   friend class response_item;
 
+private:
+  /** Values to prepend to responses, string is the value and bool is if it
+   * is a parameter's name or a direct string */
+  std::vector<std::pair<std::string, bool>> _string_prepends;
+
 public:
   /**
    * Loads parameters data from a JSON

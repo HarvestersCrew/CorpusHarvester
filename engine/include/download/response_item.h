@@ -42,8 +42,17 @@ public:
    * @param name name of the parameter
    * @return pair of the parameter and its value
    */
-  const std::pair<const api_parameter_response *, std::string> &
+  std::pair<const api_parameter_response *, std::string>
   get_named_parameter(const std::string &name) const;
+
+  /**
+   * Returns the prepended string designed by the API
+   * @param param parameter which the value depend
+   * @param value string to prepend
+   * @return std::string value prepended
+   */
+  std::string string_prepend(const api_parameter_response *param,
+                             std::string value) const;
 };
 
 #endif
