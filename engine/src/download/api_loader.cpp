@@ -26,7 +26,7 @@ api_loader::~api_loader() {
 void api_loader::set_parameter_request_default_value(const std::string &key,
                                                      const std::string &val) {
   for (api_parameter_request *p : this->_requests) {
-    if (p->_api_name == key) {
+    if (p->_name == key) {
       p->set_default_value(val);
       return;
     }
@@ -151,15 +151,14 @@ api_loader::query_and_parse(const nlohmann::json &params,
     std::optional<std::string> val;
     val = std::nullopt;
 
-    if (params.contains(el->_api_name)) {
-      if (!el->is_value_valid(params.at(el->_api_name).get<std::string>()))
+    if (params.contains(el->_name)) {
+      if (!el->is_value_valid(params.at(el->_name).get<std::string>()))
         throw std::runtime_error("Incompatible parameter.");
-      val.emplace(params.at(el->_api_name).get<std::string>());
+      val.emplace(params.at(el->_name).get<std::string>());
     } else if (el->_default_value.has_value())
       val.emplace(el->_default_value.value());
     else if (el->_required)
-      throw std::runtime_error("Required parameter not filled: " +
-                               el->_api_name);
+      throw std::runtime_error("Required parameter not filled: " + el->_name);
 
     if (val.has_value()) {
 
@@ -268,7 +267,7 @@ void api_loader::manage_media(const std::string &path_api,
 std::optional<api_parameter_request *>
 api_loader::find_request_parameter(const std::string &name) const {
   for (api_parameter_request *el : this->_requests) {
-    if (el->_api_name == name) {
+    if (el->_name == name) {
       return el;
     }
   }
@@ -278,7 +277,7 @@ api_loader::find_request_parameter(const std::string &name) const {
 std::optional<api_parameter_response *>
 api_loader::find_response_parameter(const std::string &name) const {
   for (api_parameter_response *el : this->_responses) {
-    if (el->_api_name == name) {
+    if (el->_name == name) {
       return el;
     }
   }
