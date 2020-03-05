@@ -46,13 +46,13 @@ public:
   get_named_parameter(const std::string &name) const;
 
   /**
-   * Returns the prepended string designed by the API
+   * Returns the prepended and appended string designed by the API
    * @param param parameter which the value depend
-   * @param value string to prepend
-   * @return std::string value prepended
+   * @param value string to modify
+   * @return std::string value modified
    */
-  std::string string_prepend(const api_parameter_response *param,
-                             std::string value) const;
+  std::string string_prepend_append(const api_parameter_response *param,
+                                    std::string value) const;
 };
 
 #endif

@@ -236,7 +236,7 @@
                         "items": {
                             "$id": "#/properties/response/items/properties/string_prepends/items",
                             "type": "object",
-                            "title": "Each value to append to a response URL",
+                            "title": "Each value to prepend to a response URL",
                             "required": [
                                 "is_parameter_name",
                                 "value"
@@ -249,6 +249,32 @@
                                 },
                                 "value": {
                                     "$id": "#/properties/response/items/properties/string_prepends/items/value",
+                                    "type": "string",
+                                    "title": "Value to use"
+                                }
+                            }
+                        }
+                    },
+                    "string_appends": {
+                        "$id": "#/properties/response/items/properties/string_appends",
+                        "type": "array",
+                        "title": "Values and / or parameters to append to a response URL",
+                        "items": {
+                            "$id": "#/properties/response/items/properties/string_appends/items",
+                            "type": "object",
+                            "title": "Each value to append to a response URL",
+                            "required": [
+                                "is_parameter_name",
+                                "value"
+                            ],
+                            "properties": {
+                                "is_parameter_name": {
+                                    "$id": "#/properties/response/items/properties/string_appends/items/is_parameter_name",
+                                    "type": "boolean",
+                                    "title": "If the given string is the name of a parameter (else take the string as is)"
+                                },
+                                "value": {
+                                    "$id": "#/properties/response/items/properties/string_appends/items/value",
                                     "type": "string",
                                     "title": "Value to use"
                                 }

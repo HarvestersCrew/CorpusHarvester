@@ -120,6 +120,10 @@ private:
    * is a parameter's name or a direct string */
   std::vector<std::pair<std::string, bool>> _string_prepends;
 
+  /** Values to append to responses, string is the value and bool is if it
+   * is a parameter's name or a direct string */
+  std::vector<std::pair<std::string, bool>> _string_appends;
+
 public:
   /**
    * Loads parameters data from a JSON

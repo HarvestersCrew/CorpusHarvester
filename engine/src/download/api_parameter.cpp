@@ -147,6 +147,14 @@ api_parameter_response::api_parameter_response(const nlohmann::json &json)
           std::make_pair(param_name, el.at("is_parameter_name").get<bool>()));
     }
   }
+
+  if (json.contains("string_appends")) {
+    for (const auto &el : json.at("string_appends")) {
+      std::string param_name = el.at("value").get<std::string>();
+      this->_string_appends.push_back(
+          std::make_pair(param_name, el.at("is_parameter_name").get<bool>()));
+    }
+  }
 }
 
 std::string api_parameter_response::to_string() const {
@@ -156,6 +164,12 @@ std::string api_parameter_response::to_string() const {
   out << "name: " << this->_name << std::endl;
   out << "string prepend: [" << std::endl;
   for (std::pair<std::string, bool> el : this->_string_prepends) {
+    out << "value: \"" << el.first << "\", is_parameter: " << el.second
+        << std::endl;
+  }
+  out << "]" << std::endl;
+  out << "string append: [" << std::endl;
+  for (std::pair<std::string, bool> el : this->_string_appends) {
     out << "value: \"" << el.first << "\", is_parameter: " << el.second
         << std::endl;
   }
