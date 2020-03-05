@@ -141,7 +141,8 @@ api_loader::query_and_parse(const nlohmann::json &params,
 
   download_item dl_item(this->_url);
 
-  nlohmann::json relevant_parameters;
+  std::vector<std::pair<api_parameter_request *, std::string>>
+      relevant_parameters;
 
   std::list<File *> files;
   nlohmann::json results_array;
@@ -163,7 +164,7 @@ api_loader::query_and_parse(const nlohmann::json &params,
     if (val.has_value()) {
 
       if (el->_relevant) {
-        relevant_parameters[el->_name] = val.value();
+        relevant_parameters.push_back(std::make_pair(el, val.value()));
       }
 
       if (el->_position == "body") {
@@ -202,8 +203,9 @@ api_loader::query_and_parse(const nlohmann::json &params,
                         param->json_value_to_string(el[param->_api_name]));
         }
       }
-      for (const auto &[key, val] : relevant_parameters.items()) {
-        file->add_tag(key, val.get<std::string>());
+      for (const std::pair<api_parameter_request *, std::string> &el :
+           relevant_parameters) {
+        file->add_tag(el.first->_name, el.second);
       }
 
       files.push_back(file);
