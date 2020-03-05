@@ -102,6 +102,7 @@ public:
   std::string get_path() const { return _path; }
   std::string get_name() const { return _name; }
   std::string get_source() const { return _source; }
+  std::string get_format() const { return _format; }
   bool get_binary() const { return _binary; }
   std::vector<char> get_content_bin() const { return _bin_content; }
   std::string get_content_str() const { return _content; }
@@ -109,6 +110,8 @@ public:
 
   void set_format(std::string format) { _format = format; }
   void set_path(std::string path) { _path = path; }
+  void set_name(std::string name) { _name = name; }
+  void set_source(std::string source) { _source = source; }
   void set_binary(bool bin) { _binary = bin; }
   void set_content(std::string content);
   void set_bin_content(std::vector<char> content);

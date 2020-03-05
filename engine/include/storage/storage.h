@@ -2,7 +2,9 @@
 #define STORAGE_H
 
 #include "indexation/file.h"
+#include "indexation/setting.h"
 #include "utils/exceptions.h"
+#include <cppconn/connection.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -34,11 +36,17 @@ private:
 
 public:
   /**
-   * Creates a Storage object
-   * @param root_folder_name the name of the root folder where the files are
-   * stored
+   * Default constructor
    */
-  Storage(const std::string root_folder_name);
+  Storage();
+
+  /**
+   * Creates a Storage object fetching settings from database
+   * @param db the database
+   */
+  Storage(sql::Connection *db);
+
+  void init_root(sql::Connection *db);
 
   /**
    * Given the name of a file and its source (api) name, finds destination of
@@ -47,20 +55,20 @@ public:
    * @param api_name the source where this file was downloaded
    * @return the destination path of the file in the storage
    */
-  std::string file_destination(std::string file_name,
-                               std::string api_name) const;
+  std::string file_destination(File *file) const;
 
-  /**
-   * Moves the file from its current path to its destination in the storage
-   * @param file the file to move
-   */
-  void move_file(File *file) const;
+  // /**
+  //  * Moves the file from its current path to its destination in the storage
+  //  * @param file the file to move
+  //  */
+  // void move_file(File *file) const;
 
   /**
    * Creates a file in the storage
    * @param file the file to store
+   * @return the destination of the file
    */
-  void store_file(File *file) const;
+  std::string store_file(File *file) const;
 
   /**
    * Creates the files in the storage

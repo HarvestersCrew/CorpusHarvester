@@ -25,6 +25,14 @@ public:
   }
 };
 
+class SettingNotFoundException : public std::runtime_error {
+
+public:
+  SettingNotFoundException(std::string &name)
+      : std::runtime_error("Setting with name '" + name +
+                           "' was not found in the database") {}
+};
+
 class CommandException : public std::runtime_error {
 
 public:

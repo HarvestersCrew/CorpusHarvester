@@ -8,10 +8,11 @@
 class Assertion {
 
 public:
-  static void assert_contains(std::string function_name, int container_size,
-                              std::string container[], std::string contained) {
+  static int assert_contains(std::string function_name, int container_size,
+                             std::string container[], std::string contained) {
     bool trouve = false;
-    for (int i = 0; i < container_size; ++i) {
+    int i;
+    for (i = 0; i < container_size; ++i) {
       if (container[i] == contained) {
         trouve = true;
         break;
@@ -20,6 +21,7 @@ public:
     if (!trouve) {
       throw TestFailedException(function_name, contained, "");
     }
+    return i;
   }
 
   static void assert_equals(std::string function_name, std::string expected,

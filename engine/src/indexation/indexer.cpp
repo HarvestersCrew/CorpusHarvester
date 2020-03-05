@@ -13,6 +13,15 @@ void Indexer::open_database() {
   }
 }
 
+void Indexer::close_database() {
+  if (_db != nullptr) {
+    _db->close();
+    _db = nullptr;
+  } else {
+    print_if_verbose("Database is already closed", _verbose);
+  }
+}
+
 void Indexer::insert_database_item(DatabaseItem *item) const {
   item->insert(_db);
   print_if_verbose("- Insert " + item->to_string() + " : OK", _verbose);
@@ -20,24 +29,31 @@ void Indexer::insert_database_item(DatabaseItem *item) const {
 
 void Indexer::create_database(bool drop_table) {
   open_database();
+  std::string drop_statements[] = {DROP_CORPUS_FILES_STATEMENT,
+                                   DROP_CORPUS_STATEMENT, DROP_TAG_STATEMENT,
+                                   DROP_FILE_STATEMENT, DROP_SETTING_STATEMENT};
+  std::string create_statements[] = {
+      CORPUS_CREATE_STATEMENT, FILE_CREATE_STATEMENT, TAG_CREATE_STATEMENT,
+      CORPUS_FILES_CREATE_STATEMENT, SETTING_CREATE_STATEMENT};
   sql::Statement *stmt = _db->createStatement();
   if (drop_table) {
-    stmt->execute(DROP_CORPUS_FILES_STATEMENT);
-    stmt->execute(DROP_CORPUS_STATEMENT);
-    stmt->execute(DROP_TAG_STATEMENT);
-    stmt->execute(DROP_FILE_STATEMENT);
+    for (auto &drop_statement : drop_statements) {
+      stmt->execute(drop_statement);
+    }
     print_if_verbose("- Drop tables : OK", _verbose);
   }
 
   stmt = _db->createStatement();
-  stmt->execute(CORPUS_CREATE_STATEMENT);
-  print_if_verbose("- Create Corpus table : OK", _verbose);
-  stmt->execute(FILE_CREATE_STATEMENT);
-  print_if_verbose("- Create File table : OK", _verbose);
-  stmt->execute(TAG_CREATE_STATEMENT);
-  print_if_verbose("- Create Tag table : OK", _verbose);
-  stmt->execute(CORPUS_FILES_CREATE_STATEMENT);
-  print_if_verbose("- Create CorpusFiles table : OK", _verbose);
+  for (auto &create_statement : create_statements) {
+    stmt->execute(create_statement);
+  }
+  print_if_verbose("- Create tables : OK", _verbose);
+
+  if (drop_table) {
+    Setting::init_settings(_db);
+    print_if_verbose("- Init Setting tables : OK", _verbose);
+  }
+
   delete stmt;
 }
 

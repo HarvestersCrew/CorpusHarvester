@@ -8,7 +8,7 @@
 #include "utils/exceptions.h"
 #include "utils/utils.h"
 
-#define TABLES_COUNT 4
+#define TABLES_COUNT 5
 #define FILE_COUNT 50
 #define TWEET_COUNT 26
 #define TAG_COUNT 6
@@ -19,6 +19,8 @@
 void test_create_database();
 void test_indexation();
 void test_create_database2();
+void test_get_setting();
+void test_get_wrong_setting();
 void test_fetch_tweets();
 void test_fetch_even_files();
 void test_fetch_by_name();

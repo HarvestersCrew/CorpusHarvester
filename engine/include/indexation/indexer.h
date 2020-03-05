@@ -5,6 +5,7 @@
 #include "indexation/database_item.h"
 #include "indexation/file.h"
 #include "indexation/search_builder.h"
+#include "indexation/setting.h"
 #include "utils/utils.h"
 
 #include <cppconn/driver.h>
@@ -54,6 +55,11 @@ public:
    * Opens the database if not already opened
    */
   void open_database();
+
+  /**
+   * Closes the database if not already closed
+   */
+  void close_database();
 
   /**
    * Creates the database

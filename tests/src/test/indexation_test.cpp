@@ -1,7 +1,8 @@
 #include "test/indexation_test.h"
 
 Indexer indexer("harvester", VERBOSE);
-std::string tables[] = {"Corpus", "File", "Tag", "CorpusFiles"};
+std::string tables[] = {"Corpus", "File", "Tag", "CorpusFiles", "Setting"};
+int tables_row_count[] = {0, 0, 0, 0, Setting::get_init_settings_count()};
 
 /* TESTS */
 
@@ -14,13 +15,16 @@ void test_create_database() {
   int row_count = 0;
   std::string table;
   sql::ResultSet *res_select;
+  int index;
   // Tests if no unexpected tables were created and if the expected one are
   // empty
   while (res_show->next()) {
     table = res_show->getString(1);
-    Assertion::assert_contains(__FUNCTION__, TABLES_COUNT, tables, table);
+    index =
+        Assertion::assert_contains(__FUNCTION__, TABLES_COUNT, tables, table);
     res_select = stmt->executeQuery("SELECT * FROM " + table);
-    Assertion::assert_equals(__FUNCTION__, 0, res_select->rowsCount());
+    Assertion::assert_equals(__FUNCTION__, tables_row_count[index],
+                             res_select->rowsCount());
     row_count++;
   }
   // Tests if every expected tables are created
@@ -29,6 +33,7 @@ void test_create_database() {
                               std::to_string(TABLES_COUNT) + " tables",
                               "only " + std::to_string(row_count) + " tables");
   }
+
   delete stmt;
   delete res_select;
   delete res_show;
@@ -77,6 +82,25 @@ void test_create_database2() {
   Assertion::assert_equals(__FUNCTION__, db_length, res_select->rowsCount());
   delete stmt;
   delete res_select;
+}
+
+void test_get_setting() {
+  std::string name = "storage_root";
+  Setting setting = Setting(name, indexer.get_database());
+  Assertion::assert_equals(__FUNCTION__, name, setting.get_name());
+  Assertion::assert_equals(__FUNCTION__,
+                           Setting::get_default_value(Setting::STORAGE_ROOT),
+                           setting.get_value());
+}
+
+void test_get_wrong_setting() {
+  try {
+    std::string name = "wrong_setting";
+    Setting setting = Setting(name, indexer.get_database());
+  } catch (SettingNotFoundException &e) {
+    return;
+  }
+  Assertion::assert_throw(__FUNCTION__, "SettingNotFoundException");
 }
 
 void test_fetch_tweets() {
@@ -213,6 +237,8 @@ void indexation_test() {
     Assertion::test(test_create_database, "test_create_database");
     Assertion::test(test_indexation, "test_indexation");
     Assertion::test(test_create_database2, "test_create_database2");
+    Assertion::test(test_get_setting, "test_get_setting");
+    Assertion::test(test_get_wrong_setting, "test_get_wrong_setting");
     Assertion::test(test_fetch_tweets, "test_fetch_tweets");
     Assertion::test(test_fetch_even_files, "test_fetch_even_files");
     Assertion::test(test_fetch_by_tag_lt, "test_fetch_by_tag_lt");
@@ -229,4 +255,5 @@ void indexation_test() {
   } catch (sql::SQLException &e) {
     print_sql_exception(e);
   }
+  indexer.close_database();
 }

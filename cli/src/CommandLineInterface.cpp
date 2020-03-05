@@ -52,11 +52,11 @@ Corpus CommandLineInterface::create_corpus() {
   std::list<File *> out = tmdb.query_and_parse({{"query", "star wars"}}, dl);
 
   // Store the files
-  Storage storage("/tmp/stored/");
+  Indexer indexer("harvester", false);
+  Storage storage(indexer.get_database());
   storage.store_files(out);
 
   // Index the downloaded data
-  Indexer indexer("harvester", false);
   indexer.create_database(true);
   indexer.indexation(out);
 
