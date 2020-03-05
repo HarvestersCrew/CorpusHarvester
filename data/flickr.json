@@ -1,0 +1,109 @@
+{
+    "name": "Flickr",
+    "url": "https://api.flickr.com/services/rest/",
+    "method": "GET",
+    "api_type": "image",
+    "response_main_item": "picture",
+    "path_to_results": [
+        "photos",
+        "photo"
+    ],
+    "truncate_before": 14,
+    "truncate_after": 1,
+    "request": [
+        {
+            "type": "string",
+            "api_name": "api_key",
+            "required": true,
+            "position": "body",
+            "relevant": false
+        },
+        {
+            "type": "string",
+            "api_name": "method",
+            "required": true,
+            "position": "body",
+            "relevant": false,
+            "default_value": "flickr.photos.search"
+        },
+        {
+            "type": "string",
+            "api_name": "format",
+            "required": true,
+            "position": "body",
+            "relevant": false,
+            "default_value": "json"
+        },
+        {
+            "type": "string",
+            "api_name": "text",
+            "required": true,
+            "position": "body",
+            "relevant": true
+        }
+    ],
+    "response": [
+        {
+            "type": "string",
+            "api_name": "title",
+            "relevant": true
+        },
+        {
+            "type": "string",
+            "api_name": "id",
+            "relevant": true
+        },
+        {
+            "type": "string",
+            "api_name": "server",
+            "relevant": false
+        },
+        {
+            "type": "int",
+            "api_name": "farm",
+            "relevant": false
+        },
+        {
+            "type": "image_link",
+            "api_name": "secret",
+            "name": "picture",
+            "relevant": true,
+            "string_appends": [
+                {
+                    "is_parameter_name": false,
+                    "value": ".jpg"
+                }
+            ],
+            "string_prepends": [
+                {
+                    "is_parameter_name": false,
+                    "value": "https://farm"
+                },
+                {
+                    "is_parameter_name": true,
+                    "value": "farm"
+                },
+                {
+                    "is_parameter_name": false,
+                    "value": ".staticflickr.com/"
+                },
+                {
+                    "is_parameter_name": true,
+                    "value": "server"
+                },
+                {
+                    "is_parameter_name": false,
+                    "value": "/"
+                },
+                {
+                    "is_parameter_name": true,
+                    "value": "id"
+                },
+                {
+                    "is_parameter_name": false,
+                    "value": "_"
+                }
+            ]
+        }
+    ]
+}
