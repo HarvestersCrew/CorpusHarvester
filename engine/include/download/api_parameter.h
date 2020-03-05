@@ -52,6 +52,8 @@ protected:
 
   /** Name of the parameter on the API side */
   std::string _api_name;
+  /** Display name of the tag (DB, selector...) */
+  std::string _name;
   /** Type of the parameter values */
   value_type _value_type;
 };
@@ -95,8 +97,6 @@ private:
   bool _required;
   /** Whether the parameter is relevant to keep in the database */
   bool _relevant;
-  /** If parameter is relevant, name to use as tag in the database */
-  std::optional<std::string> _name;
   /** Default value to use in requests */
   std::optional<std::string> _default_value;
   /** Enum of values valid to use */
@@ -121,10 +121,6 @@ public:
    * @return std::string state of the parameter
    */
   virtual std::string to_string() const;
-
-private:
-  /** Name to use as tag in the database */
-  std::string _name;
 };
 
 #endif

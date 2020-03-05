@@ -3,6 +3,11 @@
 api_parameter_base::api_parameter_base(const nlohmann::json &json) {
 
   this->_api_name = json.at("api_name").get<std::string>();
+  if (json.contains("name")) {
+    this->_name = json.at("name").get<std::string>();
+  } else {
+    this->_name = this->_api_name;
+  }
 
   if (json.at("type").get<std::string>() == API_PARAMETER_STRING) {
     this->_value_type = value_type::STRING;
@@ -20,6 +25,7 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
 std::string api_parameter_base::to_string() const {
   std::stringstream out;
   out << "------- api_name: " << this->_api_name << " -------" << std::endl;
+  out << "name: " << this->_name << std::endl;
   out << "value_type: " << this->get_type_string();
   return out.str();
 }
@@ -65,13 +71,6 @@ api_parameter_request::api_parameter_request(const nlohmann::json &json)
   this->_required = json.at("required").get<bool>();
   this->_relevant = json.at("relevant").get<bool>();
 
-  if (json.contains("name"))
-    this->_name = json.at("name").get<std::string>();
-  else if (this->_relevant)
-    throw std::runtime_error("A relevant parameter needs a name");
-  else
-    this->_name = std::nullopt;
-
   if (json.contains("values")) {
     for (const auto &el : json.at("values")) {
       this->_values.push_back(el.get<std::string>());
@@ -92,7 +91,6 @@ std::string api_parameter_request::to_string() const {
   out << "position: " << this->_position << std::endl;
   out << "required: " << this->_required << std::endl;
   out << "relevant: " << this->_relevant << std::endl;
-  out << "name: " << this->_name.value_or("no value") << std::endl;
   out << "default_value: " << this->_default_value.value_or("no default value")
       << std::endl;
 

@@ -163,8 +163,8 @@ api_loader::query_and_parse(const nlohmann::json &params,
 
     if (val.has_value()) {
 
-      if (el->_relevant && el->_name.has_value()) {
-        relevant_parameters[el->_name.value()] = val.value();
+      if (el->_relevant) {
+        relevant_parameters[el->_name] = val.value();
       }
 
       if (el->_position == "body") {

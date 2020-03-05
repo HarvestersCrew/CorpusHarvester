@@ -190,30 +190,7 @@
                             "title": "Possible values items"
                         }
                     }
-                },
-                "oneOf": [
-                    {
-                        "properties": {
-                            "relevant": {
-                                "enum": [
-                                    true
-                                ]
-                            }
-                        },
-                        "required": [
-                            "name"
-                        ]
-                    },
-                    {
-                        "properties": {
-                            "relevant": {
-                                "enum": [
-                                    false
-                                ]
-                            }
-                        }
-                    }
-                ]
+                }
             }
         },
         "response": {
@@ -226,8 +203,7 @@
                 "title": "The Items Schema",
                 "required": [
                     "type",
-                    "api_name",
-                    "name"
+                    "api_name"
                 ],
                 "properties": {
                     "type": {
