@@ -50,8 +50,7 @@ std::string response_item::string_prepend(const api_parameter_response *param,
     const std::pair<std::string, bool> &el = param->_string_prepends.at(i);
     std::string prep("");
     if (el.second) {
-      throw std::runtime_error(
-          "Using response value as prepend not yet implemented");
+      prep = this->get_named_parameter(el.first).second;
     } else {
       prep = el.first;
     }
