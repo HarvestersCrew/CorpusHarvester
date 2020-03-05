@@ -58,6 +58,8 @@ protected:
   std::string _name;
   /** Type of the parameter values */
   value_type _value_type;
+  /** Whether the parameter is relevant to keep in the database */
+  bool _relevant;
 };
 
 /**
@@ -99,8 +101,6 @@ private:
   std::string _position;
   /** Whether the parameter is required in a request */
   bool _required;
-  /** Whether the parameter is relevant to keep in the database */
-  bool _relevant;
   /** Default value to use in requests */
   std::optional<std::string> _default_value;
   /** Enum of values valid to use */

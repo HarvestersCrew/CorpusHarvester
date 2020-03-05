@@ -187,7 +187,8 @@
                 "title": "The Items Schema",
                 "required": [
                     "type",
-                    "api_name"
+                    "api_name",
+                    "relevant"
                 ],
                 "properties": {
                     "type": {
@@ -217,6 +218,15 @@
                         "examples": [
                             "text",
                             "retweets"
+                        ]
+                    },
+                    "relevant": {
+                        "$id": "#/properties/response/items/properties/relevant",
+                        "type": "boolean",
+                        "title": "Save parameter in corpus",
+                        "enum": [
+                            false,
+                            true
                         ]
                     },
                     "string_prepends": {

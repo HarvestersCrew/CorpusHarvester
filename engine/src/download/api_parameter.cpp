@@ -9,6 +9,8 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
     this->_name = this->_api_name;
   }
 
+  this->_relevant = json.at("relevant").get<bool>();
+
   if (json.at("type").get<std::string>() == API_PARAMETER_STRING) {
     this->_value_type = value_type::STRING;
   } else if (json.at("type").get<std::string>() == API_PARAMETER_INT) {
@@ -26,7 +28,8 @@ std::string api_parameter_base::to_string() const {
   std::stringstream out;
   out << "------- api_name: " << this->_api_name << " -------" << std::endl;
   out << "name: " << this->_name << std::endl;
-  out << "value_type: " << this->get_type_string();
+  out << "value_type: " << this->get_type_string() << std::endl;
+  out << "relevant: " << this->_relevant;
   return out.str();
 }
 
@@ -69,7 +72,6 @@ api_parameter_request::api_parameter_request(const nlohmann::json &json)
     : api_parameter_base(json) {
   this->_position = json.at("position").get<std::string>();
   this->_required = json.at("required").get<bool>();
-  this->_relevant = json.at("relevant").get<bool>();
 
   if (json.contains("values")) {
     for (const auto &el : json.at("values")) {
@@ -90,7 +92,6 @@ std::string api_parameter_request::to_string() const {
   out << base << std::endl;
   out << "position: " << this->_position << std::endl;
   out << "required: " << this->_required << std::endl;
-  out << "relevant: " << this->_relevant << std::endl;
   out << "default_value: " << this->_default_value.value_or("no default value")
       << std::endl;
 

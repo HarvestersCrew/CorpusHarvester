@@ -56,32 +56,38 @@
         {
             "type": "int64",
             "name": "id",
-            "api_name": "id"
+            "api_name": "id",
+            "relevant": true
         },
         {
             "type": "string",
             "name": "date",
-            "api_name": "created_at"
+            "api_name": "created_at",
+            "relevant": true
         },
         {
             "type": "string",
             "name": "text",
-            "api_name": "text"
+            "api_name": "text",
+            "relevant": true
         },
         {
             "type": "int",
             "name": "retweet",
-            "api_name": "retweet_count"
+            "api_name": "retweet_count",
+            "relevant": true
         },
         {
             "type": "int",
             "name": "favorite",
-            "api_name": "favorite_count"
+            "api_name": "favorite_count",
+            "relevant": true
         },
         {
             "type": "string",
             "name": "lang",
-            "api_name": "lang"
+            "api_name": "lang",
+            "relevant": true
         }
     ]
 }

@@ -50,17 +50,20 @@
         {
             "type": "string",
             "api_name": "title",
-            "name": "title"
+            "name": "title",
+            "relevant": true
         },
         {
             "type": "string",
             "api_name": "overview",
-            "name": "synopsis"
+            "name": "synopsis",
+            "relevant": true
         },
         {
             "type": "string",
             "api_name": "release_date",
-            "name": "date"
+            "name": "date",
+            "relevant": true
         }
     ]
 }

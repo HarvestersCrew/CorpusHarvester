@@ -193,7 +193,7 @@ api_loader::query_and_parse(const nlohmann::json &params,
       for (const auto &response : el.get_parameters()) {
         if (response.first->_name == this->_response_main_item) {
           this->manage_main_value(el, file, dl);
-        } else {
+        } else if (response.first->_relevant) {
           file->add_tag(response.first->_name, response.second);
         }
       }
