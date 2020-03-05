@@ -194,7 +194,9 @@ api_loader::query_and_parse(const nlohmann::json &params,
       File *file = new File("", out.str(), 0, this->_name, "");
       for (const api_parameter_response *param : this->_responses) {
         if (param->_name == this->_response_main_item) {
-          this->manage_main_value(el[param->_api_name], param, file, dl);
+          this->manage_main_value(
+              this->get_param_value_from_single_json_response(el, param), param,
+              file, dl);
         } else {
           file->add_tag(param->_name,
                         param->json_value_to_string(el[param->_api_name]));
@@ -297,4 +299,10 @@ std::string api_loader::response_url_prepend(std::string url) const {
     url = prep + url;
   }
   return url;
+}
+
+nlohmann::json api_loader::get_param_value_from_single_json_response(
+    const nlohmann::json single_response,
+    const api_parameter_response *param) const {
+  return single_response.at(param->_api_name);
 }

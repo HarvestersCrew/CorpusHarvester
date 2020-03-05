@@ -173,6 +173,10 @@ public:
    * @return std::string URL prepended
    */
   std::string response_url_prepend(std::string url) const;
+
+  nlohmann::json get_param_value_from_single_json_response(
+      const nlohmann::json single_response,
+      const api_parameter_response *param) const;
 };
 
 #endif
