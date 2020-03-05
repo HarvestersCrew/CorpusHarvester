@@ -181,29 +181,33 @@ api_loader::query_and_parse(const nlohmann::json &params,
     results_array = results_array[el];
   }
 
+  std::vector<response_item> parsed_responses;
+  for (const auto &el : results_array) {
+    parsed_responses.emplace_back(el, this->_responses);
+  }
+
   std::string content;
   std::string now;
   int id = 0;
-  for (const auto &el : results_array) {
+  for (const response_item &el : parsed_responses) {
     now = get_current_time("%d-%m-%Y");
     std::ostringstream out;
     out << now << "_" << id;
 
     try {
+
       File *file = new File("", out.str(), 0, this->_name, "");
-      for (const api_parameter_response *param : this->_responses) {
-        if (param->_name == this->_response_main_item) {
-          this->manage_main_value(
-              this->get_param_value_from_single_json_response(el, param), param,
-              file, dl);
+      for (const auto &response : el.get_parameters()) {
+        if (response.first->_name == this->_response_main_item) {
+          this->manage_main_value(el, file, dl);
         } else {
-          file->add_tag(param->_name,
-                        param->json_value_to_string(el[param->_api_name]));
+          file->add_tag(response.first->_name, response.second);
         }
       }
-      for (const std::pair<api_parameter_request *, std::string> &el :
+
+      for (const std::pair<api_parameter_request *, std::string> &relevant :
            relevant_parameters) {
-        file->add_tag(el.first->_name, el.second);
+        file->add_tag(relevant.first->_name, relevant.second);
       }
 
       files.push_back(file);
@@ -219,18 +223,20 @@ api_loader::query_and_parse(const nlohmann::json &params,
   return files;
 }
 
-void api_loader::manage_main_value(const nlohmann::json &result_to_manage,
-                                   const api_parameter_response *param,
+void api_loader::manage_main_value(const response_item &result_to_manage,
                                    File *file_to_save_to,
                                    const download_manager &dl) const {
+  auto main_result =
+      result_to_manage.get_named_parameter(this->_response_main_item);
+  auto main_result_param = main_result.first;
+  auto main_result_value = main_result.second;
   switch (this->_api_type) {
   case api_loader::api_type::TEXT:
-    this->manage_text(param->json_value_to_string(result_to_manage),
-                      file_to_save_to);
+    this->manage_text(main_result_value, file_to_save_to);
     break;
   case api_loader::api_type::IMAGE:
-    this->manage_media(param->json_value_to_string(result_to_manage), param,
-                       file_to_save_to, dl);
+    this->manage_media(main_result_value, main_result_param, file_to_save_to,
+                       dl);
     break;
   default:
     throw std::runtime_error("Saving type " + this->api_type_string() +
@@ -301,8 +307,8 @@ std::string api_loader::response_url_prepend(std::string url) const {
   return url;
 }
 
-nlohmann::json api_loader::get_param_value_from_single_json_response(
-    const nlohmann::json single_response,
-    const api_parameter_response *param) const {
-  return single_response.at(param->_api_name);
-}
+// nlohmann::json api_loader::get_param_value_from_single_json_response(
+//     const nlohmann::json single_response,
+//     const api_parameter_response *param) const {
+//   return single_response.at(param->_api_name);
+// }

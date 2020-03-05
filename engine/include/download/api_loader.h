@@ -4,6 +4,7 @@
 #include "download/api_parameter.h"
 #include "download/download_item.h"
 #include "download/download_manager.h"
+#include "download/response_item.h"
 #include "indexation/file.h"
 #include "utils/exceptions.h"
 #include "utils/nlohmann/json-schema.hpp"
@@ -124,8 +125,7 @@ public:
    * @param file_to_save_to file to save results to
    * @param dl download manager
    */
-  void manage_main_value(const nlohmann::json &result_to_manage,
-                         const api_parameter_response *param,
+  void manage_main_value(const response_item &result_to_manage,
                          File *file_to_save_to,
                          const download_manager &dl) const;
 
@@ -174,9 +174,9 @@ public:
    */
   std::string response_url_prepend(std::string url) const;
 
-  nlohmann::json get_param_value_from_single_json_response(
-      const nlohmann::json single_response,
-      const api_parameter_response *param) const;
+  // nlohmann::json get_param_value_from_single_json_response(
+  //     const nlohmann::json single_response,
+  //     const api_parameter_response *param) const;
 };
 
 #endif
