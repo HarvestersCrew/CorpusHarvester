@@ -57,6 +57,13 @@ private:
   /** List of responses from a query */
   std::vector<api_parameter_response *> _responses;
 
+  /** Number of characters to truncate at the start of the response to parse it
+   */
+  std::optional<int> _truncate_before;
+
+  /** Number of characters to truncate at the end of the response to parse it */
+  std::optional<int> _truncate_after;
+
   /**
    * Takes a JSON describing the API, checks against the defined schema and
    * insert it in the object

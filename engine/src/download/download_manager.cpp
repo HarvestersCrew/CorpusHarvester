@@ -46,6 +46,16 @@ std::vector<char> download_manager::download(const download_item &dli) const {
     throw download_no_200_exception(response_code);
   }
 
+  if (dli.get_truncate_before() > 0) {
+    read_buffer.erase(read_buffer.begin(),
+                      read_buffer.begin() + dli.get_truncate_before());
+  }
+
+  if (dli.get_truncate_after() > 0) {
+    int first_to_erase = read_buffer.size() - dli.get_truncate_after();
+    read_buffer.erase(read_buffer.begin() + first_to_erase, read_buffer.end());
+  }
+
   return read_buffer;
 }
 

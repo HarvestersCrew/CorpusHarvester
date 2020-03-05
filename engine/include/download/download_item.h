@@ -14,6 +14,10 @@ private:
   std::string _url;
   /** Map of request parameters */
   std::map<const api_parameter_request *, std::string> _parameters;
+  /** Number of characters to truncate at the start of the response */
+  int _truncate_before;
+  /** Number of characters to truncate at the end of the response */
+  int _truncate_after;
 
 public:
   /**
@@ -21,6 +25,16 @@ public:
    * @param url URL to assign
    */
   download_item(const std::string &url);
+
+  /**
+   * Creates the object with a given URL and specifies a truncate before and
+   * after
+   * @param url URL to assign
+   * @param truncate_before number of characters to erase at start of response
+   * @param truncate_after number of characters to erase at end of response
+   */
+  download_item(const std::string &url, int truncate_before,
+                int truncate_after);
 
   /**
    * Gets a string representation of the object to print
@@ -36,6 +50,9 @@ public:
   void set_parameter(const api_parameter_request *key, const std::string &val);
 
   void set_url(const std::string &url);
+
+  int get_truncate_before() const;
+  int get_truncate_after() const;
 
   std::string get_url() const;
   const std::map<const api_parameter_request *, std::string> &

@@ -56,6 +56,16 @@ void api_loader::init(const nlohmann::json &j) {
     throw api_unrecognized_settings_exception("api_type", given_api_type);
   }
 
+  this->_truncate_before = {};
+  if (j.contains("truncate_before")) {
+    this->_truncate_before = j.at("truncate_before").get<int>();
+  }
+
+  this->_truncate_after = {};
+  if (j.contains("truncate_after")) {
+    this->_truncate_after = j.at("truncate_after").get<int>();
+  }
+
   for (auto &el : j.at("path_to_results")) {
     this->_path_to_results.push_back(el.get<std::string>());
   }
@@ -80,6 +90,8 @@ std::string api_loader::to_string() const {
   out << "url: " << this->_url << std::endl;
   out << "api_type: " << this->api_type_string() << std::endl;
   out << "main value name: " << this->_response_main_item << std::endl;
+  out << "truncate before: " << this->_truncate_before.value_or(0) << std::endl;
+  out << "truncate after: " << this->_truncate_after.value_or(0) << std::endl;
 
   out << "path to result: ";
   for (const std::string &el : this->_path_to_results) {
@@ -119,7 +131,8 @@ std::list<File *>
 api_loader::query_and_parse(const nlohmann::json &params,
                             const download_manager &dl) const {
 
-  download_item dl_item(this->_url);
+  download_item dl_item(this->_url, this->_truncate_before.value_or(0),
+                        this->_truncate_after.value_or(0));
 
   std::vector<std::pair<api_parameter_request *, std::string>>
       relevant_parameters;

@@ -50,6 +50,16 @@
                 "image"
             ]
         },
+        "truncate_before": {
+            "$id": "#/properties/truncate_before",
+            "type": "integer",
+            "title": "Number of characters to truncate before parsing the response"
+        },
+        "truncate_after": {
+            "$id": "#/properties/truncate_after",
+            "type": "integer",
+            "title": "Number of characters to truncate after parsing the response"
+        },
         "response_main_item": {
             "$id": "#/properties/response_main_item",
             "type": "string",
