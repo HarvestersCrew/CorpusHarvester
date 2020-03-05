@@ -81,3 +81,6 @@ docker/%: docker/up
 	@echo "#!/bin/bash" > ${BINDIR}/$*
 	@echo "docker-compose exec harvester ${BINDIR}/$* \$${@:1}" >> ${BINDIR}/$*
 	@chmod a+wx ${BINDIR}/$*
+
+docker/bash: docker/up
+	docker exec -it harvester bash
