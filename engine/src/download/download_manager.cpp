@@ -14,15 +14,17 @@ std::vector<char> download_manager::download(const download_item &dli) const {
 
   // IF GET TYPE, WHICH IS CURRENTLY ALWAYS
   std::string url = dli.get_url();
-  if (dli.get_parameters().size() != 0) {
+  if (dli.get_position_parameters("body").size() != 0) {
     url += "?" + this->build_body_query(dli);
   }
 
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
-  if (dli.get_headers().size() != 0) {
+  std::map<std::string, std::string> request_headers =
+      dli.get_position_parameters("header");
+  if (request_headers.size() != 0) {
     struct curl_slist *list = NULL;
-    for (auto el : dli.get_headers()) {
+    for (auto el : request_headers) {
       std::stringstream header;
       header << el.first << ": " << el.second;
       list = curl_slist_append(list, header.str().c_str());
@@ -57,7 +59,8 @@ size_t download_manager::write_callback(char *contents, size_t size,
 
 std::string download_manager::build_body_query(const download_item &dli) const {
   std::stringstream ss;
-  const std::map<std::string, std::string> &query = dli.get_parameters();
+  const std::map<std::string, std::string> query =
+      dli.get_position_parameters("body");
   if (query.size() != 0) {
     bool first = true;
 

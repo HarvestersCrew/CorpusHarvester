@@ -167,10 +167,8 @@ api_loader::query_and_parse(const nlohmann::json &params,
         relevant_parameters.push_back(std::make_pair(el, val.value()));
       }
 
-      if (el->_position == "body") {
-        dl_item.set_parameter(el->_api_name, val.value());
-      } else if (el->_position == "header") {
-        dl_item.set_header(el->_api_name, val.value());
+      if (el->_position == "body" || el->_position == "header") {
+        dl_item.set_parameter(el, val.value());
       } else
         throw std::runtime_error("Unknown position");
     }

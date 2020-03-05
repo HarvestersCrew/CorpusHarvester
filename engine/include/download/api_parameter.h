@@ -19,6 +19,7 @@
 class api_parameter_base {
 
   friend class api_loader;
+  friend class download_item;
 
 public:
   /**
@@ -63,6 +64,7 @@ protected:
  */
 class api_parameter_request : public api_parameter_base {
   friend class api_loader;
+  friend class download_item;
 
 public:
   /**
@@ -108,6 +110,7 @@ private:
  */
 class api_parameter_response : public api_parameter_base {
   friend class api_loader;
+  friend class download_item;
 
 public:
   /**
