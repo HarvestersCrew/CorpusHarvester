@@ -20,6 +20,9 @@
   "= "                                                                         \
   "? AND "                                                                     \
   "t.value = ?;"
+#define GET_FILE_API_ID                                                        \
+  "SELECT t.value FROM File f, Tag t WHERE f.id = t.file_id AND t.name = "     \
+  "'_api_id'"
 #define INSERT_FILE_STATEMENT                                                  \
   "INSERT INTO File (path, name, size, source, format) VALUES(?, ?, ?, ?, ?)"
 #define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
@@ -81,7 +84,12 @@ public:
 
   std::string to_string() const;
 
-  void insert(sql::Connection *db);
+  /**
+   * Checks if the api Id of this file exists
+   */
+  bool api_id_exists(sql::Connection *db);
+
+  bool insert(sql::Connection *db);
 
   void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
@@ -98,6 +106,8 @@ public:
    * @param value the value of the tag
    */
   void add_tag(std::string name, std::string value);
+
+  std::string get_tag_value(std::string name);
 
   std::string get_path() const { return _path; }
   std::string get_name() const { return _name; }

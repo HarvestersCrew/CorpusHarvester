@@ -39,7 +39,7 @@ std::string Corpus::to_string() const {
   return out.str();
 }
 
-void Corpus::insert(sql::Connection *db) {
+bool Corpus::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
 
   prep_stmt = db->prepareStatement(INSERT_CORPUS_STATEMENT);
@@ -56,6 +56,7 @@ void Corpus::insert(sql::Connection *db) {
     prep_stmt->execute();
   }
   delete prep_stmt;
+  return true;
 }
 
 void Corpus::fetch_files(sql::Connection *db) {

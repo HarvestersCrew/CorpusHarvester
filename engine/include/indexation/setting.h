@@ -57,7 +57,7 @@ public:
 
   std::string to_string() const;
 
-  void insert(sql::Connection *db);
+  bool insert(sql::Connection *db);
 
   /**
    * Updates the Setting object in the database

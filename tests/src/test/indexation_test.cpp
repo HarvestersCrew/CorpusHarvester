@@ -43,10 +43,12 @@ void test_indexation() {
   std::list<File *> files;
   for (int i = 0; i < FILE_COUNT; i++) {
     std::string i_str = std::to_string(i);
+    std::string i_plus_50_str = std::to_string(i + 50);
     File *file = new File("/stockage/file" + i_str, "file" + i_str, i + 100,
                           "Tweeter", ".txt");
     fill_file_randomly(file, i < TWEET_COUNT, i % 2 == 0);
-    file->add_tag("retweet", i_str);
+    file->add_tag("retweet", i_plus_50_str);
+    file->add_tag("_api_id", i_str);
     files.push_back(file);
   }
   indexer.indexation(files);
@@ -63,6 +65,14 @@ void test_indexation() {
   delete stmt;
   delete res_files;
   delete res_tags;
+}
+
+void test_api_id_exists() {
+  File *file =
+      new File("api_id_exists", "api_id_exists", 100, "Tweeter", ".txt");
+  file->add_tag("_api_id", "0");
+  bool inserted = indexer.insert_database_item(file);
+  Assertion::assert_false(__FUNCTION__, inserted);
 }
 
 void test_create_database2() {
@@ -130,7 +140,7 @@ void test_fetch_by_size() {
 void test_fetch_by_tag_lt() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
   std::list<File *> tweets =
-      sb->add_tag_condition("retweet", "15", "<")->build();
+      sb->add_tag_condition("retweet", "65", "<")->build();
   Assertion::assert_equals(__FUNCTION__, 15, tweets.size());
 }
 
@@ -236,6 +246,7 @@ void indexation_test() {
   try {
     Assertion::test(test_create_database, "test_create_database");
     Assertion::test(test_indexation, "test_indexation");
+    Assertion::test(test_api_id_exists, "test_api_id_exists");
     Assertion::test(test_create_database2, "test_create_database2");
     Assertion::test(test_get_setting, "test_get_setting");
     Assertion::test(test_get_wrong_setting, "test_get_wrong_setting");

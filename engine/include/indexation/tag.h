@@ -58,7 +58,7 @@ public:
 
   std::string to_string() const;
 
-  void insert(sql::Connection *db);
+  bool insert(sql::Connection *db);
 
   void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 

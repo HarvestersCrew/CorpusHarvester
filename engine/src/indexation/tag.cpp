@@ -15,7 +15,7 @@ std::string Tag::to_string() const {
   return out.str();
 }
 
-void Tag::insert(sql::Connection *db) {
+bool Tag::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
   std::list<File *> files;
 
@@ -27,6 +27,7 @@ void Tag::insert(sql::Connection *db) {
   delete prep_stmt;
 
   this->_id = DatabaseItem::get_last_inserted_id(db);
+  return true;
 }
 
 void Tag::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {

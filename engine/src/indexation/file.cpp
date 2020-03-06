@@ -25,24 +25,49 @@ std::string File::to_string() const {
   return out.str();
 }
 
-void File::insert(sql::Connection *db) {
-  sql::PreparedStatement *prep_stmt;
-  std::list<File *> files;
-
-  prep_stmt = db->prepareStatement(INSERT_FILE_STATEMENT);
-  prep_stmt->setString(1, _path);
-  prep_stmt->setString(2, _name);
-  prep_stmt->setInt(3, _size);
-  prep_stmt->setString(4, _source);
-  prep_stmt->setString(5, _format);
-  prep_stmt->execute();
-  delete prep_stmt;
-
-  this->_id = DatabaseItem::get_last_inserted_id(db);
-  for (const auto &tag : _tags) {
-    tag->set_file_id(this->_id);
-    tag->insert(db);
+bool File::api_id_exists(sql::Connection *db) {
+  sql::Statement *stmt;
+  sql::ResultSet *res;
+  std::string api_id = get_tag_value("_api_id");
+  bool api_id_exists = false;
+  if (api_id == "") {
+    return api_id_exists;
   }
+  stmt = db->createStatement();
+  res = stmt->executeQuery(GET_FILE_API_ID);
+
+  std::string curr_api_id = "";
+  while (res->next()) {
+    curr_api_id = res->getString("value");
+    if (curr_api_id == api_id) {
+      api_id_exists = true;
+    }
+  }
+  return api_id_exists;
+}
+
+bool File::insert(sql::Connection *db) {
+  bool aie = api_id_exists(db);
+  if (!aie) {
+    sql::PreparedStatement *prep_stmt;
+    std::list<File *> files;
+
+    prep_stmt = db->prepareStatement(INSERT_FILE_STATEMENT);
+    prep_stmt->setString(1, _path);
+    prep_stmt->setString(2, _name);
+    prep_stmt->setInt(3, _size);
+    prep_stmt->setString(4, _source);
+    prep_stmt->setString(5, _format);
+    prep_stmt->execute();
+    delete prep_stmt;
+
+    this->_id = DatabaseItem::get_last_inserted_id(db);
+    for (const auto &tag : _tags) {
+      tag->set_file_id(this->_id);
+      tag->insert(db);
+    }
+  }
+  return !aie;
 }
 
 void File::fetch_tags(sql::Connection *db) {
@@ -104,4 +129,15 @@ void File::store(const std::string &path) const {
     outfile.write(buf, vec_content.size());
     outfile.close();
   }
+}
+
+std::string File::get_tag_value(std::string name) {
+  std::string value = "";
+  for (auto &tag : _tags) {
+    if (tag->get_name() == name) {
+      value = tag->get_value();
+      break;
+    }
+  }
+  return value;
 }

@@ -33,7 +33,7 @@ std::string Setting::to_string() const {
   return out.str();
 }
 
-void Setting::insert(sql::Connection *db) {
+bool Setting::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
 
   prep_stmt = db->prepareStatement(INSERT_SETTING_STATEMENT);
@@ -42,6 +42,7 @@ void Setting::insert(sql::Connection *db) {
   prep_stmt->execute();
   _id = DatabaseItem::get_last_inserted_id(db);
   delete prep_stmt;
+  return true;
 }
 
 void Setting::update(sql::Connection *db) {

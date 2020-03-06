@@ -35,13 +35,6 @@ class Indexer {
    */
   bool _verbose;
 
-private:
-  /**
-   * Inserts the given item in the database
-   * @param item the item to insert in the database
-   */
-  void insert_database_item(DatabaseItem *item) const;
-
 public:
   /**
    * Creates an Indexer object
@@ -50,6 +43,13 @@ public:
    * otherwise
    */
   Indexer(std::string db_name, bool verbose = false);
+
+  /**
+   * Inserts the given item in the database
+   * @param item the item to insert in the database
+   * return true if the item was succesfully inserted
+   */
+  bool insert_database_item(DatabaseItem *item) const;
 
   /**
    * Opens the database if not already opened

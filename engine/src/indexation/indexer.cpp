@@ -22,9 +22,14 @@ void Indexer::close_database() {
   }
 }
 
-void Indexer::insert_database_item(DatabaseItem *item) const {
-  item->insert(_db);
-  print_if_verbose("- Insert " + item->to_string() + " : OK", _verbose);
+bool Indexer::insert_database_item(DatabaseItem *item) const {
+  bool inserted = item->insert(_db);
+  if (inserted) {
+    print_if_verbose("- Insertion of " + item->to_string() + " : OK", _verbose);
+  } else {
+    print_if_verbose("- The item wasn't inserted", _verbose);
+  }
+  return inserted;
 }
 
 void Indexer::create_database(bool drop_table) {

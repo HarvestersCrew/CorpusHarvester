@@ -42,8 +42,9 @@ public:
   /**
    * Inserts the object in the given database
    * @param db the database where the object is inserted
+   * return true if the object was succesfully inserted
    */
-  virtual void insert(sql::Connection *db) = 0;
+  virtual bool insert(sql::Connection *db) = 0;
 
   /**
    * Fills the object reading the result of an SQL statement
