@@ -32,6 +32,8 @@ public:
   /** Enum used to define the type of the main API value */
   enum api_type { TEXT, IMAGE };
 
+  std::string get_name() const;
+
 private:
   /** Base URL of the API to call queries on */
   std::string _url;

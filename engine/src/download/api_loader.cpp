@@ -23,6 +23,8 @@ api_loader::~api_loader() {
     delete el;
 }
 
+std::string api_loader::get_name() const { return this->_name; }
+
 void api_loader::set_parameter_request_default_value(const std::string &key,
                                                      const std::string &val) {
   for (api_parameter_request *p : this->_requests) {
