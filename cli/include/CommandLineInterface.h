@@ -10,6 +10,7 @@
 #include "indexation/search_builder.h"
 #include "storage/storage.h"
 
+#include "argparse.hpp"
 #include <deque>
 #include <iostream>
 #include <string>
@@ -22,9 +23,9 @@
 class CommandLineInterface : public ClientAction {
 private:
   /**
-   * Arguments of the user input.
+   * Parser we will use to create our request.
    */
-  std::deque<std::string> arguments;
+  argparse::ArgumentParser parser;
 
   /**
    * Print in the user terminal all the possible actions.
@@ -36,7 +37,7 @@ private:
    *
    * @return Corpus created
    */
-  Corpus create_corpus();
+  Corpus create_corpus(const std::string name);
 
   /**
    * Show all the corpus created
@@ -56,7 +57,7 @@ public:
    *
    * @param arguments Vector sequence of all the arguments.
    */
-  CommandLineInterface(const std::deque<std::string> arguments);
+  CommandLineInterface(int argc, char **argv);
 
   /**
    * Execute the current command and print in the user terminal the output.

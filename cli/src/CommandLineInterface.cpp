@@ -4,49 +4,48 @@
 
 #include <typeinfo>
 
-CommandLineInterface::CommandLineInterface(
-    const std::deque<std::string> arguments) {
-  this->arguments = arguments;
-}
+CommandLineInterface::CommandLineInterface(int argc, char **argv) {
 
-void CommandLineInterface::show_help_menu() {
-  // Create our corpus
-  std::cout << "Possible Commands : " << std::endl;
-  std::cout << "create : Create a corpus." << std::endl;
-  std::cout << "--help : Show help menu." << std::endl;
+  this->parser = argparse::ArgumentParser("Corpus Harvester");
+
+  // Option for the creation of a corpus
+  this->parser.add_argument("--create")
+      .help("Create a new corpus")
+      .default_value(false)
+      .implicit_value(true);
+
+  // Show the list of the corpus
+  this->parser.add_argument("--corpus")
+      .help("Show a corpus")
+      .default_value(false)
+      .implicit_value(true);
+
+  // List of string at the end of the command to get the name of the corpus
+  this->parser.add_argument("name").help("Name of the corpus").remaining();
+
+  try {
+    this->parser.parse_args(argc, argv);
+  } catch (const std::runtime_error &err) {
+    std::cout << err.what() << std::endl;
+    std::cout << this->parser;
+    exit(0);
+  }
 }
 
 void CommandLineInterface::create_api() {
   // TODO :: Creation of a new corpus
 }
 
-Corpus CommandLineInterface::create_corpus() {
+Corpus CommandLineInterface::create_corpus(const std::string name) {
 
-  // If we don't have any parameters.
-  if (this->arguments.empty()) {
-    std::cout << "Please specify the content's type of the corpus."
-              << std::endl;
-    exit(0);
-  }
-
-  // If the first command is help
-  if (this->arguments.front() == "--help") {
-    std::cout << "Please specify the content type of our future corpus."
-              << std::endl;
-    exit(0);
-  }
-
-  // We get the content's type of our data.
-  std::string type = this->arguments.front();
-
-  std::cout << "Creation of " << type << "'s corpus in progress..."
+  std::cout << "Creation of " << name << "'s corpus in progress..."
             << std::endl;
 
   // Download corresponding data
   download_manager dl;
   // api_loader twitter(std::string("data/twitter.json"),
   //                    std::string("data/twitter.env.json"));
-  // std::list<File *> out = twitter.query_and_parse({{"q", type}}, dl);
+  // std::list<File *> out = twitter.query_and_parse({{"q", name}}, dl);
   api_loader tmdb(std::string("data/tmdb_poster.json"),
                   std::string("data/tmdb.env.json"));
   std::list<File *> out = tmdb.query_and_parse({{"query", "star wars"}}, dl);
@@ -77,14 +76,6 @@ Corpus CommandLineInterface::create_corpus() {
 
 std::list<Corpus *> CommandLineInterface::list_corpus() {
 
-  // TODO ::  Add some parameters for using filtering in the request.
-
-  // If the first command is help
-  if (this->arguments.front() == "--help") {
-    std::cout << "Some filters ae available ." << std::endl;
-    exit(0);
-  }
-
   Indexer indexer("harvester", 0);
   sql::Connection *db = indexer.get_database();
 
@@ -96,19 +87,30 @@ std::list<Corpus *> CommandLineInterface::list_corpus() {
 
 void CommandLineInterface::run() {
 
-  // Get the first command and remove it form the deque array.
-  std::string firstCommand = this->arguments.front();
-  this->arguments.pop_front();
+  // Creation of a corpus
+  if (this->parser["--create"] == true) {
 
-  // We print the help menu.
-  if (firstCommand == "help" or firstCommand == "--help" or
-      firstCommand == "-help") {
-    this->show_help_menu();
-  } else if (firstCommand == "create") {
-    Corpus corpus = this->create_corpus();
-    std::cout << corpus.to_string() << std::endl;
-  } else if (firstCommand == "corpus") {
+    std::string corpusName = "";
 
+    try {
+      auto names = this->parser.get<std::vector<std::string>>("name");
+      for (auto &name : names)
+        corpusName += name + " ";
+
+      // Remove the last character, here a space
+      corpusName.pop_back();
+
+      // Create the corpus and show it
+      Corpus corpus = this->create_corpus(corpusName);
+      std::cout << corpus.to_string() << std::endl;
+
+    } catch (std::logic_error &e) {
+      std::cout << "No name provide for the corpus" << std::endl;
+    }
+  }
+  // Show all the corpus
+  else if (this->parser["--corpus"] == true) {
+    std::cout << "List of all the corpus." << std::endl;
     std::list<Corpus *> corpusList = this->list_corpus();
     std::cout << "Number of available corpus : " << corpusList.size()
               << std::endl;
@@ -116,12 +118,5 @@ void CommandLineInterface::run() {
     for (const Corpus *corpus : corpusList) {
       std::cout << corpus->header_string() << std::endl;
     }
-
-  } else {
-    std::cout
-        << "The command '" << firstCommand
-        << "' doesn't exit. Please check the available commands with 'help'."
-        << std::endl;
-    exit(0);
   }
 }
