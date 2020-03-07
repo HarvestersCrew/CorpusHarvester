@@ -37,9 +37,11 @@ bool File::api_id_exists(sql::Connection *db) {
   res = stmt->executeQuery(GET_FILE_API_ID);
 
   std::string curr_api_id = "";
+  std::string curr_source = "";
   while (res->next()) {
+    curr_source = res->getString("source");
     curr_api_id = res->getString("value");
-    if (curr_api_id == api_id) {
+    if (curr_api_id == api_id && curr_source == _source) {
       api_id_exists = true;
     }
   }

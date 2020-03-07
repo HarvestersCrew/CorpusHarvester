@@ -21,7 +21,8 @@
   "? AND "                                                                     \
   "t.value = ?;"
 #define GET_FILE_API_ID                                                        \
-  "SELECT t.value FROM File f, Tag t WHERE f.id = t.file_id AND t.name = "     \
+  "SELECT f.source, t.value FROM File f, Tag t WHERE f.id = t.file_id AND "    \
+  "t.name = "                                                                  \
   "'_api_id'"
 #define INSERT_FILE_STATEMENT                                                  \
   "INSERT INTO File (path, name, size, source, format) VALUES(?, ?, ?, ?, ?)"

@@ -75,6 +75,13 @@ void test_api_id_exists() {
   Assertion::assert_false(__FUNCTION__, inserted);
 }
 
+void test_same_api_id_different_source() {
+  File *file = new File("path", "name", 150, "Tmdb", ".txt");
+  file->add_tag("_api_id", "0");
+  bool inserted = indexer.insert_database_item(file);
+  Assertion::assert_true(__FUNCTION__, inserted);
+}
+
 void test_create_database2() {
   sql::Connection *db = indexer.get_database();
   sql::Statement *stmt = db->createStatement();
@@ -247,6 +254,8 @@ void indexation_test() {
     Assertion::test(test_create_database, "test_create_database");
     Assertion::test(test_indexation, "test_indexation");
     Assertion::test(test_api_id_exists, "test_api_id_exists");
+    Assertion::test(test_same_api_id_different_source,
+                    "test_same_api_id_different_source");
     Assertion::test(test_create_database2, "test_create_database2");
     Assertion::test(test_get_setting, "test_get_setting");
     Assertion::test(test_get_wrong_setting, "test_get_wrong_setting");
