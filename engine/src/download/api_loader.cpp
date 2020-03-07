@@ -129,7 +129,7 @@ std::string api_loader::api_type_string() const {
   }
 }
 
-std::list<File *>
+std::list<shared_ptr<File>>
 api_loader::query_and_parse(const nlohmann::json &params,
                             const download_manager &dl) const {
 
@@ -139,7 +139,7 @@ api_loader::query_and_parse(const nlohmann::json &params,
   std::vector<std::pair<api_parameter_request *, std::string>>
       relevant_parameters;
 
-  std::list<File *> files;
+  std::list<shared_ptr<File>> files;
   nlohmann::json results_array;
 
   for (api_parameter_request *el : this->_requests) {
@@ -191,21 +191,23 @@ api_loader::query_and_parse(const nlohmann::json &params,
 
     try {
 
-      File *file = new File("", out.str(), 0, this->_name, "");
+      shared_ptr<File> sp_file = std::make_shared<File>();
+      sp_file->set_name(out.str());
+      sp_file->set_source(this->_name);
       for (const auto &response : el.get_parameters()) {
         if (response.first->_name == this->_response_main_item) {
-          this->manage_main_value(el, file, dl);
+          this->manage_main_value(el, sp_file, dl);
         } else if (response.first->_relevant) {
-          file->add_tag(response.first->_name, response.second);
+          sp_file->add_tag(response.first->_name, response.second);
         }
       }
 
       for (const std::pair<api_parameter_request *, std::string> &relevant :
            relevant_parameters) {
-        file->add_tag(relevant.first->_name, relevant.second);
+        sp_file->add_tag(relevant.first->_name, relevant.second);
       }
 
-      files.push_back(file);
+      files.push_back(sp_file);
     } catch (...) {
       std::exception_ptr e = std::current_exception();
       std::cerr << "Unexpected exception while parsing a result: "
@@ -219,7 +221,7 @@ api_loader::query_and_parse(const nlohmann::json &params,
 }
 
 void api_loader::manage_main_value(const response_item &result_to_manage,
-                                   File *file_to_save_to,
+                                   shared_ptr<File> file_to_save_to,
                                    const download_manager &dl) const {
   std::pair<const api_parameter_response *, std::string> main_result =
       result_to_manage.get_named_parameter(this->_response_main_item);
@@ -240,14 +242,14 @@ void api_loader::manage_main_value(const response_item &result_to_manage,
 }
 
 void api_loader::manage_text(const std::string &api_result,
-                             File *file_to_save_to) const {
+                             shared_ptr<File> file_to_save_to) const {
   file_to_save_to->set_content(api_result);
   file_to_save_to->set_format("txt");
 }
 
 void api_loader::manage_media(const std::string &path_api,
                               const api_parameter_response *param,
-                              File *file_to_save_to,
+                              shared_ptr<File> file_to_save_to,
                               const download_manager &dl) const {
   if (param->_value_type != api_parameter_base::value_type::IMAGE_LINK) {
     throw std::runtime_error("Can't manage this API (" + this->_name +

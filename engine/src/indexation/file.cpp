@@ -5,13 +5,7 @@ File::File(std::string path, std::string name, int size, std::string source,
     : DatabaseItem(id), _path(path), _name(name), _size(size), _source(source),
       _format(format) {}
 
-File::File() : DatabaseItem(0) {}
-
-File::~File() {
-  for (auto &tag : _tags) {
-    delete tag;
-  }
-}
+File::File() : DatabaseItem(-1) {}
 
 std::string File::to_string() const {
   std::ostringstream out;
@@ -45,6 +39,8 @@ bool File::api_id_exists(sql::Connection *db) {
       api_id_exists = true;
     }
   }
+  delete stmt;
+  delete res;
   return api_id_exists;
 }
 
@@ -52,7 +48,6 @@ bool File::insert(sql::Connection *db) {
   bool aie = api_id_exists(db);
   if (!aie) {
     sql::PreparedStatement *prep_stmt;
-    std::list<File *> files;
 
     prep_stmt = db->prepareStatement(INSERT_FILE_STATEMENT);
     prep_stmt->setString(1, _path);
@@ -82,9 +77,9 @@ void File::fetch_tags(sql::Connection *db) {
   delete prep_stmt;
 
   while (res->next()) {
-    Tag *tag = new Tag();
-    tag->fill_from_statement(db, res);
-    _tags.push_back(tag);
+    Tag tag = Tag();
+    tag.fill_from_statement(db, res);
+    _tags.push_back(std::make_unique<Tag>(tag));
   }
   delete res;
 }
@@ -100,7 +95,7 @@ void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
 }
 
 void File::add_tag(std::string name, std::string value) {
-  _tags.push_back(new Tag(name, value));
+  _tags.push_back(std::make_unique<Tag>(Tag(name, value)));
 }
 
 void File::set_content(std::string content) {

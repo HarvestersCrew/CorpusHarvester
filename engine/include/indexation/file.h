@@ -7,6 +7,7 @@
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 #include <fstream>
+#include <memory>
 #include <mysql_connection.h>
 #include <sstream>
 #include <vector>
@@ -27,6 +28,8 @@
 #define INSERT_FILE_STATEMENT                                                  \
   "INSERT INTO File (path, name, size, source, format) VALUES(?, ?, ?, ?, ?)"
 #define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
+
+using std::unique_ptr;
 
 /**
  * File class describes a File table in the database
@@ -58,7 +61,7 @@ class File : public DatabaseItem {
   bool _binary = false;
 
   /** The tags describing this file */
-  std::list<Tag *> _tags;
+  std::list<unique_ptr<Tag>> _tags;
 
 public:
   /**
@@ -77,11 +80,6 @@ public:
    */
   File(std::string path, std::string name, int size, std::string source,
        std::string format, int id = -1);
-
-  /**
-   * Default destructor
-   */
-  ~File();
 
   std::string to_string() const;
 

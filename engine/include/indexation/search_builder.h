@@ -8,7 +8,10 @@
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 #include <iostream>
+#include <memory>
 #include <regex>
+
+using std::shared_ptr;
 
 /**
  * SearchBuilder class provide a way to create an SQL statement with the buidler
@@ -102,7 +105,7 @@ public:
 
   SearchBuilder *logical_or();
 
-  std::list<File *> build();
+  std::list<shared_ptr<File>> build();
 
   void clear();
 

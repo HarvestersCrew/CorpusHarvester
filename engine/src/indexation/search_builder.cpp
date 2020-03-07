@@ -62,7 +62,7 @@ SearchBuilder *SearchBuilder::logical_or() {
   return this;
 }
 
-std::list<File *> SearchBuilder::build() {
+std::list<shared_ptr<File>> SearchBuilder::build() {
   valid_current_clause();
   std::string request;
   if (_left_request == "") {
@@ -77,7 +77,7 @@ std::list<File *> SearchBuilder::build() {
   request = _left_request + _first_select + _right_request;
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
-  std::list<File *> files;
+  std::list<shared_ptr<File>> files;
 
   print_if_verbose(request, _verbose);
   prep_stmt = _db->prepareStatement(request);
@@ -93,7 +93,7 @@ std::list<File *> SearchBuilder::build() {
   res = prep_stmt->executeQuery();
 
   while (res->next()) {
-    File *file = new File();
+    shared_ptr<File> file = std::make_shared<File>();
     file->fill_from_statement(_db, res);
     files.push_back(file);
   }

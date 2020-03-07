@@ -9,6 +9,8 @@
 #include <fstream>
 #include <iostream>
 
+using std::shared_ptr;
+
 /**
  * Storage class provides methods to store the files in the file system
  */
@@ -55,26 +57,26 @@ public:
    * @param api_name the source where this file was downloaded
    * @return the destination path of the file in the storage
    */
-  std::string file_destination(File *file) const;
+  std::string file_destination(shared_ptr<File> file) const;
 
   // /**
   //  * Moves the file from its current path to its destination in the storage
   //  * @param file the file to move
   //  */
-  // void move_file(File *file) const;
+  // void move_file(shared_ptr<File> file) const;
 
   /**
    * Creates a file in the storage
    * @param file the file to store
    * @return the destination of the file
    */
-  std::string store_file(File *file) const;
+  std::string store_file(shared_ptr<File> file) const;
 
   /**
    * Creates the files in the storage
    * @param files the files to store
    */
-  void store_files(std::list<File *> files) const;
+  void store_files(std::list<shared_ptr<File>> files) const;
 
   std::string get_root_folder_name() const { return _root_folder_name; }
   void set_root_folder_name(std::string root_folder_name) {

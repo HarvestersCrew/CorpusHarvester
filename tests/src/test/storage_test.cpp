@@ -3,7 +3,8 @@
 Storage storage = Storage();
 std::string STORED_PATH;
 std::string TEMP_FILES_PATH;
-File *file = new File("", "imafilefrom", 100, "tweeter", ".txt");
+shared_ptr<File> file =
+    std::make_shared<File>(File("", "imafilefrom", 100, "tweeter", ".txt"));
 
 void test_file_destination() {
   std::string fileDest = storage.file_destination(file);

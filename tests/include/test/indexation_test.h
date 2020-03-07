@@ -1,5 +1,6 @@
 #include <cstring>
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 #include "indexation/indexer.h"
@@ -7,6 +8,8 @@
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 #include "utils/utils.h"
+
+using std::shared_ptr;
 
 #define TABLES_COUNT 5
 #define FILE_COUNT 50

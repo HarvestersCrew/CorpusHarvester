@@ -44,7 +44,7 @@ std::string vec_to_string(const std::vector<char> &vec) {
   return str;
 }
 
-void fill_file_randomly(File *file, bool tweet, bool is_even) {
+void fill_file_randomly(shared_ptr<File> file, bool tweet, bool is_even) {
   std::ostringstream is_evenStream;
   is_evenStream << is_even;
   file->add_tag("is_even", is_evenStream.str());

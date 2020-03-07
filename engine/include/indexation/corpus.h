@@ -2,6 +2,7 @@
 #define CORPUSHARVESTER_CORPUS_H
 
 #include <list>
+#include <memory>
 
 #include "file.h"
 
@@ -27,6 +28,8 @@
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
   "cf.file_id = f.id;"
 
+using std::shared_ptr;
+
 /**
  * Corpus class describes a Corpus table in the database
  */
@@ -45,7 +48,7 @@ private:
   /**
    * The list of all the data contained by the corpus.
    */
-  std::list<File *> _files;
+  std::list<shared_ptr<File>> _files;
 
   /**
    * A description of the filters that were used to create this corpus
@@ -74,13 +77,9 @@ public:
    * @param used_filters the corpus filters description
    * @param id the id of the corpus in the database
    */
-  Corpus(std::string title, std::string creation_date, std::list<File *> files,
-         std::string used_filters, int id = -1);
-
-  /**
-   * Default destructor
-   */
-  ~Corpus();
+  Corpus(std::string title, std::string creation_date,
+         std::list<shared_ptr<File>> files, std::string used_filters,
+         int id = -1);
 
   /**
    * Fills the _files attribute fetching the files linked to this corpus in the

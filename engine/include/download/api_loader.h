@@ -118,10 +118,11 @@ public:
    * Queries and parses
    * @param params JSON of parameters to insert in place of the default ones
    * @param dl download manager
-   * @return std::list<File *> Parsed response suitable for the Harvester
+   * @return std::list<shared_ptr<File>> Parsed response suitable for the
+   * Harvester
    */
-  std::list<File *> query_and_parse(const nlohmann::json &params,
-                                    const download_manager &dl) const;
+  std::list<shared_ptr<File>> query_and_parse(const nlohmann::json &params,
+                                              const download_manager &dl) const;
 
   /**
    * Manage the retrieval of the main value of the API (text, image...)
@@ -131,7 +132,7 @@ public:
    * @param dl download manager
    */
   void manage_main_value(const response_item &result_to_manage,
-                         File *file_to_save_to,
+                         shared_ptr<File> file_to_save_to,
                          const download_manager &dl) const;
 
   /**
@@ -140,7 +141,8 @@ public:
    * @param api_result given value by the API
    * @param file_to_save_to file to save results to
    */
-  void manage_text(const std::string &api_result, File *file_to_save_to) const;
+  void manage_text(const std::string &api_result,
+                   shared_ptr<File> file_to_save_to) const;
 
   /**
    * Manages the retrieval of a media from the API.
@@ -151,7 +153,8 @@ public:
    * @param dl download manager
    */
   void manage_media(const std::string &path_api,
-                    const api_parameter_response *param, File *file_to_save_to,
+                    const api_parameter_response *param,
+                    shared_ptr<File> file_to_save_to,
                     const download_manager &dl) const;
 
   /**
