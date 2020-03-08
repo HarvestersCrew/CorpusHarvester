@@ -29,4 +29,7 @@ nlohmann::json json_from_file(const std::string &path);
 
 std::string get_current_time(const char *patern);
 
+std::string add_string_every_n_chars(std::string input, std::string to_add,
+                                     int n);
+
 #endif

@@ -89,3 +89,14 @@ std::string get_current_time(const char *patern) {
   oss << std::put_time(&tm, patern);
   return oss.str();
 }
+
+std::string add_string_every_n_chars(std::string input, std::string to_add,
+                                     int n) {
+  std::string split_string;
+  std::string sub_str;
+  for (size_t i = 0; i < input.length(); i += n) {
+    sub_str = input.substr(i, n);
+    split_string += sub_str + to_add;
+  }
+  return split_string;
+}

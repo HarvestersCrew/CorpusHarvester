@@ -54,7 +54,6 @@ Corpus CommandLineInterface::create_corpus(const std::string name) {
   // Store the files
   Indexer indexer("harvester", false);
   indexer.create_database(true);
-
   Storage storage(indexer.get_database());
   storage.store_files(out);
 

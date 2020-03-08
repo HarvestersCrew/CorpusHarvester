@@ -19,10 +19,21 @@ bool Storage::folder_exists_in_root(std::string folder_path) const {
   return std::filesystem::exists(dest_folder_name);
 }
 
+std::string Storage::get_folder_path(std::string file_name) const {
+  return add_string_every_n_chars(file_name, "/", MD5_SPLIT);
+}
+
 std::string Storage::file_destination(shared_ptr<File> file) const {
-  std::string file_name = file->get_name();
-  std::string dest_folder_path = file->get_source() + "/" + file_name[0] + "/";
+  std::string md5_file_name = md5(file->get_name());
+  std::string file_name =
+      md5_file_name.substr(md5_file_name.length() - MD5_SPLIT, MD5_SPLIT);
+  std::string file_name_for_folder =
+      md5_file_name.substr(0, md5_file_name.length() - MD5_SPLIT);
+  std::string file_folder = get_folder_path(file_name_for_folder);
+  std::string dest_folder_path = file->get_source() + "/" + file_folder;
+  file->set_name(file_name);
   file->set_path(dest_folder_path);
+
   bool dest_folder_exists = folder_exists_in_root(dest_folder_path);
   if (!dest_folder_exists) {
     bool correctly_created = create_folders_in_root(dest_folder_path);

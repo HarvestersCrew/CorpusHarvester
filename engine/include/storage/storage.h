@@ -4,12 +4,16 @@
 #include "indexation/file.h"
 #include "indexation/setting.h"
 #include "utils/exceptions.h"
+#include "utils/md5.h"
+#include "utils/utils.h"
 #include <cppconn/connection.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 
 using std::shared_ptr;
+
+#define MD5_SPLIT 8
 
 /**
  * Storage class provides methods to store the files in the file system
@@ -49,6 +53,8 @@ public:
   Storage(sql::Connection *db);
 
   void init_root(sql::Connection *db);
+
+  std::string get_folder_path(std::string file_name) const;
 
   /**
    * Given the name of a file and its source (api) name, finds destination of
