@@ -54,11 +54,12 @@ Corpus CommandLineInterface::create_corpus() {
 
   // Store the files
   Indexer indexer("harvester", false);
+  indexer.create_database(true);
+
   Storage storage(indexer.get_database());
   storage.store_files(out);
 
   // Index the downloaded data
-  indexer.create_database(true);
   indexer.indexation(out);
 
   // Request files which has at least one retweet and one favorite
