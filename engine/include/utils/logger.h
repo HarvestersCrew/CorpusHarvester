@@ -19,7 +19,15 @@ using std::ostream;
 using std::string;
 using std::stringstream;
 
+/** Class used to manage logs, with levels and different outputs */
 class logger {
+
+  friend void test_logger_get_ostream();
+  friend void test_logger_output_log();
+  friend void test_logger_debug();
+  friend void test_logger_info();
+  friend void test_logger_warning();
+  friend void test_logger_error();
 
 public:
   logger();
@@ -35,18 +43,48 @@ public:
   static string get_output_path();
   static void set_output_path(string path);
 
-  static void ostream_log(ostream &os, logger::level level, const string &msg);
-  static void print_log(logger::level level, const string &msg);
-
+  /**
+   * Logs a debug message
+   * @param msg message to log
+   */
   static void debug(const string &msg);
+  /**
+   * Logs an info message
+   * @param msg message to log
+   */
   static void info(const string &msg);
+  /**
+   * Logs a warning message
+   * @param msg message to log
+   */
   static void warning(const string &msg);
+  /**
+   * Logs an error message
+   * @param msg message to log
+   */
   static void error(const string &msg);
 
 private:
+  /** Minimal level to output */
   static level _level;
+  /** Where to output logs */
   static output _output;
+  /** Directory to use if outputting to files */
   static string _output_path;
+
+  /**
+   * Used to updated an ostream based on a given level and message.
+   * @param os ostream to update
+   * @param level level of importance of the message
+   * @param msg message to log
+   */
+  static void ostream_log(ostream &os, logger::level level, const string &msg);
+  /**
+   * Prints the given message to the logger output
+   * @param level level of importance of the message
+   * @param msg message to log
+   */
+  static void print_log(logger::level level, const string &msg);
 };
 
 #endif
