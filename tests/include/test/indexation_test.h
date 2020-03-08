@@ -1,13 +1,15 @@
-#include <cstring>
-#include <iostream>
-#include <memory>
-#include <sstream>
+#ifndef INDEXATION_TEST_H
+#define INDEXATION_TEST_H
 
 #include "indexation/indexer.h"
 #include "indexation/search_builder.h"
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 #include "utils/utils.h"
+#include <cstring>
+#include <iostream>
+#include <memory>
+#include <sstream>
 
 using std::shared_ptr;
 
@@ -36,3 +38,5 @@ void test_create_corpus();
 void test_wrong_search();
 void test_wrong_search2();
 void indexation_test();
+
+#endif

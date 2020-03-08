@@ -78,4 +78,11 @@ public:
   const char *what() const throw();
 };
 
+class logger_exception : public std::runtime_error {
+
+public:
+  logger_exception(std::string error_message)
+      : std::runtime_error(error_message) {}
+};
+
 #endif
