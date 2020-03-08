@@ -24,7 +24,11 @@ std::string Storage::get_folder_path(std::string file_name) const {
 }
 
 std::string Storage::file_destination(shared_ptr<File> file) const {
-  std::string md5_file_name = md5(file->get_name());
+  std::string current_file_name = file->get_name();
+  if (current_file_name == "") {
+    current_file_name = random_str(25);
+  }
+  std::string md5_file_name = md5(current_file_name);
   std::string file_name =
       md5_file_name.substr(md5_file_name.length() - MD5_SPLIT, MD5_SPLIT);
   std::string file_name_for_folder =

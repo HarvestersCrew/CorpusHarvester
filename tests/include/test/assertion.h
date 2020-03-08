@@ -39,6 +39,13 @@ public:
     }
   }
 
+  static void assert_not_equals(std::string function_name,
+                                std::string not_expected, std::string found) {
+    if (not_expected == found) {
+      throw TestFailedException(function_name, not_expected, found);
+    }
+  }
+
   static void assert_true(std::string function_name, bool found) {
     if (!found) {
       throw TestFailedException(function_name, "true", std::to_string(found));

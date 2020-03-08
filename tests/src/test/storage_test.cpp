@@ -22,6 +22,12 @@ void test_file_destination() {
       fileDest);
 }
 
+void test_empty_file_name() {
+  file->set_name("");
+  std::string fileDest = storage.file_destination(file);
+  Assertion::assert_not_equals(__FUNCTION__, "", fileDest);
+}
+
 // void test_move_one_file() {
 //   system(INIT_DATA);
 //   file =
@@ -61,6 +67,7 @@ void storage_test() {
   std::cout << std::endl << "Storage tests : " << std::endl;
   try {
     Assertion::test(test_file_destination, "test_file_destination");
+    Assertion::test(test_empty_file_name, "test_empty_file_name");
     // Assertion::test(test_move_one_file, "test_move_one_file");
     Assertion::test(test_store_one_file, "test_store_one_file");
   } catch (const TestFailedException &e) {
