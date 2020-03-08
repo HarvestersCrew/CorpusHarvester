@@ -7,19 +7,14 @@
 Corpus::Corpus() {}
 
 Corpus::Corpus(std::string title, std::string creation_date,
-               std::list<File *> files, std::string used_filters, int id)
+               std::list<shared_ptr<File>> files, std::string used_filters,
+               int id)
     : DatabaseItem(id), _title(title), _creation_date(creation_date),
       _files(files), _used_filters(used_filters) {}
 
 Corpus::Corpus(std::string title, std::string creation_date, int id)
     : DatabaseItem(id), _title(title), _creation_date(creation_date), _files(),
       _used_filters("") {}
-
-Corpus::~Corpus() {
-  for (auto &file : _files) {
-    delete file;
-  }
-}
 
 std::string Corpus::header_string() const {
   std::ostringstream out;
@@ -69,7 +64,7 @@ void Corpus::fetch_files(sql::Connection *db) {
   delete prep_stmt;
 
   while (res->next()) {
-    File *file = new File();
+    shared_ptr<File> file = std::make_shared<File>();
     file->fill_from_statement(db, res);
     _files.push_back(file);
   }

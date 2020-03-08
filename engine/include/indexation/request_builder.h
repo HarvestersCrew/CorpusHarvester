@@ -2,6 +2,9 @@
 #define REQUEST_BUILDER_H
 
 #include "indexation/file.h"
+#include <memory>
+
+using std::shared_ptr;
 
 /**
  * This interface describe a request builder using the design patern Builder
@@ -39,7 +42,7 @@ public:
    * matching it
    * @return the list of all files matching the built request
    */
-  virtual std::list<File *> build() = 0;
+  virtual std::list<shared_ptr<File>> build() = 0;
 
   /**
    * Clears the builder

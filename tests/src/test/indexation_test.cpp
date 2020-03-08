@@ -40,16 +40,16 @@ void test_create_database() {
 }
 
 void test_indexation() {
-  std::list<File *> files;
+  std::list<shared_ptr<File>> files;
   for (int i = 0; i < FILE_COUNT; i++) {
     std::string i_str = std::to_string(i);
     std::string i_plus_50_str = std::to_string(i + 50);
-    File *file = new File("/stockage/file" + i_str, "file" + i_str, i + 100,
-                          "Tweeter", ".txt");
-    fill_file_randomly(file, i < TWEET_COUNT, i % 2 == 0);
-    file->add_tag("retweet", i_plus_50_str);
-    file->add_tag("_api_id", i_str);
-    files.push_back(file);
+    shared_ptr<File> up_file = std::make_shared<File>(File(
+        "/stockage/file" + i_str, "file" + i_str, i + 100, "Tweeter", ".txt"));
+    fill_file_randomly(up_file, i < TWEET_COUNT, i % 2 == 0);
+    up_file->add_tag("retweet", i_plus_50_str);
+    up_file->add_tag("_api_id", i_str);
+    files.push_back(up_file);
   }
   indexer.indexation(files);
 
@@ -68,11 +68,19 @@ void test_indexation() {
 }
 
 void test_api_id_exists() {
-  File *file =
-      new File("api_id_exists", "api_id_exists", 100, "Tweeter", ".txt");
+  shared_ptr<File> file = std::make_shared<File>(
+      File("api_id_exists", "api_id_exists", 100, "Tweeter", ".txt"));
   file->add_tag("_api_id", "0");
-  bool inserted = indexer.insert_database_item(file);
+  bool inserted = indexer.insert_file(file);
   Assertion::assert_false(__FUNCTION__, inserted);
+}
+
+void test_same_api_id_different_source() {
+  shared_ptr<File> file =
+      std::make_shared<File>(File("path", "name", 150, "Tmdb", ".txt"));
+  file->add_tag("_api_id", "0");
+  bool inserted = indexer.insert_file(file);
+  Assertion::assert_true(__FUNCTION__, inserted);
 }
 
 void test_create_database2() {
@@ -114,46 +122,49 @@ void test_get_wrong_setting() {
 }
 
 void test_fetch_tweets() {
-  std::list<File *> tweets = indexer.fetch_from_tag("type", "tweet");
+  std::list<shared_ptr<File>> tweets = indexer.fetch_from_tag("type", "tweet");
   Assertion::assert_equals(__FUNCTION__, TWEET_COUNT, tweets.size());
 }
 
 void test_fetch_even_files() {
-  std::list<File *> tweets = indexer.fetch_from_tag("is_even", "1");
+  std::list<shared_ptr<File>> tweets = indexer.fetch_from_tag("is_even", "1");
   Assertion::assert_equals(__FUNCTION__, EVEN_FILES, tweets.size());
 }
 
 void test_fetch_by_name() {
-  std::list<File *> tweets = indexer.fetch_from_attribute("name", "file12");
+  std::list<shared_ptr<File>> tweets =
+      indexer.fetch_from_attribute("name", "file12");
   Assertion::assert_equals(__FUNCTION__, 1, tweets.size());
-  File *tweet = *(tweets.begin());
+  shared_ptr<File> &tweet = *(tweets.begin());
   Assertion::assert_equals(__FUNCTION__, tweet->get_name(), "file12");
 }
 
 void test_fetch_by_size() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  std::list<File *> tweets = sb->add_condition("size", "110", "<=")->build();
+  std::list<shared_ptr<File>> tweets =
+      sb->add_condition("size", "110", "<=")->build();
   Assertion::assert_equals(__FUNCTION__, "size <= 110", sb->get_filters());
   Assertion::assert_equals(__FUNCTION__, 11, tweets.size());
 }
 
 void test_fetch_by_tag_lt() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  std::list<File *> tweets =
+  std::list<shared_ptr<File>> tweets =
       sb->add_tag_condition("retweet", "65", "<")->build();
   Assertion::assert_equals(__FUNCTION__, 15, tweets.size());
 }
 
 void test_fetch_specific_files() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  std::list<File *> files = sb->add_tag_condition("is_even", "1", "=")
-                                ->logical_and()
-                                ->add_tag_condition("type", "tweet", "=")
-                                ->logical_or()
-                                ->add_tag_condition("subject", "kitty", "=")
-                                ->logical_and()
-                                ->add_condition("name", "file8", "=")
-                                ->build();
+  std::list<shared_ptr<File>> files =
+      sb->add_tag_condition("is_even", "1", "=")
+          ->logical_and()
+          ->add_tag_condition("type", "tweet", "=")
+          ->logical_or()
+          ->add_tag_condition("subject", "kitty", "=")
+          ->logical_and()
+          ->add_condition("name", "file8", "=")
+          ->build();
   Assertion::assert_equals(
       __FUNCTION__,
       "is_even = 1 AND type = tweet OR subject = kitty AND name = file8",
@@ -163,38 +174,40 @@ void test_fetch_specific_files() {
 
 void test_fetch_specific_files2() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  std::list<File *> files = sb->add_tag_condition("is_even", "1", "=")
-                                ->logical_and()
-                                ->add_condition("name", "file6", "=")
-                                ->logical_and()
-                                ->add_tag_condition("subject", "kitty", "=")
-                                ->logical_or()
-                                ->add_tag_condition("subject", "tank", "=")
-                                ->build();
+  std::list<shared_ptr<File>> files =
+      sb->add_tag_condition("is_even", "1", "=")
+          ->logical_and()
+          ->add_condition("name", "file6", "=")
+          ->logical_and()
+          ->add_tag_condition("subject", "kitty", "=")
+          ->logical_or()
+          ->add_tag_condition("subject", "tank", "=")
+          ->build();
   Assertion::assert_equals(__FUNCTION__, 1, files.size());
 }
 
 void test_fetch_specific_files3() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  std::list<File *> files = sb->add_condition("name", "file6", "!=")
-                                ->logical_and()
-                                ->add_tag_condition("type", "tweet", "=")
-                                ->logical_or()
-                                ->add_tag_condition("subject", "tank", "=")
-                                ->logical_and()
-                                ->add_condition("size", "112", "<")
-                                ->build();
+  std::list<shared_ptr<File>> files =
+      sb->add_condition("name", "file6", "!=")
+          ->logical_and()
+          ->add_tag_condition("type", "tweet", "=")
+          ->logical_or()
+          ->add_tag_condition("subject", "tank", "=")
+          ->logical_and()
+          ->add_condition("size", "112", "<")
+          ->build();
   Assertion::assert_equals(__FUNCTION__, 11, files.size());
 }
 
 void test_create_corpus() {
   SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
-  std::list<File *> files = sb->add_condition("name", "file6", "=")
-                                ->logical_or()
-                                ->add_condition("name", "file8", "=")
-                                ->logical_or()
-                                ->add_condition("name", "file3", "=")
-                                ->build();
+  std::list<shared_ptr<File>> files = sb->add_condition("name", "file6", "=")
+                                          ->logical_or()
+                                          ->add_condition("name", "file8", "=")
+                                          ->logical_or()
+                                          ->add_condition("name", "file3", "=")
+                                          ->build();
   Corpus corpus("file 6/8/3", "01/02/2020", files, sb->get_filters());
   Corpus corpus2("empty", "02/03/2020");
   indexer.save_corpus(corpus);
@@ -247,6 +260,8 @@ void indexation_test() {
     Assertion::test(test_create_database, "test_create_database");
     Assertion::test(test_indexation, "test_indexation");
     Assertion::test(test_api_id_exists, "test_api_id_exists");
+    Assertion::test(test_same_api_id_different_source,
+                    "test_same_api_id_different_source");
     Assertion::test(test_create_database2, "test_create_database2");
     Assertion::test(test_get_setting, "test_get_setting");
     Assertion::test(test_get_wrong_setting, "test_get_wrong_setting");

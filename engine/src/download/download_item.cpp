@@ -21,8 +21,8 @@ std::string download_item::to_string() const {
   return ss.str();
 }
 
-void download_item::set_parameter(const api_parameter_request *key,
-                                  const std::string &val) {
+void download_item::set_parameter(
+    const shared_ptr<const api_parameter_request> key, const std::string &val) {
   this->_parameters.insert_or_assign(key, val);
 }
 
@@ -35,7 +35,7 @@ void download_item::set_url(const std::string &url) { this->_url = url; }
 
 std::string download_item ::get_url() const { return this->_url; }
 
-const std::map<const api_parameter_request *, std::string> &
+const std::map<shared_ptr<const api_parameter_request>, std::string> &
 download_item::get_parameters() const {
   return this->_parameters;
 }

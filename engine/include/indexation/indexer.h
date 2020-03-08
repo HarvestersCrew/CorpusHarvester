@@ -12,7 +12,10 @@
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 #include <iostream>
+#include <memory>
 #include <sstream>
+
+using std::shared_ptr;
 
 /**
  * Indexer class provides methods to manage the indexation of the files in the
@@ -45,11 +48,11 @@ public:
   Indexer(std::string db_name, bool verbose = false);
 
   /**
-   * Inserts the given item in the database
-   * @param item the item to insert in the database
-   * return true if the item was succesfully inserted
+   * Inserts the given file in the database
+   * @param file the file to insert in the database
+   * return true if the file was succesfully inserted
    */
-  bool insert_database_item(DatabaseItem *item) const;
+  bool insert_file(shared_ptr<File> file) const;
 
   /**
    * Opens the database if not already opened
@@ -72,7 +75,7 @@ public:
    * Indexes the given files in the database
    * @param files the files to index
    */
-  void indexation(std::list<File *> files);
+  void indexation(std::list<shared_ptr<File>> files);
 
   /**
    * Saves the given corpus in the database
@@ -86,7 +89,8 @@ public:
    * @param tag_value the value of the tag
    * return a list of all the files matching the condition
    */
-  std::list<File *> fetch_from_tag(std::string tag_name, std::string tag_value);
+  std::list<shared_ptr<File>> fetch_from_tag(std::string tag_name,
+                                             std::string tag_value);
 
   /**
    * Filters the files in the database where the given attribute (one column in
@@ -95,8 +99,8 @@ public:
    * @param tag_value the value of the tag
    * return a list of all the files matching the condition
    */
-  std::list<File *> fetch_from_attribute(std::string attribute,
-                                         std::string value);
+  std::list<shared_ptr<File>> fetch_from_attribute(std::string attribute,
+                                                   std::string value);
 
   /**
    * Creates a search builder to request files from the database used by this

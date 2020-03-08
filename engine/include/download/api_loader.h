@@ -14,6 +14,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <memory>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -22,6 +23,9 @@
 
 #define API_TYPE_TXT "text"
 #define API_TYPE_IMG "image"
+
+using std::make_shared;
+using std::shared_ptr;
 
 /**
  * API class, used to load API settings and use its tags
@@ -54,10 +58,10 @@ private:
   std::vector<std::string> _path_to_results;
 
   /** List of parameters used in requests */
-  std::vector<api_parameter_request *> _requests;
+  std::vector<shared_ptr<api_parameter_request>> _requests;
 
   /** List of responses from a query */
-  std::vector<api_parameter_response *> _responses;
+  std::vector<shared_ptr<api_parameter_response>> _responses;
 
   /** Number of characters to truncate at the start of the response to parse it
    */
@@ -97,8 +101,6 @@ public:
   api_loader(const std::string &schema_path,
              const std::string &default_values_path);
 
-  ~api_loader();
-
   /**
    * @param key key of the default value
    * @param val default value to set
@@ -118,10 +120,11 @@ public:
    * Queries and parses
    * @param params JSON of parameters to insert in place of the default ones
    * @param dl download manager
-   * @return std::list<File *> Parsed response suitable for the Harvester
+   * @return std::list<shared_ptr<File>> Parsed response suitable for the
+   * Harvester
    */
-  std::list<File *> query_and_parse(const nlohmann::json &params,
-                                    const download_manager &dl) const;
+  std::list<shared_ptr<File>> query_and_parse(const nlohmann::json &params,
+                                              const download_manager &dl) const;
 
   /**
    * Manage the retrieval of the main value of the API (text, image...)
@@ -131,7 +134,7 @@ public:
    * @param dl download manager
    */
   void manage_main_value(const response_item &result_to_manage,
-                         File *file_to_save_to,
+                         shared_ptr<File> file_to_save_to,
                          const download_manager &dl) const;
 
   /**
@@ -140,7 +143,8 @@ public:
    * @param api_result given value by the API
    * @param file_to_save_to file to save results to
    */
-  void manage_text(const std::string &api_result, File *file_to_save_to) const;
+  void manage_text(const std::string &api_result,
+                   shared_ptr<File> file_to_save_to) const;
 
   /**
    * Manages the retrieval of a media from the API.
@@ -151,7 +155,8 @@ public:
    * @param dl download manager
    */
   void manage_media(const std::string &path_api,
-                    const api_parameter_response *param, File *file_to_save_to,
+                    const shared_ptr<const api_parameter_response> param,
+                    shared_ptr<File> file_to_save_to,
                     const download_manager &dl) const;
 
   /**
@@ -160,7 +165,7 @@ public:
    * @return std::optional<api_parameter_request *> optional containing maybe
    * the parameter pointer
    */
-  std::optional<api_parameter_request *>
+  std::optional<shared_ptr<api_parameter_request>>
   find_request_parameter(const std::string &name) const;
 
   /**
@@ -169,7 +174,7 @@ public:
    * @return std::optional<api_parameter_request *> optional containing maybe
    * the parameter pointer
    */
-  std::optional<api_parameter_response *>
+  std::optional<shared_ptr<api_parameter_response>>
   find_response_parameter(const std::string &name) const;
 };
 

@@ -6,8 +6,11 @@
 #include <ctime>
 #include <fstream>
 #include <iomanip>
+#include <memory>
 #include <string>
 #include <vector>
+
+using std::shared_ptr;
 
 std::string exec(std::string cmd);
 
@@ -16,7 +19,7 @@ std::string random_str(const unsigned int len);
 
 std::string vec_to_string(const std::vector<char> &vec);
 
-void fill_file_randomly(File *file, bool tweet, bool is_even);
+void fill_file_randomly(shared_ptr<File> file, bool tweet, bool is_even);
 
 void print_sql_exception(sql::SQLException &e);
 

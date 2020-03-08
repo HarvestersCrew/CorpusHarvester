@@ -19,7 +19,7 @@ bool Storage::folder_exists_in_root(std::string folder_path) const {
   return std::filesystem::exists(dest_folder_name);
 }
 
-std::string Storage::file_destination(File *file) const {
+std::string Storage::file_destination(shared_ptr<File> file) const {
   std::string file_name = file->get_name();
   std::string dest_folder_path = file->get_source() + "/" + file_name[0] + "/";
   file->set_path(dest_folder_path);
@@ -34,7 +34,7 @@ std::string Storage::file_destination(File *file) const {
   return _root_folder_name + dest_folder_path + file_name + file->get_format();
 }
 
-// void Storage::move_file(File *file) const {
+// void Storage::move_file(shared_ptr<File> file) const {
 //   std::string file_dest = file_destination(file);
 //   try {
 //     std::filesystem::rename(file->get_path(), file_dest);
@@ -45,13 +45,13 @@ std::string Storage::file_destination(File *file) const {
 //   }
 // }
 
-std::string Storage::store_file(File *file) const {
+std::string Storage::store_file(shared_ptr<File> file) const {
   std::string file_dest = file_destination(file);
   file->store(file_dest);
   return file_dest;
 }
 
-void Storage::store_files(std::list<File *> files) const {
+void Storage::store_files(std::list<shared_ptr<File>> files) const {
   for (auto &file : files) {
     store_file(file);
   }
