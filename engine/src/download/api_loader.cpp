@@ -16,18 +16,11 @@ api_loader::api_loader(const std::string &schema_path,
   }
 }
 
-api_loader::~api_loader() {
-  for (api_parameter_base *el : this->_requests)
-    delete el;
-  for (api_parameter_base *el : this->_responses)
-    delete el;
-}
-
 std::string api_loader::get_name() const { return this->_name; }
 
 void api_loader::set_parameter_request_default_value(const std::string &key,
                                                      const std::string &val) {
-  for (api_parameter_request *p : this->_requests) {
+  for (const shared_ptr<api_parameter_request> p : this->_requests) {
     if (p->_name == key) {
       p->set_default_value(val);
       return;
@@ -72,12 +65,12 @@ void api_loader::init(const nlohmann::json &j) {
     this->_path_to_results.push_back(el.get<std::string>());
   }
   for (auto &el : j.at("request"))
-    this->_requests.push_back(new api_parameter_request(el));
+    this->_requests.push_back(make_shared<api_parameter_request>(el));
   for (auto &el : j.at("response"))
-    this->_responses.push_back(new api_parameter_response(el));
+    this->_responses.push_back(make_shared<api_parameter_response>(el));
 
   bool main_attribute_found = false;
-  for (api_parameter_response *el : this->_responses) {
+  for (const shared_ptr<const api_parameter_response> el : this->_responses) {
     if (el->_name == this->_response_main_item)
       main_attribute_found = true;
   }
@@ -102,12 +95,12 @@ std::string api_loader::to_string() const {
   out << std::endl;
 
   out << std::endl << "Request parameters:";
-  for (const api_parameter_request *el : this->_requests) {
+  for (const shared_ptr<const api_parameter_request> el : this->_requests) {
     out << std::endl << el->to_string();
   }
 
   out << std::endl << "Response parameters:";
-  for (const api_parameter_response *el : this->_responses) {
+  for (const shared_ptr<const api_parameter_response> el : this->_responses) {
     out << std::endl << el->to_string();
   }
 
@@ -136,13 +129,13 @@ api_loader::query_and_parse(const nlohmann::json &params,
   download_item dl_item(this->_url, this->_truncate_before.value_or(0),
                         this->_truncate_after.value_or(0));
 
-  std::vector<std::pair<api_parameter_request *, std::string>>
+  std::vector<std::pair<shared_ptr<const api_parameter_request>, std::string>>
       relevant_parameters;
 
   std::list<shared_ptr<File>> files;
   nlohmann::json results_array;
 
-  for (api_parameter_request *el : this->_requests) {
+  for (const shared_ptr<const api_parameter_request> el : this->_requests) {
 
     std::optional<std::string> val;
     val = std::nullopt;
@@ -202,8 +195,8 @@ api_loader::query_and_parse(const nlohmann::json &params,
         }
       }
 
-      for (const std::pair<api_parameter_request *, std::string> &relevant :
-           relevant_parameters) {
+      for (const std::pair<shared_ptr<const api_parameter_request>, std::string>
+               &relevant : relevant_parameters) {
         sp_file->add_tag(relevant.first->_name, relevant.second);
       }
 
@@ -223,9 +216,10 @@ api_loader::query_and_parse(const nlohmann::json &params,
 void api_loader::manage_main_value(const response_item &result_to_manage,
                                    shared_ptr<File> file_to_save_to,
                                    const download_manager &dl) const {
-  std::pair<const api_parameter_response *, std::string> main_result =
+  std::pair<shared_ptr<const api_parameter_response>, std::string> main_result =
       result_to_manage.get_named_parameter(this->_response_main_item);
-  const api_parameter_response *main_result_param = main_result.first;
+  shared_ptr<const api_parameter_response> main_result_param =
+      main_result.first;
   std::string main_result_value = main_result.second;
   switch (this->_api_type) {
   case api_loader::api_type::TEXT:
@@ -247,10 +241,10 @@ void api_loader::manage_text(const std::string &api_result,
   file_to_save_to->set_format("txt");
 }
 
-void api_loader::manage_media(const std::string &path_api,
-                              const api_parameter_response *param,
-                              shared_ptr<File> file_to_save_to,
-                              const download_manager &dl) const {
+void api_loader::manage_media(
+    const std::string &path_api,
+    const shared_ptr<const api_parameter_response> param,
+    shared_ptr<File> file_to_save_to, const download_manager &dl) const {
   if (param->_value_type != api_parameter_base::value_type::IMAGE_LINK) {
     throw std::runtime_error("Can't manage this API (" + this->_name +
                              ") media type.");
@@ -268,9 +262,9 @@ void api_loader::manage_media(const std::string &path_api,
   file_to_save_to->set_format(format);
 }
 
-std::optional<api_parameter_request *>
+std::optional<shared_ptr<api_parameter_request>>
 api_loader::find_request_parameter(const std::string &name) const {
-  for (api_parameter_request *el : this->_requests) {
+  for (shared_ptr<api_parameter_request> el : this->_requests) {
     if (el->_name == name) {
       return el;
     }
@@ -278,9 +272,9 @@ api_loader::find_request_parameter(const std::string &name) const {
   return {};
 }
 
-std::optional<api_parameter_response *>
+std::optional<shared_ptr<api_parameter_response>>
 api_loader::find_response_parameter(const std::string &name) const {
-  for (api_parameter_response *el : this->_responses) {
+  for (shared_ptr<api_parameter_response> el : this->_responses) {
     if (el->_name == name) {
       return el;
     }

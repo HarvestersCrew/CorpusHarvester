@@ -2,7 +2,7 @@
 
 response_item::response_item(
     const nlohmann::json &single_entry,
-    const std::vector<api_parameter_response *> &params) {
+    const std::vector<shared_ptr<api_parameter_response>> &params) {
   this->parse(single_entry, params);
 }
 
@@ -14,9 +14,10 @@ std::string response_item::to_string() const {
   return out.str();
 }
 
-void response_item::parse(const nlohmann::json &single_entry,
-                          const std::vector<api_parameter_response *> &params) {
-  for (api_parameter_response *el : params) {
+void response_item::parse(
+    const nlohmann::json &single_entry,
+    const std::vector<shared_ptr<api_parameter_response>> &params) {
+  for (const shared_ptr<const api_parameter_response> el : params) {
     std::string value =
         el->json_value_to_string(single_entry.at(el->_api_name));
     this->_parameters.insert_or_assign(el, value);
@@ -29,15 +30,15 @@ void response_item::parse(const nlohmann::json &single_entry,
   }
 }
 
-const std::map<const api_parameter_response *, std::string> &
+const std::map<shared_ptr<const api_parameter_response>, std::string> &
 response_item::get_parameters() const {
   return this->_parameters;
 }
 
-std::pair<const api_parameter_response *, std::string>
+std::pair<shared_ptr<const api_parameter_response>, std::string>
 response_item::get_named_parameter(const std::string &name) const {
-  for (const std::pair<const api_parameter_response *, std::string> &el :
-       this->_parameters) {
+  for (const std::pair<shared_ptr<const api_parameter_response>, std::string>
+           &el : this->_parameters) {
     if (el.first->_name == name) {
       return std::make_pair(el.first, el.second);
     }
@@ -45,9 +46,9 @@ response_item::get_named_parameter(const std::string &name) const {
   throw api_missing_settings_exception();
 }
 
-std::string
-response_item::string_prepend_append(const api_parameter_response *param,
-                                     std::string value) const {
+std::string response_item::string_prepend_append(
+    const shared_ptr<const api_parameter_response> param,
+    std::string value) const {
 
   for (int i = param->_string_prepends.size() - 1; i >= 0; --i) {
     const std::pair<std::string, bool> &el = param->_string_prepends.at(i);

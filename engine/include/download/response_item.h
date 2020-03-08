@@ -6,22 +6,25 @@
 #include "utils/nlohmann/json.hpp"
 #include <iostream>
 #include <map>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <utility>
+
+using std::shared_ptr;
 
 /** Class used to store a single entry of a response */
 class response_item {
 private:
   /** Map of response parameters as keys and received values as values */
-  std::map<const api_parameter_response *, std::string> _parameters;
+  std::map<shared_ptr<const api_parameter_response>, std::string> _parameters;
 
 public:
   /** Constructor simply calling parse method
    * @see response_item::parse
    */
   response_item(const nlohmann::json &single_entry,
-                const std::vector<api_parameter_response *> &params);
+                const std::vector<shared_ptr<api_parameter_response>> &params);
 
   std::string to_string() const;
 
@@ -32,9 +35,9 @@ public:
    * @param params Response params describing the API
    */
   void parse(const nlohmann::json &single_entry,
-             const std::vector<api_parameter_response *> &params);
+             const std::vector<shared_ptr<api_parameter_response>> &params);
 
-  const std::map<const api_parameter_response *, std::string> &
+  const std::map<shared_ptr<const api_parameter_response>, std::string> &
   get_parameters() const;
 
   /**
@@ -42,7 +45,7 @@ public:
    * @param name name of the parameter
    * @return pair of the parameter and its value
    */
-  std::pair<const api_parameter_response *, std::string>
+  std::pair<shared_ptr<const api_parameter_response>, std::string>
   get_named_parameter(const std::string &name) const;
 
   /**
@@ -51,8 +54,9 @@ public:
    * @param value string to modify
    * @return std::string value modified
    */
-  std::string string_prepend_append(const api_parameter_response *param,
-                                    std::string value) const;
+  std::string
+  string_prepend_append(const shared_ptr<const api_parameter_response> param,
+                        std::string value) const;
 };
 
 #endif
