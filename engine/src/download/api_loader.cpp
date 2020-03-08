@@ -62,12 +62,12 @@ void api_loader::init(const nlohmann::json &j) {
   }
 
   for (auto &el : j.at("path_to_results")) {
-    this->_path_to_results.push_back(el.get<std::string>());
+    this->_path_to_results.emplace_back(el.get<std::string>());
   }
   for (auto &el : j.at("request"))
-    this->_requests.push_back(make_shared<api_parameter_request>(el));
+    this->_requests.emplace_back(make_shared<api_parameter_request>(el));
   for (auto &el : j.at("response"))
-    this->_responses.push_back(make_shared<api_parameter_response>(el));
+    this->_responses.emplace_back(make_shared<api_parameter_response>(el));
 
   bool main_attribute_found = false;
   for (const shared_ptr<const api_parameter_response> el : this->_responses) {
@@ -152,7 +152,7 @@ api_loader::query_and_parse(const nlohmann::json &params,
     if (val.has_value()) {
 
       if (el->_relevant) {
-        relevant_parameters.push_back(std::make_pair(el, val.value()));
+        relevant_parameters.emplace_back(std::make_pair(el, val.value()));
       }
 
       if (el->_position == "body" || el->_position == "header") {
