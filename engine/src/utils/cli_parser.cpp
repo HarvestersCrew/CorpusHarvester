@@ -5,6 +5,9 @@ cli_command::cli_command(const string &initial_call, const string &description,
     : _initial_call(initial_call), _description(description),
       _is_option(is_option), _is_option_bool(is_option_bool) {}
 
+cli_command::cli_command(const string &initial_call, const string &description)
+    : cli_command(initial_call, description, false, false) {}
+
 cli_command &cli_command::add_command(const string &name,
                                       const string &description) {
   if (this->_is_option) {
