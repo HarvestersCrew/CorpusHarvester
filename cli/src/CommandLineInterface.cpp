@@ -1,7 +1,7 @@
 
 #include "CommandLineInterface.h"
+#include "utils/logger.h"
 #include "utils/utils.h"
-
 #include <typeinfo>
 
 CommandLineInterface::CommandLineInterface(int argc, char **argv) {
@@ -26,8 +26,9 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv) {
   try {
     this->parser.parse_args(argc, argv);
   } catch (const std::runtime_error &err) {
-    std::cout << err.what() << std::endl;
-    std::cout << this->parser;
+    logger::error(err.what());
+    // TODO :: Need to change that
+    std::cout << this->parser << std::endl;
     exit(0);
   }
 }
@@ -38,8 +39,7 @@ void CommandLineInterface::create_api() {
 
 Corpus CommandLineInterface::create_corpus(const std::string name) {
 
-  std::cout << "Creation of " << name << "'s corpus in progress..."
-            << std::endl;
+  logger::info("Creation of " + name + "'s corpus in progress...");
 
   // Download corresponding data
   download_manager dl;
@@ -105,21 +105,21 @@ void CommandLineInterface::run() {
 
       // Create the corpus and show it
       Corpus corpus = this->create_corpus(corpusName);
-      std::cout << corpus.to_string() << std::endl;
+      logger::info(corpus.to_string());
 
     } catch (std::logic_error &e) {
-      std::cout << "No name provide for the corpus" << std::endl;
+      logger::error("No name provide for the corpus.");
     }
   }
   // Show all the corpus
   else if (this->parser["--corpus"] == true) {
-    std::cout << "List of all the corpus." << std::endl;
+    logger::info("List of all the corpus.");
+
     std::list<Corpus *> corpusList = this->list_corpus();
-    std::cout << "Number of available corpus : " << corpusList.size()
-              << std::endl;
+    logger::info("Number of available corpus : " + corpusList.size());
 
     for (const Corpus *corpus : corpusList) {
-      std::cout << corpus->header_string() << std::endl;
+      logger::info(corpus->header_string());
     }
   }
 }
