@@ -85,4 +85,22 @@ public:
       : std::runtime_error(error_message) {}
 };
 
+class cli_parser_exception : public std::runtime_error {
+public:
+  cli_parser_exception(std::string error_message)
+      : std::runtime_error(error_message) {}
+};
+
+class cli_parser_bad_parse_exception : public std::runtime_error {
+public:
+  cli_parser_bad_parse_exception(std::string error_message)
+      : std::runtime_error(error_message) {}
+};
+
+class cli_parser_help_asked_exception : public std::runtime_error {
+public:
+  cli_parser_help_asked_exception()
+      : std::runtime_error("User asked for help on CLI") {}
+};
+
 #endif
