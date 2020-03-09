@@ -23,6 +23,7 @@
   "INSERT INTO CorpusFiles (corpus_id, file_id) VALUES(?, ?)"
 #define DROP_CORPUS_FILES_STATEMENT "DROP TABLE IF EXISTS CorpusFiles;"
 #define GET_ALL_CORPUS "SELECT * FROM Corpus"
+#define GET_CORPUS_FROM_NAME "SELECT * FROM Corpus WHERE title = ?"
 #define GET_ALL_CORPUS_FILES "SELECT * FROM CorpusFiles"
 #define GET_CORPUS_FILES_STATEMENT                                             \
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
@@ -112,7 +113,25 @@ public:
 
   bool has_file() { return !_files.empty(); }
 
+  /**
+   * Get a list of all the corpus.
+   *
+   * @param db
+   *
+   * @return List of Corpus.
+   */
   static std::list<Corpus *> get_all_corpuses(sql::Connection *db);
+
+  /**
+   * Get a corpus based on his name.
+   *
+   * @param db Database
+   * @param name Name of the corpus
+   *
+   * @return Optional Contain a corpus if the we have a result.
+   */
+  static std::optional<Corpus *> get_corpus_from_name(sql::Connection *db,
+                                                      const std::string name);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H

@@ -37,6 +37,21 @@ void CommandLineInterface::create_api() {
   // TODO :: Creation of a new corpus
 }
 
+std::optional<Corpus *>
+CommandLineInterface::search_corpus(const std::string name) {
+
+  logger::debug("Search corpus : " + name);
+
+  // Get the indexer
+  Indexer indexer("harvester", false);
+  indexer.create_database(false);
+
+  sql::Connection *db = indexer.get_database();
+  std::optional<Corpus *> corpus = Corpus::get_corpus_from_name(db, name);
+
+  return corpus;
+}
+
 Corpus CommandLineInterface::create_corpus(const std::string name) {
 
   logger::info("Creation of " + name + "'s corpus in progress...");
@@ -113,13 +128,36 @@ void CommandLineInterface::run() {
   }
   // Show all the corpus
   else if (this->parser["--corpus"] == true) {
-    logger::info("List of all the corpus.");
 
-    std::list<Corpus *> corpusList = this->list_corpus();
-    logger::info("Number of available corpus : " + corpusList.size());
+    // Check if we have a name else, we show all the corpus
+    try {
+      std::string corpusName = "";
+      auto names = this->parser.get<std::vector<std::string>>("name");
+      for (auto &name : names)
+        corpusName += name + " ";
 
-    for (const Corpus *corpus : corpusList) {
-      logger::info(corpus->header_string());
+      // Remove the last character, here a space
+      corpusName.pop_back();
+
+      // Search for the corpus with the given name
+      std::optional<Corpus *> optionalCorpus = this->search_corpus(corpusName);
+
+      // Check if we have a corpus
+      if (optionalCorpus.has_value()) {
+        logger::info(optionalCorpus.value()->header_string());
+      } else {
+        logger::info("No corpus have been found for the name : " + corpusName);
+      }
+
+    } catch (std::logic_error &e) {
+      logger::info("List of all the corpus.");
+
+      std::list<Corpus *> corpusList = this->list_corpus();
+      logger::info("Number of available corpus : " + corpusList.size());
+
+      for (const Corpus *corpus : corpusList) {
+        logger::info(corpus->header_string());
+      }
     }
   }
 }

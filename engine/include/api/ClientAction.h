@@ -19,6 +19,14 @@ private:
   virtual Corpus create_corpus(const std::string name) = 0;
 
   /**
+   * Search for a particular corpus.
+   *
+   * @param name
+   * @return
+   */
+  virtual std::optional<Corpus *> search_corpus(const std::string name) = 0;
+
+  /**
    * Create a new api for downloading new data.
    * TODO :: See for the parameter
    */

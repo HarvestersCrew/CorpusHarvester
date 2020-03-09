@@ -53,7 +53,7 @@ public:
    *
    * @return Corpus Object
    */
-  std::optional<Corpus> visualisation_corpus(const std::string name);
+  std::optional<Corpus *> visualisation_corpus(const std::string name);
 
   /**
    * Get all the data present in our database.

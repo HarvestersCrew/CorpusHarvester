@@ -100,3 +100,30 @@ std::list<Corpus *> Corpus::get_all_corpuses(sql::Connection *db) {
   delete res;
   return corpuses;
 }
+
+std::optional<Corpus *> Corpus::get_corpus_from_name(sql::Connection *db,
+                                                     std::string name) {
+  sql::PreparedStatement *prep_stmt;
+  sql::ResultSet *res;
+
+  // Get the corpus based on the name
+  prep_stmt = db->prepareStatement(GET_CORPUS_FROM_NAME);
+  prep_stmt->setString(1, name);
+  res = prep_stmt->executeQuery();
+  delete prep_stmt;
+
+  // Define by default a nullptr for the corpus
+  Corpus *corpus = nullptr;
+
+  // If we have got a value, we put it in the variable
+  while (res->next()) {
+    corpus = new Corpus();
+    corpus->fill_attribute_from_statement(res);
+  }
+  delete res;
+
+  // Based on the result, we return an optional
+  return corpus == nullptr
+             ? std::nullopt
+             : std::optional<std::reference_wrapper<Corpus *>>{corpus};
+}

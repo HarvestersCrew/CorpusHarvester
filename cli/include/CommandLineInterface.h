@@ -40,6 +40,15 @@ private:
   Corpus create_corpus(const std::string name);
 
   /**
+   * Search a corpus in the database
+   *
+   * @param name Name of the corpus
+   *
+   * @return Optional corpus
+   */
+  std::optional<Corpus *> search_corpus(const std::string name);
+
+  /**
    * Show all the corpus created
    *
    * @return list of corpus
