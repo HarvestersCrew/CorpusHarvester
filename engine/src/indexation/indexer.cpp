@@ -1,7 +1,6 @@
 #include "indexation/indexer.h"
 
-Indexer::Indexer(std::string db_name, bool verbose)
-    : _db_name(db_name), _db(nullptr), _verbose(verbose) {
+Indexer::Indexer(std::string db_name) : _db_name(db_name), _db(nullptr) {
   open_database();
 }
 
@@ -11,7 +10,7 @@ void Indexer::open_database() {
     _db = driver->connect("db", "root", "1234");
     _db->setSchema(_db_name);
   } else {
-    print_if_verbose("Database is already opened", _verbose);
+    logger::debug("Database is already opened");
   }
 }
 
@@ -20,16 +19,16 @@ void Indexer::close_database() {
     _db->close();
     delete _db;
   } else {
-    print_if_verbose("Database is already closed", _verbose);
+    logger::debug("Database is already closed");
   }
 }
 
 bool Indexer::insert_file(shared_ptr<File> file) const {
   bool inserted = file->insert(_db);
   if (inserted) {
-    print_if_verbose("- Insertion of " + file->to_string() + " : OK", _verbose);
+    logger::debug("Insertion of " + file->to_string() + " : OK");
   } else {
-    print_if_verbose("- The file wasn't inserted", _verbose);
+    logger::debug("The file wasn't inserted");
   }
   return inserted;
 }
@@ -46,18 +45,18 @@ void Indexer::create_database(bool drop_table) {
     for (auto &drop_statement : drop_statements) {
       stmt->execute(drop_statement);
     }
-    print_if_verbose("- Drop tables : OK", _verbose);
+    logger::debug("Drop tables : OK");
   }
 
   stmt = _db->createStatement();
   for (auto &create_statement : create_statements) {
     stmt->execute(create_statement);
   }
-  print_if_verbose("- Create tables : OK", _verbose);
+  logger::debug("Create tables : OK");
 
   if (drop_table) {
     Setting::init_settings(_db);
-    print_if_verbose("- Init Setting tables : OK", _verbose);
+    logger::debug("Init Setting tables : OK");
   }
 
   delete stmt;
@@ -74,7 +73,7 @@ void Indexer::save_corpus(Corpus &corpus) { corpus.insert(_db); }
 
 std::list<shared_ptr<File>> Indexer::fetch_from_tag(std::string tag_name,
                                                     std::string tag_value) {
-  SearchBuilder *sb = new SearchBuilder(_db, _verbose);
+  SearchBuilder *sb = new SearchBuilder(_db);
   std::list<shared_ptr<File>> files =
       sb->add_tag_condition(tag_name, tag_value, "=")->build();
   return files;
@@ -82,7 +81,7 @@ std::list<shared_ptr<File>> Indexer::fetch_from_tag(std::string tag_name,
 
 std::list<shared_ptr<File>> Indexer::fetch_from_attribute(std::string attribute,
                                                           std::string value) {
-  SearchBuilder *sb = new SearchBuilder(_db, _verbose);
+  SearchBuilder *sb = new SearchBuilder(_db);
   std::list<shared_ptr<File>> files =
       sb->add_condition(attribute, value, "=")->build();
   return files;

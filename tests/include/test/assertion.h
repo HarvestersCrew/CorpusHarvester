@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "utils/exceptions.h"
+#include "utils/logger.h"
 
 class Assertion {
 

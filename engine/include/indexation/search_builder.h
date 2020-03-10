@@ -3,6 +3,7 @@
 
 #include "indexation/file.h"
 #include "indexation/request_builder.h"
+#include "utils/logger.h"
 #include "utils/utils.h"
 #include <cppconn/driver.h>
 #include <cppconn/prepared_statement.h>
@@ -59,11 +60,6 @@ class SearchBuilder : public RequestBuilder {
   bool _current_clause_only_on_file;
 
   /**
-   * A boolean to allow to print in the function of this class
-   */
-  bool _verbose;
-
-  /**
    * A description of the filters applied in the search request
    */
   std::string _filters;
@@ -83,10 +79,9 @@ public:
   /**
    * Creates a SearchBuilder object
    * @param db the database
-   * @param verbose true to allow prints in the function of this class, false
    * otherwise
    */
-  SearchBuilder(sql::Connection *db, bool verbose = false);
+  SearchBuilder(sql::Connection *db);
 
   /**
    * Adds a condition to the request being built

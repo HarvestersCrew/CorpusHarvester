@@ -1,6 +1,6 @@
 #include "test/indexation_test.h"
 
-Indexer indexer("harvester", VERBOSE);
+Indexer indexer("harvester");
 std::string tables[] = {"Corpus", "File", "Tag", "CorpusFiles", "Setting"};
 int tables_row_count[] = {0, 0, 0, 0, Setting::get_init_settings_count()};
 
@@ -115,10 +115,10 @@ void test_get_wrong_setting() {
   try {
     std::string name = "wrong_setting";
     Setting setting = Setting(name, indexer.get_database());
+    Assertion::assert_throw(__FUNCTION__, "SettingNotFoundException");
   } catch (SettingNotFoundException &e) {
     return;
   }
-  Assertion::assert_throw(__FUNCTION__, "SettingNotFoundException");
 }
 
 void test_fetch_tweets() {
@@ -140,7 +140,7 @@ void test_fetch_by_name() {
 }
 
 void test_fetch_by_size() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
+  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
   std::list<shared_ptr<File>> tweets =
       sb->add_condition("size", "110", "<=")->build();
   Assertion::assert_equals(__FUNCTION__, "size <= 110", sb->get_filters());
@@ -148,14 +148,14 @@ void test_fetch_by_size() {
 }
 
 void test_fetch_by_tag_lt() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
+  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
   std::list<shared_ptr<File>> tweets =
       sb->add_tag_condition("retweet", "65", "<")->build();
   Assertion::assert_equals(__FUNCTION__, 15, tweets.size());
 }
 
 void test_fetch_specific_files() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
+  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
   std::list<shared_ptr<File>> files =
       sb->add_tag_condition("is_even", "1", "=")
           ->logical_and()
@@ -173,7 +173,7 @@ void test_fetch_specific_files() {
 }
 
 void test_fetch_specific_files2() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
+  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
   std::list<shared_ptr<File>> files =
       sb->add_tag_condition("is_even", "1", "=")
           ->logical_and()
@@ -187,7 +187,7 @@ void test_fetch_specific_files2() {
 }
 
 void test_fetch_specific_files3() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
+  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
   std::list<shared_ptr<File>> files =
       sb->add_condition("name", "file6", "!=")
           ->logical_and()
@@ -201,7 +201,7 @@ void test_fetch_specific_files3() {
 }
 
 void test_create_corpus() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
+  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
   std::list<shared_ptr<File>> files = sb->add_condition("name", "file6", "=")
                                           ->logical_or()
                                           ->add_condition("name", "file8", "=")
@@ -229,29 +229,29 @@ void test_create_corpus() {
 
 void test_wrong_search() {
   try {
-    SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
+    SearchBuilder *sb = new SearchBuilder(indexer.get_database());
     sb->add_condition("name", "file6", "=")
         ->logical_or()
         ->logical_or()
         ->build();
+    Assertion::assert_throw(__FUNCTION__, "SQLException");
   } catch (sql::SQLException &e) {
     return;
   }
-  Assertion::assert_throw(__FUNCTION__, "SQLException");
 }
 
 void test_wrong_search2() {
   try {
-    SearchBuilder *sb = new SearchBuilder(indexer.get_database(), VERBOSE);
+    SearchBuilder *sb = new SearchBuilder(indexer.get_database());
     sb->add_condition("name", "file6", "=")
         ->add_condition("name", "file3", "=")
         ->logical_or()
         ->add_condition("name", "file7", "=")
         ->build();
+    Assertion::assert_throw(__FUNCTION__, "SQLException");
   } catch (sql::SQLException &e) {
     return;
   }
-  Assertion::assert_throw(__FUNCTION__, "SQLException");
 }
 
 void indexation_test() {
@@ -277,7 +277,7 @@ void indexation_test() {
     Assertion::test(test_wrong_search, "test_wrong_search");
     Assertion::test(test_wrong_search2, "test_wrong_search2");
   } catch (TestFailedException &e) {
-    std::cout << e.what() << std::endl;
+    std::cerr << e.what() << std::endl;
   } catch (sql::SQLException &e) {
     print_sql_exception(e);
   }

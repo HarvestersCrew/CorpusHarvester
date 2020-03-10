@@ -59,7 +59,7 @@ void test_store_one_file() {
 }
 
 void storage_test() {
-  Indexer indexerr = Indexer("harvester", STORAGE_TEST_VERBOSE);
+  Indexer indexerr = Indexer("harvester");
   indexerr.open_database();
   storage.init_root(indexerr.get_database());
   STORED_PATH = storage.get_root_folder_name();
