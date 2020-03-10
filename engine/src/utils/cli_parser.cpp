@@ -125,7 +125,7 @@ string cli_command::get_help() const {
 tuple<vector<string>, map<string, string>, map<string, bool>>
 cli_parser::parse(const cli_command &root, vector<string> cli_args) {
 
-  if (cli_args.at(0) == "-h") {
+  if (cli_args.size() > 0 && cli_args.at(0) == "-h") {
     cout << root.get_help() << endl;
     throw cli_parser_help_asked_exception();
   }
