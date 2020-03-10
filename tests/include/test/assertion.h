@@ -1,10 +1,10 @@
 #ifndef ASSERTION_H
 #define ASSERTION_H
 
-#include <iostream>
-
 #include "utils/exceptions.h"
 #include "utils/logger.h"
+#include <iostream>
+#include <sstream>
 
 class Assertion {
 
@@ -37,6 +37,25 @@ public:
     if (expected != found) {
       throw TestFailedException(function_name, std::to_string(expected),
                                 std::to_string(found));
+    }
+  }
+
+  static void assert_equals(std::string function_name, bool expected,
+                            bool found) {
+    if (expected != found) {
+      throw TestFailedException(function_name, std::to_string(expected),
+                                std::to_string(found));
+    }
+  }
+
+  static void assert_equals(std::string function_name, void *expected,
+                            void *found) {
+    if (expected != found) {
+      std::stringstream ss_expected, ss_found;
+      ss_expected << expected;
+      ss_found << found;
+      throw TestFailedException(function_name, ss_expected.str(),
+                                ss_found.str());
     }
   }
 
