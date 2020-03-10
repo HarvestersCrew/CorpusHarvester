@@ -48,7 +48,12 @@ void logger::ostream_log(ostream &os, logger::level level, const string &msg) {
       throw logger_exception("Unexpected logger lever");
       break;
     }
-    os << "[" << tag << "] - " << msg << endl;
+    os << "[" << tag << "] ";
+    long unsigned int warning_length = 7;
+    for (long unsigned int i = 0; i < warning_length - tag.size(); i++) {
+      os << " ";
+    }
+    os << "- " << msg << endl;
   }
 }
 
