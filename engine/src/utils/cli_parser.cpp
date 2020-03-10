@@ -11,8 +11,7 @@ cli_command::cli_command(const string &initial_call, const string &description)
 cli_command &cli_command::add_command(const string &name,
                                       const string &description) {
   if (this->_is_option) {
-    throw cli_parser_exception(
-        "Can't add a subcommand to a command managing options");
+    throw cli_parser_exception("Can't add a subcommand to an option");
   }
   if (this->_options.size() > 0) {
     throw cli_parser_exception(

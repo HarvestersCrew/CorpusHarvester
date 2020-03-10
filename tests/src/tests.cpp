@@ -1,3 +1,4 @@
+#include "test/cli_parser_test.h"
 #include "test/indexation_test.h"
 #include "test/logger_test.h"
 #include "test/storage_test.h"
@@ -7,5 +8,6 @@ int main() {
   indexation_test();
   storage_test();
   logger_test();
+  cli_parser_test();
   return 0;
 }
