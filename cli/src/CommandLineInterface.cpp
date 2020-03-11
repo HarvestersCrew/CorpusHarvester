@@ -43,10 +43,9 @@ CommandLineInterface::search_corpus(const std::string name) {
   logger::debug("Search corpus : " + name);
 
   // Get the indexer
-  Indexer indexer("harvester");
-  indexer.create_database(false);
+  sql::Connection *db = HarvesterDatabase::init();
+  Indexer indexer(db);
 
-  sql::Connection *db = indexer.get_database();
   std::optional<Corpus *> corpus = Corpus::get_corpus_from_name(db, name);
 
   return corpus;
@@ -67,12 +66,12 @@ Corpus CommandLineInterface::create_corpus(const std::string name) {
   //     tmdb.query_and_parse({{"query", "star wars"}}, dl);
 
   // Store the files
-  Indexer indexer("harvester");
-  indexer.create_database(true);
-  Storage storage(indexer.get_database());
+  sql::Connection *db = HarvesterDatabase::init();
+  Storage storage(db);
   storage.store_files(out);
 
   // Index the downloaded data
+  Indexer indexer(db);
   indexer.indexation(out);
 
   // Request files which has at least one retweet and one favorite
@@ -87,15 +86,15 @@ Corpus CommandLineInterface::create_corpus(const std::string name) {
   std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
   Corpus corpus("50 premiers avec retweets > 100", now, tweets, "");
   indexer.save_corpus(corpus);
-  indexer.close_database();
+  HarvesterDatabase::close();
 
   return corpus;
 }
 
 std::list<Corpus *> CommandLineInterface::list_corpus() {
 
-  Indexer indexer("harvester");
-  sql::Connection *db = indexer.get_database();
+  sql::Connection *db = HarvesterDatabase::init();
+  Indexer indexer(db);
 
   // TODO :: Problem here
   std::list<Corpus *> corpus = Corpus::get_all_corpuses(db);

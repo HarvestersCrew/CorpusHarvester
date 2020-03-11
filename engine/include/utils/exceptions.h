@@ -18,7 +18,7 @@ public:
       : _functionName(functionName), _expected(expected), _found(found) {}
 
   std::string what() const throw() {
-    std::string what = "[ERROR] Test of function " + _functionName +
+    std::string what = " {{ ERROR }} Test of function " + _functionName +
                        "() failed : expected [" + _expected + "], got [" +
                        _found + "]";
     return what;
@@ -38,6 +38,12 @@ class CommandException : public std::runtime_error {
 public:
   CommandException(std::string &error_message)
       : std::runtime_error(error_message) {}
+};
+
+class ClosedDatabaseException : public std::runtime_error {
+
+public:
+  ClosedDatabaseException() : std::runtime_error("Database is closed") {}
 };
 
 class api_no_setting_exception : public std::exception {

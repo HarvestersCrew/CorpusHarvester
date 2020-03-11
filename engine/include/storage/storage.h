@@ -1,8 +1,8 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
+#include "database/setting.h"
 #include "indexation/file.h"
-#include "indexation/setting.h"
 #include "utils/exceptions.h"
 #include "utils/md5.h"
 #include "utils/utils.h"

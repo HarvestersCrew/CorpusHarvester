@@ -78,6 +78,20 @@ public:
     }
   }
 
+  template <class T>
+  static void assert_nullptr(std::string function_name, T object) {
+    if (object != nullptr) {
+      throw TestFailedException(function_name, "nullptr", "A filled object");
+    }
+  }
+
+  template <class T>
+  static void assert_not_nullptr(std::string function_name, T object) {
+    if (object == nullptr) {
+      throw TestFailedException(function_name, "An filled object", "nullptr");
+    }
+  }
+
   static void assert_throw(std::string function_name,
                            std::string exception_name) {
     throw TestFailedException(function_name, exception_name, "nothing");
@@ -85,7 +99,7 @@ public:
 
   static void test(void (*func)(void), std::string function_name) {
     func();
-    std::cout << "[OK] " << function_name << "()" << std::endl;
+    std::cout << "{{ OK }} " << function_name << "()" << std::endl;
   }
 };
 

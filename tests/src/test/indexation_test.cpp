@@ -1,15 +1,17 @@
 #include "test/indexation_test.h"
 
-Indexer indexer("harvester");
+sql::Connection *indexer_db = HarvesterDatabase::init();
+Indexer indexer = Indexer(indexer_db);
 std::string tables[] = {"Corpus", "File", "Tag", "CorpusFiles", "Setting"};
 int tables_row_count[] = {0, 0, 0, 0, Setting::get_init_settings_count()};
 
 /* TESTS */
 
 void test_create_database() {
-  indexer.create_database(true);
-  sql::Connection *db = indexer.get_database();
-  sql::Statement *stmt = db->createStatement();
+  HarvesterDatabase::open();
+  HarvesterDatabase::drop();
+  HarvesterDatabase::create();
+  sql::Statement *stmt = indexer_db->createStatement();
   sql::ResultSet *res_show = stmt->executeQuery("SHOW TABLES");
 
   int row_count = 0;
@@ -53,8 +55,7 @@ void test_indexation() {
   }
   indexer.indexation(files);
 
-  sql::Connection *db = indexer.get_database();
-  sql::Statement *stmt = db->createStatement();
+  sql::Statement *stmt = indexer_db->createStatement();
   sql::ResultSet *res_files = stmt->executeQuery("SELECT * FROM File");
   sql::ResultSet *res_tags = stmt->executeQuery("SELECT * FROM Tag");
   // Tests if every expected files were inserted
@@ -84,8 +85,7 @@ void test_same_api_id_different_source() {
 }
 
 void test_create_database2() {
-  sql::Connection *db = indexer.get_database();
-  sql::Statement *stmt = db->createStatement();
+  sql::Statement *stmt = indexer_db->createStatement();
   std::string request;
   for (int i = 0; i < TABLES_COUNT - 1; i++) {
     request += tables[i] + ", ";
@@ -93,7 +93,7 @@ void test_create_database2() {
   request = "SELECT * FROM " + request + tables[TABLES_COUNT - 1];
   sql::ResultSet *res_select = stmt->executeQuery(request);
   int db_length = res_select->rowsCount();
-  indexer.create_database(false);
+  HarvesterDatabase::create();
   res_select = stmt->executeQuery(request);
   // Tests if the amount of data in the database doesn't change after a
   // no-dropping database creation
@@ -201,7 +201,7 @@ void test_fetch_specific_files3() {
 }
 
 void test_create_corpus() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
+  SearchBuilder *sb = new SearchBuilder(indexer_db);
   std::list<shared_ptr<File>> files = sb->add_condition("name", "file6", "=")
                                           ->logical_or()
                                           ->add_condition("name", "file8", "=")
@@ -212,10 +212,9 @@ void test_create_corpus() {
   Corpus corpus2("empty", "02/03/2020");
   indexer.save_corpus(corpus);
   indexer.save_corpus(corpus2);
-  sql::Connection *db = indexer.get_database();
   sql::ResultSet *res_files;
-  sql::Statement *stmt = db->createStatement();
-  std::list<Corpus *> corpuses = Corpus::get_all_corpuses(db);
+  sql::Statement *stmt = indexer_db->createStatement();
+  std::list<Corpus *> corpuses = Corpus::get_all_corpuses(indexer_db);
   Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());
   Corpus *first_element = *corpuses.begin();
   Assertion::assert_equals(__FUNCTION__, "file 6/8/3",
@@ -280,6 +279,8 @@ void indexation_test() {
     std::cerr << e.what() << std::endl;
   } catch (sql::SQLException &e) {
     print_sql_exception(e);
+  } catch (std::exception &e) {
+    std::cerr << e.what() << std::endl;
   }
-  indexer.close_database();
+  HarvesterDatabase::close();
 }

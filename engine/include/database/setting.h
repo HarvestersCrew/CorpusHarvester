@@ -1,7 +1,7 @@
 #ifndef SETTING_H
 #define SETTING_H
 
-#include "database_item.h"
+#include "database/database_item.h"
 #include "utils/exceptions.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>

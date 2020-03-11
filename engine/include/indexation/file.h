@@ -1,7 +1,7 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include "indexation/database_item.h"
+#include "database/database_item.h"
 #include "indexation/tag.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
