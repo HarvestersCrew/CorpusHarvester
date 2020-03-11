@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include "indexation/file.h"
+#include "utils/logger.h"
 #include "utils/nlohmann/json.hpp"
 #include <ctime>
 #include <fstream>
@@ -22,8 +23,6 @@ std::string vec_to_string(const std::vector<char> &vec);
 void fill_file_randomly(shared_ptr<File> file, bool tweet, bool is_even);
 
 void print_sql_exception(sql::SQLException &e);
-
-void print_if_verbose(std::string to_print, bool verbose);
 
 nlohmann::json json_from_file(const std::string &path);
 

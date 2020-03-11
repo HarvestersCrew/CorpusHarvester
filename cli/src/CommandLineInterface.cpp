@@ -52,7 +52,7 @@ CommandLineInterface::search_corpus(const std::string name) {
   logger::debug("Search corpus : " + name);
 
   // Get the indexer
-  Indexer indexer("harvester", false);
+  Indexer indexer("harvester");
   indexer.create_database(false);
 
   sql::Connection *db = indexer.get_database();
@@ -76,7 +76,7 @@ Corpus CommandLineInterface::create_corpus(const std::string name) {
   //     tmdb.query_and_parse({{"query", "star wars"}}, dl);
 
   // Store the files
-  Indexer indexer("harvester", false);
+  Indexer indexer("harvester");
   indexer.create_database(true);
   Storage storage(indexer.get_database());
   storage.store_files(out);
@@ -103,7 +103,7 @@ Corpus CommandLineInterface::create_corpus(const std::string name) {
 
 std::list<Corpus *> CommandLineInterface::list_corpus() {
 
-  Indexer indexer("harvester", 0);
+  Indexer indexer("harvester");
   sql::Connection *db = indexer.get_database();
 
   // TODO :: Problem here

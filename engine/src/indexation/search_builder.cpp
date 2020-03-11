@@ -1,9 +1,9 @@
 #include "indexation/search_builder.h"
 
-SearchBuilder::SearchBuilder(sql::Connection *db, bool verbose)
+SearchBuilder::SearchBuilder(sql::Connection *db)
     : RequestBuilder(), _first_prepared_values(0), _prepared_values(0),
-      _current_prepared_values(0), _current_clause_only_on_file(true),
-      _verbose(verbose), _db(db) {}
+      _current_prepared_values(0), _current_clause_only_on_file(true), _db(db) {
+}
 
 void SearchBuilder::valid_current_clause() {
   std::string distinct = "";
@@ -79,7 +79,7 @@ std::list<shared_ptr<File>> SearchBuilder::build() {
   sql::ResultSet *res;
   std::list<shared_ptr<File>> files;
 
-  print_if_verbose(request, _verbose);
+  logger::debug(request);
   prep_stmt = _db->prepareStatement(request);
   int i = 1;
   for (auto &preparedValue : _first_prepared_values) {

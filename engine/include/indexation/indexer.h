@@ -6,6 +6,7 @@
 #include "indexation/file.h"
 #include "indexation/search_builder.h"
 #include "indexation/setting.h"
+#include "utils/logger.h"
 #include "utils/utils.h"
 
 #include <cppconn/driver.h>
@@ -33,19 +34,13 @@ class Indexer {
    */
   sql::Connection *_db;
 
-  /**
-   * A boolean to allow prints in the function of this class
-   */
-  bool _verbose;
-
 public:
   /**
    * Creates an Indexer object
    * @param db_name the name of the database
-   * @param verbose true to allow prints in the function of this class, false
    * otherwise
    */
-  Indexer(std::string db_name, bool verbose = false);
+  Indexer(std::string db_name);
 
   /**
    * Inserts the given file in the database
@@ -108,7 +103,7 @@ public:
    * @return a search builder
    */
   SearchBuilder get_search_builder() {
-    SearchBuilder sb(_db, _verbose);
+    SearchBuilder sb(_db);
     return sb;
   }
 

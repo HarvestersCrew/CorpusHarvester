@@ -30,10 +30,10 @@ void test_logger_set_output_path() {
 
   try {
     logger::set_output_path("/random_path_ahzgruthrgke");
+    Assertion::assert_throw(__FUNCTION__, "filesystem_error");
   } catch (CommandException &e) {
     return;
   }
-  Assertion::assert_throw(__FUNCTION__, "filesystem_error");
 }
 
 void test_logger_get_ostream() {
@@ -43,23 +43,23 @@ void test_logger_get_ostream() {
 
   to_log = "Blabla";
   logger::ostream_log(ss, logger::level::DEBUG, to_log);
-  to_log = "[DEBUG] - " + to_log + '\n';
+  to_log = "[DEBUG]   - " + to_log + '\n';
   Assertion::assert_equals(__FUNCTION__, to_log, ss.str());
   ss.clear();
 
   try {
     logger::ostream_log(ss, logger::level::NONE, to_log);
+    Assertion::assert_throw(__FUNCTION__, "logger_error");
   } catch (const logger_exception &e) {
     return;
   }
-  Assertion::assert_throw(__FUNCTION__, "logger_error");
 
   logger::set_level(logger::level::ERROR);
   to_log = "Blabla";
   logger::ostream_log(ss, logger::level::DEBUG, to_log);
   Assertion::assert_equals(__FUNCTION__, "", ss.str());
   logger::ostream_log(ss, logger::level::ERROR, to_log);
-  to_log = "[ERROR] - " + to_log + '\n';
+  to_log = "[ERROR]   - " + to_log + '\n';
   Assertion::assert_equals(__FUNCTION__, to_log, ss.str());
   ss.clear();
 }
@@ -189,6 +189,6 @@ void logger_test() {
     Assertion::test(test_logger_warning, "test_logger_warning");
     Assertion::test(test_logger_error, "test_logger_error");
   } catch (TestFailedException &e) {
-    std::cout << e.what() << std::endl;
+    std::cerr << e.what() << std::endl;
   }
 }

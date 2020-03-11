@@ -17,7 +17,6 @@ using std::shared_ptr;
 #define FILE_COUNT 50
 #define TWEET_COUNT 26
 #define TAG_COUNT 7
-#define VERBOSE false
 #define EVEN_FILES FILE_COUNT / 2 + FILE_COUNT % 2
 #define EVEN_TWEETS TWEET_COUNT / 2 + FILE_COUNT % 2
 
