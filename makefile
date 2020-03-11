@@ -73,7 +73,7 @@ docker/clean: docker/up clean
 docker/%: docker/up
 	docker-compose exec harvester $(MAKE) ${BINDIR}/$*
 	@echo "#!/bin/bash" > ${BINDIR}/$*
-	@echo "docker-compose exec harvester ${BINDIR}/$* \$${@:1}" >> ${BINDIR}/$*
+	@echo "docker-compose exec harvester ${BINDIR}/$* \"\$${@:1}\"" >> ${BINDIR}/$*
 	@chmod a+wx ${BINDIR}/$*
 
 docker/bash: docker/up
