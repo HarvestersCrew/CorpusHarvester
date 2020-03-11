@@ -22,16 +22,16 @@ void Indexer::save_corpus(Corpus &corpus) { corpus.insert(_db); }
 
 std::list<shared_ptr<File>> Indexer::fetch_from_tag(std::string tag_name,
                                                     std::string tag_value) {
-  SearchBuilder *sb = new SearchBuilder(_db);
+  SearchBuilder sb = get_search_builder();
   std::list<shared_ptr<File>> files =
-      sb->add_tag_condition(tag_name, tag_value, "=")->build();
+      sb.add_tag_condition(tag_name, tag_value, "=")->build();
   return files;
 }
 
 std::list<shared_ptr<File>> Indexer::fetch_from_attribute(std::string attribute,
                                                           std::string value) {
-  SearchBuilder *sb = new SearchBuilder(_db);
+  SearchBuilder sb = get_search_builder();
   std::list<shared_ptr<File>> files =
-      sb->add_condition(attribute, value, "=")->build();
+      sb.add_condition(attribute, value, "=")->build();
   return files;
 }

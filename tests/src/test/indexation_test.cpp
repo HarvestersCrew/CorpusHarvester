@@ -140,24 +140,24 @@ void test_fetch_by_name() {
 }
 
 void test_fetch_by_size() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
+  SearchBuilder sb = indexer.get_search_builder();
   std::list<shared_ptr<File>> tweets =
-      sb->add_condition("size", "110", "<=")->build();
-  Assertion::assert_equals(__FUNCTION__, "size <= 110", sb->get_filters());
+      sb.add_condition("size", "110", "<=")->build();
+  Assertion::assert_equals(__FUNCTION__, "size <= 110", sb.get_filters());
   Assertion::assert_equals(__FUNCTION__, 11, tweets.size());
 }
 
 void test_fetch_by_tag_lt() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
+  SearchBuilder sb = indexer.get_search_builder();
   std::list<shared_ptr<File>> tweets =
-      sb->add_tag_condition("retweet", "65", "<")->build();
+      sb.add_tag_condition("retweet", "65", "<")->build();
   Assertion::assert_equals(__FUNCTION__, 15, tweets.size());
 }
 
 void test_fetch_specific_files() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
+  SearchBuilder sb = indexer.get_search_builder();
   std::list<shared_ptr<File>> files =
-      sb->add_tag_condition("is_even", "1", "=")
+      sb.add_tag_condition("is_even", "1", "=")
           ->logical_and()
           ->add_tag_condition("type", "tweet", "=")
           ->logical_or()
@@ -168,14 +168,14 @@ void test_fetch_specific_files() {
   Assertion::assert_equals(
       __FUNCTION__,
       "is_even = 1 AND type = tweet OR subject = kitty AND name = file8",
-      sb->get_filters());
+      sb.get_filters());
   Assertion::assert_equals(__FUNCTION__, 1, files.size());
 }
 
 void test_fetch_specific_files2() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
+  SearchBuilder sb = indexer.get_search_builder();
   std::list<shared_ptr<File>> files =
-      sb->add_tag_condition("is_even", "1", "=")
+      sb.add_tag_condition("is_even", "1", "=")
           ->logical_and()
           ->add_condition("name", "file6", "=")
           ->logical_and()
@@ -187,9 +187,9 @@ void test_fetch_specific_files2() {
 }
 
 void test_fetch_specific_files3() {
-  SearchBuilder *sb = new SearchBuilder(indexer.get_database());
+  SearchBuilder sb = indexer.get_search_builder();
   std::list<shared_ptr<File>> files =
-      sb->add_condition("name", "file6", "!=")
+      sb.add_condition("name", "file6", "!=")
           ->logical_and()
           ->add_tag_condition("type", "tweet", "=")
           ->logical_or()
@@ -201,14 +201,14 @@ void test_fetch_specific_files3() {
 }
 
 void test_create_corpus() {
-  SearchBuilder *sb = new SearchBuilder(indexer_db);
-  std::list<shared_ptr<File>> files = sb->add_condition("name", "file6", "=")
+  SearchBuilder sb = indexer.get_search_builder();
+  std::list<shared_ptr<File>> files = sb.add_condition("name", "file6", "=")
                                           ->logical_or()
                                           ->add_condition("name", "file8", "=")
                                           ->logical_or()
                                           ->add_condition("name", "file3", "=")
                                           ->build();
-  Corpus corpus("file 6/8/3", "01/02/2020", files, sb->get_filters());
+  Corpus corpus("file 6/8/3", "01/02/2020", files, sb.get_filters());
   Corpus corpus2("empty", "02/03/2020");
   indexer.save_corpus(corpus);
   indexer.save_corpus(corpus2);
@@ -228,11 +228,8 @@ void test_create_corpus() {
 
 void test_wrong_search() {
   try {
-    SearchBuilder *sb = new SearchBuilder(indexer.get_database());
-    sb->add_condition("name", "file6", "=")
-        ->logical_or()
-        ->logical_or()
-        ->build();
+    SearchBuilder sb = indexer.get_search_builder();
+    sb.add_condition("name", "file6", "=")->logical_or()->logical_or()->build();
     Assertion::assert_throw(__FUNCTION__, "SQLException");
   } catch (sql::SQLException &e) {
     return;
@@ -241,8 +238,8 @@ void test_wrong_search() {
 
 void test_wrong_search2() {
   try {
-    SearchBuilder *sb = new SearchBuilder(indexer.get_database());
-    sb->add_condition("name", "file6", "=")
+    SearchBuilder sb = indexer.get_search_builder();
+    sb.add_condition("name", "file6", "=")
         ->add_condition("name", "file3", "=")
         ->logical_or()
         ->add_condition("name", "file7", "=")
