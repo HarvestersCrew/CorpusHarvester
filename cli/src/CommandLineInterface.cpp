@@ -8,11 +8,15 @@
 CommandLineInterface::CommandLineInterface(int argc, char **argv)
     : parser(argv[0], "Corpus Harvester") {
 
+  for (int j = 0; j < argc; j++) {
+    cout << argv[j] << endl;
+  }
+
   // cli_command this->parser("bin/cli", "Corpus Harvester");
   cli_command &command1 =
       this->parser.add_command("create", "Create a new corpus.");
 
-  command1.add_option("--name", "Name of the corpus", true);
+  command1.add_option("name", "Name of the corpus", false);
 
   cli_command &command2 = this->parser.add_command("corpus", "Show a corpus.");
 
@@ -27,6 +31,16 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   it = this->string_inputs.find("create");
   if (it != this->string_inputs.end()) {
     logger::debug("Create value");
+  }
+
+  it = this->string_inputs.find("name");
+  if (it != this->string_inputs.end()) {
+    logger::debug("We got a name !");
+  }
+
+  for (map<string, string>::const_iterator it = this->string_inputs.begin();
+       it != this->string_inputs.end(); ++it) {
+    std::cout << it->first << " " << it->second << "\n";
   }
 
   //  // List of string at the end of the command to get the name of the corpus
