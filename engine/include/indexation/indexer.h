@@ -1,13 +1,11 @@
 #ifndef INDEXER_H
 #define INDEXER_H
 
+#include "database/harvester_database.h"
 #include "indexation/corpus.h"
-#include "indexation/database_item.h"
 #include "indexation/file.h"
 #include "indexation/search_builder.h"
-#include "indexation/setting.h"
 #include "utils/logger.h"
-#include "utils/utils.h"
 
 #include <cppconn/driver.h>
 #include <cppconn/prepared_statement.h>
@@ -25,22 +23,16 @@ using std::shared_ptr;
 class Indexer {
 
   /**
-   * The name of the database
-   */
-  std::string _db_name;
-
-  /**
    * The database (as a connection)
    */
   sql::Connection *_db;
 
 public:
   /**
-   * Creates an Indexer object
-   * @param db_name the name of the database
-   * otherwise
+   * Creates an Indexer object that uses the given database
+   * @param the database the idexer should use
    */
-  Indexer(std::string db_name);
+  Indexer(sql::Connection *db);
 
   /**
    * Inserts the given file in the database
@@ -48,23 +40,6 @@ public:
    * return true if the file was succesfully inserted
    */
   bool insert_file(shared_ptr<File> file) const;
-
-  /**
-   * Opens the database if not already opened
-   */
-  void open_database();
-
-  /**
-   * Closes the database if not already closed
-   */
-  void close_database();
-
-  /**
-   * Creates the database
-   * @param drop_table if true, drop the tables existing in the database before
-   * creating the new ones
-   */
-  void create_database(bool drop_table);
 
   /**
    * Indexes the given files in the database

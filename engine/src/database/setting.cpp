@@ -1,4 +1,4 @@
-#include "indexation/setting.h"
+#include "database/setting.h"
 
 /* STATIC VARIABLES */
 

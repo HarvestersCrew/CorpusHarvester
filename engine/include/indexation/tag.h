@@ -1,7 +1,7 @@
 #ifndef TAG_H
 #define TAG_H
 
-#include "indexation/database_item.h"
+#include "database/database_item.h"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>

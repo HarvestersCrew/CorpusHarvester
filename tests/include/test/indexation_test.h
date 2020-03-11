@@ -1,6 +1,7 @@
 #ifndef INDEXATION_TEST_H
 #define INDEXATION_TEST_H
 
+#include "database/harvester_database.h"
 #include "indexation/indexer.h"
 #include "indexation/search_builder.h"
 #include "test/assertion.h"
@@ -10,8 +11,6 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
-
-using std::shared_ptr;
 
 #define TABLES_COUNT 5
 #define FILE_COUNT 50

@@ -191,4 +191,5 @@ void logger_test() {
   } catch (TestFailedException &e) {
     std::cerr << e.what() << std::endl;
   }
+  logger::set_output(logger::output::STDOUT);
 }
