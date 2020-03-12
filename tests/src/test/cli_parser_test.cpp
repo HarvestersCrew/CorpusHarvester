@@ -114,14 +114,9 @@ void test_cli_parser_parser() {
 
 void cli_parser_test() {
   std::cout << std::endl << "CLI parser tests : " << std::endl;
-  try {
-    Assertion::test(test_cli_parser_construction,
-                    "test_cli_parser_construction");
-    Assertion::test(test_cli_parser_is_terminal, "test_cli_parser_is_terminal");
-    Assertion::test(test_cli_parser_add_command, "test_cli_parser_add_command");
-    Assertion::test(test_cli_parser_add_option, "test_cli_parser_add_option");
-    Assertion::test(test_cli_parser_parser, "test_cli_parser_parser");
-  } catch (TestFailedException &e) {
-    std::cerr << e.what() << std::endl;
-  }
+  Assertion::test(test_cli_parser_construction, "test_cli_parser_construction");
+  Assertion::test(test_cli_parser_is_terminal, "test_cli_parser_is_terminal");
+  Assertion::test(test_cli_parser_add_command, "test_cli_parser_add_command");
+  Assertion::test(test_cli_parser_add_option, "test_cli_parser_add_option");
+  Assertion::test(test_cli_parser_parser, "test_cli_parser_parser");
 }

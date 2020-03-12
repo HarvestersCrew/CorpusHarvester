@@ -178,18 +178,14 @@ void test_logger_error() {
 
 void logger_test() {
   std::cout << std::endl << "Logger tests : " << std::endl;
-  try {
-    Assertion::test(test_logger_set_level, "test_logger_set_level");
-    Assertion::test(test_logger_set_output, "test_logger_set_output");
-    Assertion::test(test_logger_set_output_path, "test_logger_set_output_path");
-    Assertion::test(test_logger_get_ostream, "test_logger_get_ostream");
-    Assertion::test(test_logger_output_log, "test_logger_output_log");
-    Assertion::test(test_logger_debug, "test_logger_debug");
-    Assertion::test(test_logger_info, "test_logger_info");
-    Assertion::test(test_logger_warning, "test_logger_warning");
-    Assertion::test(test_logger_error, "test_logger_error");
-  } catch (TestFailedException &e) {
-    std::cerr << e.what() << std::endl;
-  }
+  Assertion::test(test_logger_set_level, "test_logger_set_level");
+  Assertion::test(test_logger_set_output, "test_logger_set_output");
+  Assertion::test(test_logger_set_output_path, "test_logger_set_output_path");
+  Assertion::test(test_logger_get_ostream, "test_logger_get_ostream");
+  Assertion::test(test_logger_output_log, "test_logger_output_log");
+  Assertion::test(test_logger_debug, "test_logger_debug");
+  Assertion::test(test_logger_info, "test_logger_info");
+  Assertion::test(test_logger_warning, "test_logger_warning");
+  Assertion::test(test_logger_error, "test_logger_error");
   logger::set_output(logger::output::STDOUT);
 }

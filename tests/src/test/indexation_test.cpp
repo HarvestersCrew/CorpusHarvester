@@ -252,32 +252,24 @@ void test_wrong_search2() {
 
 void indexation_test() {
   std::cout << std::endl << "Indexation tests : " << std::endl;
-  try {
-    Assertion::test(test_create_database, "test_create_database");
-    Assertion::test(test_indexation, "test_indexation");
-    Assertion::test(test_api_id_exists, "test_api_id_exists");
-    Assertion::test(test_same_api_id_different_source,
-                    "test_same_api_id_different_source");
-    Assertion::test(test_create_database2, "test_create_database2");
-    Assertion::test(test_get_setting, "test_get_setting");
-    Assertion::test(test_get_wrong_setting, "test_get_wrong_setting");
-    Assertion::test(test_fetch_tweets, "test_fetch_tweets");
-    Assertion::test(test_fetch_even_files, "test_fetch_even_files");
-    Assertion::test(test_fetch_by_tag_lt, "test_fetch_by_tag_lt");
-    Assertion::test(test_fetch_by_name, "test_fetch_by_name");
-    Assertion::test(test_fetch_by_size, "test_fetch_by_size");
-    Assertion::test(test_fetch_specific_files, "test_fetch_specific_files");
-    Assertion::test(test_fetch_specific_files2, "test_fetch_specific_files2");
-    Assertion::test(test_fetch_specific_files3, "test_fetch_specific_files3");
-    Assertion::test(test_create_corpus, "test_create_corpus");
-    Assertion::test(test_wrong_search, "test_wrong_search");
-    Assertion::test(test_wrong_search2, "test_wrong_search2");
-  } catch (TestFailedException &e) {
-    std::cerr << e.what() << std::endl;
-  } catch (sql::SQLException &e) {
-    print_sql_exception(e);
-  } catch (std::exception &e) {
-    std::cerr << e.what() << std::endl;
-  }
+  Assertion::test(test_create_database, "test_create_database");
+  Assertion::test(test_indexation, "test_indexation");
+  Assertion::test(test_api_id_exists, "test_api_id_exists");
+  Assertion::test(test_same_api_id_different_source,
+                  "test_same_api_id_different_source");
+  Assertion::test(test_create_database2, "test_create_database2");
+  Assertion::test(test_get_setting, "test_get_setting");
+  Assertion::test(test_get_wrong_setting, "test_get_wrong_setting");
+  Assertion::test(test_fetch_tweets, "test_fetch_tweets");
+  Assertion::test(test_fetch_even_files, "test_fetch_even_files");
+  Assertion::test(test_fetch_by_tag_lt, "test_fetch_by_tag_lt");
+  Assertion::test(test_fetch_by_name, "test_fetch_by_name");
+  Assertion::test(test_fetch_by_size, "test_fetch_by_size");
+  Assertion::test(test_fetch_specific_files, "test_fetch_specific_files");
+  Assertion::test(test_fetch_specific_files2, "test_fetch_specific_files2");
+  Assertion::test(test_fetch_specific_files3, "test_fetch_specific_files3");
+  Assertion::test(test_create_corpus, "test_create_corpus");
+  Assertion::test(test_wrong_search, "test_wrong_search");
+  Assertion::test(test_wrong_search2, "test_wrong_search2");
   HarvesterDatabase::close();
 }

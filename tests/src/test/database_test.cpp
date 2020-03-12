@@ -38,14 +38,8 @@ void test_closed_db_exceptions() {
 
 void database_test() {
   std::cout << std::endl << "Database tests : " << std::endl;
-  try {
-    Assertion::test(test_close, "test_close");
-    Assertion::test(test_open, "test_open");
-    Assertion::test(test_drop_create_empty, "test_drop_create_empty");
-    Assertion::test(test_closed_db_exceptions, "test_closed_db_exceptions");
-  } catch (const TestFailedException &e) {
-    std::cerr << e.what() << std::endl;
-  } catch (const CommandException &e) {
-    std::cerr << e.what() << std::endl;
-  }
+  Assertion::test(test_close, "test_close");
+  Assertion::test(test_open, "test_open");
+  Assertion::test(test_drop_create_empty, "test_drop_create_empty");
+  Assertion::test(test_closed_db_exceptions, "test_closed_db_exceptions");
 }

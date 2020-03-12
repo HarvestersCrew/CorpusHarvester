@@ -12,5 +12,10 @@ int main() {
   database_test();
   storage_test();
   indexation_test();
+  std::cout << std::endl
+            << "Runs : "
+            << Assertion::get_successes() + Assertion::get_failures()
+            << " | Errors : " << Assertion::get_failures()
+            << " | Successes : " << Assertion::get_successes() << std::endl;
   return 0;
 }
