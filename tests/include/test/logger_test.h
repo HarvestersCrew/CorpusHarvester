@@ -21,6 +21,6 @@ void test_logger_debug();
 void test_logger_info();
 void test_logger_warning();
 void test_logger_error();
-void logger_test();
+std::pair<int, int> logger_test();
 
 #endif

@@ -36,16 +36,15 @@ void test_closed_db_exceptions() {
   }
 }
 
-void database_test() {
+std::pair<int, int> database_test() {
+  int function_count = 4;
+  void (*test_functions[])(void) = {
+      test_close, test_open, test_drop_create_empty, test_closed_db_exceptions};
+  std::string test_functions_name[] = {"test_close", "test_open",
+                                       "test_drop_create_empty",
+                                       "test_closed_db_exceptions"};
+
   std::cout << std::endl << "Database tests : " << std::endl;
-  try {
-    Assertion::test(test_close, "test_close");
-    Assertion::test(test_open, "test_open");
-    Assertion::test(test_drop_create_empty, "test_drop_create_empty");
-    Assertion::test(test_closed_db_exceptions, "test_closed_db_exceptions");
-  } catch (const TestFailedException &e) {
-    std::cerr << e.what() << std::endl;
-  } catch (const CommandException &e) {
-    std::cerr << e.what() << std::endl;
-  }
+  return Assertion::test_all(test_functions, test_functions_name,
+                             function_count);
 }

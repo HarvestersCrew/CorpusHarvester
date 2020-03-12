@@ -35,6 +35,6 @@ void test_fetch_specific_files3();
 void test_create_corpus();
 void test_wrong_search();
 void test_wrong_search2();
-void indexation_test();
+std::pair<int, int> indexation_test();
 
 #endif
