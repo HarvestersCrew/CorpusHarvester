@@ -34,14 +34,29 @@ std::string Setting::to_string() const {
 }
 
 bool Setting::insert(sql::Connection *db) {
-  sql::PreparedStatement *prep_stmt;
+  try {
+    sql::PreparedStatement *prep_stmt;
+    sql::ResultSet *res;
 
-  prep_stmt = db->prepareStatement(INSERT_SETTING_STATEMENT);
-  prep_stmt->setString(1, _name);
-  prep_stmt->setString(2, _value);
-  prep_stmt->execute();
-  _id = DatabaseItem::get_last_inserted_id(db);
-  delete prep_stmt;
+    prep_stmt = db->prepareStatement(GET_SETTING_FROM_KEY);
+    prep_stmt->setString(1, _name);
+    res = prep_stmt->executeQuery();
+    if (res->next()) {
+      logger::error("Can't insert " + _name + " setting : already exists");
+      return false;
+    }
+
+    prep_stmt = db->prepareStatement(INSERT_SETTING_STATEMENT);
+    prep_stmt->setString(1, _name);
+    prep_stmt->setString(2, _value);
+    prep_stmt->execute();
+    _id = DatabaseItem::get_last_inserted_id(db);
+    delete res;
+    delete prep_stmt;
+  } catch (sql::SQLException &e) {
+    log_sql_exception(e);
+    return false;
+  }
   return true;
 }
 

@@ -23,7 +23,7 @@ int main() {
     test_count += test_results.second;
     if (i == 0) { // Reset logger level after logger_test
       logger::set_output(logger::output::STDOUT);
-      logger::set_level(logger::level::INFO);
+      logger::set_level(logger::level::NONE);
     }
   }
 

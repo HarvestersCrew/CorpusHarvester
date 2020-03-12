@@ -24,6 +24,8 @@ void fill_file_randomly(shared_ptr<File> file, bool tweet, bool is_even);
 
 void print_sql_exception(sql::SQLException &e);
 
+void log_sql_exception(sql::SQLException &e);
+
 nlohmann::json json_from_file(const std::string &path);
 
 std::string get_current_time(const char *patern);
