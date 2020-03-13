@@ -48,14 +48,16 @@ void test_store_one_file() {
   Assertion::assert_equals(__FUNCTION__, content + "\n", ls);
 }
 
-std::pair<int, int> storage_test() {
-  int function_count = 3;
-  void (*test_functions[])(void) = {test_file_destination, test_empty_file_name,
-                                    test_store_one_file};
-  std::string test_functions_name[] = {
-      "test_file_destination", "test_empty_file_name", "test_store_one_file"};
-
+void storage_test() {
   std::cout << std::endl << "Storage tests : " << std::endl;
-  return Assertion::test_all(test_functions, test_functions_name,
-                             function_count);
+  try {
+    Assertion::test(test_file_destination, "test_file_destination");
+    Assertion::test(test_empty_file_name, "test_empty_file_name");
+    Assertion::test(test_store_one_file, "test_store_one_file");
+  } catch (const TestFailedException &e) {
+    std::cerr << e.what() << std::endl;
+  } catch (const CommandException &e) {
+    std::cerr << e.what() << std::endl;
+  }
+  HarvesterDatabase::close();
 }
