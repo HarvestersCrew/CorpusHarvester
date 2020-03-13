@@ -11,6 +11,7 @@
 #include "storage/storage.h"
 
 #include "argparse.hpp"
+#include "utils/cli_parser.h"
 #include <deque>
 #include <iostream>
 #include <string>
@@ -25,7 +26,17 @@ private:
   /**
    * Parser we will use to create our request.
    */
-  argparse::ArgumentParser parser;
+  cli_command parser;
+
+  /**
+   * List of all the command set.
+   */
+  vector<string> commands;
+
+  /**
+   * Map with all options and values.
+   */
+  map<string, string> string_inputs;
 
   /**
    * Print in the user terminal all the possible actions.
