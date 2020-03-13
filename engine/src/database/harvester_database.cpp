@@ -6,7 +6,11 @@ void HarvesterDatabase::open() {
   if (_db == nullptr) {
     sql::Driver *driver = get_driver_instance();
     _db = driver->connect("db", "root", "1234");
-    _db->setSchema("harvester");
+
+    sql::Statement *stmt = _db->createStatement();
+    stmt->execute("CREATE DATABASE IF NOT EXISTS " HARVESTER_DATABASE_NAME ";");
+
+    _db->setSchema(HARVESTER_DATABASE_NAME);
   } else {
     logger::debug("Database is already opened");
   }

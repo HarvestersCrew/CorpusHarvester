@@ -12,6 +12,8 @@
 #include <cppconn/resultset.h>
 #include <iostream>
 
+#define HARVESTER_DATABASE_NAME "harvester"
+
 using std::string;
 
 /**

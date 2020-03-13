@@ -34,10 +34,10 @@ std::string Setting::to_string() const {
 }
 
 bool Setting::insert(sql::Connection *db) {
+
   try {
     sql::PreparedStatement *prep_stmt;
     sql::ResultSet *res;
-
     prep_stmt = db->prepareStatement(GET_SETTING_FROM_KEY);
     prep_stmt->setString(1, _name);
     res = prep_stmt->executeQuery();
@@ -57,6 +57,7 @@ bool Setting::insert(sql::Connection *db) {
     log_sql_exception(e);
     return false;
   }
+
   return true;
 }
 

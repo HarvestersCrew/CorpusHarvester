@@ -9,6 +9,6 @@ void test_close();
 void test_open();
 void test_drop_create_empty();
 void test_closed_db_exceptions();
-std::pair<int, int> database_test();
+void database_test();
 
 #endif

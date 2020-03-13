@@ -112,18 +112,11 @@ void test_cli_parser_parser() {
                            bool_args.find("option3")->second);
 }
 
-std::pair<int, int> cli_parser_test() {
-  int function_count = 5;
-  void (*test_functions[])(void) = {
-      test_cli_parser_construction, test_cli_parser_is_terminal,
-      test_cli_parser_add_command, test_cli_parser_add_option,
-      test_cli_parser_parser};
-  std::string test_functions_name[] = {
-      "test_cli_parser_construction", "test_cli_parser_is_terminal",
-      "test_cli_parser_add_command", "test_cli_parser_add_option",
-      "test_cli_parser_parser"};
-
+void cli_parser_test() {
   std::cout << std::endl << "CLI parser tests : " << std::endl;
-  return Assertion::test_all(test_functions, test_functions_name,
-                             function_count);
+  Assertion::test(test_cli_parser_construction, "test_cli_parser_construction");
+  Assertion::test(test_cli_parser_is_terminal, "test_cli_parser_is_terminal");
+  Assertion::test(test_cli_parser_add_command, "test_cli_parser_add_command");
+  Assertion::test(test_cli_parser_add_option, "test_cli_parser_add_option");
+  Assertion::test(test_cli_parser_parser, "test_cli_parser_parser");
 }

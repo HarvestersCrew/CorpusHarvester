@@ -19,6 +19,6 @@ void test_cli_parser_is_terminal();
 void test_cli_parser_add_command();
 void test_cli_parser_add_option();
 void test_cli_parser_parser();
-std::pair<int, int> cli_parser_test();
+void cli_parser_test();
 
 #endif

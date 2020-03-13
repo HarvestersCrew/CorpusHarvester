@@ -1,17 +1,18 @@
 #ifndef ASSERTION_H
 #define ASSERTION_H
 
-#include "database/harvester_database.h"
 #include "utils/exceptions.h"
 #include "utils/logger.h"
 #include "utils/utils.h"
 #include <iostream>
-#include <iterator>
 #include <sstream>
 
 class Assertion {
 
 public:
+  static int successes;
+  static int failures;
+
   static int assert_contains(std::string function_name, int container_size,
                              std::string container[], std::string contained) {
     bool trouve = false;
@@ -101,33 +102,27 @@ public:
   }
 
   static void test(void (*func)(void), std::string function_name) {
-    func();
-    std::cout << "{{ OK }} " << function_name << "()" << std::endl;
-  }
-
-  static std::pair<int, int> test_all(void (*test_functions[])(void),
-                                      std::string test_functions_name[],
-                                      int function_count) {
-    std::pair<int, int> successes_count = std::pair(0, 0);
-
-    for (int i = 0; i < function_count; i++) {
-      try {
-        Assertion::test(test_functions[i], test_functions_name[i]);
-        successes_count.first++;
-      } catch (const TestFailedException &e) {
-        std::cerr << e.what() << std::endl;
-      } catch (const CommandException &e) {
-        std::cerr << e.what() << std::endl;
-      } catch (sql::SQLException &e) {
-        print_sql_exception(e);
-      } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
-      }
-      successes_count.second++;
+    try {
+      func();
+      std::cout << "{{ OK }} " << function_name << "()" << std::endl;
+      ++Assertion::successes;
+    } catch (TestFailedException &e) {
+      std::cerr << e.what() << std::endl;
+      ++Assertion::failures;
+    } catch (const CommandException &e) {
+      std::cerr << e.what() << std::endl;
+      ++Assertion::failures;
+    } catch (sql::SQLException &e) {
+      print_sql_exception(e);
+      ++Assertion::failures;
+    } catch (std::exception &e) {
+      std::cerr << e.what() << std::endl;
+      ++Assertion::failures;
     }
-    HarvesterDatabase::close();
-    return successes_count;
   }
+
+  static int get_successes() { return Assertion::successes; }
+  static int get_failures() { return Assertion::failures; }
 };
 
 #endif

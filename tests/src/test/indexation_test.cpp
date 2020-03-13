@@ -121,38 +121,6 @@ void test_get_wrong_setting() {
   }
 }
 
-void test_update_setting() {
-  std::string name = "storage_root";
-  std::string new_value = "/new/path";
-  Setting setting = Setting(name, new_value);
-  setting.update(indexer.get_database());
-  Setting updated_setting(name, indexer.get_database());
-  Assertion::assert_equals(__FUNCTION__, new_value,
-                           updated_setting.get_value());
-}
-
-void test_insert_setting() {
-  std::string name = "new_setting";
-  std::string value = "value";
-  Setting setting = Setting(name, value);
-  bool inserted = setting.insert(indexer.get_database());
-  Setting inserted_setting(name, indexer.get_database());
-  Assertion::assert_true(__FUNCTION__, inserted);
-  Assertion::assert_equals(__FUNCTION__, name, inserted_setting.get_name());
-  Assertion::assert_equals(__FUNCTION__, value, inserted_setting.get_value());
-}
-
-void test_insert_existing_setting() {
-  std::string name = "storage_root";
-  Setting existing_setting(name, indexer.get_database());
-  std::string value = "value";
-  Setting setting = Setting(name, value);
-  bool inserted = setting.insert(indexer.get_database());
-  Assertion::assert_false(__FUNCTION__, inserted);
-  Assertion::assert_not_equals(__FUNCTION__, value,
-                               existing_setting.get_value());
-}
-
 void test_fetch_tweets() {
   std::list<shared_ptr<File>> tweets = indexer.fetch_from_tag("type", "tweet");
   Assertion::assert_equals(__FUNCTION__, TWEET_COUNT, tweets.size());
@@ -282,34 +250,61 @@ void test_wrong_search2() {
   }
 }
 
-std::pair<int, int> indexation_test() {
-  int function_count = 21;
-  void (*test_functions[])(void) = {
-      test_create_database,       test_indexation,
-      test_api_id_exists,         test_same_api_id_different_source,
-      test_create_database2,      test_get_setting,
-      test_get_wrong_setting,     test_update_setting,
-      test_insert_setting,        test_insert_existing_setting,
-      test_fetch_tweets,          test_fetch_even_files,
-      test_fetch_by_tag_lt,       test_fetch_by_name,
-      test_fetch_by_size,         test_fetch_specific_files,
-      test_fetch_specific_files2, test_fetch_specific_files3,
-      test_create_corpus,         test_wrong_search,
-      test_wrong_search2};
-  std::string test_functions_name[] = {
-      "test_create_database",       "test_indexation",
-      "test_api_id_exists",         "test_same_api_id_different_source",
-      "test_create_database2",      "test_get_setting",
-      "test_get_wrong_setting",     "test_update_setting",
-      "test_insert_setting",        "test_insert_existing_setting",
-      "test_fetch_tweets",          "test_fetch_even_files",
-      "test_fetch_by_tag_lt",       "test_fetch_by_name",
-      "test_fetch_by_size",         "test_fetch_specific_files",
-      "test_fetch_specific_files2", "test_fetch_specific_files3",
-      "test_create_corpus",         "test_wrong_search",
-      "test_wrong_search2"};
+void test_update_setting() {
+  std::string name = "storage_root";
+  std::string new_value = "/new/path";
+  Setting setting = Setting(name, new_value);
+  setting.update(indexer.get_database());
+  Setting updated_setting(name, indexer.get_database());
+  Assertion::assert_equals(__FUNCTION__, new_value,
+                           updated_setting.get_value());
+}
 
+void test_insert_setting() {
+  std::string name = "new_setting";
+  std::string value = "value";
+  Setting setting = Setting(name, value);
+  bool inserted = setting.insert(indexer.get_database());
+  Setting inserted_setting(name, indexer.get_database());
+  Assertion::assert_true(__FUNCTION__, inserted);
+  Assertion::assert_equals(__FUNCTION__, name, inserted_setting.get_name());
+  Assertion::assert_equals(__FUNCTION__, value, inserted_setting.get_value());
+}
+
+void test_insert_existing_setting() {
+  std::string name = "storage_root";
+  Setting existing_setting(name, indexer.get_database());
+  std::string value = "value";
+  Setting setting = Setting(name, value);
+  bool inserted = setting.insert(indexer.get_database());
+  Assertion::assert_false(__FUNCTION__, inserted);
+  Assertion::assert_not_equals(__FUNCTION__, value,
+                               existing_setting.get_value());
+}
+
+void indexation_test() {
   std::cout << std::endl << "Indexation tests : " << std::endl;
-  return Assertion::test_all(test_functions, test_functions_name,
-                             function_count);
+  Assertion::test(test_create_database, "test_create_database");
+  Assertion::test(test_indexation, "test_indexation");
+  Assertion::test(test_api_id_exists, "test_api_id_exists");
+  Assertion::test(test_same_api_id_different_source,
+                  "test_same_api_id_different_source");
+  Assertion::test(test_create_database2, "test_create_database2");
+  Assertion::test(test_get_setting, "test_get_setting");
+  Assertion::test(test_get_wrong_setting, "test_get_wrong_setting");
+  Assertion::test(test_fetch_tweets, "test_fetch_tweets");
+  Assertion::test(test_fetch_even_files, "test_fetch_even_files");
+  Assertion::test(test_fetch_by_tag_lt, "test_fetch_by_tag_lt");
+  Assertion::test(test_fetch_by_name, "test_fetch_by_name");
+  Assertion::test(test_fetch_by_size, "test_fetch_by_size");
+  Assertion::test(test_fetch_specific_files, "test_fetch_specific_files");
+  Assertion::test(test_fetch_specific_files2, "test_fetch_specific_files2");
+  Assertion::test(test_fetch_specific_files3, "test_fetch_specific_files3");
+  Assertion::test(test_create_corpus, "test_create_corpus");
+  Assertion::test(test_wrong_search, "test_wrong_search");
+  Assertion::test(test_wrong_search2, "test_wrong_search2");
+  Assertion::test(test_update_setting, "test_update_setting");
+  Assertion::test(test_insert_setting, "test_insert_setting");
+  Assertion::test(test_insert_existing_setting, "test_insert_existing_setting");
+  HarvesterDatabase::close();
 }

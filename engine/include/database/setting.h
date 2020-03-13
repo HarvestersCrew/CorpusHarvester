@@ -17,7 +17,7 @@
 #define GET_SETTINGS "SELECT * FROM Setting;"
 #define INSERT_SETTING_STATEMENT                                               \
   "INSERT INTO Setting (name, value) VALUES(?, ?);"
-#define UPDATE_SETTING_STATEMENT "UPDATE Setting SET value = ? WHERE name = ?;"
+#define UPDATE_SETTING_STATEMENT "UPDATE Setting SET value = ? WHERE name = ?"
 #define DROP_SETTING_STATEMENT "DROP TABLE IF EXISTS Setting;"
 
 /**

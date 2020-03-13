@@ -176,28 +176,16 @@ void test_logger_error() {
   std::filesystem::remove("./logs");
 }
 
-std::pair<int, int> logger_test() {
-  int function_count = 9;
-  void (*test_functions[])(void) = {test_logger_set_level,
-                                    test_logger_set_output,
-                                    test_logger_set_output_path,
-                                    test_logger_get_ostream,
-                                    test_logger_output_log,
-                                    test_logger_debug,
-                                    test_logger_info,
-                                    test_logger_warning,
-                                    test_logger_error};
-  std::string test_functions_name[] = {"test_logger_set_level",
-                                       "test_logger_set_output",
-                                       "test_logger_set_output_path",
-                                       "test_logger_get_ostream",
-                                       "test_logger_output_log",
-                                       "test_logger_debug",
-                                       "test_logger_info",
-                                       "test_logger_warning",
-                                       "test_logger_error"};
-
+void logger_test() {
   std::cout << std::endl << "Logger tests : " << std::endl;
-  return Assertion::test_all(test_functions, test_functions_name,
-                             function_count);
+  Assertion::test(test_logger_set_level, "test_logger_set_level");
+  Assertion::test(test_logger_set_output, "test_logger_set_output");
+  Assertion::test(test_logger_set_output_path, "test_logger_set_output_path");
+  Assertion::test(test_logger_get_ostream, "test_logger_get_ostream");
+  Assertion::test(test_logger_output_log, "test_logger_output_log");
+  Assertion::test(test_logger_debug, "test_logger_debug");
+  Assertion::test(test_logger_info, "test_logger_info");
+  Assertion::test(test_logger_warning, "test_logger_warning");
+  Assertion::test(test_logger_error, "test_logger_error");
+  logger::set_output(logger::output::STDOUT);
 }
