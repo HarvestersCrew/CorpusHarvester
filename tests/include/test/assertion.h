@@ -3,12 +3,16 @@
 
 #include "utils/exceptions.h"
 #include "utils/logger.h"
+#include "utils/utils.h"
 #include <iostream>
 #include <sstream>
 
 class Assertion {
 
 public:
+  static int successes;
+  static int failures;
+
   static int assert_contains(std::string function_name, int container_size,
                              std::string container[], std::string contained) {
     bool trouve = false;
@@ -98,9 +102,27 @@ public:
   }
 
   static void test(void (*func)(void), std::string function_name) {
-    func();
-    std::cout << "{{ OK }} " << function_name << "()" << std::endl;
+    try {
+      func();
+      std::cout << "{{ OK }} " << function_name << "()" << std::endl;
+      ++Assertion::successes;
+    } catch (TestFailedException &e) {
+      std::cerr << e.what() << std::endl;
+      ++Assertion::failures;
+    } catch (const CommandException &e) {
+      std::cerr << e.what() << std::endl;
+      ++Assertion::failures;
+    } catch (sql::SQLException &e) {
+      print_sql_exception(e);
+      ++Assertion::failures;
+    } catch (std::exception &e) {
+      std::cerr << e.what() << std::endl;
+      ++Assertion::failures;
+    }
   }
+
+  static int get_successes() { return Assertion::successes; }
+  static int get_failures() { return Assertion::failures; }
 };
 
 #endif

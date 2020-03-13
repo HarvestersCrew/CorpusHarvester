@@ -50,14 +50,8 @@ void test_store_one_file() {
 
 void storage_test() {
   std::cout << std::endl << "Storage tests : " << std::endl;
-  try {
-    Assertion::test(test_file_destination, "test_file_destination");
-    Assertion::test(test_empty_file_name, "test_empty_file_name");
-    Assertion::test(test_store_one_file, "test_store_one_file");
-  } catch (const TestFailedException &e) {
-    std::cerr << e.what() << std::endl;
-  } catch (const CommandException &e) {
-    std::cerr << e.what() << std::endl;
-  }
+  Assertion::test(test_file_destination, "test_file_destination");
+  Assertion::test(test_empty_file_name, "test_empty_file_name");
+  Assertion::test(test_store_one_file, "test_store_one_file");
   HarvesterDatabase::close();
 }
