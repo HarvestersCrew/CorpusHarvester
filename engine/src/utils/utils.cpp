@@ -67,13 +67,13 @@ void print_sql_exception(sql::SQLException &e) {
   std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
 }
 
-void log_sql_exception(sql::SQLException &e) {
-  std::ostringstream sql_exception;
-  sql_exception << "# ERR: " << e.what();
-  sql_exception << " (MySQL error code: " << e.getErrorCode();
-  sql_exception << ", SQLState: " << e.getSQLState() << " )";
-  logger::error(sql_exception.str());
-}
+// void log_sql_exception(sql::SQLException &e) {
+//   std::ostringstream sql_exception;
+//   sql_exception << "# ERR: " << e.what();
+//   sql_exception << " (MySQL error code: " << e.getErrorCode();
+//   sql_exception << ", SQLState: " << e.getSQLState() << " )";
+//   logger::error(sql_exception.str());
+// }
 
 nlohmann::json json_from_file(const std::string &path) {
   std::ifstream in(path);
