@@ -20,6 +20,8 @@ using std::ostream;
 using std::string;
 using std::stringstream;
 
+class Setting;
+
 /** Class used to manage logs, with levels and different outputs */
 class logger {
 
