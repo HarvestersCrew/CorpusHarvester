@@ -1,7 +1,6 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include "database/setting.h"
 #include "utils/exceptions.h"
 #include <filesystem>
 #include <fstream>
@@ -17,6 +16,7 @@ using std::cout;
 using std::endl;
 using std::ofstream;
 using std::ostream;
+using std::stoi;
 using std::string;
 using std::stringstream;
 
@@ -39,9 +39,11 @@ public:
 
   static logger::level get_level();
   static void set_level(logger::level level);
+  static void set_level(const string &level);
 
   static logger::output get_output();
   static void set_output(logger::output output);
+  static void set_output(const string &output);
 
   static string get_output_path();
   static void set_output_path(string path);
@@ -75,9 +77,7 @@ private:
   /** Directory to use if outputting to files */
   static string _output_path;
 
-  static Setting _db_level;
-  static Setting _db_output;
-  static Setting _db_output_path;
+  static bool _initialized;
 
   /**
    * Used to updated an ostream based on a given level and message.
@@ -92,6 +92,8 @@ private:
    * @param msg message to log
    */
   static void print_log(logger::level level, const string &msg);
+
+  static void init_from_file();
 };
 
 #endif

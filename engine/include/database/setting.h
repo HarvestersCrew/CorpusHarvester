@@ -37,9 +37,6 @@ class Setting : public DatabaseItem {
 public:
   /* Settings name */
   static std::string STORAGE_ROOT;
-  static std::string LOGGER_LEVEL;
-  static std::string LOGGER_OUTPUT;
-  static std::string LOGGER_OUTPUT_PATH;
 
   /**
    * Default constructor

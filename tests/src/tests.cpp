@@ -7,14 +7,17 @@
 
 int main() {
   std::cout << std::endl << "Tests : " << std::endl;
+
   logger_test();
   logger::set_level(logger::level::NONE);
   cli_parser_test();
   database_test();
   storage_test();
   indexation_test();
+
   HarvesterDatabase::init();
   HarvesterDatabase::drop();
+
   std::cout << std::endl
             << "Runs : "
             << Assertion::get_successes() + Assertion::get_failures()

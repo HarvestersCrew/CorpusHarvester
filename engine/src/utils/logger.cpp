@@ -2,15 +2,24 @@
 
 logger::logger() {}
 
-logger::level logger::get_level() { return logger::_level; }
+logger::level logger::get_level() {
+  logger::init_from_file();
+  return logger::_level;
+}
 void logger::set_level(logger::level level) {
   if (!(level >= logger::level::DEBUG && level <= logger::level::NONE)) {
     throw logger_exception("Unsupported logging level");
   }
   logger::_level = level;
 }
+void logger::set_level(const string &level) {
+  logger::set_level((logger::level)stoi(level));
+}
 
-logger::output logger::get_output() { return logger::_output; }
+logger::output logger::get_output() {
+  logger::init_from_file();
+  return logger::_output;
+}
 void logger::set_output(logger::output output) {
   if (!(output >= logger::output::STDOUT && output <= logger::output::FILE)) {
     throw logger_exception("Unsupported logging output");
@@ -20,8 +29,14 @@ void logger::set_output(logger::output output) {
     logger::set_output_path(LOGGER_DEFAULT_OUTPUT_PATH);
   }
 }
+void logger::set_output(const string &output) {
+  logger::set_output((logger::output)stoi(output));
+}
 
-string logger::get_output_path() { return logger::_output_path; }
+string logger::get_output_path() {
+  logger::init_from_file();
+  return logger::_output_path;
+}
 void logger::set_output_path(string path) {
   if (path.back() != '/') {
     path += '/';
@@ -80,6 +95,12 @@ void logger::print_log(logger::level level, const string &msg) {
   }
 }
 
+void logger::init_from_file() {
+  if (!logger::_initialized) {
+    logger::_initialized = true;
+  }
+}
+
 void logger::debug(const string &msg) {
   logger::print_log(logger::level::DEBUG, msg);
 }
@@ -93,6 +114,7 @@ void logger::error(const string &msg) {
   logger::print_log(logger::level::ERROR, msg);
 }
 
+bool logger::_initialized = false;
 logger::level logger::_level = logger::level::DEBUG;
 logger::output logger::_output = logger::output::STDOUT;
 string logger::_output_path = LOGGER_DEFAULT_OUTPUT_PATH;
