@@ -77,6 +77,7 @@ public:
   static std::string get_default_value(std::string name) {
     return _default_settings[name];
   }
+  std::string get_default_value() { return _default_settings.at(this->_name); }
 
   void set_name(std::string name) { _name = name; }
   void set_value(std::string value) { _value = value; }
