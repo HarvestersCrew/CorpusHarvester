@@ -28,6 +28,14 @@ private:
    */
   cli_command parser;
 
+  /**
+   * List of all the command set.
+   */
+  vector<string> commands;
+
+  /**
+   * Map with all options and values.
+   */
   map<string, string> string_inputs;
 
   /**

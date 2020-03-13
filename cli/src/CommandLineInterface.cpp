@@ -8,52 +8,30 @@
 CommandLineInterface::CommandLineInterface(int argc, char **argv)
     : parser(argv[0], "Corpus Harvester") {
 
-  for (int j = 0; j < argc; j++) {
-    cout << argv[j] << endl;
-  }
-
   // cli_command this->parser("bin/cli", "Corpus Harvester");
-  cli_command &command1 =
-      this->parser.add_command("create", "Create a new corpus.");
+  cli_command &corpusCommand =
+      this->parser.add_command("corpus", "Corpus function.");
 
-  command1.add_option("name", "Name of the corpus", false);
+  // Creation of the corpus
+  cli_command &createCorpus =
+      corpusCommand.add_command("create", "Create a corpus with a given name.");
 
-  cli_command &command2 = this->parser.add_command("corpus", "Show a corpus.");
+  createCorpus.add_option("name", "Name of the new corpus.", false);
 
-  std::vector<std::string> allArgs(argv + 1, argv + argc);
+  // List of corpus
+  cli_command &listCorpus = corpusCommand.add_command(
+      "list", "List of all the corpus with potentially a name.");
 
-  vector<string> subcommands;
+  listCorpus.add_option("name", "Corpus name that you want to search.", false);
+
+  // Transform our array to a vector of string
+  std::vector<string> allArgs(argv + 1, argv + argc);
+
   map<string, bool> bool_inputs;
-  std::tie(subcommands, this->string_inputs, bool_inputs) =
+
+  // Get and store all the parameter
+  std::tie(this->commands, this->string_inputs, bool_inputs) =
       cli_parser::parse(this->parser, allArgs);
-
-  std::map<string, string>::iterator it;
-  it = this->string_inputs.find("create");
-  if (it != this->string_inputs.end()) {
-    logger::debug("Create value");
-  }
-
-  it = this->string_inputs.find("name");
-  if (it != this->string_inputs.end()) {
-    logger::debug("We got a name !");
-  }
-
-  for (map<string, string>::const_iterator it = this->string_inputs.begin();
-       it != this->string_inputs.end(); ++it) {
-    std::cout << it->first << " " << it->second << "\n";
-  }
-
-  //  // List of string at the end of the command to get the name of the corpus
-  //  this->parser.add_argument("name").help("Name of the corpus").remaining();
-  //
-  //  try {
-  //    this->parser.parse_args(argc, argv);
-  //  } catch (const std::runtime_error &err) {
-  //    logger::error(err.what());
-  //    // TODO :: Need to change that
-  //    std::cout << this->parser << std::endl;
-  //    exit(0);
-  //  }
 }
 
 void CommandLineInterface::create_api() {
@@ -127,62 +105,73 @@ std::list<Corpus *> CommandLineInterface::list_corpus() {
 }
 
 void CommandLineInterface::run() {
-  //
-  //  // Creation of a corpus
-  //  if (this->parser["--create"] == true) {
-  //
-  //    std::string corpusName = "";
-  //
-  //    try {
-  //      auto names = this->parser.get<std::vector<std::string>>("name");
-  //      for (auto &name : names)
-  //        corpusName += name + " ";
-  //
-  //      // Remove the last character, here a space
-  //      corpusName.pop_back();
-  //
-  //      // Create the corpus and show it
-  //      Corpus corpus = this->create_corpus(corpusName);
-  //      logger::info(corpus.to_string());
-  //
-  //    } catch (std::logic_error &e) {
-  //      logger::error("No name provide for the corpus.");
-  //    }
-  //  }
-  //  // Show all the corpus
-  //  else if (this->parser["--corpus"] == true) {
-  //
-  //    // Check if we have a name else, we show all the corpus
-  //    try {
-  //      std::string corpusName = "";
-  //      auto names = this->parser.get<std::vector<std::string>>("name");
-  //      for (auto &name : names)
-  //        corpusName += name + " ";
-  //
-  //      // Remove the last character, here a space
-  //      corpusName.pop_back();
-  //
-  //      // Search for the corpus with the given name
-  //      std::optional<Corpus *> optionalCorpus =
-  //      this->search_corpus(corpusName);
-  //
-  //      // Check if we have a corpus
-  //      if (optionalCorpus.has_value()) {
-  //        logger::info(optionalCorpus.value()->header_string());
-  //      } else {
-  //        logger::info("No corpus have been found for the name : " +
-  //        corpusName);
-  //      }
-  //
-  //    } catch (std::logic_error &e) {
-  //      logger::info("List of all the corpus.");
-  //
-  //      std::list<Corpus *> corpusList = this->list_corpus();
-  //      logger::info("Number of available corpus : " + corpusList.size());
-  //
-  //      for (const Corpus *corpus : corpusList) {
-  //        logger::info(corpus->header_string());
-  //      }
-  //    }
-  //  }
+
+  map<string, string>::iterator itSubCommand;
+
+  // Check if we have the corpus command
+  if (std::find(this->commands.begin(), this->commands.end(), "corpus") !=
+      this->commands.end()) {
+    logger::debug("Corpus method.");
+
+    // Check if we want to list the corpus
+    if (std::find(this->commands.begin(), this->commands.end(), "list") !=
+        this->commands.end()) {
+
+      // Check if we have a value for the name
+      itSubCommand = this->string_inputs.find("name");
+
+      if (itSubCommand != this->string_inputs.end() &&
+          itSubCommand->second != "") {
+
+        // Get the name of the corpus
+        string corpusName = itSubCommand->second;
+
+        // Search for the corpus with the given name
+        std::optional<Corpus *> optionalCorpus =
+            this->search_corpus(corpusName);
+
+        // Check if we have a corpus
+        if (optionalCorpus.has_value()) {
+          logger::info(optionalCorpus.value()->header_string());
+        } else {
+          logger::info("No corpus have been found for the name : " +
+                       corpusName);
+        }
+
+      } else {
+        logger::info("List of all the corpus.");
+
+        std::list<Corpus *> corpusList = this->list_corpus();
+        logger::info("Number of available corpus : " + corpusList.size());
+
+        for (const Corpus *corpus : corpusList) {
+          logger::info(corpus->header_string());
+        }
+      }
+    }
+
+    // Check if the user want to create a corpus.
+
+    if (std::find(this->commands.begin(), this->commands.end(), "create") !=
+        this->commands.end()) {
+
+      // Check if we have a value for the name
+      itSubCommand = this->string_inputs.find("name");
+
+      if (itSubCommand != this->string_inputs.end() &&
+          itSubCommand->second != "") {
+
+        // Get the name of the corpus
+        string corpusName = itSubCommand->second;
+
+        // Create the corpus and show it
+        Corpus corpus = this->create_corpus(corpusName);
+        logger::info(corpus.to_string());
+
+      } else {
+        logger::error("We have no name !");
+        exit(-1);
+      }
+    }
+  }
 }
