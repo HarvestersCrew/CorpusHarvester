@@ -7,7 +7,7 @@
 int main() {
   std::cout << std::endl << "Tests : " << std::endl;
   logger_test();
-  logger::set_level(logger::level::INFO);
+  logger::set_level(logger::level::NONE);
   cli_parser_test();
   database_test();
   storage_test();

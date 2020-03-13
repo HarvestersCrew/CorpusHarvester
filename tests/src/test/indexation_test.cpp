@@ -250,6 +250,38 @@ void test_wrong_search2() {
   }
 }
 
+void test_update_setting() {
+  std::string name = "storage_root";
+  std::string new_value = "/new/path";
+  Setting setting = Setting(name, new_value);
+  setting.update(indexer.get_database());
+  Setting updated_setting(name, indexer.get_database());
+  Assertion::assert_equals(__FUNCTION__, new_value,
+                           updated_setting.get_value());
+}
+
+void test_insert_setting() {
+  std::string name = "new_setting";
+  std::string value = "value";
+  Setting setting = Setting(name, value);
+  bool inserted = setting.insert(indexer.get_database());
+  Setting inserted_setting(name, indexer.get_database());
+  Assertion::assert_true(__FUNCTION__, inserted);
+  Assertion::assert_equals(__FUNCTION__, name, inserted_setting.get_name());
+  Assertion::assert_equals(__FUNCTION__, value, inserted_setting.get_value());
+}
+
+void test_insert_existing_setting() {
+  std::string name = "storage_root";
+  Setting existing_setting(name, indexer.get_database());
+  std::string value = "value";
+  Setting setting = Setting(name, value);
+  bool inserted = setting.insert(indexer.get_database());
+  Assertion::assert_false(__FUNCTION__, inserted);
+  Assertion::assert_not_equals(__FUNCTION__, value,
+                               existing_setting.get_value());
+}
+
 void indexation_test() {
   std::cout << std::endl << "Indexation tests : " << std::endl;
   Assertion::test(test_create_database, "test_create_database");
@@ -271,5 +303,8 @@ void indexation_test() {
   Assertion::test(test_create_corpus, "test_create_corpus");
   Assertion::test(test_wrong_search, "test_wrong_search");
   Assertion::test(test_wrong_search2, "test_wrong_search2");
+  Assertion::test(test_update_setting, "test_update_setting");
+  Assertion::test(test_insert_setting, "test_insert_setting");
+  Assertion::test(test_insert_existing_setting, "test_insert_existing_setting");
   HarvesterDatabase::close();
 }
