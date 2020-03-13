@@ -20,7 +20,7 @@ void logger::set_output_path(string path) {
   }
   if (!std::filesystem::exists(path)) {
     string msg = "Logging path not found: " + path;
-    throw CommandException(msg);
+    throw logger_exception(msg);
   }
   logger::_output_path = path;
 }

@@ -31,7 +31,7 @@ void test_logger_set_output_path() {
   try {
     logger::set_output_path("/random_path_ahzgruthrgke");
     Assertion::assert_throw(__FUNCTION__, "filesystem_error");
-  } catch (CommandException &e) {
+  } catch (logger_exception &e) {
     return;
   }
 }
