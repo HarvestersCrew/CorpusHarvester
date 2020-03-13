@@ -1,6 +1,7 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include "database/setting.h"
 #include "utils/exceptions.h"
 #include <filesystem>
 #include <fstream>
@@ -71,6 +72,10 @@ private:
   static output _output;
   /** Directory to use if outputting to files */
   static string _output_path;
+
+  static Setting _db_level;
+  static Setting _db_output;
+  static Setting _db_output_path;
 
   /**
    * Used to updated an ostream based on a given level and message.

@@ -3,10 +3,18 @@
 logger::logger() {}
 
 logger::level logger::get_level() { return logger::_level; }
-void logger::set_level(logger::level level) { logger::_level = level; }
+void logger::set_level(logger::level level) {
+  if (!(level >= logger::level::DEBUG && level <= logger::level::NONE)) {
+    throw logger_exception("Unsupported logging level");
+  }
+  logger::_level = level;
+}
 
 logger::output logger::get_output() { return logger::_output; }
 void logger::set_output(logger::output output) {
+  if (!(output >= logger::output::STDOUT && output <= logger::output::FILE)) {
+    throw logger_exception("Unsupported logging output");
+  }
   logger::_output = output;
   if (output == logger::output::FILE) {
     logger::set_output_path(LOGGER_DEFAULT_OUTPUT_PATH);
@@ -29,7 +37,7 @@ void logger::ostream_log(ostream &os, logger::level level, const string &msg) {
   if (level == logger::level::NONE) {
     throw logger_exception("Can't log level 'NONE'");
   }
-  if (level >= logger::_level) {
+  if (level >= logger::get_level()) {
     string tag = "";
     switch (level) {
     case logger::level::DEBUG:
@@ -58,11 +66,11 @@ void logger::ostream_log(ostream &os, logger::level level, const string &msg) {
 }
 
 void logger::print_log(logger::level level, const string &msg) {
-  if (logger::_output == logger::output::FILE) {
+  if (logger::get_output() == logger::output::FILE) {
     stringstream ss;
     logger::ostream_log(ss, level, msg);
     if (ss.str() != "") {
-      ofstream f(logger::_output_path + LOGGER_DEFAULT_FILENAME,
+      ofstream f(logger::get_output_path() + LOGGER_DEFAULT_FILENAME,
                  std::ofstream::app);
       f << ss.str();
       f.close();
