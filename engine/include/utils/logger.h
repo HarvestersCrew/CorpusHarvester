@@ -2,6 +2,8 @@
 #define LOGGER_H
 
 #include "utils/exceptions.h"
+#include "utils/nlohmann/json.hpp"
+#include "utils/utils.h"
 #include <filesystem>
 #include <fstream>
 #include <ostream>
@@ -11,6 +13,7 @@
 
 #define LOGGER_DEFAULT_OUTPUT_PATH "./"
 #define LOGGER_DEFAULT_FILENAME "logs"
+#define LOGGER_SETTINGS_PATH "./data/logger_settings.env.json"
 
 using std::cout;
 using std::endl;
@@ -49,6 +52,11 @@ public:
   static void set_output_path(string path);
 
   /**
+   * Gives the attributes what we consider default values
+   */
+  static void set_default_values();
+
+  /**
    * Logs a debug message
    * @param msg message to log
    */
@@ -69,6 +77,11 @@ public:
    */
   static void error(const string &msg);
 
+  /**
+   * Saves settings to the settings file
+   */
+  static void update_file_settings();
+
 private:
   /** Minimal level to output */
   static level _level;
@@ -76,8 +89,10 @@ private:
   static output _output;
   /** Directory to use if outputting to files */
   static string _output_path;
-
+  /** If settings were loaded from file */
   static bool _initialized;
+  /** Path to the settings file */
+  static string _settings_file;
 
   /**
    * Used to updated an ostream based on a given level and message.
@@ -93,6 +108,9 @@ private:
    */
   static void print_log(logger::level level, const string &msg);
 
+  /**
+   * Inits if necessary the settings from the file
+   */
   static void init_from_file();
 };
 

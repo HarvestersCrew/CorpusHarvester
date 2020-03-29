@@ -1,27 +1,18 @@
 #include "test/logger_test.h"
 
 void test_logger_set_level() {
-  Assertion::assert_equals(__FUNCTION__, logger::level::DEBUG,
-                           logger::get_level());
-
   logger::set_level(logger::level::INFO);
   Assertion::assert_equals(__FUNCTION__, logger::level::INFO,
                            logger::get_level());
 }
 
 void test_logger_set_output() {
-  Assertion::assert_equals(__FUNCTION__, logger::output::STDOUT,
-                           logger::get_output());
-
   logger::set_output(logger::output::FILE);
   Assertion::assert_equals(__FUNCTION__, logger::output::FILE,
                            logger::get_output());
 }
 
 void test_logger_set_output_path() {
-  logger::set_output(logger::output::FILE);
-  Assertion::assert_equals(__FUNCTION__, logger::get_output_path(), "./");
-
   logger::set_output_path("/tmp/");
   Assertion::assert_equals(__FUNCTION__, logger::get_output_path(), "/tmp/");
 

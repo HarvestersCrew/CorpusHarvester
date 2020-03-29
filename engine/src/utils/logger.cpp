@@ -97,8 +97,47 @@ void logger::print_log(logger::level level, const string &msg) {
 
 void logger::init_from_file() {
   if (!logger::_initialized) {
+    logger::set_default_values();
     logger::_initialized = true;
+    bool created = false;
+    try {
+      nlohmann::json settings = json_from_file(logger::_settings_file);
+      logger::set_level(settings.at("level").get<logger::level>());
+      logger::set_output(settings.at("output").get<logger::output>());
+      logger::set_output_path(settings.at("output_path").get<string>());
+      created = true;
+    } catch (const logger_exception &e) {
+      logger::error("Logger settings file content invalid, recreating it");
+    } catch (const nlohmann::detail::type_error &e) {
+      logger::error("Logger settings file content invalid, recreating it");
+    } catch (const std::runtime_error &e) {
+      logger::warning("Logger settings file not found, creating it");
+    } catch (const nlohmann::detail::parse_error &e) {
+      logger::error("Logger settings file content invalid, recreating it");
+    }
+
+    if (!created) {
+      logger::update_file_settings();
+    }
+
+    logger::info("Logger successfully initialized");
   }
+}
+
+void logger::update_file_settings() {
+  nlohmann::json json;
+  json["output"] = logger::get_output();
+  json["output_path"] = logger::get_output_path();
+  json["level"] = logger::get_level();
+  ofstream file(logger::_settings_file);
+  file << json;
+  file.close();
+}
+
+void logger::set_default_values() {
+  logger::set_level(logger::level::DEBUG);
+  logger::set_output(logger::output::STDOUT);
+  logger::set_output_path(LOGGER_DEFAULT_OUTPUT_PATH);
 }
 
 void logger::debug(const string &msg) {
@@ -115,6 +154,7 @@ void logger::error(const string &msg) {
 }
 
 bool logger::_initialized = false;
-logger::level logger::_level = logger::level::DEBUG;
-logger::output logger::_output = logger::output::STDOUT;
-string logger::_output_path = LOGGER_DEFAULT_OUTPUT_PATH;
+logger::level logger::_level;
+logger::output logger::_output;
+string logger::_output_path;
+string logger::_settings_file = LOGGER_SETTINGS_PATH;
