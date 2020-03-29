@@ -11,8 +11,8 @@
 #include <string>
 #include <system_error>
 
-#define LOGGER_DEFAULT_OUTPUT_PATH "./"
-#define LOGGER_DEFAULT_FILENAME "logs"
+#define LOGGER_DEFAULT_OUTPUT_PATH "/tmp/"
+#define LOGGER_DEFAULT_FILENAME "harvester_logs"
 #define LOGGER_SETTINGS_PATH "./data/logger_settings.env.json"
 
 using std::cout;
