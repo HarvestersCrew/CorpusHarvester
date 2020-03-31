@@ -9,7 +9,7 @@
     ],
     "request": [
         {
-            "type": "string",
+            "type": "int",
             "api_name": "id",
             "name": "_api_id",
             "relevant": true
