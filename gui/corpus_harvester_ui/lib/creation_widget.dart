@@ -18,16 +18,25 @@ Source wikiSource = Source(name: "WikiCommons");
 FileType txtType = FileType(typeName: "Text");
 FileType imgType = FileType(typeName: "Image");
 FileType vidType = FileType(typeName: "Video");
-CorpusFile fileA = CorpusFile(name: "A.txt", source: twitterSource, type: txtType, date: DateTime.now());
-CorpusFile fileB = CorpusFile(name: "B.txt", source: wikiSource, type: txtType, date: DateTime.now());
-CorpusFile fileC = CorpusFile(name: "C.txt", source: twitterSource, type: txtType, date: DateTime.now());
-CorpusFile fileD = CorpusFile(name: "D.txt", source: twitterSource, type: txtType, date: DateTime.now());
-CorpusFile fileE = CorpusFile(name: "E.txt", source: wikiSource, type: txtType, date: DateTime.now());
-CorpusFile fileF = CorpusFile(name: "F.txt", source: wikiSource, type: txtType, date: DateTime.now());
+CorpusFile fileA = CorpusFile(name: "A.txt", source: twitterSource, type: txtType, date: DateTime.now().add(Duration(days: -14)));
+CorpusFile fileB = CorpusFile(name: "B.txt", source: wikiSource, type: txtType, date: DateTime.now().add(Duration(days: -8)));
+CorpusFile fileC = CorpusFile(name: "C.txt", source: twitterSource, type: txtType, date: DateTime.now().add(Duration(days: -7)));
+CorpusFile fileD = CorpusFile(name: "D.txt", source: twitterSource, type: txtType, date: DateTime.now().add(Duration(days: -7)));
+CorpusFile fileE = CorpusFile(name: "E.png", source: wikiSource, type: imgType, date: DateTime.now().add(Duration(days: -4)));
+CorpusFile fileF = CorpusFile(name: "F.png", source: wikiSource, type: imgType, date: DateTime.now().add(Duration(days: -4)));
+CorpusFile fileG = CorpusFile(name: "G.png", source: wikiSource, type: imgType, date: DateTime.now().add(Duration(days: -4)));
+CorpusFile fileH = CorpusFile(name: "H.png", source: wikiSource, type: imgType, date: DateTime.now().add(Duration(days: -4)));
+CorpusFile fileI = CorpusFile(name: "I.png", source: wikiSource, type: imgType, date: DateTime.now().add(Duration(days: -4)));
+CorpusFile fileJ = CorpusFile(name: "J.png", source: wikiSource, type: imgType, date: DateTime.now().add(Duration(days: -4)));
+CorpusFile fileK = CorpusFile(name: "K.png", source: twitterSource, type: txtType, date: DateTime.now());
+CorpusFile fileL = CorpusFile(name: "L.png", source: twitterSource, type: txtType, date: DateTime.now());
+CorpusFile fileM = CorpusFile(name: "M.png", source: twitterSource, type: txtType, date: DateTime.now());
+CorpusFile fileN = CorpusFile(name: "N.png", source: twitterSource, type: txtType, date: DateTime.now());
+CorpusFile fileO = CorpusFile(name: "O.png", source: twitterSource, type: txtType, date: DateTime.now());
 
 List<Source> _sources = [twitterSource, wikiSource];
 List<FileType> _types = [txtType, imgType, vidType];
-List<CorpusFile> _filesList = [fileA, fileB, fileC, fileD, fileE, fileF];
+List<CorpusFile> _filesList = [fileA, fileB, fileC, fileD, fileE, fileF, fileG, fileH, fileI, fileJ, fileK, fileL, fileM, fileN, fileO];
 
 class _CreationWidgetState extends State<CreationWidget> {
 

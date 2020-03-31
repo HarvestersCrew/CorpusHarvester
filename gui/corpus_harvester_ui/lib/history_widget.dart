@@ -29,7 +29,17 @@ Corpus corpusA = Corpus(name: "Corpus A", date: DateTime.now().add(Duration(days
 Corpus corpusB = Corpus(name: "Corpus Très très long !!!!", date: DateTime.now().add(Duration(days: -2)), files: [fileA, fileC, fileD], sources: [twitterSource], types: [txtType]);
 Corpus corpusC = Corpus(name: "Corpus C", date: DateTime.now(), files: [fileB, fileE, fileF], sources: [wikiSource], types: [txtType]);
 Corpus corpusD = Corpus(name: "Corpus D", date: DateTime.now(), files: [fileD, fileF], sources: [twitterSource, wikiSource], types: [txtType]);
-List<Corpus> corpusList = [corpusA, corpusB, corpusC, corpusD];
+Corpus corpusE = Corpus(name: "Corpus Images", date: DateTime.now().add(Duration(days: -7)), files: [], sources: [], types: []);
+Corpus corpusF = Corpus(name: "Corpus Chats", date: DateTime.now().add(Duration(days: -7)), files: [], sources: [], types: []);
+Corpus corpusG = Corpus(name: "Corpus Politique", date: DateTime.now().add(Duration(days: -7)), files: [], sources: [], types: []);
+Corpus corpusN = Corpus(name: "Corpus INSA", date: DateTime.now().add(Duration(days: -7)), files: [], sources: [], types: []);
+Corpus corpusH = Corpus(name: "Corpus H", date: DateTime.now().add(Duration(days: -7)), files: [], sources: [], types: []);
+Corpus corpusI = Corpus(name: "Corpus I", date: DateTime.now().add(Duration(days: -7)), files: [], sources: [], types: []);
+Corpus corpusJ = Corpus(name: "Corpus J", date: DateTime.now().add(Duration(days: -14)), files: [], sources: [], types: []);
+Corpus corpusK = Corpus(name: "Corpus K", date: DateTime.now().add(Duration(days: -14)), files: [], sources: [], types: []);
+Corpus corpusL = Corpus(name: "Corpus L", date: DateTime.now().add(Duration(days: -14)), files: [], sources: [], types: []);
+Corpus corpusM = Corpus(name: "Corpus M", date: DateTime.now().add(Duration(days: -14)), files: [], sources: [], types: []);
+List<Corpus> corpusList = [corpusA, corpusB, corpusC, corpusD, corpusE, corpusF, corpusG, corpusH, corpusI, corpusJ, corpusK, corpusL, corpusM, corpusN];
 
 class _HistoryWidgetState extends State<HistoryWidget> {
 
