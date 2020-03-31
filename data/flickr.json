@@ -51,6 +51,7 @@
         {
             "type": "string",
             "api_name": "id",
+            "name": "_api_id",
             "relevant": true
         },
         {

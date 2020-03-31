@@ -49,6 +49,12 @@
     "response": [
         {
             "type": "string",
+            "api_name": "id",
+            "name": "_api_id",
+            "relevant": true
+        },
+        {
+            "type": "string",
             "api_name": "title",
             "name": "title",
             "relevant": true
