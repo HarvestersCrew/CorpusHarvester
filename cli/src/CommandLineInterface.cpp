@@ -30,8 +30,14 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   map<string, bool> bool_inputs;
 
   // Get and store all the parameter
-  std::tie(this->commands, this->string_inputs, bool_inputs) =
-      cli_parser::parse(this->parser, allArgs);
+  try {
+    std::tie(this->commands, this->string_inputs, bool_inputs) =
+        cli_parser::parse(this->parser, allArgs);
+  } catch (const cli_parser_bad_parse_exception &e) {
+    exit(EXIT_FAILURE);
+  } catch (const cli_parser_help_asked_exception &e) {
+    exit(EXIT_FAILURE);
+  }
 }
 
 void CommandLineInterface::create_api() {

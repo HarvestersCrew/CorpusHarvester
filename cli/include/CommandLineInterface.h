@@ -3,15 +3,15 @@
 #define CORPUSHARVESTER_CLIENTLINEINTERFACE_H
 
 #include "api/ClientAction.h"
+#include "argparse.hpp"
 #include "download/api_loader.h"
 #include "download/download_manager.h"
 #include "indexation/file.h"
 #include "indexation/indexer.h"
 #include "indexation/search_builder.h"
 #include "storage/storage.h"
-
-#include "argparse.hpp"
 #include "utils/cli_parser.h"
+#include <cstdlib>
 #include <deque>
 #include <iostream>
 #include <string>
