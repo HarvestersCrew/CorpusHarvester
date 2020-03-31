@@ -148,6 +148,10 @@ cli_parser::parse(const cli_command &root, vector<string> cli_args) {
     cout << "Wrong command line, displaying help." << endl;
     cout << root.get_help() << endl;
     throw cli_parser_bad_parse_exception(e.what());
+  } catch (const std::out_of_range &e) {
+    cout << "Argument missing, displaying help." << endl;
+    cout << root.get_help() << endl;
+    throw cli_parser_bad_parse_exception(e.what());
   }
 }
 
