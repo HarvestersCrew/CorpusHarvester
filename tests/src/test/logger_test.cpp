@@ -27,6 +27,21 @@ void test_logger_set_output_path() {
   }
 }
 
+void test_logger_get_full_output_path() {
+  logger::set_output_path("/tmp/");
+  Assertion::assert_equals(__FUNCTION__, logger::get_full_output_path(),
+                           "/tmp/" LOGGER_DEFAULT_FILENAME);
+}
+
+void test_logger_set_default_values() {
+  logger::set_default_values();
+  Assertion::assert_equals(__FUNCTION__, logger::level::DEBUG,
+                           logger::get_level());
+  Assertion::assert_equals(__FUNCTION__, logger::output::STDOUT,
+                           logger::get_output());
+  Assertion::assert_equals(__FUNCTION__, "/tmp/", logger::get_output_path());
+}
+
 void test_logger_get_ostream() {
   stringstream ss;
   string to_log;
@@ -56,10 +71,10 @@ void test_logger_get_ostream() {
 }
 
 void test_logger_output_log() {
-  std::filesystem::remove("./logs");
+  logger::set_output_path("/tmp/");
+  std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::DEBUG);
   logger::set_output(logger::output::FILE);
-  logger::set_output_path("./");
 
   stringstream msg1, msg2, expected, result;
   msg1 << "TEST MSG";
@@ -70,20 +85,20 @@ void test_logger_output_log() {
   logger::print_log(logger::level::ERROR, msg2.str());
   logger::ostream_log(expected, logger::level::ERROR, msg2.str());
 
-  ifstream f("./logs");
+  ifstream f(logger::get_full_output_path());
   result << f.rdbuf();
   f.close();
 
   Assertion::assert_equals(__FUNCTION__, expected.str(), result.str());
 
-  std::filesystem::remove("./logs");
+  std::filesystem::remove(logger::get_full_output_path());
 }
 
 void test_logger_debug() {
-  std::filesystem::remove("./logs");
+  logger::set_output_path("./");
+  std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::DEBUG);
   logger::set_output(logger::output::FILE);
-  logger::set_output_path("./");
 
   stringstream msg, expected, result;
   msg << "BLABLA";
@@ -93,19 +108,19 @@ void test_logger_debug() {
   logger::set_level(logger::level::INFO);
   logger::ostream_log(expected, logger::level::DEBUG, msg.str());
 
-  ifstream f("./logs");
+  ifstream f(logger::get_full_output_path());
   result << f.rdbuf();
   f.close();
   Assertion::assert_equals(__FUNCTION__, expected.str(), result.str());
 
-  std::filesystem::remove("./logs");
+  std::filesystem::remove(logger::get_full_output_path());
 }
 
 void test_logger_info() {
-  std::filesystem::remove("./logs");
+  logger::set_output_path("./");
+  std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::INFO);
   logger::set_output(logger::output::FILE);
-  logger::set_output_path("./");
 
   stringstream msg, expected, result;
   msg << "BLABLA";
@@ -115,19 +130,19 @@ void test_logger_info() {
   logger::set_level(logger::level::WARNING);
   logger::ostream_log(expected, logger::level::INFO, msg.str());
 
-  ifstream f("./logs");
+  ifstream f(logger::get_full_output_path());
   result << f.rdbuf();
   f.close();
   Assertion::assert_equals(__FUNCTION__, expected.str(), result.str());
 
-  std::filesystem::remove("./logs");
+  std::filesystem::remove(logger::get_full_output_path());
 }
 
 void test_logger_warning() {
-  std::filesystem::remove("./logs");
+  logger::set_output_path("./");
+  std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::WARNING);
   logger::set_output(logger::output::FILE);
-  logger::set_output_path("./");
 
   stringstream msg, expected, result;
   msg << "BLABLA";
@@ -137,19 +152,19 @@ void test_logger_warning() {
   logger::set_level(logger::level::ERROR);
   logger::ostream_log(expected, logger::level::WARNING, msg.str());
 
-  ifstream f("./logs");
+  ifstream f(logger::get_full_output_path());
   result << f.rdbuf();
   f.close();
   Assertion::assert_equals(__FUNCTION__, expected.str(), result.str());
 
-  std::filesystem::remove("./logs");
+  std::filesystem::remove(logger::get_full_output_path());
 }
 
 void test_logger_error() {
-  std::filesystem::remove("./logs");
+  logger::set_output_path("./");
+  std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::ERROR);
   logger::set_output(logger::output::FILE);
-  logger::set_output_path("./");
 
   stringstream msg, expected, result;
   msg << "BLABLA";
@@ -159,12 +174,12 @@ void test_logger_error() {
   logger::set_level(logger::level::NONE);
   logger::ostream_log(expected, logger::level::ERROR, msg.str());
 
-  ifstream f("./logs");
+  ifstream f(logger::get_full_output_path());
   result << f.rdbuf();
   f.close();
   Assertion::assert_equals(__FUNCTION__, expected.str(), result.str());
 
-  std::filesystem::remove("./logs");
+  std::filesystem::remove(logger::get_full_output_path());
 }
 
 void logger_test() {
@@ -172,6 +187,10 @@ void logger_test() {
   Assertion::test(test_logger_set_level, "test_logger_set_level");
   Assertion::test(test_logger_set_output, "test_logger_set_output");
   Assertion::test(test_logger_set_output_path, "test_logger_set_output_path");
+  Assertion::test(test_logger_get_full_output_path,
+                  "test_logger_get_full_output_path");
+  Assertion::test(test_logger_set_default_values,
+                  "test_logger_set_default_values");
   Assertion::test(test_logger_get_ostream, "test_logger_get_ostream");
   Assertion::test(test_logger_output_log, "test_logger_output_log");
   Assertion::test(test_logger_debug, "test_logger_debug");

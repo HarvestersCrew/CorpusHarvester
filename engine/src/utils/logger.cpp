@@ -48,6 +48,12 @@ void logger::set_output_path(string path) {
   logger::_output_path = path;
 }
 
+string logger::get_full_output_path() {
+  stringstream ss;
+  ss << logger::get_output_path() << LOGGER_DEFAULT_FILENAME;
+  return ss.str();
+}
+
 void logger::ostream_log(ostream &os, logger::level level, const string &msg) {
   if (level == logger::level::NONE) {
     throw logger_exception("Can't log level 'NONE'");

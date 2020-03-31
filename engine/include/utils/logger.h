@@ -51,6 +51,8 @@ public:
   static string get_output_path();
   static void set_output_path(string path);
 
+  static string get_full_output_path();
+
   /**
    * Gives the attributes what we consider default values
    */
