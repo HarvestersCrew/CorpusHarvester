@@ -1,54 +1,73 @@
-#include <bits/stdc++.h>
-#include <iostream>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-#include "storage/command_exception.h"
 #include "storage/storage.h"
 
-Storage::Storage(const string root_folder_name)
-    : _root_folder_name((root_folder_name[root_folder_name.length()] == '/')
-                            ? root_folder_name
-                            : root_folder_name + "/") {}
+Storage::Storage(sql::Connection *db) { init_root(db); }
 
-int Storage::createFoldersInRoot(string &folder_path) const {
-  string dest_folder_name = _root_folder_name + folder_path;
-  string mkpath_cmd = "mkdir -p " + dest_folder_name;
-  if (system(mkpath_cmd.c_str()) == -1) {
-    return 0;
-  } else {
-    return 1;
+Storage::Storage() {}
+
+void Storage::init_root(sql::Connection *db) {
+  Setting root_folder_name = Setting(Setting::STORAGE_ROOT, db);
+  _root_folder_name = root_folder_name.get_value();
+}
+
+bool Storage::create_folders_in_root(std::string folder_path) const {
+  std::string dest_folder_name = _root_folder_name + folder_path;
+  return std::filesystem::create_directories(dest_folder_name);
+}
+
+bool Storage::folder_exists_in_root(std::string folder_path) const {
+  std::string dest_folder_name = _root_folder_name + folder_path;
+  return std::filesystem::exists(dest_folder_name);
+}
+
+std::string Storage::get_folder_path(std::string file_name) const {
+  return add_string_every_n_chars(file_name, "/", MD5_SPLIT);
+}
+
+std::string Storage::file_destination(shared_ptr<File> file) const {
+  std::string current_file_name = file->get_name();
+  if (current_file_name == "") {
+    current_file_name = random_str(25);
   }
-}
+  std::string md5_file_name = md5(current_file_name);
+  std::string file_name =
+      md5_file_name.substr(md5_file_name.length() - MD5_SPLIT, MD5_SPLIT);
+  std::string file_name_for_folder =
+      md5_file_name.substr(0, md5_file_name.length() - MD5_SPLIT);
+  std::string file_folder = get_folder_path(file_name_for_folder);
+  std::string dest_folder_path = file->get_source() + "/" + file_folder;
+  file->set_name(file_name);
+  file->set_path(dest_folder_path);
 
-bool Storage::folderExistsInRoot(string &folder_path) const {
-  struct stat buffer;
-  string dest = _root_folder_name + folder_path;
-  return (stat(dest.c_str(), &buffer) == 0);
-}
-
-string Storage::fileDestination(string file_name, string api_name) const {
-  string dest_folder_name = api_name + "/" + file_name[0] + "/";
-  string dest_folder_path = _root_folder_name + dest_folder_name;
-  bool dest_folder_exists = folderExistsInRoot(dest_folder_name);
+  bool dest_folder_exists = folder_exists_in_root(dest_folder_path);
   if (!dest_folder_exists) {
-    int correctly_created = createFoldersInRoot(dest_folder_name);
+    bool correctly_created = create_folders_in_root(dest_folder_path);
     if (!correctly_created) {
-      string error_message = "Error creating : " + dest_folder_path;
+      std::string error_message = "Error creating : " + dest_folder_path;
       throw CommandException(error_message);
     }
   }
-  return dest_folder_path + file_name;
+  return _root_folder_name + dest_folder_path + file_name + file->get_format();
 }
 
-string Storage::storeFile(string file_path, string file_name,
-                          string api_name) const {
-  string file_destination = fileDestination(file_name, api_name);
-  string move_file_cmd = "mv " + file_path + " " + file_destination;
-  if (system(move_file_cmd.c_str()) == -1) {
-    string error_message =
-        "Error moving : " + file_path + " to " + file_destination;
-    throw CommandException(error_message);
+// void Storage::move_file(shared_ptr<File> file) const {
+//   std::string file_dest = file_destination(file);
+//   try {
+//     std::filesystem::rename(file->get_path(), file_dest);
+//   } catch (std::filesystem::filesystem_error &e) {
+//     std::string error_message =
+//         "Error moving : " + file->get_path() + " to " + file_dest;
+//     throw CommandException(error_message);
+//   }
+// }
+
+std::string Storage::store_file(shared_ptr<File> file) const {
+  std::string file_dest = file_destination(file);
+  file->store(file_dest);
+  return file_dest;
+}
+
+void Storage::store_files(std::list<shared_ptr<File>> files) const {
+  for (auto &file : files) {
+    store_file(file);
   }
-  return file_destination;
 }

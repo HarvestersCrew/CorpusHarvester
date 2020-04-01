@@ -1,0 +1,9 @@
+.idea
+.vscode
+bin
+obj
+data/storage_data
+stored
+backup
+*.env.json
+logs

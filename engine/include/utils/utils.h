@@ -1,23 +1,35 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "indexation/file.h"
+#include "utils/logger.h"
 #include "utils/nlohmann/json.hpp"
+#include <ctime>
 #include <fstream>
+#include <iomanip>
+#include <memory>
 #include <string>
+#include <vector>
 
-#include "indexation/mysql/file.h"
+using std::shared_ptr;
 
-using std::string;
+std::string exec(std::string cmd);
 
 // Returns a random string of length len from a-z characters.
-string random_str(const unsigned int len);
+std::string random_str(const unsigned int len);
 
-void fillFileRandomly(File *file, bool tweet, bool isEven);
+std::string vec_to_string(const std::vector<char> &vec);
 
-void printSQLException(sql::SQLException &e);
+void fill_file_randomly(shared_ptr<File> file, bool tweet, bool is_even);
 
-void print(string toPrint, bool verbose);
+void print_sql_exception(sql::SQLException &e);
+void log_sql_exception(sql::SQLException &e);
 
 nlohmann::json json_from_file(const std::string &path);
+
+std::string get_current_time(const char *patern);
+
+std::string add_string_every_n_chars(std::string input, std::string to_add,
+                                     int n);
 
 #endif

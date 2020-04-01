@@ -1,0 +1,288 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/root.json",
+    "type": "object",
+    "required": [
+        "name",
+        "url",
+        "method",
+        "api_type",
+        "response_main_item",
+        "path_to_results",
+        "request",
+        "response"
+    ],
+    "properties": {
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "pattern": "^[\\w]+$",
+            "title": "API name",
+            "examples": [
+                "Twitter",
+                "Instagram"
+            ]
+        },
+        "url": {
+            "$id": "#/properties/url",
+            "type": "string",
+            "title": "API endpoint",
+            "examples": [
+                "https://api.twitter.com/1.1/search/tweets.json"
+            ]
+        },
+        "method": {
+            "$id": "#/properties/method",
+            "type": "string",
+            "title": "HTTP method",
+            "enum": [
+                "GET",
+                "POST"
+            ]
+        },
+        "api_type": {
+            "$id": "#/properties/api_type",
+            "type": "string",
+            "title": "Type of main value got from API",
+            "enum": [
+                "text",
+                "image"
+            ]
+        },
+        "truncate_before": {
+            "$id": "#/properties/truncate_before",
+            "type": "integer",
+            "title": "Number of characters to truncate before parsing the response"
+        },
+        "truncate_after": {
+            "$id": "#/properties/truncate_after",
+            "type": "integer",
+            "title": "Number of characters to truncate after parsing the response"
+        },
+        "response_main_item": {
+            "$id": "#/properties/response_main_item",
+            "type": "string",
+            "title": "Named attribute to consider as main API value",
+            "examples": [
+                "text",
+                "image",
+                "poster",
+                "tweet"
+            ]
+        },
+        "path_to_results": {
+            "$id": "#/properties/path_to_results",
+            "type": "array",
+            "title": "JSON path to list of results",
+            "items": {
+                "$id": "#/properties/path_to_results/items",
+                "type": "string",
+                "title": "Part of JSON path",
+                "examples": [
+                    "statuses"
+                ]
+            }
+        },
+        "request": {
+            "$id": "#/properties/request",
+            "type": "array",
+            "title": "Request parameters",
+            "items": {
+                "$id": "#/properties/request/items",
+                "type": "object",
+                "title": "The Items Schema",
+                "required": [
+                    "type",
+                    "api_name",
+                    "required",
+                    "position",
+                    "relevant"
+                ],
+                "properties": {
+                    "type": {
+                        "$id": "#/properties/request/items/properties/type",
+                        "type": "string",
+                        "title": "Parameter's type",
+                        "enum": [
+                            "string",
+                            "int",
+                            "int64"
+                        ]
+                    },
+                    "api_name": {
+                        "$id": "#/properties/request/items/properties/api_name",
+                        "type": "string",
+                        "title": "Name in API",
+                        "examples": [
+                            "q",
+                            "page_count"
+                        ]
+                    },
+                    "required": {
+                        "$id": "#/properties/request/items/properties/required",
+                        "type": "boolean",
+                        "title": "If parameter is required",
+                        "enum": [
+                            true,
+                            false
+                        ]
+                    },
+                    "position": {
+                        "$id": "#/properties/request/items/properties/position",
+                        "type": "string",
+                        "title": "Position in request",
+                        "enum": [
+                            "body",
+                            "header"
+                        ]
+                    },
+                    "relevant": {
+                        "$id": "#/properties/request/items/properties/relevant",
+                        "type": "boolean",
+                        "title": "Save parameter in corpus",
+                        "enum": [
+                            false,
+                            true
+                        ]
+                    },
+                    "name": {
+                        "$id": "#/properties/request/items/properties/name",
+                        "type": "string",
+                        "title": "Name in DB",
+                        "examples": [
+                            "text",
+                            "retweets"
+                        ]
+                    },
+                    "default_value": {
+                        "$id": "#/properties/request/items/properties/default_value",
+                        "title": "Default value",
+                        "type": "string",
+                        "examples": [
+                            "ABC",
+                            "53"
+                        ]
+                    },
+                    "values": {
+                        "$id": "#/properties/request/items/properties/values",
+                        "title": "Values to choose from",
+                        "type": "array",
+                        "items": {
+                            "$id": "#/properties/variables/values/items",
+                            "type": "string",
+                            "title": "Possible values items"
+                        }
+                    }
+                }
+            }
+        },
+        "response": {
+            "$id": "#/properties/response",
+            "type": "array",
+            "title": "Response parameters",
+            "items": {
+                "$id": "#/properties/response/items",
+                "type": "object",
+                "title": "The Items Schema",
+                "required": [
+                    "type",
+                    "api_name",
+                    "relevant"
+                ],
+                "properties": {
+                    "type": {
+                        "$id": "#/properties/response/items/properties/type",
+                        "type": "string",
+                        "title": "Parameter's type",
+                        "enum": [
+                            "string",
+                            "int",
+                            "int64",
+                            "image_link"
+                        ]
+                    },
+                    "api_name": {
+                        "$id": "#/properties/response/items/properties/api_name",
+                        "type": "string",
+                        "title": "Name in API",
+                        "examples": [
+                            "q",
+                            "page_count"
+                        ]
+                    },
+                    "name": {
+                        "$id": "#/properties/response/items/properties/name",
+                        "type": "string",
+                        "title": "Name in DB",
+                        "examples": [
+                            "text",
+                            "retweets"
+                        ]
+                    },
+                    "relevant": {
+                        "$id": "#/properties/response/items/properties/relevant",
+                        "type": "boolean",
+                        "title": "Save parameter in corpus",
+                        "enum": [
+                            false,
+                            true
+                        ]
+                    },
+                    "string_prepends": {
+                        "$id": "#/properties/response/items/properties/string_prepends",
+                        "type": "array",
+                        "title": "Values and / or parameters to prepend to a response URL",
+                        "items": {
+                            "$id": "#/properties/response/items/properties/string_prepends/items",
+                            "type": "object",
+                            "title": "Each value to prepend to a response URL",
+                            "required": [
+                                "is_parameter_name",
+                                "value"
+                            ],
+                            "properties": {
+                                "is_parameter_name": {
+                                    "$id": "#/properties/response/items/properties/string_prepends/items/is_parameter_name",
+                                    "type": "boolean",
+                                    "title": "If the given string is the name of a parameter (else take the string as is)"
+                                },
+                                "value": {
+                                    "$id": "#/properties/response/items/properties/string_prepends/items/value",
+                                    "type": "string",
+                                    "title": "Value to use"
+                                }
+                            }
+                        }
+                    },
+                    "string_appends": {
+                        "$id": "#/properties/response/items/properties/string_appends",
+                        "type": "array",
+                        "title": "Values and / or parameters to append to a response URL",
+                        "items": {
+                            "$id": "#/properties/response/items/properties/string_appends/items",
+                            "type": "object",
+                            "title": "Each value to append to a response URL",
+                            "required": [
+                                "is_parameter_name",
+                                "value"
+                            ],
+                            "properties": {
+                                "is_parameter_name": {
+                                    "$id": "#/properties/response/items/properties/string_appends/items/is_parameter_name",
+                                    "type": "boolean",
+                                    "title": "If the given string is the name of a parameter (else take the string as is)"
+                                },
+                                "value": {
+                                    "$id": "#/properties/response/items/properties/string_appends/items/value",
+                                    "type": "string",
+                                    "title": "Value to use"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

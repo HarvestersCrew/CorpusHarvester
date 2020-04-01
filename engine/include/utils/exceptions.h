@@ -4,25 +4,46 @@
 #include <exception>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
-using std::string;
-
 class TestFailedException {
-  string _functionName;
-  string _expected;
-  string _found;
+  std::string _functionName;
+  std::string _expected;
+  std::string _found;
 
 public:
-  TestFailedException(string functionName, string expected, string found)
+  TestFailedException(std::string functionName, std::string expected,
+                      std::string found)
       : _functionName(functionName), _expected(expected), _found(found) {}
 
-  string what() const throw() {
-    string what = "[ERROR] Test of function " + _functionName +
-                  "() failed : expected [" + _expected + "], got [" + _found +
-                  "]";
+  std::string what() const throw() {
+    std::string what = " {{ ERROR }} Test of function " + _functionName +
+                       "() failed : expected [" + _expected + "], got [" +
+                       _found + "]";
     return what;
   }
+};
+
+class SettingNotFoundException : public std::runtime_error {
+
+public:
+  SettingNotFoundException(std::string &name)
+      : std::runtime_error("Setting with name '" + name +
+                           "' was not found in the database") {}
+};
+
+class CommandException : public std::runtime_error {
+
+public:
+  CommandException(std::string &error_message)
+      : std::runtime_error(error_message) {}
+};
+
+class ClosedDatabaseException : public std::runtime_error {
+
+public:
+  ClosedDatabaseException() : std::runtime_error("Database is closed") {}
 };
 
 class api_no_setting_exception : public std::exception {
@@ -37,6 +58,55 @@ private:
 class api_missing_settings_exception : public std::exception {
 public:
   const char *what() const throw();
+};
+
+class api_unrecognized_settings_exception : public std::exception {
+private:
+  std::string _msg;
+
+public:
+  api_unrecognized_settings_exception()
+      : _msg("An API setting was unrecognized.") {}
+  api_unrecognized_settings_exception(const std::string &key,
+                                      const std::string &val)
+      : _msg("An API setting value was unrecognized: " + key + " = " + val) {}
+  const char *what() const throw();
+};
+
+class download_no_200_exception : public std::exception {
+private:
+  std::string _msg;
+
+public:
+  download_no_200_exception() : _msg("HTTP call didn't succeed.") {}
+  download_no_200_exception(int http_code)
+      : _msg("HTTP call didn't succeed: " + http_code) {}
+  const char *what() const throw();
+};
+
+class logger_exception : public std::runtime_error {
+
+public:
+  logger_exception(std::string error_message)
+      : std::runtime_error(error_message) {}
+};
+
+class cli_parser_exception : public std::runtime_error {
+public:
+  cli_parser_exception(std::string error_message)
+      : std::runtime_error(error_message) {}
+};
+
+class cli_parser_bad_parse_exception : public std::runtime_error {
+public:
+  cli_parser_bad_parse_exception(std::string error_message)
+      : std::runtime_error(error_message) {}
+};
+
+class cli_parser_help_asked_exception : public std::runtime_error {
+public:
+  cli_parser_help_asked_exception()
+      : std::runtime_error("User asked for help on CLI") {}
 };
 
 #endif

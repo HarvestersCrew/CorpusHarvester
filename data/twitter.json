@@ -1,0 +1,93 @@
+{
+    "name": "Twitter",
+    "url": "https://api.twitter.com/1.1/search/tweets.json",
+    "method": "GET",
+    "api_type": "text",
+    "response_main_item": "text",
+    "path_to_results": [
+        "statuses"
+    ],
+    "request": [
+        {
+            "type": "string",
+            "required": true,
+            "position": "body",
+            "relevant": false,
+            "api_name": "q"
+        },
+        {
+            "type": "string",
+            "required": false,
+            "default_value": "en",
+            "position": "body",
+            "relevant": false,
+            "api_name": "lang"
+        },
+        {
+            "type": "string",
+            "values": [
+                "mixed",
+                "recent",
+                "popular"
+            ],
+            "required": false,
+            "default_value": "recent",
+            "position": "body",
+            "relevant": false,
+            "api_name": "result_type"
+        },
+        {
+            "type": "int",
+            "required": false,
+            "default_value": "100",
+            "position": "body",
+            "relevant": false,
+            "api_name": "count"
+        },
+        {
+            "type": "string",
+            "required": true,
+            "position": "header",
+            "relevant": false,
+            "api_name": "Authorization"
+        }
+    ],
+    "response": [
+        {
+            "type": "string",
+            "api_name": "id_str",
+            "name": "_api_id",
+            "relevant": true
+        },
+        {
+            "type": "string",
+            "name": "date",
+            "api_name": "created_at",
+            "relevant": true
+        },
+        {
+            "type": "string",
+            "name": "text",
+            "api_name": "text",
+            "relevant": true
+        },
+        {
+            "type": "int",
+            "name": "retweet",
+            "api_name": "retweet_count",
+            "relevant": true
+        },
+        {
+            "type": "int",
+            "name": "favorite",
+            "api_name": "favorite_count",
+            "relevant": true
+        },
+        {
+            "type": "string",
+            "name": "lang",
+            "api_name": "lang",
+            "relevant": true
+        }
+    ]
+}
