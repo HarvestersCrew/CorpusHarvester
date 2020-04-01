@@ -13,16 +13,21 @@
 # limitations under the License.
 
 # Executable name.
-BINARY_NAME=flutter_desktop_example
+BINARY_NAME=corpus_harvester_ui
 # Any extra source files to build.
 EXTRA_SOURCES=
 # Paths of any additional libraries to be bundled in the output directory.
 EXTRA_BUNDLED_LIBRARIES=
 # Extra flags (e.g., for library dependencies).
-SYSTEM_LIBRARIES=
+SYSTEM_LIBRARIES=gtk+-3.0 x11
 EXTRA_CXXFLAGS=
 EXTRA_CPPFLAGS=
 EXTRA_LDFLAGS=
+
+# The location of the flutter-desktop-embedding repository.
+FDE_ROOT=$(CURDIR)/../..
+# Plugins to include from the flutter-desktop-embedding plugins/ directory.
+PLUGIN_NAMES=corpus_harvester_plugin
 
 # Default build type. For a release build, set BUILD=release.
 # Currently this only sets NDEBUG, which is used to control the flags passed
@@ -56,6 +61,20 @@ ICU_DATA_NAME=icudtl.dat
 ICU_DATA_SOURCE=$(FLUTTER_EPHEMERAL_DIR)/$(ICU_DATA_NAME)
 FLUTTER_ASSETS_NAME=flutter_assets
 FLUTTER_ASSETS_SOURCE=$(FLUTTER_APP_BUILD_DIR)/$(FLUTTER_ASSETS_NAME)
+
+# Plugin-related additions
+# Currently plugins are refenced by direct source path. Eventually this should
+# be pub-based instead as on other platforms.
+PLUGINS_DIR=$(FDE_ROOT)
+# The name of each plugin library is the name of its directory with _plugin
+# appended. The exception is example_plugin (to avoid confusion with the
+# top-level example/ directory), so it's added here separately.
+PLUGIN_LIB_NAMES=$(foreach plugin,$(PLUGIN_NAMES),$(plugin))
+PLUGIN_LIBS=$(foreach plugin,$(PLUGIN_LIB_NAMES),$(OUT_DIR)/lib$(plugin).so)
+EXTRA_BUNDLED_LIBRARIES+=$(PLUGIN_LIBS)
+EXTRA_LDFLAGS+=$(patsubst %,-l%,$(PLUGIN_LIB_NAMES))
+# The plugin builds place all published headers in a top-level include/.
+EXTRA_CPPFLAGS+=-I$(OUT_DIR)/include
 
 # Bundle structure
 BUNDLE_OUT_DIR=$(OUT_DIR)/$(BUILD)
@@ -124,8 +143,27 @@ $(BIN_OUT): $(OBJ_FILES) $(ALL_LIBS_OUT)
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OBJ_FILES) $(LDFLAGS) -o $@
 
-$(WRAPPER_SOURCES) $(FLUTTER_LIB) $(ICU_DATA_SOURCE) $(FLUTTER_ASSETS_SOURCE): \
-	| sync
+$(WRAPPER_SOURCES) $(FLUTTER_LIB) $(ICU_DATA_SOURCE) $(FLUTTER_ASSETS_SOURCE) \
+	$(PLUGIN_NAMES): | sync
+
+# Implicit rules won't match phony targets, so list plugin builds explicitly.
+$(OUT_DIR)/libcorpus_harvester_plugin.so: | corpus_harvester_plugin
+
+# Compilation depends on plugin headers that are copied as part of the
+# plugin builds, so ensure those happen first.
+# TODO: Restructure to avoid the need for this.
+$(OBJ_FILES) : | $(EXTRA_BUNDLED_LIBRARIES)
+
+.PHONY: $(PLUGIN_NAMES)
+$(PLUGIN_NAMES):
+	make -C $(PLUGINS_DIR)/$@/linux \
+		OUT_DIR=$(OUT_DIR) \
+		FLUTTER_EPHEMERAL_DIR="$(abspath $(FLUTTER_EPHEMERAL_DIR))"
+
+# Plugin library bundling pattern.
+$(BUNDLE_LIB_DIR)/%: $(OUT_DIR)/%
+	mkdir -p $(BUNDLE_LIB_DIR)
+	cp $< $@
 
 $(FLUTTER_LIB_OUT): $(FLUTTER_LIB)
 	mkdir -p $(@D)

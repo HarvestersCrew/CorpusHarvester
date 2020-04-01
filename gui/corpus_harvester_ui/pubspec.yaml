@@ -16,6 +16,8 @@ dependencies:
 
   cupertino_icons: ^0.1.0
   intl: ^0.16.1
+  corpus_harvester_plugin:
+    path: ../corpus_harvester_plugin
 
 dev_dependencies:
   flutter_test:

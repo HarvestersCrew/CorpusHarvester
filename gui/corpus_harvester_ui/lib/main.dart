@@ -18,6 +18,7 @@ import 'package:example_flutter/home_page.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
+import 'package:corpus_harvester_plugin/corpus_harvester_plugin.dart' as corpus_harvester_plugin;
 
 void main() {
   // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
@@ -29,6 +30,10 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("HERE !");
+    corpus_harvester_plugin.CorpusHarvesterPlugin.platformVersion.then((version) {
+      print(version);
+    });
     return MaterialApp(
       title: 'Corpus Harvester UI',
       debugShowCheckedModeBanner: false,
