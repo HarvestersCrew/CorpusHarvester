@@ -47,75 +47,6 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   }
 }
 
-void CommandLineInterface::create_api() {
-  // TODO :: Creation of a new api
-}
-
-std::optional<Corpus *>
-CommandLineInterface::search_corpus(const std::string name) {
-
-  logger::debug("Search corpus : " + name);
-
-  // Get the indexer
-  sql::Connection *db = HarvesterDatabase::init();
-  Indexer indexer(db);
-
-  std::optional<Corpus *> corpus = Corpus::get_corpus_from_name(db, name);
-
-  return corpus;
-}
-
-Corpus CommandLineInterface::create_corpus(const std::string name) {
-
-  logger::info("Creation of " + name + "'s corpus in progress...");
-
-  // Download corresponding data
-  download_manager dl;
-  api_loader twitter(std::string("data/twitter.json"),
-                     std::string("data/twitter.env.json"));
-  std::list<shared_ptr<File>> out = twitter.query_and_parse({{"q", name}}, dl);
-  // api_loader tmdb(std::string("data/tmdb_poster.json"),
-  //                 std::string("data/tmdb.env.json"));
-  // std::list<shared_ptr<File>> out =
-  //     tmdb.query_and_parse({{"query", "star wars"}}, dl);
-
-  // Store the files
-  sql::Connection *db = HarvesterDatabase::init();
-  Storage storage(db);
-  storage.store_files(out);
-
-  // Index the downloaded data
-  Indexer indexer(db);
-  indexer.indexation(out);
-
-  // Request files which has at least one retweet and one favorite
-  SearchBuilder sb = indexer.get_search_builder();
-  std::list<shared_ptr<File>> tweets =
-      sb.add_tag_condition("retweet", "100", ">")
-          ->logical_and()
-          ->add_condition("id", "50", "<")
-          ->build();
-
-  // Create our corpus from the fetch data and save it
-  std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
-  Corpus corpus("50 premiers avec retweets > 100", now, tweets, "");
-  indexer.save_corpus(corpus);
-  HarvesterDatabase::close();
-
-  return corpus;
-}
-
-std::list<Corpus *> CommandLineInterface::list_corpus() {
-
-  sql::Connection *db = HarvesterDatabase::init();
-  Indexer indexer(db);
-
-  // TODO :: Problem here
-  std::list<Corpus *> corpus = Corpus::get_all_corpuses(db);
-
-  return corpus;
-}
-
 void CommandLineInterface::run() {
 
   map<string, string>::iterator itSubCommand;
@@ -140,7 +71,7 @@ void CommandLineInterface::run() {
 
         // Search for the corpus with the given name
         std::optional<Corpus *> optionalCorpus =
-            this->search_corpus(corpusName);
+            ManagerRequest::getInstance().visualisation_corpus(corpusName);
 
         // Check if we have a corpus
         if (optionalCorpus.has_value()) {
@@ -153,7 +84,11 @@ void CommandLineInterface::run() {
       } else {
         logger::info("List of all the corpus.");
 
-        std::list<Corpus *> corpusList = this->list_corpus();
+        std::map<std::string, std::string> filters, orders;
+
+        std::list<Corpus *> corpusList =
+            ManagerRequest::getInstance().visualisation_corpus(filters, orders);
+
         logger::info("Number of available corpus : " + corpusList.size());
 
         for (const Corpus *corpus : corpusList) {
@@ -204,7 +139,7 @@ void CommandLineInterface::run() {
         string corpusName = itSubCommand->second;
 
         // Create the corpus and show it
-        Corpus corpus = this->create_corpus(corpusName);
+        Corpus corpus = ManagerRequest::getInstance().create_corpus(corpusName);
         logger::info(corpus.to_string());
 
       } else {

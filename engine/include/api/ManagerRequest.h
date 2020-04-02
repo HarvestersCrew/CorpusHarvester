@@ -29,8 +29,6 @@ public:
    * Allow the user to add specific filters in order to search in the database
    * the corpus. Different kind of filters is available :
    *      - 'title' : Corpus which contains the title.
-   *      - 'latest' : Based on the input date, the latest corpus.
-   *      - 'oldest' : Based on the input date, the oldest corpus.
    *
    * Also, we allow the possibility of the user to order the result of the data
    * by :
@@ -42,7 +40,7 @@ public:
    *
    * @return std::list<Corpus> List of all the corpus.
    */
-  std::list<Corpus>
+  std::list<Corpus *>
   visualisation_corpus(std::map<std::string, std::string> &filters,
                        std::map<std::string, std::string> &orders);
 
@@ -76,6 +74,17 @@ public:
   std::list<File>
   visualisation_data(const std::map<std::string, std::string> &filters,
                      const std::map<std::string, std::string> &orders);
+
+  /**
+   * Create a corpus based on the name of it.
+   *
+   * // TODO :: Need to precise more parameters. Im' thinking about the
+   * different tags (list or map)
+   *
+   * @param name
+   * @return
+   */
+  Corpus create_corpus(const std::string name);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H
