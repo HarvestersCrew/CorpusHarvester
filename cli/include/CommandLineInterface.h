@@ -39,6 +39,11 @@ private:
   map<string, string> string_inputs;
 
   /**
+   * Map indicates if there are options
+   */
+  map<string, bool> bool_inputs;
+
+  /**
    * Print in the user terminal all the possible actions.
    */
   void show_help_menu();
