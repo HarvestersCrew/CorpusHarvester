@@ -6,7 +6,7 @@ Storage::Storage() {}
 
 void Storage::init_root(sql::Connection *db) {
   Setting root_folder_name = Setting(Setting::STORAGE_ROOT, db);
-  _root_folder_name = root_folder_name.get_value();
+  _root_folder_name = root_folder_name.get_value() + DOWNLOAD_FOLDER;
 }
 
 bool Storage::create_folders_in_root(std::string folder_path) const {

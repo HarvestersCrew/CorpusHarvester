@@ -13,6 +13,7 @@
 
 using std::shared_ptr;
 
+#define DOWNLOAD_FOLDER "download/"
 #define MD5_SPLIT 8
 
 /**
