@@ -2,8 +2,8 @@
 #define SEARCH_BUILDER_H
 
 #include "indexation/file.h"
-#include "indexation/request_builder.h"
 #include "utils/logger.h"
+#include "utils/request_builder.h"
 #include "utils/utils.h"
 #include <cppconn/driver.h>
 #include <cppconn/prepared_statement.h>
