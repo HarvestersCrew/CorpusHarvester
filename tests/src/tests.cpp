@@ -1,4 +1,5 @@
 #include "database/harvester_database.h"
+#include "test/apis_test.h"
 #include "test/cli_parser_test.h"
 #include "test/database_test.h"
 #include "test/indexation_test.h"
@@ -12,8 +13,9 @@ int main() {
   logger::set_level(logger::level::NONE);
   database_test();
   logger::set_level(logger::level::NONE);
-  cli_parser_test();
   storage_test();
+  apis_test();
+  cli_parser_test();
   indexation_test();
 
   HarvesterDatabase::init();
