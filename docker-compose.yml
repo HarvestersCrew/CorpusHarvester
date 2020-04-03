@@ -28,7 +28,9 @@ services:
         - type: bind
           source: ./
           target: /project
-          # read_only: true
+        - type: bind
+          source: ./data/apis
+          target: /tmp/stored/apis
         - harvester_bin:/project/bin/
     depends_on:
         - db
