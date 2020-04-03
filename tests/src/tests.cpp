@@ -10,8 +10,9 @@ int main() {
 
   logger_test();
   logger::set_level(logger::level::NONE);
-  cli_parser_test();
   database_test();
+  logger::set_level(logger::level::NONE);
+  cli_parser_test();
   storage_test();
   indexation_test();
 

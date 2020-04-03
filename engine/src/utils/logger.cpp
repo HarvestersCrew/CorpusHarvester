@@ -2,10 +2,7 @@
 
 logger::logger() {}
 
-logger::level logger::get_level() {
-  logger::init_from_file();
-  return logger::_level;
-}
+logger::level logger::get_level() { return logger::_level; }
 void logger::set_level(logger::level level) {
   if (!(level >= logger::level::DEBUG && level <= logger::level::NONE)) {
     throw logger_exception("Unsupported logging level");
@@ -16,27 +13,18 @@ void logger::set_level(const string &level) {
   logger::set_level((logger::level)stoi(level));
 }
 
-logger::output logger::get_output() {
-  logger::init_from_file();
-  return logger::_output;
-}
+logger::output logger::get_output() { return logger::_output; }
 void logger::set_output(logger::output output) {
   if (!(output >= logger::output::STDOUT && output <= logger::output::FILE)) {
     throw logger_exception("Unsupported logging output");
   }
   logger::_output = output;
-  if (output == logger::output::FILE) {
-    logger::set_output_path(LOGGER_DEFAULT_OUTPUT_PATH);
-  }
 }
 void logger::set_output(const string &output) {
   logger::set_output((logger::output)stoi(output));
 }
 
-string logger::get_output_path() {
-  logger::init_from_file();
-  return logger::_output_path;
-}
+string logger::get_output_path() { return logger::_output_path; }
 void logger::set_output_path(string path) {
   if (path.back() != '/') {
     path += '/';
@@ -52,6 +40,25 @@ string logger::get_full_output_path() {
   stringstream ss;
   ss << logger::get_output_path() << LOGGER_DEFAULT_FILENAME;
   return ss.str();
+}
+
+void logger::save_to_db() {
+  if ((logger::level)stoi(logger::_setting_level.get_value()) !=
+      logger::get_level()) {
+    logger::_setting_level.set_value(to_string(logger::get_level()));
+    logger::_setting_level.update(HarvesterDatabase::init());
+  }
+  if ((logger::output)stoi(logger::_setting_output.get_value()) !=
+      logger::get_output()) {
+    logger::_setting_output.set_value(to_string(logger::get_output()));
+    logger::_setting_output.update(HarvesterDatabase::init());
+    logger::debug("Saved logger output to DB");
+  }
+  if (logger::_setting_output_path.get_value() != logger::get_output_path()) {
+    logger::_setting_output_path.set_value(logger::get_output_path());
+    logger::_setting_output_path.update(HarvesterDatabase::init());
+    logger::debug("Saved logger output path to DB");
+  }
 }
 
 void logger::ostream_log(ostream &os, logger::level level, const string &msg) {
@@ -87,6 +94,10 @@ void logger::ostream_log(ostream &os, logger::level level, const string &msg) {
 }
 
 void logger::print_log(logger::level level, const string &msg) {
+  if (!logger::_initialized) {
+    logger::_backlog.push_back(make_pair(level, msg));
+    return;
+  }
   if (logger::get_output() == logger::output::FILE) {
     stringstream ss;
     logger::ostream_log(ss, level, msg);
@@ -101,49 +112,36 @@ void logger::print_log(logger::level level, const string &msg) {
   }
 }
 
-void logger::init_from_file() {
-  if (!logger::_initialized) {
-    logger::set_default_values();
-    logger::_initialized = true;
-    bool created = false;
-    try {
-      nlohmann::json settings = json_from_file(logger::_settings_file);
-      logger::set_level(settings.at("level").get<logger::level>());
-      logger::set_output(settings.at("output").get<logger::output>());
-      logger::set_output_path(settings.at("output_path").get<string>());
-      created = true;
-    } catch (const logger_exception &e) {
-      logger::error("Logger settings file content invalid, recreating it");
-    } catch (const nlohmann::detail::type_error &e) {
-      logger::error("Logger settings file content invalid, recreating it");
-    } catch (const std::runtime_error &e) {
-      logger::warning("Logger settings file not found, creating it");
-    } catch (const nlohmann::detail::parse_error &e) {
-      logger::error("Logger settings file content invalid, recreating it");
-    }
-
-    if (!created) {
-      logger::update_file_settings();
-    }
-
-    logger::info("Logger successfully initialized");
+void logger::start(Setting level, Setting output, Setting output_path) {
+  if (logger::_initialized) {
+    return;
   }
+  logger::_setting_level = level;
+  logger::_setting_output = output;
+  logger::_setting_output_path = output_path;
+  try {
+    logger::set_level(logger::_setting_level.get_value());
+    logger::set_output(logger::_setting_output.get_value());
+    logger::set_output_path(logger::_setting_output_path.get_value());
+  } catch (const logger_exception &e) {
+    logger::error("Invalid logger settings from DB, recreating it");
+    logger::set_level(Setting::get_default_value(Setting::LOGGER_LEVEL));
+    logger::set_output(Setting::get_default_value(Setting::LOGGER_OUTPUT));
+    logger::set_output_path(
+        Setting::get_default_value(Setting::LOGGER_OUTPUT_PATH));
+  }
+  logger::_initialized = true;
+  for (const auto &el : logger::_backlog) {
+    logger::print_log(el.first, el.second);
+  }
+  logger::_backlog.clear();
+  logger::save_to_db();
+  logger::debug("Logger successfully initialized");
 }
 
-void logger::update_file_settings() {
-  nlohmann::json json;
-  json["output"] = logger::get_output();
-  json["output_path"] = logger::get_output_path();
-  json["level"] = logger::get_level();
-  ofstream file(logger::_settings_file);
-  file << json;
-  file.close();
-}
-
-void logger::set_default_values() {
-  logger::set_level(logger::level::DEBUG);
-  logger::set_output(logger::output::STDOUT);
-  logger::set_output_path(LOGGER_DEFAULT_OUTPUT_PATH);
+void logger::stop() {
+  logger::_backlog.clear();
+  logger::_initialized = false;
 }
 
 void logger::debug(const string &msg) {
@@ -163,4 +161,7 @@ bool logger::_initialized = false;
 logger::level logger::_level;
 logger::output logger::_output;
 string logger::_output_path;
-string logger::_settings_file = LOGGER_SETTINGS_PATH;
+Setting logger::_setting_level;
+Setting logger::_setting_output;
+Setting logger::_setting_output_path;
+vector<pair<logger::level, string>> logger::_backlog;

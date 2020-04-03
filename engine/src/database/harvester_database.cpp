@@ -19,6 +19,7 @@ void HarvesterDatabase::drop() {
   if (_db == nullptr) {
     throw ClosedDatabaseException();
   }
+  logger::stop();
   sql::Statement *stmt = _db->createStatement();
   std::string drop_statements[] = {DROP_CORPUS_FILES_STATEMENT,
                                    DROP_CORPUS_STATEMENT, DROP_TAG_STATEMENT,
@@ -46,6 +47,10 @@ void HarvesterDatabase::create() {
     Setting::init_settings(_db);
     logger::debug("Init Setting tables : OK");
     delete stmt;
+    Setting logger_level(Setting::LOGGER_LEVEL, _db);
+    Setting logger_output(Setting::LOGGER_OUTPUT, _db);
+    Setting logger_output_path(Setting::LOGGER_OUTPUT_PATH, _db);
+    logger::start(logger_level, logger_output, logger_output_path);
   }
 }
 
@@ -64,6 +69,7 @@ sql::Connection *HarvesterDatabase::init() {
 }
 
 void HarvesterDatabase::close() {
+  logger::stop();
   if (_db != nullptr) {
     _db->close();
     delete _db;

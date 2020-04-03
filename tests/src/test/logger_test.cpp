@@ -19,6 +19,9 @@ void test_logger_set_output_path() {
   logger::set_output_path("/tmp");
   Assertion::assert_equals(__FUNCTION__, logger::get_output_path(), "/tmp/");
 
+  logger::set_output_path("./");
+  Assertion::assert_equals(__FUNCTION__, logger::get_output_path(), "./");
+
   try {
     logger::set_output_path("/random_path_ahzgruthrgke");
     Assertion::assert_throw(__FUNCTION__, "filesystem_error");
@@ -31,15 +34,6 @@ void test_logger_get_full_output_path() {
   logger::set_output_path("/tmp/");
   Assertion::assert_equals(__FUNCTION__, logger::get_full_output_path(),
                            "/tmp/" LOGGER_DEFAULT_FILENAME);
-}
-
-void test_logger_set_default_values() {
-  logger::set_default_values();
-  Assertion::assert_equals(__FUNCTION__, logger::level::DEBUG,
-                           logger::get_level());
-  Assertion::assert_equals(__FUNCTION__, logger::output::STDOUT,
-                           logger::get_output());
-  Assertion::assert_equals(__FUNCTION__, "/tmp/", logger::get_output_path());
 }
 
 void test_logger_get_ostream() {
@@ -182,6 +176,61 @@ void test_logger_error() {
   std::filesystem::remove(logger::get_full_output_path());
 }
 
+void test_logger_start() {
+  logger::set_output_path("./");
+  logger::set_level(logger::level::ERROR);
+  logger::set_output(logger::output::FILE);
+  logger::save_to_db();
+
+  logger::_initialized = false;
+  std::filesystem::remove(logger::get_full_output_path());
+
+  stringstream msg, expected, result, result2;
+  msg << "BLABLA";
+
+  logger::error(msg.str());
+  logger::ostream_log(expected, logger::level::ERROR, msg.str());
+
+  ifstream f1(logger::get_full_output_path());
+  result << f1.rdbuf();
+  f1.close();
+  Assertion::assert_equals(__FUNCTION__, "", result.str());
+  std::filesystem::remove(logger::get_full_output_path());
+
+  logger::start(
+      Setting(Setting::LOGGER_LEVEL, HarvesterDatabase::init()),
+      Setting(Setting::LOGGER_OUTPUT, HarvesterDatabase::init()),
+      Setting(Setting::LOGGER_OUTPUT_PATH, HarvesterDatabase::init()));
+  ifstream f2(logger::get_full_output_path());
+  result2 << f2.rdbuf();
+  f2.close();
+  Assertion::assert_equals(__FUNCTION__, expected.str(), result2.str());
+  std::filesystem::remove(logger::get_full_output_path());
+}
+
+void test_logger_save_to_db() {
+  logger::set_level(logger::level::DEBUG);
+  logger::set_output(logger::output::STDOUT);
+  logger::set_output_path("/tmp/");
+  logger::save_to_db();
+
+  logger::set_level(logger::level::WARNING);
+  logger::set_output(logger::output::FILE);
+  logger::set_output_path("./");
+  logger::save_to_db();
+
+  Assertion::assert_equals(
+      __FUNCTION__, "2",
+      Setting(Setting::LOGGER_LEVEL, HarvesterDatabase::init()).get_value());
+  Assertion::assert_equals(
+      __FUNCTION__, "1",
+      Setting(Setting::LOGGER_OUTPUT, HarvesterDatabase::init()).get_value());
+  Assertion::assert_equals(
+      __FUNCTION__, "./",
+      Setting(Setting::LOGGER_OUTPUT_PATH, HarvesterDatabase::init())
+          .get_value());
+}
+
 void logger_test() {
   std::cout << std::endl << "Logger tests : " << std::endl;
   Assertion::test(test_logger_set_level, "test_logger_set_level");
@@ -189,13 +238,12 @@ void logger_test() {
   Assertion::test(test_logger_set_output_path, "test_logger_set_output_path");
   Assertion::test(test_logger_get_full_output_path,
                   "test_logger_get_full_output_path");
-  Assertion::test(test_logger_set_default_values,
-                  "test_logger_set_default_values");
   Assertion::test(test_logger_get_ostream, "test_logger_get_ostream");
   Assertion::test(test_logger_output_log, "test_logger_output_log");
   Assertion::test(test_logger_debug, "test_logger_debug");
   Assertion::test(test_logger_info, "test_logger_info");
   Assertion::test(test_logger_warning, "test_logger_warning");
   Assertion::test(test_logger_error, "test_logger_error");
-  logger::set_output(logger::output::STDOUT);
+  Assertion::test(test_logger_start, "test_logger_start");
+  Assertion::test(test_logger_save_to_db, "test_logger_save_to_db");
 }
