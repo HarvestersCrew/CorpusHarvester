@@ -11,8 +11,7 @@ void HarvesterDatabase::open() {
     stmt->execute("CREATE DATABASE IF NOT EXISTS " HARVESTER_DATABASE_NAME ";");
 
     _db->setSchema(HARVESTER_DATABASE_NAME);
-  } else {
-    logger::debug("Database is already opened");
+    logger::debug("Database opened");
   }
 }
 
