@@ -14,6 +14,7 @@ void test_drop_create_empty() {
   HarvesterDatabase::drop();
   Assertion::assert_true(__FUNCTION__, HarvesterDatabase::empty());
   HarvesterDatabase::create();
+  logger::set_level(logger::level::NONE);
   Assertion::assert_false(__FUNCTION__, HarvesterDatabase::empty());
 }
 
@@ -34,6 +35,7 @@ void test_closed_db_exceptions() {
     Assertion::assert_throw(__FUNCTION__, "ClosedDatabaseException");
   } catch (ClosedDatabaseException &e) {
   }
+  logger::set_level(logger::level::NONE);
 }
 
 void database_test() {
