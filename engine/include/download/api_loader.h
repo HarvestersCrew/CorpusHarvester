@@ -1,6 +1,8 @@
 #ifndef API_LOADER_H
 #define API_LOADER_H
 
+#include "database/harvester_database.h"
+#include "database/setting.h"
 #include "download/api_parameter.h"
 #include "download/download_item.h"
 #include "download/download_manager.h"
@@ -24,8 +26,12 @@
 #define API_TYPE_TXT "text"
 #define API_TYPE_IMG "image"
 
+#define API_LOADER_SCHEMA_NAME "api_schema.json"
+
 using std::make_shared;
 using std::shared_ptr;
+using std::string;
+using std::stringstream;
 
 /**
  * API class, used to load API settings and use its tags
@@ -76,6 +82,12 @@ private:
    * @param j JSON of the API to load into the object
    */
   void init(const nlohmann::json &j);
+
+  /**
+   * Gets the full path of the API schema
+   * @return string Absolute path of the file to use
+   */
+  string get_api_schema_full_path() const;
 
 public:
   /**

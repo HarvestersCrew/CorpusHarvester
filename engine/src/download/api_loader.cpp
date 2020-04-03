@@ -33,7 +33,7 @@ void api_loader::set_parameter_request_default_value(const std::string &key,
 void api_loader::init(const nlohmann::json &j) {
 
   nlohmann::json_schema::json_validator validator;
-  nlohmann::json schema = json_from_file("data/api_schema.json");
+  nlohmann::json schema = json_from_file(this->get_api_schema_full_path());
   validator.set_root_schema(schema);
   validator.validate(j);
 
@@ -76,6 +76,13 @@ void api_loader::init(const nlohmann::json &j) {
   }
   if (!main_attribute_found)
     throw api_missing_settings_exception();
+}
+
+string api_loader::get_api_schema_full_path() const {
+  stringstream ss;
+  ss << Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init()).get_value()
+     << API_LOADER_SCHEMA_NAME;
+  return ss.str();
 }
 
 std::string api_loader::to_string() const {

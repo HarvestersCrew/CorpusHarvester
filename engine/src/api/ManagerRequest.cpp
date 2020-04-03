@@ -92,8 +92,8 @@ Corpus ManagerRequest::create_corpus(std::string name) {
 
   // Download corresponding data
   download_manager dl;
-  api_loader twitter(std::string("data/twitter.json"),
-                     std::string("data/twitter.env.json"));
+  api_loader twitter(std::string("data/apis/twitter.json"),
+                     std::string("data/apis/twitter.env.json"));
   std::list<shared_ptr<File>> out = twitter.query_and_parse({{"q", name}}, dl);
   // api_loader tmdb(std::string("data/tmdb_poster.json"),
   //                 std::string("data/tmdb.env.json"));
