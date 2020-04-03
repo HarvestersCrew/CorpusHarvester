@@ -26,8 +26,7 @@ void api_loader::set_parameter_request_default_value(const std::string &key,
       return;
     }
   }
-  throw std::runtime_error("Default parameter \"" + key +
-                           "\" not found in schema.");
+  throw api_default_not_in_schema(key);
 }
 
 void api_loader::init(const nlohmann::json &j) {

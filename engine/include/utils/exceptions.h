@@ -109,4 +109,11 @@ public:
       : std::runtime_error("User asked for help on CLI") {}
 };
 
+class api_default_not_in_schema : public std::runtime_error {
+public:
+  api_default_not_in_schema(std::string param)
+      : std::runtime_error("Default parameter '" + param +
+                           "' not found in schema") {}
+};
+
 #endif
