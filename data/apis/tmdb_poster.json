@@ -9,12 +9,6 @@
     ],
     "request": [
         {
-            "type": "int",
-            "api_name": "id",
-            "name": "_api_id",
-            "relevant": true
-        },
-        {
             "type": "string",
             "required": true,
             "position": "body",
@@ -53,6 +47,12 @@
         }
     ],
     "response": [
+        {
+            "type": "int",
+            "api_name": "id",
+            "name": "_api_id",
+            "relevant": true
+        },
         {
             "type": "string",
             "api_name": "title",
