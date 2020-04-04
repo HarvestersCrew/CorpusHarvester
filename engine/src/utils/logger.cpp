@@ -43,6 +43,9 @@ string logger::get_full_output_path() {
 }
 
 void logger::save_to_db() {
+  if (!logger::_initialized) {
+    throw logger_not_started_exception();
+  }
   if ((logger::level)stoi(logger::_setting_level.get_value()) !=
       logger::get_level()) {
     logger::_setting_level.set_value(to_string(logger::get_level()));

@@ -128,4 +128,9 @@ public:
       : std::runtime_error("API '" + name + "' not found by API discover") {}
 };
 
+class logger_not_started_exception : public std::runtime_error {
+public:
+  logger_not_started_exception() : std::runtime_error("Logger not started") {}
+};
+
 #endif
