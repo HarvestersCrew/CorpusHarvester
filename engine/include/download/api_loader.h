@@ -89,6 +89,39 @@ private:
    */
   string get_api_schema_full_path() const;
 
+  /**
+   * Manage the retrieval of the main value of the API (text, image...)
+   * @param result_to_manage JSON object corresponding to the object
+   * @param param definition of the given result
+   * @param file_to_save_to file to save results to
+   * @param dl download manager
+   */
+  void manage_main_value(const response_item &result_to_manage,
+                         shared_ptr<File> file_to_save_to,
+                         const download_manager &dl) const;
+
+  /**
+   * Manages the saving of a text by the API.
+   * Follows a call to manage_main_value
+   * @param api_result given value by the API
+   * @param file_to_save_to file to save results to
+   */
+  void manage_text(const std::string &api_result,
+                   shared_ptr<File> file_to_save_to) const;
+
+  /**
+   * Manages the retrieval of a media from the API.
+   * Follows a call to manage_main_value
+   * @param path_api given value by the API
+   * @param param definition of the given value
+   * @param file_to_save_to file to save results to
+   * @param dl download manager
+   */
+  void manage_media(const std::string &path_api,
+                    const shared_ptr<const api_parameter_response> param,
+                    shared_ptr<File> file_to_save_to,
+                    const download_manager &dl) const;
+
 public:
   /**
    * Creates the object from a JSON describing the API
@@ -137,39 +170,6 @@ public:
    */
   std::list<shared_ptr<File>> query_and_parse(const nlohmann::json &params,
                                               const download_manager &dl) const;
-
-  /**
-   * Manage the retrieval of the main value of the API (text, image...)
-   * @param result_to_manage JSON object corresponding to the object
-   * @param param definition of the given result
-   * @param file_to_save_to file to save results to
-   * @param dl download manager
-   */
-  void manage_main_value(const response_item &result_to_manage,
-                         shared_ptr<File> file_to_save_to,
-                         const download_manager &dl) const;
-
-  /**
-   * Manages the saving of a text by the API.
-   * Follows a call to manage_main_value
-   * @param api_result given value by the API
-   * @param file_to_save_to file to save results to
-   */
-  void manage_text(const std::string &api_result,
-                   shared_ptr<File> file_to_save_to) const;
-
-  /**
-   * Manages the retrieval of a media from the API.
-   * Follows a call to manage_main_value
-   * @param path_api given value by the API
-   * @param param definition of the given value
-   * @param file_to_save_to file to save results to
-   * @param dl download manager
-   */
-  void manage_media(const std::string &path_api,
-                    const shared_ptr<const api_parameter_response> param,
-                    shared_ptr<File> file_to_save_to,
-                    const download_manager &dl) const;
 
   /**
    * Gets a request parameter named as
