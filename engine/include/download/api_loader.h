@@ -192,7 +192,8 @@ public:
   /**
    * Gets vector of available request parameters
    */
-  const std::vector<shared_ptr<api_parameter_request>> &get_requests() const;
+  const std::vector<shared_ptr<api_parameter_request>> &
+  get_request_parameters() const;
 };
 
 #endif

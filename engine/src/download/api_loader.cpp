@@ -289,6 +289,6 @@ api_loader::find_response_parameter(const std::string &name) const {
 }
 
 const std::vector<shared_ptr<api_parameter_request>> &
-api_loader::get_requests() const {
+api_loader::get_request_parameters() const {
   return this->_requests;
 }
