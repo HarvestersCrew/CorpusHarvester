@@ -84,6 +84,11 @@ void Setting::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   db->isClosed();
 }
 
+void Setting::set_default_value(const std::string &name,
+                                const std::string &value) {
+  Setting::_default_settings.at(name) = value;
+}
+
 void Setting::init_settings(sql::Connection *db) {
   Setting setting = Setting();
   for (auto &pair : _default_settings) {

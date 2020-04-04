@@ -83,6 +83,9 @@ public:
   void set_name(std::string name) { _name = name; }
   void set_value(std::string value) { _value = value; }
 
+  static void set_default_value(const std::string &name,
+                                const std::string &value);
+
   /**
    * Initializes the default settings in the database
    * @param db the database
