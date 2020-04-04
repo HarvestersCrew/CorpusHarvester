@@ -116,4 +116,16 @@ public:
                            "' not found in schema") {}
 };
 
+class api_twice_same_name : public std::runtime_error {
+public:
+  api_twice_same_name(std::string name)
+      : std::runtime_error("Another '" + name + "' already exists") {}
+};
+
+class api_factory_name_not_found : public std::runtime_error {
+public:
+  api_factory_name_not_found(std::string name)
+      : std::runtime_error("API '" + name + "' not found by API discover") {}
+};
+
 #endif

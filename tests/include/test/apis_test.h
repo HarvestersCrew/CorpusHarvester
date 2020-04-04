@@ -8,12 +8,14 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
-#include <vector>
+#include <string>
+#include <unordered_map>
 
 using std::ofstream;
 using std::shared_ptr;
+using std::string;
 using std::stringstream;
-using std::vector;
+using std::unordered_map;
 
 #define APIS_TEST_CURRENT_APIS_NUMBER 4
 

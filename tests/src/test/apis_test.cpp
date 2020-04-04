@@ -8,7 +8,7 @@ void test_apis_get_apis() {
   fake_json << "blabla";
   fake_json.close();
 
-  vector<shared_ptr<api_loader>> apis = ApiFactory::get_apis();
+  unordered_map<string, shared_ptr<api_loader>> apis = ApiFactory::get_apis();
   Assertion::assert_equals(__FUNCTION__, APIS_TEST_CURRENT_APIS_NUMBER,
                            apis.size());
 

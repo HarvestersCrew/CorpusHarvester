@@ -19,6 +19,7 @@
 
 namespace fs = std::filesystem;
 using std::make_pair;
+using std ::make_shared;
 using std::nullopt;
 using std::optional;
 using std::pair;
@@ -31,8 +32,8 @@ using std::vector;
 
 class ApiFactory {
 private:
-  /** List of api_loader found */
-  static optional<vector<shared_ptr<api_loader>>> apis;
+  /** Map of name and api_loader found */
+  static optional<unordered_map<string, shared_ptr<api_loader>>> apis;
 
   /**
    * Discovers and loads all compatible APIs from path
@@ -51,9 +52,18 @@ public:
    * Returns a const ref to the found APIs but first discovers them if there the
    * optional isn't initialized
    */
-  static const vector<shared_ptr<api_loader>> &get_apis();
+  static const unordered_map<string, shared_ptr<api_loader>> &get_apis();
 
+  /**
+   * Returns a list of the API names
+   */
   static vector<string> get_api_names();
+
+  /**
+   * Returns the pointer to an api_loader given its name
+   * @throw api_factory_name_not_found if the given API is not found in the list
+   */
+  static const shared_ptr<api_loader> get_api(const string &name);
 };
 
 #endif

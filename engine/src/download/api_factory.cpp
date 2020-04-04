@@ -1,6 +1,7 @@
 #include "download/api_factory.h"
 
-optional<vector<shared_ptr<api_loader>>> ApiFactory::apis = nullopt;
+optional<unordered_map<string, shared_ptr<api_loader>>> ApiFactory::apis =
+    nullopt;
 
 string ApiFactory::get_apis_folder_path() {
   stringstream ss;
@@ -14,9 +15,10 @@ void ApiFactory::discover_from_path(const string &path) {
   if (ApiFactory::apis.has_value()) {
     ApiFactory::apis.value().clear();
   } else {
-    ApiFactory::apis = vector<shared_ptr<api_loader>>();
+    ApiFactory::apis = unordered_map<string, shared_ptr<api_loader>>();
   }
-  vector<shared_ptr<api_loader>> &apis = ApiFactory::apis.value();
+  unordered_map<string, shared_ptr<api_loader>> &apis =
+      ApiFactory::apis.value();
 
   logger::debug("Discovering APIs from " + path);
 
@@ -72,16 +74,33 @@ void ApiFactory::discover_from_path(const string &path) {
   for (const auto &el : apis_found) {
 
     try {
+
+      shared_ptr<api_loader> ptr;
+
       if (el.second.second.has_value()) {
-        const auto &inserted = apis.emplace_back(
-            new api_loader(el.second.first.value(), el.second.second.value()));
-        logger::debug("API '" + inserted->get_name() +
+        ptr = make_shared<api_loader>(el.second.first.value(),
+                                      el.second.second.value());
+      } else {
+        ptr = make_shared<api_loader>(el.second.first.value());
+      }
+
+      if (apis.find(ptr->get_name()) != apis.end()) {
+        throw api_twice_same_name(ptr->get_name());
+      }
+
+      apis.emplace(ptr->get_name(), ptr);
+
+      if (el.second.second.has_value()) {
+        logger::debug("API '" + ptr->get_name() +
                       "' loaded with its provided default values");
       } else {
-        const auto &inserted =
-            apis.emplace_back(new api_loader(el.second.first.value()));
-        logger::debug("API '" + inserted->get_name() + "' loaded");
+        logger::debug("API '" + ptr->get_name() + "' loaded");
       }
+
+    } catch (const api_twice_same_name &e) {
+      logger::error(
+          "API discover: found twice the same API name, skipping the latest");
+      logger::error(e.what());
     } catch (const api_unrecognized_settings_exception &e) {
       logger::error("API discover: unrecognized setting for " +
                     el.second.first.value() + ", skipping it");
@@ -104,7 +123,7 @@ void ApiFactory::discover_from_path(const string &path) {
   logger::info("API discover: " + to_string(apis.size()) + " APIs were loaded");
 }
 
-const vector<shared_ptr<api_loader>> &ApiFactory::get_apis() {
+const unordered_map<string, shared_ptr<api_loader>> &ApiFactory::get_apis() {
   if (!ApiFactory::apis.has_value()) {
     ApiFactory::discover_from_path(ApiFactory::get_apis_folder_path());
   }
@@ -114,7 +133,9 @@ const vector<shared_ptr<api_loader>> &ApiFactory::get_apis() {
 vector<string> ApiFactory::get_api_names() {
   vector<string> names;
   for (const auto &el : ApiFactory::get_apis()) {
-    names.push_back(el->get_name());
+    names.push_back(el.first);
   }
   return names;
 }
+
+const shared_ptr<api_loader> ApiFactory::get_api(const string &name) {}
