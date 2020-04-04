@@ -19,7 +19,7 @@ int main() {
   } catch (const ClosedDatabaseException &e) {
   }
 
-  // logger_test();
+  logger_test();
   database_test();
   storage_test();
   apis_test();
