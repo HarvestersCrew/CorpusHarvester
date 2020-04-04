@@ -138,4 +138,10 @@ vector<string> ApiFactory::get_api_names() {
   return names;
 }
 
-const shared_ptr<api_loader> ApiFactory::get_api(const string &name) {}
+const shared_ptr<api_loader> ApiFactory::get_api(const string &name) {
+  auto el = ApiFactory::get_apis().find(name);
+  if (el == ApiFactory::get_apis().end()) {
+    throw api_factory_name_not_found(name);
+  }
+  return el->second;
+}
