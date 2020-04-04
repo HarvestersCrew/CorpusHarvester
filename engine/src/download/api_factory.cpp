@@ -1,5 +1,7 @@
 #include "download/api_factory.h"
 
+optional<vector<shared_ptr<api_loader>>> ApiFactory::apis = nullopt;
+
 string ApiFactory::get_apis_folder_path() {
   stringstream ss;
   ss << Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init()).get_value();
@@ -7,14 +9,20 @@ string ApiFactory::get_apis_folder_path() {
   return ss.str();
 }
 
-vector<shared_ptr<api_loader>>
-ApiFactory::discover_from_path(const string &path) {
-  vector<shared_ptr<api_loader>> apis;
+void ApiFactory::discover_from_path(const string &path) {
+
+  if (ApiFactory::apis.has_value()) {
+    ApiFactory::apis.value().clear();
+  } else {
+    ApiFactory::apis = vector<shared_ptr<api_loader>>();
+  }
+  vector<shared_ptr<api_loader>> &apis = ApiFactory::apis.value();
+
   logger::debug("Discovering APIs from " + path);
 
   if (!fs::exists(path)) {
     logger::warning("Can't discover APIs, aborting - missing folder: " + path);
-    return apis;
+    return;
   }
 
   /** Map of APIs: key is the stem ("twitter", "tmdb"...)
@@ -94,5 +102,11 @@ ApiFactory::discover_from_path(const string &path) {
   }
 
   logger::info("API discover: " + to_string(apis.size()) + " APIs were loaded");
-  return apis;
+}
+
+const vector<shared_ptr<api_loader>> &ApiFactory::get_apis() {
+  if (!ApiFactory::apis.has_value()) {
+    ApiFactory::discover_from_path(ApiFactory::get_apis_folder_path());
+  }
+  return ApiFactory::apis.value();
 }

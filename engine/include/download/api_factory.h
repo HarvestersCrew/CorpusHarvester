@@ -30,9 +30,28 @@ using std::unordered_map;
 using std::vector;
 
 class ApiFactory {
+private:
+  /** List of api_loader found */
+  static optional<vector<shared_ptr<api_loader>>> apis;
+
+  /**
+   * Discovers and loads all compatible APIs from path
+   * @param path Folder path to look into (non recursive)
+   */
+  static void discover_from_path(const string &path);
+
 public:
+  /**
+   * Returns the path to the app APIs folder
+   * @return string Path to the folder
+   */
   static string get_apis_folder_path();
-  static vector<shared_ptr<api_loader>> discover_from_path(const string &path);
+
+  /**
+   * Returns a const ref to the found APIs but first discovers them if there the
+   * optional isn't initialized
+   */
+  static const vector<shared_ptr<api_loader>> &get_apis();
 };
 
 #endif

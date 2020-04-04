@@ -15,7 +15,7 @@ using std::shared_ptr;
 using std::stringstream;
 using std::vector;
 
-void discover_from_path_test();
+void test_apis_get_apis();
 void apis_test();
 
 #endif
