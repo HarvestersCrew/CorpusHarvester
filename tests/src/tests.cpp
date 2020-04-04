@@ -1,13 +1,18 @@
 #include "database/harvester_database.h"
+#include "database/setting.h"
 #include "test/apis_test.h"
 #include "test/cli_parser_test.h"
 #include "test/database_test.h"
 #include "test/indexation_test.h"
 #include "test/logger_test.h"
 #include "test/storage_test.h"
+#include "utils/logger.h"
 
 int main() {
   std::cout << std::endl << "Tests : " << std::endl;
+
+  Setting::set_default_value(Setting::LOGGER_LEVEL,
+                             std::to_string(logger::level::NONE));
 
   try {
     HarvesterDatabase::drop();
@@ -15,9 +20,7 @@ int main() {
   }
 
   // logger_test();
-  logger::set_level(logger::level::NONE);
   database_test();
-  logger::set_level(logger::level::NONE);
   storage_test();
   apis_test();
   cli_parser_test();
