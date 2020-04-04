@@ -13,6 +13,10 @@
 #define API_PARAMETER_STRING "string"
 #define API_PARAMETER_IMAGE_LINK "image_link"
 
+using std::optional;
+using std::string;
+using std::vector;
+
 /**
  * Common class for request and response parameters
  */
@@ -23,6 +27,9 @@ class api_parameter_base {
   friend class response_item;
 
 public:
+  /** Value describing the type of the parameter */
+  enum value_type { STRING, INT, INT64, IMAGE_LINK };
+
   /**
    * String of current state
    * @return std::string state of the parameter
@@ -41,8 +48,8 @@ public:
    */
   virtual std::string json_value_to_string(const nlohmann::json &val) const;
 
-  /** Value describing the type of the parameter */
-  enum value_type { STRING, INT, INT64, IMAGE_LINK };
+  virtual string get_name() const;
+  virtual value_type get_value_type() const;
 
 protected:
   /**
@@ -95,6 +102,10 @@ public:
    * @param val value to set as default
    */
   void set_default_value(const std::string &val);
+
+  bool get_required() const;
+  optional<string> get_default_value() const;
+  vector<string> get_values() const;
 
 private:
   /** Position of the parameter in the HTTP request (body, header...) */

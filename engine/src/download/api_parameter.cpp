@@ -68,6 +68,12 @@ api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
   return result;
 }
 
+string api_parameter_base::get_name() const { return this->_name; }
+
+api_parameter_base::value_type api_parameter_base::get_value_type() const {
+  return this->_value_type;
+}
+
 api_parameter_request::api_parameter_request(const nlohmann::json &json)
     : api_parameter_base(json) {
   this->_position = json.at("position").get<std::string>();
@@ -135,6 +141,16 @@ void api_parameter_request::set_default_value(const std::string &val) {
   if (!this->is_value_valid(val))
     throw std::runtime_error("Default value incompatible");
   this->_default_value = val;
+}
+
+bool api_parameter_request::get_required() const { return this->_required; }
+
+optional<string> api_parameter_request::get_default_value() const {
+  return this->_default_value;
+}
+
+vector<string> api_parameter_request::get_values() const {
+  return this->_values;
 }
 
 api_parameter_response::api_parameter_response(const nlohmann::json &json)
