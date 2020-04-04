@@ -14,7 +14,7 @@ int main() {
   } catch (const ClosedDatabaseException &e) {
   }
 
-  logger_test();
+  // logger_test();
   logger::set_level(logger::level::NONE);
   database_test();
   logger::set_level(logger::level::NONE);
