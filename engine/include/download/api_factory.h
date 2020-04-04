@@ -52,6 +52,8 @@ public:
    * optional isn't initialized
    */
   static const vector<shared_ptr<api_loader>> &get_apis();
+
+  static vector<string> get_api_names();
 };
 
 #endif

@@ -15,7 +15,10 @@ using std::shared_ptr;
 using std::stringstream;
 using std::vector;
 
+#define APIS_TEST_CURRENT_APIS_NUMBER 4
+
 void test_apis_get_apis();
+void test_apis_get_names();
 void apis_test();
 
 #endif

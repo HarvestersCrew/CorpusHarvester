@@ -110,3 +110,11 @@ const vector<shared_ptr<api_loader>> &ApiFactory::get_apis() {
   }
   return ApiFactory::apis.value();
 }
+
+vector<string> ApiFactory::get_api_names() {
+  vector<string> names;
+  for (const auto &el : ApiFactory::get_apis()) {
+    names.push_back(el->get_name());
+  }
+  return names;
+}
