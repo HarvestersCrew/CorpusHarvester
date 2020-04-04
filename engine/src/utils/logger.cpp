@@ -115,13 +115,13 @@ void logger::print_log(logger::level level, const string &msg) {
   }
 }
 
-void logger::start(Setting level, Setting output, Setting output_path) {
+void logger::start(sql::Connection *db) {
   if (logger::_initialized) {
     return;
   }
-  logger::_setting_level = level;
-  logger::_setting_output = output;
-  logger::_setting_output_path = output_path;
+  logger::_setting_level = Setting(Setting::LOGGER_LEVEL, db);
+  logger::_setting_output = Setting(Setting::LOGGER_OUTPUT, db);
+  logger::_setting_output_path = Setting(Setting::LOGGER_OUTPUT_PATH, db);
   try {
     logger::set_level(logger::_setting_level.get_value());
     logger::set_output(logger::_setting_output.get_value());

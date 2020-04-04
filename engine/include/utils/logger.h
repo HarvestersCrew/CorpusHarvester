@@ -59,13 +59,11 @@ public:
   static string get_full_output_path();
 
   /**
-   * Calling this method checks and sets the given settings from the DB and
+   * Calling this method checks and sets the settings from the DB and
    * starts outputting previously saved and future logs
-   * @param level DB corresponding to the level
-   * @param output DB corresponding to the output
-   * @param output_path DB corresponding to the output_path
+   * @param db DB to use to load the settings
    */
-  static void start(Setting level, Setting output, Setting output_path);
+  static void start(sql::Connection *db);
 
   /**
    * Stops the logging and starts saving logs in the backlog

@@ -202,10 +202,8 @@ void test_logger_start() {
   Assertion::assert_equals(__FUNCTION__, "", result.str());
   std::filesystem::remove(logger::get_full_output_path());
 
-  logger::start(
-      Setting(Setting::LOGGER_LEVEL, HarvesterDatabase::init()),
-      Setting(Setting::LOGGER_OUTPUT, HarvesterDatabase::init()),
-      Setting(Setting::LOGGER_OUTPUT_PATH, HarvesterDatabase::init()));
+  // Inits (or not) the DB and starts the logger
+  HarvesterDatabase::init();
   ifstream f2(logger::get_full_output_path());
   result2 << f2.rdbuf();
   f2.close();

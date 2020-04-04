@@ -61,10 +61,7 @@ bool HarvesterDatabase::empty() {
 sql::Connection *HarvesterDatabase::init() {
   HarvesterDatabase::open();
   HarvesterDatabase::create();
-  Setting logger_level(Setting::LOGGER_LEVEL, _db);
-  Setting logger_output(Setting::LOGGER_OUTPUT, _db);
-  Setting logger_output_path(Setting::LOGGER_OUTPUT_PATH, _db);
-  logger::start(logger_level, logger_output, logger_output_path);
+  logger::start(_db);
   return _db;
 }
 
