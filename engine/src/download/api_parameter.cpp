@@ -70,10 +70,6 @@ api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
 
 string api_parameter_base::get_name() const { return this->_name; }
 
-api_parameter_base::value_type api_parameter_base::get_value_type() const {
-  return this->_value_type;
-}
-
 api_parameter_request::api_parameter_request(const nlohmann::json &json)
     : api_parameter_base(json) {
   this->_position = json.at("position").get<std::string>();

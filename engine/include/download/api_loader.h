@@ -35,6 +35,16 @@ using std::stringstream;
 
 /**
  * API class, used to load API settings and use its tags
+ *
+ * api_type_string() returns a string to describe what format this API retrieves
+ * (image, text...)
+ *
+ * query_and_parse(json params, download_manager dl) takes the given parameters
+ * and the download manager to load into a list of File the response of the API
+ *
+ * get_request_parameters() retrieves a list of api_parameter_request that
+ * describe what can be used to configure query_and_parse
+ *
  */
 class api_loader {
 

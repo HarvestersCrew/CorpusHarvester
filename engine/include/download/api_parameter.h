@@ -19,6 +19,11 @@ using std::vector;
 
 /**
  * Common class for request and response parameters
+ *
+ * get_type_string() gives the parameter type in string (int, string...)
+ *
+ * get_name() gives the name of the parameter to use when referencing it
+ *
  */
 class api_parameter_base {
 
@@ -49,7 +54,6 @@ public:
   virtual std::string json_value_to_string(const nlohmann::json &val) const;
 
   virtual string get_name() const;
-  virtual value_type get_value_type() const;
 
 protected:
   /**
@@ -71,6 +75,16 @@ protected:
 
 /**
  * Class extending the base parameter to specify a request parameter
+ * @see api_parameter_base
+ *
+ * get_required() tells if the parameter is required by the API
+ *
+ * get_default_value() gives an optional with a string of the default value if
+ * it is set
+ *
+ * get_values() gives a list of the only value allowed by this parameter (if
+ * empty, all value of the valid type are accepted)
+ *
  */
 class api_parameter_request : public api_parameter_base {
   friend class api_loader;

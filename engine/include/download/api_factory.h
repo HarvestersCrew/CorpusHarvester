@@ -30,6 +30,19 @@ using std::to_string;
 using std::unordered_map;
 using std::vector;
 
+/**
+ * Class used to get automatically load API files and retrieve informations
+ * about them
+ *
+ * get_apis() returns a map of loaded APIs with their name in first and the
+ * pointer to its api_loader in second
+ *
+ * get_api_names() returns only the names of the loaded APIs, useful for user
+ * interfaces
+ *
+ * get_api(string api_name) retrieves the api_loader of the given name or throws
+ * an exception
+ */
 class ApiFactory {
 private:
   /** Map of name and api_loader found */
