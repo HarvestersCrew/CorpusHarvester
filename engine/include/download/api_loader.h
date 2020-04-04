@@ -188,6 +188,11 @@ public:
    */
   std::optional<shared_ptr<api_parameter_response>>
   find_response_parameter(const std::string &name) const;
+
+  /**
+   * Gets vector of available request parameters
+   */
+  const std::vector<shared_ptr<api_parameter_request>> &get_requests() const;
 };
 
 #endif
