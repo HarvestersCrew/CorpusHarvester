@@ -9,6 +9,11 @@
 int main() {
   std::cout << std::endl << "Tests : " << std::endl;
 
+  try {
+    HarvesterDatabase::drop();
+  } catch (const ClosedDatabaseException &e) {
+  }
+
   logger_test();
   logger::set_level(logger::level::NONE);
   database_test();
