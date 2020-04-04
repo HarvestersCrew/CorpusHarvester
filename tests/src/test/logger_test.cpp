@@ -69,6 +69,7 @@ void test_logger_output_log() {
   std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::DEBUG);
   logger::set_output(logger::output::FILE);
+  logger::_initialized = true;
 
   stringstream msg1, msg2, expected, result;
   msg1 << "TEST MSG";
@@ -93,6 +94,7 @@ void test_logger_debug() {
   std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::DEBUG);
   logger::set_output(logger::output::FILE);
+  logger::_initialized = true;
 
   stringstream msg, expected, result;
   msg << "BLABLA";
@@ -115,6 +117,7 @@ void test_logger_info() {
   std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::INFO);
   logger::set_output(logger::output::FILE);
+  logger::_initialized = true;
 
   stringstream msg, expected, result;
   msg << "BLABLA";
@@ -137,6 +140,7 @@ void test_logger_warning() {
   std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::WARNING);
   logger::set_output(logger::output::FILE);
+  logger::_initialized = true;
 
   stringstream msg, expected, result;
   msg << "BLABLA";
@@ -159,6 +163,7 @@ void test_logger_error() {
   std::filesystem::remove(logger::get_full_output_path());
   logger::set_level(logger::level::ERROR);
   logger::set_output(logger::output::FILE);
+  logger::_initialized = true;
 
   stringstream msg, expected, result;
   msg << "BLABLA";
