@@ -26,10 +26,8 @@ int main() {
   cli_parser_test();
   indexation_test();
 
-  try {
-    HarvesterDatabase::drop();
-  } catch (const ClosedDatabaseException &e) {
-  }
+  HarvesterDatabase::open();
+  HarvesterDatabase::drop();
 
   std::cout << std::endl
             << "Runs : "
