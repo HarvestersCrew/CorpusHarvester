@@ -22,6 +22,9 @@ using std::unordered_map;
 using std::unordered_set;
 using std::vector;
 
+/**
+ * Interface to make requests against APIs
+ */
 class ApiRequestBuilder {
 
   friend void test_types();

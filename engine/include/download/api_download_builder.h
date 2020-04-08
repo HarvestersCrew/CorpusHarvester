@@ -14,6 +14,14 @@ using std::list;
 using std::shared_ptr;
 using std::vector;
 
+/**
+ * Downloads a batch request
+ * Prepare the requests by preparing this object with ApiRequestBuilder
+ * interface
+ * Then retrieves the file by calling the build() method
+ *
+ * For now, only specified requests are supported, no request by type
+ */
 class ApiDownloadBuilder : public ApiRequestBuilder {
 
 private:
