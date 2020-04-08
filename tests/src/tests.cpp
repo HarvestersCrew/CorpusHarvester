@@ -1,21 +1,36 @@
 #include "database/harvester_database.h"
+#include "database/setting.h"
+#include "test/api_parameter_test.h"
+#include "test/api_request_builder_test.h"
+#include "test/apis_test.h"
 #include "test/cli_parser_test.h"
 #include "test/database_test.h"
 #include "test/indexation_test.h"
 #include "test/logger_test.h"
 #include "test/storage_test.h"
+#include "utils/logger.h"
 
 int main() {
   std::cout << std::endl << "Tests : " << std::endl;
 
+  Setting::set_default_value(Setting::LOGGER_LEVEL,
+                             std::to_string(logger::level::NONE));
+
+  try {
+    HarvesterDatabase::drop();
+  } catch (const ClosedDatabaseException &e) {
+  }
+
   logger_test();
-  logger::set_level(logger::level::NONE);
-  cli_parser_test();
   database_test();
   storage_test();
+  apis_test();
+  api_parameter_test();
+  api_request_builder_test();
+  cli_parser_test();
   indexation_test();
 
-  HarvesterDatabase::init();
+  HarvesterDatabase::open();
   HarvesterDatabase::drop();
 
   std::cout << std::endl

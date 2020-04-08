@@ -1,27 +1,31 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include "database/harvester_database.h"
+#include "database/setting.h"
 #include "utils/exceptions.h"
-#include "utils/nlohmann/json.hpp"
 #include "utils/utils.h"
 #include <filesystem>
 #include <fstream>
 #include <ostream>
 #include <sstream>
 #include <string>
-#include <system_error>
+#include <utility>
+#include <vector>
 
-#define LOGGER_DEFAULT_OUTPUT_PATH "/tmp/"
 #define LOGGER_DEFAULT_FILENAME "harvester_logs"
-#define LOGGER_SETTINGS_PATH "./data/logger_settings.env.json"
 
 using std::cout;
 using std::endl;
+using std::make_pair;
 using std::ofstream;
 using std::ostream;
+using std::pair;
 using std::stoi;
 using std::string;
 using std::stringstream;
+using std::to_string;
+using std::vector;
 
 class Setting;
 
@@ -34,6 +38,7 @@ class logger {
   friend void test_logger_info();
   friend void test_logger_warning();
   friend void test_logger_error();
+  friend void test_logger_start();
 
 public:
   logger();
@@ -54,9 +59,16 @@ public:
   static string get_full_output_path();
 
   /**
-   * Gives the attributes what we consider default values
+   * Calling this method checks and sets the settings from the DB and
+   * starts outputting previously saved and future logs
+   * @param db DB to use to load the settings
    */
-  static void set_default_values();
+  static void start(sql::Connection *db);
+
+  /**
+   * Stops the logging and starts saving logs in the backlog
+   */
+  static void stop();
 
   /**
    * Logs a debug message
@@ -80,9 +92,9 @@ public:
   static void error(const string &msg);
 
   /**
-   * Saves settings to the settings file
+   * Saves the current settings to the DB (if different)
    */
-  static void update_file_settings();
+  static void save_to_db();
 
 private:
   /** Minimal level to output */
@@ -91,10 +103,16 @@ private:
   static output _output;
   /** Directory to use if outputting to files */
   static string _output_path;
-  /** If settings were loaded from file */
+  /** If settings were loaded from DB */
   static bool _initialized;
-  /** Path to the settings file */
-  static string _settings_file;
+
+  /** DB settings of the logger */
+  static Setting _setting_level;
+  static Setting _setting_output;
+  static Setting _setting_output_path;
+
+  /** Backlog of logs sent before the logger was initialized */
+  static vector<pair<logger::level, string>> _backlog;
 
   /**
    * Used to updated an ostream based on a given level and message.
@@ -109,11 +127,6 @@ private:
    * @param msg message to log
    */
   static void print_log(logger::level level, const string &msg);
-
-  /**
-   * Inits if necessary the settings from the file
-   */
-  static void init_from_file();
 };
 
 #endif

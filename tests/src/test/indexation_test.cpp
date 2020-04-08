@@ -11,6 +11,7 @@ void test_create_database() {
   HarvesterDatabase::open();
   HarvesterDatabase::drop();
   HarvesterDatabase::create();
+  logger::set_level(logger::level::NONE);
   sql::Statement *stmt = indexer_db->createStatement();
   sql::ResultSet *res_show = stmt->executeQuery("SHOW TABLES");
 
@@ -94,6 +95,7 @@ void test_create_database2() {
   sql::ResultSet *res_select = stmt->executeQuery(request);
   int db_length = res_select->rowsCount();
   HarvesterDatabase::create();
+  logger::set_level(logger::level::NONE);
   res_select = stmt->executeQuery(request);
   // Tests if the amount of data in the database doesn't change after a
   // no-dropping database creation

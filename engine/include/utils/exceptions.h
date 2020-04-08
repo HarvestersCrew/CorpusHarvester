@@ -7,20 +7,27 @@
 #include <stdexcept>
 #include <string>
 
+using std::to_string;
+
 class TestFailedException {
   std::string _functionName;
   std::string _expected;
   std::string _found;
+  int _line;
 
 public:
   TestFailedException(std::string functionName, std::string expected,
-                      std::string found)
-      : _functionName(functionName), _expected(expected), _found(found) {}
+                      std::string found, int line = -1)
+      : _functionName(functionName), _expected(expected), _found(found),
+        _line(line) {}
 
   std::string what() const throw() {
     std::string what = " {{ ERROR }} Test of function " + _functionName +
                        "() failed : expected [" + _expected + "], got [" +
                        _found + "]";
+    if (_line != -1) {
+      what += " at line " + to_string(_line);
+    }
     return what;
   }
 };
@@ -107,6 +114,44 @@ class cli_parser_help_asked_exception : public std::runtime_error {
 public:
   cli_parser_help_asked_exception()
       : std::runtime_error("User asked for help on CLI") {}
+};
+
+class api_default_not_in_schema : public std::runtime_error {
+public:
+  api_default_not_in_schema(std::string param)
+      : std::runtime_error("Default parameter '" + param +
+                           "' not found in schema") {}
+};
+
+class api_twice_same_name : public std::runtime_error {
+public:
+  api_twice_same_name(std::string name)
+      : std::runtime_error("Another '" + name + "' already exists") {}
+};
+
+class api_factory_name_not_found : public std::runtime_error {
+public:
+  api_factory_name_not_found(std::string name)
+      : std::runtime_error("API '" + name + "' not found by API discover") {}
+};
+
+class logger_not_started_exception : public std::runtime_error {
+public:
+  logger_not_started_exception() : std::runtime_error("Logger not started") {}
+};
+
+class api_request_builder_invalid_type : public std::runtime_error {
+public:
+  api_request_builder_invalid_type(int val)
+      : std::runtime_error("Invalid API type: " + to_string(val)) {}
+};
+
+class api_parameter_incompatible_value : public std::runtime_error {
+public:
+  api_parameter_incompatible_value(const std::string &expected_type,
+                                   const std::string &param_name)
+      : std::runtime_error("Incompatible type when setting value of '" +
+                           param_name + "', expected " + expected_type) {}
 };
 
 #endif

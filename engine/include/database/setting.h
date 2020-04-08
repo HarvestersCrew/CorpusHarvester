@@ -38,6 +38,10 @@ public:
   /* Settings name */
   static std::string STORAGE_ROOT;
 
+  static std::string LOGGER_LEVEL;
+  static std::string LOGGER_OUTPUT;
+  static std::string LOGGER_OUTPUT_PATH;
+
   /**
    * Default constructor
    */
@@ -78,6 +82,9 @@ public:
 
   void set_name(std::string name) { _name = name; }
   void set_value(std::string value) { _value = value; }
+
+  static void set_default_value(const std::string &name,
+                                const std::string &value);
 
   /**
    * Initializes the default settings in the database

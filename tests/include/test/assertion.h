@@ -6,6 +6,7 @@
 #include "utils/utils.h"
 #include <iostream>
 #include <sstream>
+#include <typeinfo>
 
 class Assertion {
 
@@ -97,25 +98,21 @@ public:
   }
 
   static void assert_throw(std::string function_name,
-                           std::string exception_name) {
-    throw TestFailedException(function_name, exception_name, "nothing");
+                           std::string exception_name, int line = -1) {
+    throw TestFailedException(function_name, exception_name, "nothing", line);
   }
 
   static void test(void (*func)(void), std::string function_name) {
     try {
-      func();
-      std::cout << "{{ OK }} " << function_name << "()" << std::endl;
-      ++Assertion::successes;
-    } catch (TestFailedException &e) {
-      std::cerr << e.what() << std::endl;
-      ++Assertion::failures;
-    } catch (const CommandException &e) {
-      std::cerr << e.what() << std::endl;
-      ++Assertion::failures;
-    } catch (sql::SQLException &e) {
-      print_sql_exception(e);
-      ++Assertion::failures;
-    } catch (std::exception &e) {
+      try {
+        func();
+        std::cout << "{{ OK }} " << function_name << "()" << std::endl;
+        ++Assertion::successes;
+      } catch (const std::exception &e) {
+        throw TestFailedException(function_name, "no exception",
+                                  typeid(e).name());
+      }
+    } catch (const TestFailedException &e) {
       std::cerr << e.what() << std::endl;
       ++Assertion::failures;
     }

@@ -68,6 +68,8 @@ api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
   return result;
 }
 
+string api_parameter_base::get_name() const { return this->_name; }
+
 api_parameter_request::api_parameter_request(const nlohmann::json &json)
     : api_parameter_base(json) {
   this->_position = json.at("position").get<std::string>();
@@ -75,7 +77,13 @@ api_parameter_request::api_parameter_request(const nlohmann::json &json)
 
   if (json.contains("values")) {
     for (const auto &el : json.at("values")) {
-      this->_values.push_back(el.get<std::string>());
+      string val = el.get<string>();
+      if (this->is_value_correctly_typed(val)) {
+        this->_values.push_back(val);
+      } else {
+        throw api_parameter_incompatible_value(this->get_type_string(),
+                                               "values");
+      }
     }
   }
 
@@ -102,10 +110,22 @@ std::string api_parameter_request::to_string() const {
 }
 
 bool api_parameter_request::is_value_valid(const std::string &val) const {
+
+  if (!this->is_value_correctly_typed(val)) {
+    return false;
+  }
+
   if (this->_values.size() != 0 &&
       std::find(this->_values.begin(), this->_values.end(), val) ==
-          this->_values.end())
+          this->_values.end()) {
     return false;
+  }
+
+  return true;
+}
+
+bool api_parameter_request::is_value_correctly_typed(
+    const std::string &val) const {
 
   if (this->_value_type == value_type::INT64) {
     try {
@@ -128,13 +148,25 @@ bool api_parameter_request::is_value_valid(const std::string &val) const {
   } else if (this->_value_type == value_type::STRING) {
   } else if (this->_value_type == value_type::IMAGE_LINK) {
   }
+
   return true;
 }
 
 void api_parameter_request::set_default_value(const std::string &val) {
   if (!this->is_value_valid(val))
-    throw std::runtime_error("Default value incompatible");
+    throw api_parameter_incompatible_value(this->get_type_string(),
+                                           this->get_name());
   this->_default_value = val;
+}
+
+bool api_parameter_request::get_required() const { return this->_required; }
+
+optional<string> api_parameter_request::get_default_value() const {
+  return this->_default_value;
+}
+
+vector<string> api_parameter_request::get_values() const {
+  return this->_values;
 }
 
 api_parameter_response::api_parameter_response(const nlohmann::json &json)

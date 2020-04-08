@@ -90,31 +90,26 @@ Corpus ManagerRequest::create_corpus(string name, string source) {
 
   logger::info("Creation of " + name + "'s corpus in progress...");
 
-  // Download corresponding data
-  download_manager dl;
-  std::list<shared_ptr<File>> out;
-  sql::Connection *db = HarvesterDatabase::init();
-  Storage storage(db);
+  ApiDownloadBuilder dl_builder;
 
   if (source == "twitter") {
     logger::info("[*] Source Twitter OK");
-    api_loader twitter(std::string("data/twitter.json"),
-                       std::string("data/twitter.env.json"));
-    out = twitter.query_and_parse({{"q", name}}, dl);
-
+    dl_builder.add_request("Twitter",
+                           unordered_map<string, string>({{"q", name}}));
   } else if (source == "tmdb") {
     logger::info("[*] Source TMDB OK");
-    api_loader tmdb(std::string("data/tmdb_poster.json"),
-                    std::string("data/tmdb.env.json"));
-    out = tmdb.query_and_parse({{"query", "star wars"}}, dl);
+    // TODO :: Use the proper dl_builder
   } else {
     logger::info("[*] Default source used !");
-    api_loader twitter(std::string("data/twitter.json"),
-                       std::string("data/twitter.env.json"));
-    out = twitter.query_and_parse({{"q", name}}, dl);
+    dl_builder.add_request("Twitter",
+                           unordered_map<string, string>({{"q", name}}));
   }
 
+  std::list<shared_ptr<File>> out = dl_builder.build();
+
   // Store the files
+  sql::Connection *db = HarvesterDatabase::init();
+  Storage storage(db);
   storage.store_files(out);
 
   // Index the downloaded data

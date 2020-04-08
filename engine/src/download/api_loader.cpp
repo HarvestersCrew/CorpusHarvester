@@ -26,14 +26,13 @@ void api_loader::set_parameter_request_default_value(const std::string &key,
       return;
     }
   }
-  throw std::runtime_error("Default parameter \"" + key +
-                           "\" not found in schema.");
+  throw api_default_not_in_schema(key);
 }
 
 void api_loader::init(const nlohmann::json &j) {
 
   nlohmann::json_schema::json_validator validator;
-  nlohmann::json schema = json_from_file("data/api_schema.json");
+  nlohmann::json schema = json_from_file(this->get_api_schema_full_path());
   validator.set_root_schema(schema);
   validator.validate(j);
 
@@ -76,6 +75,13 @@ void api_loader::init(const nlohmann::json &j) {
   }
   if (!main_attribute_found)
     throw api_missing_settings_exception();
+}
+
+string api_loader::get_api_schema_full_path() const {
+  stringstream ss;
+  ss << Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init()).get_value()
+     << API_LOADER_SCHEMA_NAME;
+  return ss.str();
 }
 
 std::string api_loader::to_string() const {
@@ -123,7 +129,7 @@ std::string api_loader::api_type_string() const {
 }
 
 std::list<shared_ptr<File>>
-api_loader::query_and_parse(const nlohmann::json &params,
+api_loader::query_and_parse(const unordered_map<string, string> &params,
                             const download_manager &dl) const {
 
   download_item dl_item(this->_url, this->_truncate_before.value_or(0),
@@ -140,10 +146,10 @@ api_loader::query_and_parse(const nlohmann::json &params,
     std::optional<std::string> val;
     val = std::nullopt;
 
-    if (params.contains(el->_name)) {
-      if (!el->is_value_valid(params.at(el->_name).get<std::string>()))
+    if (params.find(el->_name) != params.end()) {
+      if (!el->is_value_valid(params.at(el->_name)))
         throw std::runtime_error("Incompatible parameter.");
-      val.emplace(params.at(el->_name).get<std::string>());
+      val.emplace(params.at(el->_name));
     } else if (el->_default_value.has_value())
       val.emplace(el->_default_value.value());
     else if (el->_required)
@@ -280,4 +286,9 @@ api_loader::find_response_parameter(const std::string &name) const {
     }
   }
   return {};
+}
+
+const std::vector<shared_ptr<api_parameter_request>> &
+api_loader::get_request_parameters() const {
+  return this->_requests;
 }

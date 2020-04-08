@@ -1,10 +1,15 @@
 #ifndef CORPUSHARVESTER_CLENT_REQUEST_H
 #define CORPUSHARVESTER_CLENT_REQUEST_H
 
-#include <list>
-
 #include "indexation/corpus.h"
 #include "indexation/file.h"
+#include <download/api_download_builder.h>
+#include <list>
+#include <string>
+#include <unordered_map>
+
+using std::string;
+using std::unordered_map;
 
 class ManagerRequest {
 private:
