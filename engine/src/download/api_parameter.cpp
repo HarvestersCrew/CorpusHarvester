@@ -135,7 +135,8 @@ bool api_parameter_request::is_value_valid(const std::string &val) const {
 
 void api_parameter_request::set_default_value(const std::string &val) {
   if (!this->is_value_valid(val))
-    throw std::runtime_error("Default value incompatible");
+    throw api_parameter_incompatible_value(this->get_type_string(),
+                                           this->get_name());
   this->_default_value = val;
 }
 

@@ -141,4 +141,12 @@ public:
       : std::runtime_error("Invalid API type: " + to_string(val)) {}
 };
 
+class api_parameter_incompatible_value : public std::runtime_error {
+public:
+  api_parameter_incompatible_value(const std::string &expected_type,
+                                   const std::string &param_name)
+      : std::runtime_error("Incompatible type when setting value of '" +
+                           param_name + "', expected " + expected_type) {}
+};
+
 #endif

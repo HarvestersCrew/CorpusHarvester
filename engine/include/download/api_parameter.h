@@ -117,6 +117,8 @@ public:
   /**
    * Adds the given value as a default value
    * @param val value to set as default
+   * @throw api_parameter_incompatible_value if value is incompatible to the
+   * object
    */
   void set_default_value(const std::string &val);
 
