@@ -78,8 +78,11 @@ api_parameter_request::api_parameter_request(const nlohmann::json &json)
   if (json.contains("values")) {
     for (const auto &el : json.at("values")) {
       string val = el.get<string>();
-      if (!this->is_value_correctly_typed(val)) {
+      if (this->is_value_correctly_typed(val)) {
         this->_values.push_back(val);
+      } else {
+        throw api_parameter_incompatible_value(this->get_type_string(),
+                                               "values");
       }
     }
   }
