@@ -210,7 +210,10 @@ void api_loader::manage_parsed_responses(
         sp_file->add_tag(relevant.first->_name, relevant.second);
       }
 
-      files.push_back(sp_file);
+      if (sp_file->api_id_exists(HarvesterDatabase::init())) {
+        files.push_back(sp_file);
+      }
+
     } catch (...) {
       std::exception_ptr e = std::current_exception();
       std::cerr << "Unexpected exception while parsing a result: "

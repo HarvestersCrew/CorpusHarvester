@@ -44,6 +44,7 @@ public:
    * Gets a parameter and its value with its name
    * @param name name of the parameter
    * @return pair of the parameter and its value
+   * @throw api_missing_settings_exception if parameter not found
    */
   std::pair<shared_ptr<const api_parameter_response>, std::string>
   get_named_parameter(const std::string &name) const;
