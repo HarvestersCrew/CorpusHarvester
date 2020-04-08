@@ -179,17 +179,12 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
   }
 
   std::string content;
-  std::string now;
   int id = 0;
   for (const response_item &el : parsed_responses) {
-    now = get_current_time("%d-%m-%Y");
-    std::ostringstream out;
-    out << now << "_" << id;
 
     try {
 
       shared_ptr<File> sp_file = std::make_shared<File>();
-      sp_file->set_name(out.str());
       sp_file->set_source(this->_name);
       for (const auto &response : el.get_parameters()) {
         if (response.first->_name == this->_response_main_item) {
