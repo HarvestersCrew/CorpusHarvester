@@ -77,7 +77,10 @@ api_parameter_request::api_parameter_request(const nlohmann::json &json)
 
   if (json.contains("values")) {
     for (const auto &el : json.at("values")) {
-      this->_values.push_back(el.get<std::string>());
+      string val = el.get<string>();
+      if (!this->is_value_correctly_typed(val)) {
+        this->_values.push_back(val);
+      }
     }
   }
 
@@ -104,10 +107,22 @@ std::string api_parameter_request::to_string() const {
 }
 
 bool api_parameter_request::is_value_valid(const std::string &val) const {
+
+  if (!this->is_value_correctly_typed(val)) {
+    return false;
+  }
+
   if (this->_values.size() != 0 &&
       std::find(this->_values.begin(), this->_values.end(), val) ==
-          this->_values.end())
+          this->_values.end()) {
     return false;
+  }
+
+  return true;
+}
+
+bool api_parameter_request::is_value_correctly_typed(
+    const std::string &val) const {
 
   if (this->_value_type == value_type::INT64) {
     try {
@@ -130,6 +145,7 @@ bool api_parameter_request::is_value_valid(const std::string &val) const {
   } else if (this->_value_type == value_type::STRING) {
   } else if (this->_value_type == value_type::IMAGE_LINK) {
   }
+
   return true;
 }
 

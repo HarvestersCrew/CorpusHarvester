@@ -111,11 +111,19 @@ public:
   virtual std::string to_string() const;
 
   /**
-   * Checks if a given value as a string can be typed to the parameter type
+   * Checks if a given value as a string can be typed to the parameter type and
+   * is present in the enum of values (if it exists)
    * @param val value to check
-   * @return whether it can be typed as the parameter type
+   * @return whether the value is valid for the parameter
    */
   bool is_value_valid(const std::string &val) const;
+
+  /**
+   * Checks if a given value as a string can be typed to the parameter type
+   * @param val value to check
+   * @return whether the value is correctly typed
+   */
+  bool is_value_correctly_typed(const std::string &val) const;
 
   /**
    * Adds the given value as a default value
