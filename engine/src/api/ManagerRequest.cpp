@@ -86,23 +86,35 @@ std::optional<Corpus *> ManagerRequest::visualisation_corpus(std::string name) {
   return corpus;
 }
 
-Corpus ManagerRequest::create_corpus(std::string name) {
+Corpus ManagerRequest::create_corpus(string name, string source) {
 
   logger::info("Creation of " + name + "'s corpus in progress...");
 
   // Download corresponding data
   download_manager dl;
-  api_loader twitter(std::string("data/twitter.json"),
-                     std::string("data/twitter.env.json"));
-  std::list<shared_ptr<File>> out = twitter.query_and_parse({{"q", name}}, dl);
-  // api_loader tmdb(std::string("data/tmdb_poster.json"),
-  //                 std::string("data/tmdb.env.json"));
-  // std::list<shared_ptr<File>> out =
-  //     tmdb.query_and_parse({{"query", "star wars"}}, dl);
-
-  // Store the files
+  std::list<shared_ptr<File>> out;
   sql::Connection *db = HarvesterDatabase::init();
   Storage storage(db);
+
+  if (source == "twitter") {
+    logger::info("[*] Source Twitter OK");
+    api_loader twitter(std::string("data/twitter.json"),
+                       std::string("data/twitter.env.json"));
+    out = twitter.query_and_parse({{"q", name}}, dl);
+
+  } else if (source == "tmdb") {
+    logger::info("[*] Source TMDB OK");
+    api_loader tmdb(std::string("data/tmdb_poster.json"),
+                    std::string("data/tmdb.env.json"));
+    out = tmdb.query_and_parse({{"query", "star wars"}}, dl);
+  } else {
+    logger::info("[*] Default source used !");
+    api_loader twitter(std::string("data/twitter.json"),
+                       std::string("data/twitter.env.json"));
+    out = twitter.query_and_parse({{"q", name}}, dl);
+  }
+
+  // Store the files
   storage.store_files(out);
 
   // Index the downloaded data

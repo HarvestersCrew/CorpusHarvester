@@ -84,7 +84,7 @@ public:
    * @param name
    * @return
    */
-  Corpus create_corpus(const std::string name);
+  Corpus create_corpus(const std::string name, const std::string source);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H

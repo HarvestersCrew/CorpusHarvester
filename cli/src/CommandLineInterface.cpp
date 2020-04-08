@@ -48,7 +48,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 }
 
 void CommandLineInterface::run() {
-
+  string source = "";
   map<string, string>::iterator itSubCommand;
 
   // Check if we have the corpus command
@@ -128,7 +128,7 @@ void CommandLineInterface::run() {
 
         if (itSource != this->string_inputs.end() && itSource->second != "") {
           logger::debug("We have a source");
-          string source = this->string_inputs.find("source")->second;
+          source = this->string_inputs.find("source")->second;
 
           logger::debug("Source: " + source);
 
@@ -139,7 +139,8 @@ void CommandLineInterface::run() {
         string corpusName = itSubCommand->second;
 
         // Create the corpus and show it
-        Corpus corpus = ManagerRequest::getInstance().create_corpus(corpusName);
+        Corpus corpus =
+            ManagerRequest::getInstance().create_corpus(corpusName, source);
         logger::info(corpus.to_string());
 
       } else {
