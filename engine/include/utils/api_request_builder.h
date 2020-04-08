@@ -46,6 +46,12 @@ protected:
   ApiRequestBuilder();
 
   /**
+   * Fetches the list of files from whatever source we want
+   */
+  virtual list<shared_ptr<File>> build() const;
+
+public:
+  /**
    * Clears filled types
    */
   virtual void clear_types();
@@ -77,11 +83,6 @@ protected:
    */
   virtual const vector<pair<string, unordered_map<string, string>>> &
   get_requests() const;
-
-  /**
-   * Fetches the list of files from whatever source we want
-   */
-  virtual list<shared_ptr<File>> build() const;
 };
 
 #endif
