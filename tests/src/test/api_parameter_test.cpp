@@ -5,28 +5,28 @@ void test_api_parameter_base_construct() {
 
   try {
     api_parameter_base param(j);
-    Assertion::assert_throw(__FUNCTION__, "json::type_error");
+    Assertion::assert_throw(__FUNCTION__, "json::type_error", __LINE__);
   } catch (const json::type_error &e) {
   }
 
   try {
     j = {{"blabla", "ezrgbtrb"}};
     api_parameter_base param(j);
-    Assertion::assert_throw(__FUNCTION__, "json::out_of_range");
+    Assertion::assert_throw(__FUNCTION__, "json::out_of_range", __LINE__);
   } catch (const json::out_of_range &e) {
   }
 
   try {
     j = {{"api_name", "test_api_name"}};
     api_parameter_base param(j);
-    Assertion::assert_throw(__FUNCTION__, "json::out_of_range");
+    Assertion::assert_throw(__FUNCTION__, "json::out_of_range", __LINE__);
   } catch (const json::out_of_range &e) {
   }
 
   try {
     j = {{"api_name", "test_api_name"}, {"relevant", true}};
     api_parameter_base param(j);
-    Assertion::assert_throw(__FUNCTION__, "json::out_of_range");
+    Assertion::assert_throw(__FUNCTION__, "json::out_of_range", __LINE__);
   } catch (const json::out_of_range &e) {
   }
 
@@ -35,7 +35,7 @@ void test_api_parameter_base_construct() {
          {"relevant", true},
          {"type", "fake_type"}};
     api_parameter_base param(j);
-    Assertion::assert_throw(__FUNCTION__, "std::runtime_error");
+    Assertion::assert_throw(__FUNCTION__, "std::runtime_error", __LINE__);
   } catch (const std::runtime_error &e) {
   }
 
@@ -63,14 +63,14 @@ void test_api_parameter_request_construct() {
 
   try {
     api_parameter_request param(j);
-    Assertion::assert_throw(__FUNCTION__, "json::out_of_range");
+    Assertion::assert_throw(__FUNCTION__, "json::out_of_range", __LINE__);
   } catch (const json::out_of_range &e) {
   }
 
   j["position"] = "header";
   try {
     api_parameter_request param(j);
-    Assertion::assert_throw(__FUNCTION__, "json::out_of_range");
+    Assertion::assert_throw(__FUNCTION__, "json::out_of_range", __LINE__);
   } catch (const json::out_of_range &e) {
   }
 
@@ -87,7 +87,8 @@ void test_api_parameter_request_construct() {
 
   try {
     api_parameter_request param(j);
-    Assertion::assert_throw(__FUNCTION__, "api_parameter_incompatible_value");
+    Assertion::assert_throw(__FUNCTION__, "api_parameter_incompatible_value",
+                            __LINE__);
   } catch (const api_parameter_incompatible_value &e) {
   }
 
@@ -96,7 +97,8 @@ void test_api_parameter_request_construct() {
 
   try {
     api_parameter_request param(j);
-    Assertion::assert_throw(__FUNCTION__, "api_parameter_incompatible_value");
+    Assertion::assert_throw(__FUNCTION__, "api_parameter_incompatible_value",
+                            __LINE__);
   } catch (const api_parameter_incompatible_value &e) {
   }
 
