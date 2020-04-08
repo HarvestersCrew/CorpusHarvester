@@ -1,6 +1,7 @@
 #ifndef API_PARAMETER_H
 #define API_PARAMETER_H
 
+#include "utils/exceptions.h"
 #include "utils/nlohmann/json.hpp"
 #include <iostream>
 #include <optional>
@@ -94,6 +95,8 @@ class api_parameter_request : public api_parameter_base {
   friend class download_item;
   friend class response_item;
 
+  friend void test_api_parameter_request_construct();
+
 public:
   /**
    * Loads parameters data from a JSON
@@ -144,6 +147,8 @@ class api_parameter_response : public api_parameter_base {
   friend class api_loader;
   friend class download_item;
   friend class response_item;
+
+  friend void test_api_parameter_response_construct();
 
 private:
   /** Values to prepend to responses, string is the value and bool is if it

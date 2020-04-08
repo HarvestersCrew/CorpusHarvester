@@ -9,6 +9,8 @@ using nlohmann::json;
 
 void test_api_parameter_base_construct();
 void test_api_paramter_base_values();
+void test_api_parameter_request_construct();
+void test_api_parameter_response_construct();
 void api_parameter_test();
 
 #endif
