@@ -1,5 +1,6 @@
 
 #include "CommandLineInterface.h"
+#include "download/api_factory.h"
 #include "utils/cli_parser.h"
 #include "utils/logger.h"
 #include "utils/utils.h"
@@ -25,7 +26,14 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   createCorpus.add_option("text", "Set if you want video in your corpus.",
                           true);
 
-  createCorpus.add_option("source", "Name of the source we want.", false);
+  // Get all the api names
+  vector<string> apiNames = ApiFactory::get_api_names();
+  string sourceHelp = "Name of the source we want. Available : \n";
+  for (string apiName : apiNames) {
+    sourceHelp += " - " + apiName + "\n";
+  }
+
+  createCorpus.add_option("source", sourceHelp, false);
 
   // List of corpus
   cli_command &listCorpus = corpusCommand.add_command(
@@ -130,9 +138,16 @@ void CommandLineInterface::run() {
           logger::debug("We have a source");
           source = this->string_inputs.find("source")->second;
 
-          logger::debug("Source: " + source);
-
-          // TODO :: Use the source
+          // Check the source
+          vector<string> apiNames = ApiFactory::get_api_names();
+          if (find(apiNames.begin(), apiNames.end(), source) ==
+              apiNames.end()) {
+            logger::error("Le nom de la source n'est pas valide ! ");
+            // TODO :: End the program ? Add confirmation user.
+            source = "";
+          } else {
+            logger::debug("Source: " + source);
+          }
         }
 
         // Get the name of the corpus
