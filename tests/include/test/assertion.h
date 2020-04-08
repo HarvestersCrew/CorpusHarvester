@@ -98,8 +98,8 @@ public:
   }
 
   static void assert_throw(std::string function_name,
-                           std::string exception_name) {
-    throw TestFailedException(function_name, exception_name, "nothing");
+                           std::string exception_name, int line = -1) {
+    throw TestFailedException(function_name, exception_name, "nothing", line);
   }
 
   static void test(void (*func)(void), std::string function_name) {

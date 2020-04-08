@@ -13,16 +13,21 @@ class TestFailedException {
   std::string _functionName;
   std::string _expected;
   std::string _found;
+  int _line;
 
 public:
   TestFailedException(std::string functionName, std::string expected,
-                      std::string found)
-      : _functionName(functionName), _expected(expected), _found(found) {}
+                      std::string found, int line = -1)
+      : _functionName(functionName), _expected(expected), _found(found),
+        _line(line) {}
 
   std::string what() const throw() {
     std::string what = " {{ ERROR }} Test of function " + _functionName +
                        "() failed : expected [" + _expected + "], got [" +
                        _found + "]";
+    if (_line != -1) {
+      what += " at line " + to_string(_line);
+    }
     return what;
   }
 };
