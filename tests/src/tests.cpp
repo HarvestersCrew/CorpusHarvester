@@ -1,5 +1,6 @@
 #include "database/harvester_database.h"
 #include "database/setting.h"
+#include "test/api_parameter_test.h"
 #include "test/api_request_builder_test.h"
 #include "test/apis_test.h"
 #include "test/cli_parser_test.h"
@@ -24,6 +25,7 @@ int main() {
   database_test();
   storage_test();
   apis_test();
+  api_parameter_test();
   api_request_builder_test();
   cli_parser_test();
   indexation_test();

@@ -31,6 +31,9 @@ class api_parameter_base {
   friend class download_item;
   friend class response_item;
 
+  friend void test_api_parameter_base_construct();
+  friend void test_api_paramter_base_values();
+
 public:
   /** Value describing the type of the parameter */
   enum value_type { STRING, INT, INT64, IMAGE_LINK };
