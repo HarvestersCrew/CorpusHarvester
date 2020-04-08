@@ -1,6 +1,7 @@
 #ifndef API_REQUEST_BUILDER_TEST_H
 #define API_REQUEST_BUILDER_TEST_H
 
+#include "download/api_download_builder.h"
 #include "download/api_loader.h"
 #include "test/assertion.h"
 #include "utils/api_request_builder.h"
