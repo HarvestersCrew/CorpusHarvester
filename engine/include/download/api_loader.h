@@ -29,11 +29,14 @@
 
 #define API_LOADER_SCHEMA_NAME "api_schema.json"
 
+using std::list;
 using std::make_shared;
+using std::pair;
 using std::shared_ptr;
 using std::string;
 using std::stringstream;
 using std::unordered_map;
+using std::vector;
 
 /**
  * API class, used to load API settings and use its tags
@@ -133,6 +136,13 @@ private:
                     const shared_ptr<const api_parameter_response> param,
                     shared_ptr<File> file_to_save_to,
                     const download_manager &dl) const;
+
+  void manage_parsed_responses(
+      const vector<response_item> &parsed_responses,
+      list<shared_ptr<File>> &files,
+      vector<pair<shared_ptr<const api_parameter_request>, string>>
+          &relevant_parameters,
+      const download_manager &dl) const;
 
 public:
   /**

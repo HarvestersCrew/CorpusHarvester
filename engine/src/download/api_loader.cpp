@@ -178,14 +178,25 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
     parsed_responses.emplace_back(el, this->_responses);
   }
 
-  std::string content;
-  int id = 0;
+  this->manage_parsed_responses(parsed_responses, files, relevant_parameters,
+                                dl);
+  return files;
+}
+
+void api_loader::manage_parsed_responses(
+    const vector<response_item> &parsed_responses,
+    list<shared_ptr<File>> &files,
+    vector<pair<shared_ptr<const api_parameter_request>, string>>
+        &relevant_parameters,
+    const download_manager &dl) const {
+
   for (const response_item &el : parsed_responses) {
 
     try {
 
-      shared_ptr<File> sp_file = std::make_shared<File>();
+      shared_ptr<File> sp_file = make_shared<File>();
       sp_file->set_source(this->_name);
+
       for (const auto &response : el.get_parameters()) {
         if (response.first->_name == this->_response_main_item) {
           this->manage_main_value(el, sp_file, dl);
@@ -205,11 +216,7 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
       std::cerr << "Unexpected exception while parsing a result: "
                 << e.__cxa_exception_type()->name() << std::endl;
     }
-
-    id++;
   }
-
-  return files;
 }
 
 void api_loader::manage_main_value(const response_item &result_to_manage,
