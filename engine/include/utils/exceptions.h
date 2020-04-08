@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <string>
 
+using std::to_string;
+
 class TestFailedException {
   std::string _functionName;
   std::string _expected;
@@ -131,6 +133,12 @@ public:
 class logger_not_started_exception : public std::runtime_error {
 public:
   logger_not_started_exception() : std::runtime_error("Logger not started") {}
+};
+
+class api_request_builder_invalid_type : public std::runtime_error {
+public:
+  api_request_builder_invalid_type(int val)
+      : std::runtime_error("Invalid API type: " + to_string(val)) {}
 };
 
 #endif
