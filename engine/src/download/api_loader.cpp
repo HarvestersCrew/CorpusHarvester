@@ -74,7 +74,7 @@ void api_loader::init(const nlohmann::json &j) {
       main_attribute_found = true;
   }
   if (!main_attribute_found)
-    throw api_missing_settings_exception();
+    throw api_missing_settings_exception(this->_response_main_item);
 }
 
 string api_loader::get_api_schema_full_path() const {

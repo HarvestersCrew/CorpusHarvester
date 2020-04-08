@@ -43,7 +43,7 @@ response_item::get_named_parameter(const std::string &name) const {
       return std::make_pair(el.first, el.second);
     }
   }
-  throw api_missing_settings_exception();
+  throw api_missing_settings_exception(name);
 }
 
 std::string response_item::string_prepend_append(

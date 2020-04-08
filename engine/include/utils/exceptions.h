@@ -53,42 +53,35 @@ public:
   ClosedDatabaseException() : std::runtime_error("Database is closed") {}
 };
 
-class api_no_setting_exception : public std::exception {
+class api_no_setting_exception : public std::runtime_error {
 public:
-  api_no_setting_exception(std::string key);
-  const char *what() const throw();
-
-private:
-  std::string _msg;
+  api_no_setting_exception(const std::string &key)
+      : std::runtime_error("Given setting key not existing in API: " + key) {}
 };
 
-class api_missing_settings_exception : public std::exception {
+class api_missing_settings_exception : public std::runtime_error {
 public:
-  const char *what() const throw();
+  api_missing_settings_exception(const std::string &setting)
+      : std::runtime_error("Missing setting to call an API: " + setting) {}
 };
 
-class api_unrecognized_settings_exception : public std::exception {
-private:
-  std::string _msg;
-
+class api_unrecognized_settings_exception : public std::runtime_error {
 public:
   api_unrecognized_settings_exception()
-      : _msg("An API setting was unrecognized.") {}
+      : std::runtime_error("An API setting was unrecognized") {}
   api_unrecognized_settings_exception(const std::string &key,
                                       const std::string &val)
-      : _msg("An API setting value was unrecognized: " + key + " = " + val) {}
-  const char *what() const throw();
+      : std::runtime_error("An API setting value was unrecognized: " + key +
+                           " = " + val) {}
 };
 
-class download_no_200_exception : public std::exception {
-private:
-  std::string _msg;
-
+class download_no_200_exception : public std::runtime_error {
 public:
-  download_no_200_exception() : _msg("HTTP call didn't succeed.") {}
+  download_no_200_exception()
+      : std::runtime_error("HTTP call didn't succeed") {}
   download_no_200_exception(int http_code)
-      : _msg("HTTP call didn't succeed: " + http_code) {}
-  const char *what() const throw();
+      : std::runtime_error("HTTP call didn't succeed: " +
+                           to_string(http_code)) {}
 };
 
 class logger_exception : public std::runtime_error {
