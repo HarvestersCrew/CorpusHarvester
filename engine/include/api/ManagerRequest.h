@@ -3,6 +3,7 @@
 
 #include "indexation/corpus.h"
 #include "indexation/file.h"
+#include <download/api_download_builder.h>
 #include <list>
 #include <string>
 #include <unordered_map>

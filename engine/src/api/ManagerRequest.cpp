@@ -90,16 +90,10 @@ Corpus ManagerRequest::create_corpus(std::string name) {
 
   logger::info("Creation of " + name + "'s corpus in progress...");
 
-  // Download corresponding data
-  download_manager dl;
-  api_loader twitter(std::string("data/apis/twitter.json"),
-                     std::string("data/apis/twitter.env.json"));
-  std::list<shared_ptr<File>> out =
-      twitter.query_and_parse(unordered_map<string, string>({{"q", name}}), dl);
-  // api_loader tmdb(std::string("data/tmdb_poster.json"),
-  //                 std::string("data/tmdb.env.json"));
-  // std::list<shared_ptr<File>> out =
-  //     tmdb.query_and_parse({{"query", "star wars"}}, dl);
+  ApiDownloadBuilder dl_builder;
+  dl_builder.add_request("Twitter",
+                         unordered_map<string, string>({{"q", name}}));
+  std::list<shared_ptr<File>> out = dl_builder.build();
 
   // Store the files
   sql::Connection *db = HarvesterDatabase::init();
