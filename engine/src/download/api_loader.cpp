@@ -129,7 +129,7 @@ std::string api_loader::api_type_string() const {
 }
 
 std::list<shared_ptr<File>>
-api_loader::query_and_parse(const nlohmann::json &params,
+api_loader::query_and_parse(const unordered_map<string, string> &params,
                             const download_manager &dl) const {
 
   download_item dl_item(this->_url, this->_truncate_before.value_or(0),
@@ -146,10 +146,10 @@ api_loader::query_and_parse(const nlohmann::json &params,
     std::optional<std::string> val;
     val = std::nullopt;
 
-    if (params.contains(el->_name)) {
-      if (!el->is_value_valid(params.at(el->_name).get<std::string>()))
+    if (params.find(el->_name) != params.end()) {
+      if (!el->is_value_valid(params.at(el->_name)))
         throw std::runtime_error("Incompatible parameter.");
-      val.emplace(params.at(el->_name).get<std::string>());
+      val.emplace(params.at(el->_name));
     } else if (el->_default_value.has_value())
       val.emplace(el->_default_value.value());
     else if (el->_required)

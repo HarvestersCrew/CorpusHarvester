@@ -28,3 +28,7 @@ const vector<pair<string, unordered_map<string, string>>> &
 ApiRequestBuilder::get_requests() const {
   return this->_requests;
 }
+
+list<shared_ptr<File>> ApiRequestBuilder::build() const {
+  return list<shared_ptr<File>>();
+}

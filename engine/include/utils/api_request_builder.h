@@ -2,6 +2,7 @@
 #define API_REQUEST_BUILDER_H
 
 #include "download/api_factory.h"
+#include "indexation/file.h"
 #include "utils/exceptions.h"
 #include <download/api_loader.h>
 #include <list>
@@ -80,7 +81,7 @@ protected:
   /**
    * Fetches the list of files from whatever source we want
    */
-  virtual list<shared_ptr<File>> build() = 0;
+  virtual list<shared_ptr<File>> build() const;
 };
 
 #endif

@@ -20,6 +20,7 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -32,6 +33,7 @@ using std::make_shared;
 using std::shared_ptr;
 using std::string;
 using std::stringstream;
+using std::unordered_map;
 
 /**
  * API class, used to load API settings and use its tags
@@ -173,13 +175,14 @@ public:
 
   /**
    * Queries and parses
-   * @param params JSON of parameters to insert in place of the default ones
+   * @param params map parameters to insert in place of the default ones
    * @param dl download manager
    * @return std::list<shared_ptr<File>> Parsed response suitable for the
    * Harvester
    */
-  std::list<shared_ptr<File>> query_and_parse(const nlohmann::json &params,
-                                              const download_manager &dl) const;
+  std::list<shared_ptr<File>>
+  query_and_parse(const unordered_map<string, string> &params,
+                  const download_manager &dl) const;
 
   /**
    * Gets a request parameter named as
