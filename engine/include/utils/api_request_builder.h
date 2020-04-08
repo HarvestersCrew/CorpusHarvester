@@ -4,14 +4,18 @@
 #include "download/api_factory.h"
 #include "utils/exceptions.h"
 #include <download/api_loader.h>
+#include <list>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
 
+using std::list;
 using std::make_pair;
 using std::pair;
+using std::shared_ptr;
 using std::string;
 using std::unordered_map;
 using std::unordered_set;
@@ -72,6 +76,11 @@ protected:
    */
   virtual const vector<pair<string, unordered_map<string, string>>> &
   get_requests() const;
+
+  /**
+   * Fetches the list of files from whatever source we want
+   */
+  virtual list<shared_ptr<File>> build() = 0;
 };
 
 #endif
