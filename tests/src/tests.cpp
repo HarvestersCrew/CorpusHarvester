@@ -13,13 +13,13 @@
 int main() {
   std::cout << std::endl << "Tests : " << std::endl;
 
-  Setting::set_default_value(Setting::LOGGER_LEVEL,
-                             std::to_string(logger::level::NONE));
-
   try {
     HarvesterDatabase::drop();
   } catch (const ClosedDatabaseException &e) {
   }
+
+  Setting::set_default_value(Setting::LOGGER_LEVEL,
+                             std::to_string(logger::level::NONE));
 
   logger_test();
   database_test();
