@@ -121,11 +121,8 @@ std::string api_loader::api_type_string() const {
   case api_loader::api_type::IMAGE:
     return API_TYPE_IMG;
     break;
-  default:
-    throw std::runtime_error(
-        "API type not yet recognized or implemented in string method");
-    break;
   }
+  throw api_filetype_incompatible(std::to_string(this->_api_type));
 }
 
 std::list<shared_ptr<File>>
@@ -148,12 +145,13 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
 
     if (params.find(el->_name) != params.end()) {
       if (!el->is_value_valid(params.at(el->_name)))
-        throw std::runtime_error("Incompatible parameter.");
+        throw api_parameter_incompatible_value(el->get_type_string(),
+                                               el->get_name());
       val.emplace(params.at(el->_name));
     } else if (el->_default_value.has_value())
       val.emplace(el->_default_value.value());
     else if (el->_required)
-      throw std::runtime_error("Required parameter not filled: " + el->_name);
+      throw api_missing_settings_exception(el->_name);
 
     if (val.has_value()) {
 
@@ -164,7 +162,7 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
       if (el->_position == "body" || el->_position == "header") {
         dl_item.set_parameter(el, val.value());
       } else
-        throw std::runtime_error("Unknown position");
+        throw api_unrecognized_settings_exception("position", el->_position);
     }
   }
 
@@ -236,8 +234,7 @@ void api_loader::manage_main_value(const response_item &result_to_manage,
                        dl);
     break;
   default:
-    throw std::runtime_error("Saving type " + this->api_type_string() +
-                             " is unsupported currently.");
+    throw api_filetype_incompatible(std::to_string(this->_api_type));
   }
 }
 

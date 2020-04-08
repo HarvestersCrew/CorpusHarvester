@@ -65,6 +65,12 @@ public:
       : std::runtime_error("Missing setting to call an API: " + setting) {}
 };
 
+class api_filetype_incompatible : public std::runtime_error {
+public:
+  api_filetype_incompatible(const std::string &type)
+      : std::runtime_error("Can't manage filetype: " + type) {}
+};
+
 class api_unrecognized_settings_exception : public std::runtime_error {
 public:
   api_unrecognized_settings_exception()
