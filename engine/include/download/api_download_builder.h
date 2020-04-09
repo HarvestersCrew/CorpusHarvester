@@ -40,7 +40,7 @@ public:
    * @throw api_factory_name_not_found checks before downloading anything if all
    * APIs are found
    */
-  list<shared_ptr<File>> build();
+  virtual list<shared_ptr<File>> build() const;
 };
 
 #endif

@@ -2,7 +2,7 @@
 
 ApiDownloadBuilder::ApiDownloadBuilder() : ApiRequestBuilder() {}
 
-list<shared_ptr<File>> ApiDownloadBuilder::build() {
+list<shared_ptr<File>> ApiDownloadBuilder::build() const {
   list<shared_ptr<File>> res;
 
   // Throws an exception if a request API name is not found
