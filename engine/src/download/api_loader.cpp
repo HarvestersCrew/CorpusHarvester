@@ -210,7 +210,7 @@ void api_loader::manage_parsed_responses(
         sp_file->add_tag(relevant.first->_name, relevant.second);
       }
 
-      if (sp_file->api_id_exists(HarvesterDatabase::init())) {
+      if (!sp_file->api_id_exists(HarvesterDatabase::init())) {
         files.push_back(sp_file);
       }
 
