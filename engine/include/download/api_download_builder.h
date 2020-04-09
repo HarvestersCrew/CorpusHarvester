@@ -16,6 +16,7 @@
 
 using std::list;
 using std::shared_ptr;
+using std::stoi;
 using std::to_string;
 using std::vector;
 
