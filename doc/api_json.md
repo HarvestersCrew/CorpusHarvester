@@ -299,7 +299,7 @@ Using the `_api_id` name will check if another entry of the same ID and same API
 
 ### _page
 
-Attribute representing a number which can be incremented to retrieve more results.
+Attribute representing a number which can be incremented to retrieve more results. Please set the default value to the minimum page compatible with the API for better automation.
 
 ### _page_count
 

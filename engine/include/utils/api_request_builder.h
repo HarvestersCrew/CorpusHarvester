@@ -2,9 +2,9 @@
 #define API_REQUEST_BUILDER_H
 
 #include "download/api_factory.h"
+#include "download/api_loader.h"
 #include "indexation/file.h"
 #include "utils/exceptions.h"
-#include <download/api_loader.h>
 #include <list>
 #include <memory>
 #include <string>
@@ -36,7 +36,7 @@ protected:
    * 1st map: API name, map of parameters to use
    * 2nd map: parameter name, value to use
    */
-  vector<pair<string, unordered_map<string, string>>> _requests;
+  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> _requests;
 
   /**
    * Search for these types if no requests are precised or if specified
@@ -50,10 +50,10 @@ protected:
 
   /**
    * Fetches the list of files from whatever source we want
-   * @param number number of elements to retrieve, -1 means value not set and
+   * @param number number of elements to retrieve, 0 means value not set and
    * outcome depends on the implementation
    */
-  virtual list<shared_ptr<File>> build(int number) const = 0;
+  virtual list<shared_ptr<File>> build(unsigned int number) const = 0;
 
 public:
   /**
@@ -79,6 +79,7 @@ public:
    * Adds a new request
    * @param api_name Name of the API to use
    * @param params List of parameters to use for this request
+   * @throw api_factory_name_not_found if the given API is not found
    */
   virtual void add_request(const string &api_name,
                            const unordered_map<string, string> &params);
@@ -86,7 +87,8 @@ public:
   /**
    * Get requests
    */
-  virtual const vector<pair<string, unordered_map<string, string>>> &
+  virtual const vector<
+      pair<shared_ptr<api_loader>, unordered_map<string, string>>> &
   get_requests() const;
 };
 
