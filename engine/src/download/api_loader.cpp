@@ -214,10 +214,10 @@ void api_loader::manage_parsed_responses(
         files.push_back(sp_file);
       }
 
-    } catch (...) {
-      std::exception_ptr e = std::current_exception();
-      std::cerr << "Unexpected exception while parsing a result: "
-                << e.__cxa_exception_type()->name() << std::endl;
+    } catch (const std::exception &e) {
+      stringstream ss;
+      ss << "Unexpected exception while parsing a result: " << typeid(e).name();
+      logger::error(ss.str());
     }
   }
 }
