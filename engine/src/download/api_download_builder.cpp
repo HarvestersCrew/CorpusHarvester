@@ -11,21 +11,34 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
 
   vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> requests(
       this->get_requests());
-
-  // Throws an exception if a request API name is not found
-  for (const auto &el : this->get_requests()) {
-    // If no page is specified in the parameters, we will check if the API has a
-    // page parameter and load its default value (or 1) to init the page turning
-    // if (el.second.find("_page") == el.second.end()) {
-    //   if(el.f)
-    // }
-  }
-
   unsigned int page = 0;
+
+  // Inits the page number for page compatible APIs (if not given in the
+  // parameters)
+  for (auto &el : requests) {
+    // If no base page was given, we either get the default value for the _page
+    // parameter or set it to 1 (or nothing at all if there is no _page
+    // parameter)
+    if (el.second.find("_page") == el.second.end()) {
+
+      if (el.first->find_request_parameter("_page").has_value()) {
+        const auto page_param =
+            el.first->find_request_parameter("_page").value();
+        unsigned int page_to_set =
+            stoi(page_param->get_default_value().value_or("1"));
+        el.second.emplace("_page", to_string(page_to_set));
+      }
+    }
+  }
 
   do {
     // For each specified request
     for (auto it = requests.begin(); it != requests.end();) {
+
+      // Update page if present
+      if (it->second.find("_page") != it->second.end()) {
+        it->second.at("_page") = to_string(stoi(it->second.at("_page")) + page);
+      }
 
       // Do the query
       list<shared_ptr<File>> downloaded =
