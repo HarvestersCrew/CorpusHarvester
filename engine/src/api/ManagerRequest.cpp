@@ -92,18 +92,21 @@ Corpus ManagerRequest::create_corpus(string name, string source) {
 
   ApiDownloadBuilder dl_builder;
 
-  if (source == "twitter") {
-    logger::info("[*] Source Twitter OK");
-    dl_builder.add_request("Twitter",
-                           unordered_map<string, string>({{"q", name}}));
-  } else if (source == "tmdb") {
-    logger::info("[*] Source TMDB OK");
-    // TODO :: Use the proper dl_builder
-  } else {
-    logger::info("[*] Default source used !");
-    dl_builder.add_request("Twitter",
-                           unordered_map<string, string>({{"q", name}}));
-  }
+  // if (source == "twitter") {
+  //   logger::info("[*] Source Twitter OK");
+  //   dl_builder.add_request("Twitter",
+  //                          unordered_map<string, string>({{"q", name}}));
+  // } else if (source == "TheMovieDB_Synopsis") {
+  //   logger::info("[*] Source TMDB OK");
+  //   // TODO :: Use the proper dl_builder
+  // } else {
+  //   logger::info("[*] Default source used !");
+  //   dl_builder.add_request("Twitter",
+  //                          unordered_map<string, string>({{"q", name}}));
+  // }
+
+  dl_builder.add_request(source,
+                         unordered_map<string, string>({{"query", name}}));
 
   dl_builder.build(-1);
 
