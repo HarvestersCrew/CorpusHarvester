@@ -1,9 +1,10 @@
 #ifndef CORPUSHARVESTER_CLENT_REQUEST_H
 #define CORPUSHARVESTER_CLENT_REQUEST_H
 
+#include "database/harvester_database.h"
+#include "download/api_download_builder.h"
 #include "indexation/corpus.h"
 #include "indexation/file.h"
-#include <download/api_download_builder.h>
 #include <list>
 #include <string>
 #include <unordered_map>

@@ -5,13 +5,18 @@
 #include "download/api_loader.h"
 #include "download/download_manager.h"
 #include "indexation/file.h"
+#include "indexation/indexer.h"
+#include "storage/storage.h"
 #include "utils/api_request_builder.h"
+#include "utils/logger.h"
 #include <list>
 #include <memory>
+#include <string>
 #include <vector>
 
 using std::list;
 using std::shared_ptr;
+using std::to_string;
 using std::vector;
 
 /**
@@ -31,7 +36,7 @@ public:
   ApiDownloadBuilder();
 
   /**
-   * Retrieves the file
+   * Retrieves the files, stores them and index them
    * @throw api_factory_name_not_found checks before downloading anything if all
    * APIs are found
    */

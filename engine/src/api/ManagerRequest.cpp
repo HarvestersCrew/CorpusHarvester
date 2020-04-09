@@ -105,16 +105,9 @@ Corpus ManagerRequest::create_corpus(string name, string source) {
                            unordered_map<string, string>({{"q", name}}));
   }
 
-  std::list<shared_ptr<File>> out = dl_builder.build();
+  dl_builder.build();
 
-  // Store the files
-  sql::Connection *db = HarvesterDatabase::init();
-  Storage storage(db);
-  storage.store_files(out);
-
-  // Index the downloaded data
-  Indexer indexer(db);
-  indexer.indexation(out);
+  Indexer indexer(HarvesterDatabase::init());
 
   // Request files which has at least one retweet and one favorite
   SearchBuilder sb = indexer.get_search_builder();
