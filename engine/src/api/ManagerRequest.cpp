@@ -92,7 +92,7 @@ Corpus ManagerRequest::create_corpus(string name, string source) {
 
   ApiDownloadBuilder dl_builder;
 
-  if (source == "twitter") {
+  if (source == "Twitter") {
     logger::info("[*] Source Twitter OK");
     dl_builder.add_request("Twitter",
                            unordered_map<string, string>({{"q", name}}));

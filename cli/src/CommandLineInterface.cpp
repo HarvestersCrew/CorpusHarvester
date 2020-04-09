@@ -135,7 +135,7 @@ void CommandLineInterface::run() {
             this->string_inputs.find("source");
 
         if (itSource != this->string_inputs.end() && itSource->second != "") {
-          logger::debug("We have a source");
+          // Get the source
           source = this->string_inputs.find("source")->second;
 
           // Check the source
@@ -143,7 +143,7 @@ void CommandLineInterface::run() {
           if (find(apiNames.begin(), apiNames.end(), source) ==
               apiNames.end()) {
             logger::error("Le nom de la source n'est pas valide ! ");
-            // TODO :: End the program ? Add confirmation user.
+            // TODO :: End the program ? Add user confirmation.
             source = "";
           } else {
             logger::debug("Source: " + source);
