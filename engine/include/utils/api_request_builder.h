@@ -51,7 +51,7 @@ protected:
   /**
    * Fetches the list of files from whatever source we want
    */
-  virtual list<shared_ptr<File>> build() const;
+  virtual list<shared_ptr<File>> build() const = 0;
 
 public:
   /**
