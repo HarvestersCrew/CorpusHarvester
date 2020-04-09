@@ -37,9 +37,28 @@
         {
             "type": "string",
             "api_name": "text",
+            "name": "query",
             "required": true,
             "position": "body",
             "relevant": true
+        },
+        {
+            "type": "int",
+            "api_name": "page",
+            "name": "_page",
+            "required": false,
+            "position": "body",
+            "relevant": false,
+            "default_value": "1"
+        },
+        {
+            "type": "int",
+            "api_name": "per_page",
+            "name": "_page_count",
+            "required": false,
+            "position": "body",
+            "relevant": false,
+            "default_value": "100"
         }
     ],
     "response": [

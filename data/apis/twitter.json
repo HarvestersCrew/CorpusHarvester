@@ -13,7 +13,8 @@
             "required": true,
             "position": "body",
             "relevant": false,
-            "api_name": "q"
+            "api_name": "q",
+            "name": "query"
         },
         {
             "type": "string",
@@ -39,10 +40,11 @@
         {
             "type": "int",
             "required": false,
-            "default_value": "100",
+            "default_value": "15",
             "position": "body",
             "relevant": false,
-            "api_name": "count"
+            "api_name": "count",
+            "name": "_page_count"
         },
         {
             "type": "string",
@@ -85,7 +87,7 @@
         },
         {
             "type": "string",
-            "name": "lang",
+            "name": "language",
             "api_name": "lang",
             "relevant": true
         }

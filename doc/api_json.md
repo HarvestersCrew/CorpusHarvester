@@ -297,6 +297,22 @@ Same as `string_prepends` but to append value at the end of the response. First 
 
 Using the `_api_id` name will check if another entry of the same ID and same API name is already in the database and will skip it if it is.
 
+### _page
+
+Attribute representing a number which can be incremented to retrieve more results.
+
+### _page_count
+
+Number of elements in a page to retrieve.
+
 ### query
 
 Name to use to represent a string query in a request (or response).
+
+### language
+
+Parameter which represents a language. No parsing is done on it, so you can get `english` or `en` values.
+
+### date
+
+Parameter to describe what date the element was created. No parsing is done on it for now.
