@@ -316,3 +316,16 @@ Parameter which represents a language. No parsing is done on it, so you can get 
 ### date
 
 Parameter to describe what date the element was created. No parsing is done on it for now.
+
+## Note on sensitive values
+
+Values such as API keys shouldn't have to be filled by the user at each query, which is a tedious process. So when loading an API from its descriptor file such as `/path/api.json`, the Harvester will look for an env file (which is gitignored) as `/path/api.env.json` which fills in default values.
+
+```json
+{
+    "api_key": "MY_API_KEY",
+    "other_default_to_override": "my_value
+}
+```
+
+These values will be loaded at the same time than the API, and overrides other default values if present in the descriptor.
