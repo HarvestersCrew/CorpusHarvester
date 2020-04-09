@@ -112,17 +112,14 @@ Corpus ManagerRequest::create_corpus(string name, string source) {
 
   Indexer indexer(HarvesterDatabase::init());
 
-  // Request files which has at least one retweet and one favorite
-  SearchBuilder sb = indexer.get_search_builder();
-  std::list<shared_ptr<File>> tweets =
-      sb.add_tag_condition("retweet", "100", ">")
-          ->logical_and()
-          ->add_condition("id", "50", "<")
-          ->build();
+  ApiDatabaseBuilder db_builder;
+  db_builder.add_request("Twitter",
+                         unordered_map<string, string>({{"retweet", "0"}}));
+  std::list<shared_ptr<File>> tweets = db_builder.build(0);
 
   // Create our corpus from the fetch data and save it
   std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
-  Corpus corpus("50 premiers avec retweets > 100", now, tweets, "");
+  Corpus corpus("tweets avec 0 retweet", now, tweets, "");
   indexer.save_corpus(corpus);
   HarvesterDatabase::close();
 

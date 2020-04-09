@@ -3,6 +3,7 @@
 
 #include "database/harvester_database.h"
 #include "download/api_download_builder.h"
+#include "indexation/api_database_builder.h"
 #include "indexation/corpus.h"
 #include "indexation/file.h"
 #include <list>
