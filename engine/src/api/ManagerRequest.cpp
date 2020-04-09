@@ -105,7 +105,7 @@ Corpus ManagerRequest::create_corpus(string name, string source) {
                            unordered_map<string, string>({{"q", name}}));
   }
 
-  dl_builder.build();
+  dl_builder.build(-1);
 
   Indexer indexer(HarvesterDatabase::init());
 

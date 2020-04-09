@@ -37,10 +37,12 @@ public:
 
   /**
    * Retrieves the files, stores them and index them
+   * @param number number of elements to retrieve. -1 does a single pass with
+   * the given settings
    * @throw api_factory_name_not_found checks before downloading anything if all
    * APIs are found
    */
-  virtual list<shared_ptr<File>> build() const;
+  virtual list<shared_ptr<File>> build(int number) const;
 };
 
 #endif
