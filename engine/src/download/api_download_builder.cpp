@@ -9,13 +9,11 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
   Indexer indexer(db);
   Storage storage(db);
 
-  vector<pair<string, unordered_map<string, string>>> requests(
+  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> requests(
       this->get_requests());
 
   // Throws an exception if a request API name is not found
   for (const auto &el : this->get_requests()) {
-    ApiFactory::get_api(el.first);
-
     // If no page is specified in the parameters, we will check if the API has a
     // page parameter and load its default value (or 1) to init the page turning
     // if (el.second.find("_page") == el.second.end()) {
@@ -29,12 +27,9 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
     // For each specified request
     for (auto it = requests.begin(); it != requests.end();) {
 
-      // Get the api_loader
-      shared_ptr<api_loader> api = ApiFactory::get_api(it->first);
-
       // Do the query
       list<shared_ptr<File>> downloaded =
-          api->query_and_parse(it->second, this->dl);
+          it->first->query_and_parse(it->second, this->dl);
 
       // If the returned download is empty, it means there is an error or there
       // is nothing more to find, so we remove it from our local requests

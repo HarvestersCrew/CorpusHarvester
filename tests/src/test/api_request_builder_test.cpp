@@ -40,7 +40,7 @@ void test_requests() {
   a.add_request("Twitter", m);
   Assertion::assert_equals(__FUNCTION__, 1, a.get_requests().size());
   Assertion::assert_equals(__FUNCTION__, "Twitter",
-                           a.get_requests().at(0).first);
+                           a.get_requests().at(0).first->get_name());
   Assertion::assert_equals(__FUNCTION__, 1,
                            a.get_requests().at(0).second.size());
 

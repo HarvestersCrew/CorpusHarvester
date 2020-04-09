@@ -21,10 +21,10 @@ void ApiRequestBuilder::clear_requests() { this->_requests.clear(); }
 
 void ApiRequestBuilder::add_request(
     const string &api_name, const unordered_map<string, string> &params) {
-  this->_requests.push_back(make_pair(api_name, params));
+  this->_requests.push_back(make_pair(ApiFactory::get_api(api_name), params));
 }
 
-const vector<pair<string, unordered_map<string, string>>> &
+const vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> &
 ApiRequestBuilder::get_requests() const {
   return this->_requests;
 }
