@@ -1,7 +1,7 @@
 #include "test/api_request_builder_test.h"
 
 void test_types() {
-  ApiRequestBuilder a;
+  ApiDownloadBuilder a;
   Assertion::assert_equals(__FUNCTION__, 0, a.get_types().size());
 
   a.add_type(api_loader::api_type::IMAGE);
@@ -31,7 +31,7 @@ void test_types() {
 }
 
 void test_requests() {
-  ApiRequestBuilder a;
+  ApiDownloadBuilder a;
   Assertion::assert_equals(__FUNCTION__, 0, a.get_requests().size());
 
   unordered_map<string, string> m;

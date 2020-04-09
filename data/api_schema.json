@@ -106,8 +106,7 @@
                         "title": "Parameter's type",
                         "enum": [
                             "string",
-                            "int",
-                            "int64"
+                            "int"
                         ]
                     },
                     "api_name": {

@@ -34,6 +34,8 @@
         {
             "type": "int",
             "api_name": "page",
+            "name": "_page",
+            "default_value": "1",
             "required": false,
             "position": "body",
             "relevant": false

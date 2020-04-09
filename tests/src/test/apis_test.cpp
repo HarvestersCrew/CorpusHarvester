@@ -9,11 +9,12 @@ void test_apis_get_apis() {
   fake_json.close();
 
   unordered_map<string, shared_ptr<api_loader>> apis = ApiFactory::get_apis();
-  Assertion::assert_equals(__FUNCTION__, APIS_TEST_CURRENT_APIS_NUMBER,
-                           apis.size());
+  int size = apis.size();
 
   std::filesystem::remove(ApiFactory::get_apis_folder_path() + "folder.json/");
   std::filesystem::remove(ApiFactory::get_apis_folder_path() + "fake.json");
+
+  Assertion::assert_equals(__FUNCTION__, APIS_TEST_CURRENT_APIS_NUMBER, size);
 }
 
 void test_apis_get_names() {

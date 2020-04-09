@@ -9,6 +9,7 @@
 #include "download/response_item.h"
 #include "indexation/file.h"
 #include "utils/exceptions.h"
+#include "utils/logger.h"
 #include "utils/nlohmann/json-schema.hpp"
 #include "utils/nlohmann/json.hpp"
 #include "utils/utils.h"
@@ -20,6 +21,7 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <typeinfo>
 #include <unordered_map>
 #include <utility>
 #include <vector>

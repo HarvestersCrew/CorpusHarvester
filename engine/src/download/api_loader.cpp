@@ -210,16 +210,21 @@ void api_loader::manage_parsed_responses(
         sp_file->add_tag(relevant.first->_name, relevant.second);
       }
 
-      if (sp_file->api_id_exists(HarvesterDatabase::init())) {
+      if (!sp_file->api_id_exists(HarvesterDatabase::init())) {
         files.push_back(sp_file);
       }
 
-    } catch (...) {
-      std::exception_ptr e = std::current_exception();
-      std::cerr << "Unexpected exception while parsing a result: "
-                << e.__cxa_exception_type()->name() << std::endl;
+    } catch (const std::exception &e) {
+      stringstream ss;
+      ss << "Unexpected exception while parsing a result: " << typeid(e).name();
+      logger::error(ss.str());
     }
   }
+
+  logger::info("'" + this->get_name() + "' downloaded " +
+               std::to_string(parsed_responses.size()) + " and " +
+               std::to_string(parsed_responses.size() - files.size()) +
+               " were already present");
 }
 
 void api_loader::manage_main_value(const response_item &result_to_manage,

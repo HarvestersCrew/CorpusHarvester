@@ -92,29 +92,25 @@ Corpus ManagerRequest::create_corpus(string name, string source) {
 
   ApiDownloadBuilder dl_builder;
 
-  if (source == "Twitter") {
-    logger::info("[*] Source Twitter OK");
-    dl_builder.add_request("Twitter",
-                           unordered_map<string, string>({{"q", name}}));
-  } else if (source == "tmdb") {
-    logger::info("[*] Source TMDB OK");
-    // TODO :: Use the proper dl_builder
-  } else {
-    logger::info("[*] Default source used !");
-    dl_builder.add_request("Twitter",
-                           unordered_map<string, string>({{"q", name}}));
-  }
+  // if (source == "twitter") {
+  //   logger::info("[*] Source Twitter OK");
+  //   dl_builder.add_request("Twitter",
+  //                          unordered_map<string, string>({{"q", name}}));
+  // } else if (source == "TheMovieDB_Synopsis") {
+  //   logger::info("[*] Source TMDB OK");
+  //   // TODO :: Use the proper dl_builder
+  // } else {
+  //   logger::info("[*] Default source used !");
+  //   dl_builder.add_request("Twitter",
+  //                          unordered_map<string, string>({{"q", name}}));
+  // }
 
-  std::list<shared_ptr<File>> out = dl_builder.build();
+  dl_builder.add_request(source,
+                         unordered_map<string, string>({{"query", name}}));
 
-  // Store the files
-  sql::Connection *db = HarvesterDatabase::init();
-  Storage storage(db);
-  storage.store_files(out);
+  dl_builder.build(-1);
 
-  // Index the downloaded data
-  Indexer indexer(db);
-  indexer.indexation(out);
+  Indexer indexer(HarvesterDatabase::init());
 
   // Request files which has at least one retweet and one favorite
   SearchBuilder sb = indexer.get_search_builder();
