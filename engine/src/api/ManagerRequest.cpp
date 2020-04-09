@@ -108,7 +108,7 @@ Corpus ManagerRequest::create_corpus(string name, string source) {
   dl_builder.add_request(source,
                          unordered_map<string, string>({{"query", name}}));
 
-  dl_builder.build(-1);
+  dl_builder.build(0);
 
   Indexer indexer(HarvesterDatabase::init());
 

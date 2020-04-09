@@ -2,7 +2,7 @@
 
 ApiDownloadBuilder::ApiDownloadBuilder() : ApiRequestBuilder() {}
 
-list<shared_ptr<File>> ApiDownloadBuilder::build(int number) const {
+list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
 
   list<shared_ptr<File>> res;
   sql::Connection *db = HarvesterDatabase::init();
