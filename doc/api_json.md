@@ -225,13 +225,13 @@ Boolean to save the parameter value as a metadata.
 
 ### default_value
 
-If no value is provided in a query and this value is set, will use this one.
+If no value is provided in a query and this value is set, will use this one. Must be represented as a string.
 
-*ex.:* `1` for a page number for instance
+*ex.:* `"1"` for a page number for instance
 
 ### values
 
-Array of possible values for this parameter. If a value is given by the user or by a default value, it will check it against this array before doing (or not) the query.
+Array of possible values for this parameter. If a value is given by the user or by a default value, it will check it against this array before doing (or not) the query. Values must be strings.
 
 *ex.:* `["recent", "popular", "mixed"]`
 
