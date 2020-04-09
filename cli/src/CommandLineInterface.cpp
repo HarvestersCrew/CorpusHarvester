@@ -19,6 +19,8 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 
   // Name of the corpus
   createCorpus.add_option("name", "Name of the new corpus.", false);
+  createCorpus.add_option(
+      "n_element", "Number of element you wanted in your corpus.", false);
   createCorpus.add_option("image", "Set if you want video in your corpus.",
                           true);
   createCorpus.add_option("video", "Set if you want video in your corpus.",
@@ -57,6 +59,8 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 
 void CommandLineInterface::run() {
   string source = "";
+  vector<string> sources;
+  map<string, string> params;
   map<string, string>::iterator itSubCommand;
 
   // Check if we have the corpus command
@@ -145,8 +149,10 @@ void CommandLineInterface::run() {
             logger::error("Le nom de la source n'est pas valide ! ");
             // TODO :: End the program ? Add user confirmation.
             source = "";
+            sources.push_back(source);
           } else {
             logger::debug("Source: " + source);
+            sources.push_back(source);
           }
         }
 
@@ -154,8 +160,8 @@ void CommandLineInterface::run() {
         string corpusName = itSubCommand->second;
 
         // Create the corpus and show it
-        Corpus corpus =
-            ManagerRequest::getInstance().create_corpus(corpusName, source);
+        Corpus corpus = ManagerRequest::getInstance().create_corpus(
+            corpusName, sources, params);
         logger::info(corpus.to_string());
 
       } else {

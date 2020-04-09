@@ -86,7 +86,13 @@ std::optional<Corpus *> ManagerRequest::visualisation_corpus(std::string name) {
   return corpus;
 }
 
-Corpus ManagerRequest::create_corpus(string name, string source) {
+Corpus
+ManagerRequest::create_corpus(std::string name,
+                              std::vector<std::string> sources,
+                              std::map<std::string, std::string> &params) {
+
+  // TODO :: At the moment, we manage only one source.
+  string source = sources.front();
 
   logger::info("Creation of " + name + "'s corpus in progress...");
 

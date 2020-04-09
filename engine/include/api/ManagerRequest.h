@@ -85,13 +85,14 @@ public:
   /**
    * Create a corpus based on the name of it.
    *
-   * // TODO :: Need to precise more parameters. Im' thinking about the
-   * different tags (list or map)
+   * @param name of the corpus
+   * @param sources list of the source we want to create the corpus
+   * @param params Map of the parameter for the new corpus.
    *
-   * @param name
-   * @return
+   * @return Created corpus.
    */
-  Corpus create_corpus(const std::string name, const std::string source);
+  Corpus create_corpus(std::string name, std::vector<std::string> sources,
+                       std::map<std::string, std::string> &params);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H
