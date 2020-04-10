@@ -2,6 +2,52 @@
 
 ApiRequestBuilder::ApiRequestBuilder() {}
 
+json ApiRequestBuilder::serialize() const {
+
+  json j;
+
+  j["requests"] = json::array();
+  j["types"] = json::array();
+
+  for (const auto &el : this->_types) {
+    j["types"].push_back(el);
+  }
+
+  for (const auto &request : this->_requests) {
+    j["requests"].push_back(
+        {{"api", request.first->get_name()}, {"params", json::array()}});
+    for (const auto &param : request.second) {
+      j["requests"][j["requests"].size() - 1]["params"].push_back(
+          {{"name", param.first},
+           {"value", param.second.first},
+           {"op", param.second.second}});
+    }
+  }
+
+  return j;
+}
+
+void ApiRequestBuilder::deserialize(const json &j) {
+  this->clear_requests();
+  this->clear_types();
+
+  for (const auto &type : j["types"]) {
+    this->add_type((api_loader::api_type)type.get<int>());
+  }
+
+  for (auto it = j["requests"].begin(); it != j["requests"].end(); ++it) {
+    string api_name = it->at("api").get<string>();
+    int idx = this->add_request(api_name);
+    for (auto param = it->at("params").begin(); param != it->at("params").end();
+         ++param) {
+      string param_name = param->at("name");
+      string param_value = param->at("value");
+      string op = param->at("op");
+      this->add_request_parameter(idx, param_name, param_value, op);
+    }
+  }
+}
+
 void ApiRequestBuilder::clear_types() { this->_types.clear(); }
 
 void ApiRequestBuilder::add_type(const api_loader::api_type t) {
@@ -15,11 +61,6 @@ void ApiRequestBuilder::add_type(const api_loader::api_type t) {
 const unordered_set<api_loader::api_type> &
 ApiRequestBuilder::get_types() const {
   return this->_types;
-}
-
-void ApiRequestBuilder::clear_all() {
-  this->clear_requests();
-  this->clear_types();
 }
 
 void ApiRequestBuilder::clear_requests() { this->_requests.clear(); }

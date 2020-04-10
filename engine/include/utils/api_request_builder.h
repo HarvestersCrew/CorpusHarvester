@@ -5,6 +5,7 @@
 #include "download/api_loader.h"
 #include "indexation/file.h"
 #include "utils/exceptions.h"
+#include "utils/nlohmann/json.hpp"
 #include <iostream>
 #include <list>
 #include <memory>
@@ -15,6 +16,7 @@
 #include <utility>
 #include <vector>
 
+using nlohmann::json;
 using std::endl;
 using std::list;
 using std::make_pair;
@@ -56,6 +58,18 @@ protected:
 
 public:
   /**
+   * Serializes the request
+   * @return JSON to be save wherever you want
+   */
+  virtual json serialize() const;
+
+  /**
+   * Deserializes to the request
+   * @param j JSON to load from
+   */
+  virtual void deserialize(const json &j);
+
+  /**
    * Fetches the list of files from whatever source we want
    * @param number number of elements to retrieve, 0 means value not set and
    * outcome depends on the implementation
@@ -87,11 +101,6 @@ public:
                                      const string &param_name,
                                      const string &param_value,
                                      const string &op);
-
-  /**
-   * Resets everything in the builder
-   */
-  virtual void clear_all();
 
   /**
    * Clears filled types

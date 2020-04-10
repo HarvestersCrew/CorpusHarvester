@@ -3,6 +3,10 @@
 ApiDownloadBuilder ManagerRequest::_dl_builder = ApiDownloadBuilder();
 ApiDatabaseBuilder ManagerRequest::_db_builder = ApiDatabaseBuilder();
 
+/*
+ * METHODS RELATING TO CORPUS MANAGEMENT
+ */
+
 std::list<Corpus *> ManagerRequest::visualisation_corpus(
     std::map<std::string, std::string> &filters,
     std::map<std::string, std::string> &orders) {
@@ -153,7 +157,8 @@ ApiRequestBuilder &ManagerRequest::api_builder_get_based_on_bool(bool is_web) {
 void ManagerRequest::api_builder_clear(bool is_web) {
   ApiRequestBuilder &builder =
       ManagerRequest::api_builder_get_based_on_bool(is_web);
-  builder.clear_all();
+  builder.clear_requests();
+  builder.clear_types();
 }
 
 long unsigned int

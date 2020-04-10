@@ -40,6 +40,10 @@ private:
   static ApiDatabaseBuilder _db_builder;
 
 public:
+  /*
+   * METHODS RELATING TO CORPUS MANAGEMENT
+   */
+
   /**
    * Get all the corpus present in our database.
    * Allow the user to add specific filters in order to search in the database
@@ -70,6 +74,19 @@ public:
   static std::optional<Corpus *> visualisation_corpus(const std::string name);
 
   /**
+   * Create a corpus based on the name of it.
+   *
+   * @param name of the corpus
+   * @param sources list of the source we want to create the corpus
+   * @param params Map of the parameter for the new corpus.
+   *
+   * @return Created corpus.
+   */
+  static Corpus create_corpus(std::string name,
+                              std::vector<std::string> sources,
+                              std::map<std::string, std::string> &params);
+
+  /**
    * Get all the data present in our database.
    * Allow the user to add specific filters in order to search in the
    * database the data. Different kind of filters is available :
@@ -90,19 +107,6 @@ public:
   static std::list<File>
   visualisation_data(const std::map<std::string, std::string> &filters,
                      const std::map<std::string, std::string> &orders);
-
-  /**
-   * Create a corpus based on the name of it.
-   *
-   * @param name of the corpus
-   * @param sources list of the source we want to create the corpus
-   * @param params Map of the parameter for the new corpus.
-   *
-   * @return Created corpus.
-   */
-  static Corpus create_corpus(std::string name,
-                              std::vector<std::string> sources,
-                              std::map<std::string, std::string> &params);
 
   /*
    * Methods relating to web APIs informations
