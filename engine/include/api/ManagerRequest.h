@@ -22,16 +22,6 @@ private:
 
 public:
   /**
-   * Get the instance of the Manager Request.
-   *
-   * @return ManagerRequest instance
-   */
-  static ManagerRequest &getInstance() {
-    static ManagerRequest instance;
-    return instance;
-  }
-
-  /**
    * Get all the corpus present in our database.
    * Allow the user to add specific filters in order to search in the database
    * the corpus. Different kind of filters is available :
@@ -47,7 +37,7 @@ public:
    *
    * @return std::list<Corpus> List of all the corpus.
    */
-  std::list<Corpus *>
+  static std::list<Corpus *>
   visualisation_corpus(std::map<std::string, std::string> &filters,
                        std::map<std::string, std::string> &orders);
 
@@ -58,7 +48,7 @@ public:
    *
    * @return Corpus Object
    */
-  std::optional<Corpus *> visualisation_corpus(const std::string name);
+  static std::optional<Corpus *> visualisation_corpus(const std::string name);
 
   /**
    * Get all the data present in our database.
@@ -78,7 +68,7 @@ public:
    *
    * @return std::list<File> List of all the data.
    */
-  std::list<File>
+  static std::list<File>
   visualisation_data(const std::map<std::string, std::string> &filters,
                      const std::map<std::string, std::string> &orders);
 
@@ -91,8 +81,9 @@ public:
    *
    * @return Created corpus.
    */
-  Corpus create_corpus(std::string name, std::vector<std::string> sources,
-                       std::map<std::string, std::string> &params);
+  static Corpus create_corpus(std::string name,
+                              std::vector<std::string> sources,
+                              std::map<std::string, std::string> &params);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H

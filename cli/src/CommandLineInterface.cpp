@@ -83,7 +83,7 @@ void CommandLineInterface::run() {
 
         // Search for the corpus with the given name
         std::optional<Corpus *> optionalCorpus =
-            ManagerRequest::getInstance().visualisation_corpus(corpusName);
+            ManagerRequest::visualisation_corpus(corpusName);
 
         // Check if we have a corpus
         if (optionalCorpus.has_value()) {
@@ -99,7 +99,7 @@ void CommandLineInterface::run() {
         std::map<std::string, std::string> filters, orders;
 
         std::list<Corpus *> corpusList =
-            ManagerRequest::getInstance().visualisation_corpus(filters, orders);
+            ManagerRequest::visualisation_corpus(filters, orders);
 
         logger::info("Number of available corpus : " + corpusList.size());
 
@@ -160,8 +160,8 @@ void CommandLineInterface::run() {
         string corpusName = itSubCommand->second;
 
         // Create the corpus and show it
-        Corpus corpus = ManagerRequest::getInstance().create_corpus(
-            corpusName, sources, params);
+        Corpus corpus =
+            ManagerRequest::create_corpus(corpusName, sources, params);
         logger::info(corpus.to_string());
 
       } else {
