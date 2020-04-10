@@ -3,15 +3,20 @@
 
 #include "database/harvester_database.h"
 #include "download/api_download_builder.h"
+#include "download/api_parameter.h"
 #include "indexation/api_database_builder.h"
 #include "indexation/corpus.h"
 #include "indexation/file.h"
 #include <list>
+#include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
+using std::shared_ptr;
 using std::string;
 using std::unordered_map;
+using std::vector;
 
 class ManagerRequest {
 private:
@@ -19,6 +24,9 @@ private:
    * Private Constructor. We want to have a Singleton.
    */
   ManagerRequest() {}
+
+  static ApiDownloadBuilder _dl_builder;
+  static ApiDatabaseBuilder _db_builder;
 
 public:
   /**
@@ -84,6 +92,25 @@ public:
   static Corpus create_corpus(std::string name,
                               std::vector<std::string> sources,
                               std::map<std::string, std::string> &params);
+
+  /*
+   * Methods relating to web APIs informations
+   */
+
+  /**
+   * Returns a list of API names that are usable in the Harvester
+   * @return vector of strings which are the API names
+   */
+  static vector<string> get_apis();
+
+  /**
+   * Retrieves the list of parameters usable in a web request
+   * @param api_name Name of the API to find
+   * @return vector of parameters
+   * @throw api_factory_name_not_found if the given API isn't found
+   */
+  static vector<shared_ptr<api_parameter_request>>
+  get_api_web_parameters(const string &api_name);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H

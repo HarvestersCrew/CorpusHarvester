@@ -16,6 +16,9 @@
 #include <list>
 #include <map>
 
+ApiDownloadBuilder ManagerRequest::_dl_builder = ApiDownloadBuilder();
+ApiDatabaseBuilder ManagerRequest::_db_builder = ApiDatabaseBuilder();
+
 std::list<Corpus *> ManagerRequest::visualisation_corpus(
     std::map<std::string, std::string> &filters,
     std::map<std::string, std::string> &orders) {
@@ -130,4 +133,17 @@ ManagerRequest::create_corpus(std::string name,
   HarvesterDatabase::close();
 
   return corpus;
+}
+
+/*
+ * Methods relating to web APIs informations
+ */
+
+vector<string> ManagerRequest::get_apis() {
+  return ApiFactory::get_api_names();
+}
+
+vector<shared_ptr<api_parameter_request>>
+ManagerRequest::get_api_web_parameters(const string &api_name) {
+  return ApiFactory::get_api(api_name)->get_request_parameters();
 }
