@@ -25,24 +25,16 @@ class ApiDatabaseBuilder : public ApiRequestBuilder {
 public:
   ApiDatabaseBuilder();
 
-  /**
-   * Adds a new request
-   * @param api_name Name of the API to use
-   * @param params List of parameters to use for this request
-   * @return index of the newly inserted request
-   * @throw api_factory_name_not_found if the given API is not found
-   * @throw api_no_setting_exception if a parameter isn't found
-   */
   virtual long unsigned int
   add_request(const string &api_name,
               const unordered_map<string, pair<string, string>> &params);
 
-  /**
-   * Fetches the list of files from the DB
-   * @param number number of elements to retrieve, 0 means everything that
-   * matches is retrieved
-   */
   virtual list<shared_ptr<File>> build(unsigned int number) const;
+
+  virtual void add_request_parameter(long unsigned int request_id,
+                                     const string &param_name,
+                                     const string &param_value,
+                                     const string &op);
 };
 
 #endif

@@ -114,3 +114,22 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   return res;
 }
+
+void ApiDatabaseBuilder::add_request_parameter(long unsigned int request_id,
+                                               const string &param_name,
+                                               const string &param_value,
+                                               const string &op) {
+  if (this->_requests.size() <= request_id) {
+    throw api_builder_request_not_found(request_id);
+  }
+  if (op != "=" && op != "<=" && op != ">=" && op != "<" && op != ">" &&
+      op != "!=") {
+    throw api_builder_incompatible_operator(op, "database");
+  }
+  shared_ptr<api_loader> &api = this->_requests[request_id].first;
+  if (!api->find_response_parameter(param_name).has_value()) {
+    throw api_no_setting_exception(param_name);
+  }
+  ApiRequestBuilder::add_request_parameter(request_id, param_name, param_value,
+                                           op);
+}

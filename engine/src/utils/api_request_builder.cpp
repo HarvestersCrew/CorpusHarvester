@@ -37,6 +37,24 @@ long unsigned int ApiRequestBuilder::add_request(const string &api_name) {
                            unordered_map<string, pair<string, string>>());
 }
 
+void ApiRequestBuilder::add_request_parameter(long unsigned int request_id,
+                                              const string &param_name,
+                                              const string &param_value,
+                                              const string &op) {
+  if (this->_requests.size() <= request_id) {
+    throw api_builder_request_not_found(request_id);
+  }
+
+  auto &params = this->_requests[request_id].second;
+  if (params.find(param_name) == params.end()) {
+    params.emplace(param_name, make_pair(param_value, op));
+  } else {
+    auto &param = params[param_name];
+    param.first = param_value;
+    param.second = op;
+  }
+}
+
 vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>>
 ApiRequestBuilder::get_no_op_requests() const {
 

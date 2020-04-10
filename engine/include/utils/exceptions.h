@@ -161,4 +161,11 @@ public:
                            builder_type + "' builder") {}
 };
 
+class api_builder_request_not_found : public std::runtime_error {
+public:
+  api_builder_request_not_found(long unsigned int id)
+      : std::runtime_error("Request ID " + to_string(id) +
+                           " not found in builder") {}
+};
+
 #endif

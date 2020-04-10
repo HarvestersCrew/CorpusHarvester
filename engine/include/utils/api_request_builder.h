@@ -59,6 +59,8 @@ public:
    * Fetches the list of files from whatever source we want
    * @param number number of elements to retrieve, 0 means value not set and
    * outcome depends on the implementation
+   * DatabaseBuilder -> 0 = everything that matches
+   * DownloadBuilder -> 0 = single pass over the sources
    */
   virtual list<shared_ptr<File>> build(unsigned int number) const = 0;
 
@@ -69,6 +71,7 @@ public:
    * @return index of the newly inserted request
    * @throw api_factory_name_not_found if the given API is not found
    * @throw api_no_setting_exception if a parameter isn't found
+   * @throw api_builder_incompatible_operator If an operator is incompatible
    */
   virtual long unsigned int
   add_request(const string &api_name,
@@ -81,6 +84,22 @@ public:
    * @throw api_factory_name_not_found if the given API is not found
    */
   virtual long unsigned int add_request(const string &api_name);
+
+  /**
+   * Inserts or replace a parameter value and operator in the request defined by
+   * the ID
+   * @param request_id Request ID
+   * @param param_name Name of the API parameter
+   * @param param_value Value to set
+   * @param op Operator to use to search
+   * @throw api_no_setting_exception if the parameter isn't found
+   * @throw api_builder_request_not_found if the request ID isn't found
+   * @throw api_builder_incompatible_operator If an operator is incompatible
+   */
+  virtual void add_request_parameter(long unsigned int request_id,
+                                     const string &param_name,
+                                     const string &param_value,
+                                     const string &op);
 
   /**
    * Resets everything in the builder
