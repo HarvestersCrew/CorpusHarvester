@@ -163,3 +163,11 @@ ManagerRequest::api_builder_add_request(bool is_web,
       ManagerRequest::api_builder_get_based_on_bool(is_web);
   return builder.add_request(api_name);
 }
+
+void ManagerRequest::api_builder_add_request_parameter(
+    bool is_web, long unsigned int request_id, const string &param_name,
+    const string &param_value, const string &op) {
+  ApiRequestBuilder &builder =
+      ManagerRequest::api_builder_get_based_on_bool(is_web);
+  builder.add_request_parameter(request_id, param_name, param_value, op);
+}

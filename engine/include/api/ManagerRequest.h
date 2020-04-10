@@ -163,6 +163,24 @@ public:
    */
   static long unsigned int api_builder_add_request(bool is_web,
                                                    const std::string &api_name);
+
+  /**
+   * Inserts or replace a parameter value and operator in the request defined by
+   * the ID
+   * @param is_web true if it is the web builder, false if it is the DB builder
+   * @param request_id Request ID
+   * @param param_name Name of the API parameter
+   * @param param_value Value to set
+   * @param op Operator to use to search
+   * @throw api_no_setting_exception if the parameter isn't found
+   * @throw api_builder_request_not_found if the request ID isn't found
+   * @throw api_builder_incompatible_operator If an operator is incompatible
+   */
+  static void api_builder_add_request_parameter(bool is_web,
+                                                long unsigned int request_id,
+                                                const string &param_name,
+                                                const string &param_value,
+                                                const string &op);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H
