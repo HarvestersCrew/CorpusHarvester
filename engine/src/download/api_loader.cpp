@@ -301,3 +301,8 @@ const std::vector<shared_ptr<api_parameter_request>> &
 api_loader::get_request_parameters() const {
   return this->_requests;
 }
+
+const std::vector<shared_ptr<api_parameter_response>> &
+api_loader::get_response_parameters() const {
+  return this->_responses;
+}
