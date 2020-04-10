@@ -2,25 +2,6 @@
 
 ApiDatabaseBuilder::ApiDatabaseBuilder() : ApiRequestBuilder() {}
 
-long unsigned int ApiDatabaseBuilder::add_request(
-    const string &api_name,
-    const unordered_map<string, pair<string, string>> &params) {
-
-  const shared_ptr<api_loader> api = ApiFactory::get_api(api_name);
-  for (const auto &el : params) {
-    if (!api->find_response_parameter(el.first).has_value()) {
-      throw api_no_setting_exception(el.first);
-    }
-    const string &op = el.second.second;
-    if (op != "=" && op != "<=" && op != ">=" && op != "<" && op != ">" &&
-        op != "!=") {
-      throw api_builder_incompatible_operator(op, "database");
-    }
-  }
-
-  return ApiRequestBuilder::add_request(api_name, params);
-}
-
 list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   list<shared_ptr<File>> res;

@@ -25,10 +25,6 @@ class ApiDatabaseBuilder : public ApiRequestBuilder {
 public:
   ApiDatabaseBuilder();
 
-  virtual long unsigned int
-  add_request(const string &api_name,
-              const unordered_map<string, pair<string, string>> &params);
-
   virtual list<shared_ptr<File>> build(unsigned int number) const;
 
   virtual void add_request_parameter(long unsigned int request_id,

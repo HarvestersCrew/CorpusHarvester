@@ -24,17 +24,11 @@ void ApiRequestBuilder::clear_all() {
 
 void ApiRequestBuilder::clear_requests() { this->_requests.clear(); }
 
-long unsigned int ApiRequestBuilder::add_request(
-    const string &api_name,
-    const unordered_map<string, pair<string, string>> &params) {
-
-  this->_requests.push_back(make_pair(ApiFactory::get_api(api_name), params));
-  return this->_requests.size() - 1;
-}
-
 long unsigned int ApiRequestBuilder::add_request(const string &api_name) {
-  return this->add_request(api_name,
-                           unordered_map<string, pair<string, string>>());
+  this->_requests.push_back(
+      make_pair(ApiFactory::get_api(api_name),
+                unordered_map<string, pair<string, string>>()));
+  return this->_requests.size() - 1;
 }
 
 void ApiRequestBuilder::add_request_parameter(long unsigned int request_id,
