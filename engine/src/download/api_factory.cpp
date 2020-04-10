@@ -1,6 +1,6 @@
 #include "download/api_factory.h"
 
-optional<unordered_map<string, shared_ptr<api_loader>>> ApiFactory::apis =
+optional<unordered_map<string, shared_ptr<api_loader>>> ApiFactory::_apis =
     nullopt;
 
 string ApiFactory::get_apis_folder_path() {
@@ -12,13 +12,13 @@ string ApiFactory::get_apis_folder_path() {
 
 void ApiFactory::discover_from_path(const string &path) {
 
-  if (ApiFactory::apis.has_value()) {
-    ApiFactory::apis.value().clear();
+  if (ApiFactory::_apis.has_value()) {
+    ApiFactory::_apis.value().clear();
   } else {
-    ApiFactory::apis = unordered_map<string, shared_ptr<api_loader>>();
+    ApiFactory::_apis = unordered_map<string, shared_ptr<api_loader>>();
   }
   unordered_map<string, shared_ptr<api_loader>> &apis =
-      ApiFactory::apis.value();
+      ApiFactory::_apis.value();
 
   logger::debug("Discovering APIs from " + path);
 
@@ -124,10 +124,10 @@ void ApiFactory::discover_from_path(const string &path) {
 }
 
 const unordered_map<string, shared_ptr<api_loader>> &ApiFactory::get_apis() {
-  if (!ApiFactory::apis.has_value()) {
+  if (!ApiFactory::_apis.has_value()) {
     ApiFactory::discover_from_path(ApiFactory::get_apis_folder_path());
   }
-  return ApiFactory::apis.value();
+  return ApiFactory::_apis.value();
 }
 
 vector<string> ApiFactory::get_api_names() {

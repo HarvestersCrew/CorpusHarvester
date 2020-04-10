@@ -46,7 +46,7 @@ using std::vector;
 class ApiFactory {
 private:
   /** Map of name and api_loader found */
-  static optional<unordered_map<string, shared_ptr<api_loader>>> apis;
+  static optional<unordered_map<string, shared_ptr<api_loader>>> _apis;
 
   /**
    * Discovers and loads all compatible APIs from path
