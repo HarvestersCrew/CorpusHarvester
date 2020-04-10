@@ -197,7 +197,6 @@
                         "enum": [
                             "string",
                             "int",
-                            "int64",
                             "image_link"
                         ]
                     },

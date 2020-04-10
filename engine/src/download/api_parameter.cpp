@@ -15,8 +15,6 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
     this->_value_type = value_type::STRING;
   } else if (json.at("type").get<std::string>() == API_PARAMETER_INT) {
     this->_value_type = value_type::INT;
-  } else if (json.at("type").get<std::string>() == API_PARAMETER_INT64) {
-    this->_value_type = value_type::INT64;
   } else if (json.at("type").get<std::string>() == API_PARAMETER_IMAGE_LINK) {
     this->_value_type = value_type::IMAGE_LINK;
   } else {
@@ -38,9 +36,6 @@ std::string api_parameter_base::get_value_type_string() const {
   case api_parameter_base::value_type::INT:
     return API_PARAMETER_INT;
     break;
-  case api_parameter_base::value_type::INT64:
-    return API_PARAMETER_INT64;
-    break;
   case api_parameter_base::value_type::STRING:
     return API_PARAMETER_STRING;
     break;
@@ -60,9 +55,7 @@ api_parameter_base::value_type api_parameter_base::get_value_type() const {
 std::string
 api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
   std::string result;
-  if (this->_value_type == value_type::INT64) {
-    result = std::to_string(val.get<int64_t>());
-  } else if (this->_value_type == value_type::INT) {
+  if (this->_value_type == value_type::INT) {
     result = std::to_string(val.get<int>());
   } else if (this->_value_type == value_type::STRING) {
     result = val.get<std::string>();
@@ -131,16 +124,7 @@ bool api_parameter_request::is_value_valid(const std::string &val) const {
 bool api_parameter_request::is_value_correctly_typed(
     const std::string &val) const {
 
-  if (this->_value_type == value_type::INT64) {
-    try {
-      std::stoull(val);
-    } catch (const std::invalid_argument &e) {
-      return false;
-    } catch (const std::out_of_range &e) {
-      return false;
-    }
-
-  } else if (this->_value_type == value_type::INT) {
+  if (this->_value_type == value_type::INT) {
     try {
       std::stoi(val);
     } catch (const std::invalid_argument &e) {

@@ -10,7 +10,6 @@
 #include <vector>
 
 #define API_PARAMETER_INT "int"
-#define API_PARAMETER_INT64 "int64"
 #define API_PARAMETER_STRING "string"
 #define API_PARAMETER_IMAGE_LINK "image_link"
 
@@ -37,7 +36,7 @@ class api_parameter_base {
 
 public:
   /** Value describing the type of the parameter */
-  enum value_type { STRING, INT, INT64, IMAGE_LINK };
+  enum value_type { STRING, INT, IMAGE_LINK };
 
   /**
    * String of current state
