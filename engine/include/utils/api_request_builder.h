@@ -66,6 +66,11 @@ public:
   /**
    * Deserializes to the request
    * @param j JSON to load from
+   * @throw api_factory_name_not_found if the given API is not found
+   * @throw api_no_setting_exception if the parameter isn't found
+   * @throw api_builder_request_not_found if the request ID isn't found
+   * @throw api_builder_incompatible_operator If an operator is incompatible
+   * @throw api_request_builder_invalid_type the given type is invalid
    */
   virtual void deserialize(const json &j);
 
@@ -109,6 +114,7 @@ public:
   /**
    * Add the given type
    * @param t Type of API to load from
+   * @throw api_request_builder_invalid_type the given type is invalid
    */
   virtual void add_type(const api_loader::api_type t);
   /**

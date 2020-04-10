@@ -117,7 +117,8 @@ ManagerRequest::create_corpus(std::string name,
 
   // Create our corpus from the fetch data and save it
   std::string now = get_current_time("%d-%m-%Y %H:%M:%S");
-  Corpus corpus("tweets avec 0 retweet", now, tweets, "");
+  Corpus corpus("tweets avec 0 retweet", now, tweets,
+                db_builder.serialize().dump());
   indexer.save_corpus(corpus);
   HarvesterDatabase::close();
 
