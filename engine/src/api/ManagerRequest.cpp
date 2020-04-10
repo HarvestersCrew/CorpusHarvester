@@ -171,3 +171,10 @@ void ManagerRequest::api_builder_add_request_parameter(
       ManagerRequest::api_builder_get_based_on_bool(is_web);
   builder.add_request_parameter(request_id, param_name, param_value, op);
 }
+
+list<shared_ptr<File>> ManagerRequest::api_builder_build(bool is_web,
+                                                         unsigned int number) {
+  ApiRequestBuilder &builder =
+      ManagerRequest::api_builder_get_based_on_bool(is_web);
+  return builder.build(number);
+}

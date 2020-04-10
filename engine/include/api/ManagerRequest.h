@@ -181,6 +181,17 @@ public:
                                                 const string &param_name,
                                                 const string &param_value,
                                                 const string &op);
+
+  /**
+   * Fetches the list of files from whatever source we want
+   * @param is_web true if it is the web builder, false if it is the DB builder
+   * @param number number of elements to retrieve, 0 means value not set and
+   * outcome depends on the implementation
+   * DatabaseBuilder -> 0 = everything that matches
+   * DownloadBuilder -> 0 = single pass over the sources
+   */
+  static list<shared_ptr<File>> api_builder_build(bool is_web,
+                                                  unsigned int number);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H
