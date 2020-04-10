@@ -55,6 +55,14 @@ protected:
   ApiRequestBuilder();
 
   /**
+   * Fetches the list of files from whatever source we want
+   * @param number number of elements to retrieve, 0 means value not set and
+   * outcome depends on the implementation
+   */
+  virtual list<shared_ptr<File>> build(unsigned int number) const = 0;
+
+public:
+  /**
    * Adds a new request
    * @param api_name Name of the API to use
    * @param params List of parameters to use for this request
@@ -67,13 +75,13 @@ protected:
               const unordered_map<string, pair<string, string>> &params);
 
   /**
-   * Fetches the list of files from whatever source we want
-   * @param number number of elements to retrieve, 0 means value not set and
-   * outcome depends on the implementation
+   * Adds a new request with only the API name
+   * @param api_name Name of the API to use
+   * @return index of the newly inserted request
+   * @throw api_factory_name_not_found if the given API is not found
    */
-  virtual list<shared_ptr<File>> build(unsigned int number) const = 0;
+  virtual long unsigned int add_request(const string &api_name);
 
-public:
   /**
    * Resets everything in the builder
    */

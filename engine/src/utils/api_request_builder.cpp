@@ -32,6 +32,11 @@ long unsigned int ApiRequestBuilder::add_request(
   return this->_requests.size() - 1;
 }
 
+long unsigned int ApiRequestBuilder::add_request(const string &api_name) {
+  return this->add_request(api_name,
+                           unordered_map<string, pair<string, string>>());
+}
+
 vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>>
 ApiRequestBuilder::get_no_op_requests() const {
 
