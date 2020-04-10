@@ -67,6 +67,22 @@ api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
 
 string api_parameter_base::get_name() const { return this->_name; }
 
+string
+api_parameter_base::get_sql_cast_prepared_string(const string &param) const {
+  string res;
+
+  switch (this->get_value_type()) {
+  case api_parameter_base::value_type::INT:
+    res += "CAST(" + param + " as INT)";
+    break;
+  default:
+    res += param;
+    break;
+  }
+
+  return res;
+}
+
 api_parameter_request::api_parameter_request(const nlohmann::json &json)
     : api_parameter_base(json) {
   this->_position = json.at("position").get<std::string>();

@@ -61,6 +61,12 @@ public:
 
   virtual string get_name() const;
 
+  /**
+   * Returns a prepared SQL string where the prepared value is cast to the
+   * parameter type
+   */
+  virtual string get_sql_cast_prepared_string(const string &param) const;
+
 protected:
   /**
    * Loads parameters data from a JSON
