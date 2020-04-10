@@ -70,9 +70,18 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
         prepared_values.push_back(api->get_name());
       }
 
+      // Retrieving the API parameter request in order to apply proper casting
+      // to the values, and we consider its existence was checked when adding
+      // the request
+      const shared_ptr<api_parameter_response> api_param =
+          api->find_response_parameter(param_it->first).value();
+
       // This is the query to select the entry corresponding to the parameter
       // name and value
-      query << " AND t.name = ? AND t.value = ?";
+      query << " AND t.name = ? AND ";
+      query << api_param->get_sql_cast_prepared_string("t.value") << " "
+            << param_it->second.second << " "
+            << api_param->get_sql_cast_prepared_string("?");
       prepared_values.push_back(param_it->first);
       prepared_values.push_back(param_it->second.first);
     }
@@ -82,6 +91,8 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   query << ") as result_table";
   query << " ORDER BY id";
+
+  logger::debug(query.str());
 
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *sql_res;
