@@ -222,6 +222,12 @@ public:
    */
   const std::vector<shared_ptr<api_parameter_request>> &
   get_request_parameters() const;
+
+  /**
+   * Gets vector of available response parameters
+   */
+  const std::vector<shared_ptr<api_parameter_response>> &
+  get_response_parameters() const;
 };
 
 #endif
