@@ -111,16 +111,16 @@ ManagerRequest::create_corpus(std::string name,
   //                          unordered_map<string, string>({{"q", name}}));
   // }
 
-  dl_builder.add_request(source,
-                         unordered_map<string, string>({{"query", name}}));
+  // dl_builder.add_request(source,
+  //  unordered_map<string, string>({{"query", name}}));
 
-  dl_builder.build(0);
+  // dl_builder.build(0);
 
   Indexer indexer(HarvesterDatabase::init());
 
   ApiDatabaseBuilder db_builder;
-  db_builder.add_request("Twitter",
-                         unordered_map<string, string>({{"retweet", "0"}}));
+  // db_builder.add_request("Twitter",
+  //  unordered_map<string, string>({{"retweet", "0"}}));
   std::list<shared_ptr<File>> tweets = db_builder.build(0);
 
   // Create our corpus from the fetch data and save it

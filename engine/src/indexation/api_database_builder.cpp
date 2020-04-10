@@ -24,14 +24,21 @@ void ApiDatabaseBuilder::add_request(
 list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   list<shared_ptr<File>> res;
+
+  // Used to store the prepared SQL values to send to the SQL engine
   vector<string> prepared_values;
 
+  // SQL query to use at the end
   stringstream query;
   query << "SELECT * FROM (";
 
-  string select_distinct =
-      "SELECT DISTINCT f.* FROM File f INNER JOIN Tag t ON f.id = t.file_id";
+  // Piece of request used in each tag selection
+  string select_distinct_api =
+      "SELECT DISTINCT f.* FROM File f INNER JOIN Tag t "
+      "ON f.id = t.file_id WHERE f.source = ?";
 
+  // For each request we use an iterator, used to easily know if it is the first
+  // request to add commas and other caracters
   for (auto request_it = this->get_requests().begin();
        request_it != this->get_requests().end(); ++request_it) {
 
@@ -39,23 +46,32 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
     const unordered_map<string, pair<string, string>> &params =
         request_it->second;
 
-    string select_distinct_api = select_distinct + " WHERE f.source = ?";
-
+    // If it isn't the first separate request, add the UNION keyword to get new
+    // results appended
     if (request_it != this->get_requests().begin()) {
       query << " UNION ";
     }
 
     query << "(";
 
+    // If there is a request, even if there are no parameters we should fetch
+    // every entry of this API
     query << select_distinct_api;
     prepared_values.push_back(api->get_name());
+
+    // For each parameter in the request, we also use iterators to check if it
+    // is the first
     for (auto param_it = params.begin(); param_it != params.end(); ++param_it) {
 
+      // If this is the first parameter, we don't have to add the INTERSECT and
+      // not the SELECT query because it was inserted before the for
       if (param_it != params.begin()) {
         query << " INTERSECT " << select_distinct_api;
         prepared_values.push_back(api->get_name());
       }
 
+      // This is the query to select the entry corresponding to the parameter
+      // name and value
       query << " AND t.name = ? AND t.value = ?";
       prepared_values.push_back(param_it->first);
       prepared_values.push_back(param_it->second.first);
