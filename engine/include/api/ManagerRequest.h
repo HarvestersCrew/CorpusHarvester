@@ -120,8 +120,49 @@ public:
    * @return vector of parameters
    * @throw api_factory_name_not_found if the given API isn't found
    */
-  static vector<shared_ptr<api_parameter_request>>
+  static const vector<shared_ptr<api_parameter_request>> &
   get_api_web_parameters(const string &api_name);
+
+  /**
+   * Retrieves the list of parameters usable in a DB request
+   * @param api_name Name of the API to find
+   * @return vector of parameters
+   * @throw api_factory_name_not_found if the given API isn't found
+   */
+  static const vector<shared_ptr<api_parameter_response>> &
+  get_api_db_parameters(const string &api_name);
+
+  /*
+   * Methods relating to web APIs informations
+   */
+
+  /**
+   * Helper method not intended to be used by interfaces
+   * It retrieves a reference to the wanted builder, in order to avoid all if /
+   * else in subsequent methods
+   * @param is_web true if it is the web builder, false if it is the DB builder
+   */
+  static ApiRequestBuilder &api_builder_get_based_on_bool(bool is_web);
+
+  /**
+   * Resets one of the builders
+   * @param is_web true if it is the web builder, false if it is the DB builder
+   */
+  static void api_builder_clear(bool is_web);
+
+  /**
+   * Builder is capable of doing multiple OR requests based on the API name
+   * ex.: (Twitter AND retweet < 10) OR (Twitter AND retweet > 100)
+   * Adding a request is initialising a part of a multiple OR statement
+   * Use api_builder_add_parameter with the returned index to add a parameter
+   * @param is_web true if it is the web builder, false if it is the DB builder
+   * @param api_name Name of the API to add
+   * @return index of the newly inserted request
+   * @throw api_factory_name_not_found if the given API is not found
+   * @throw api_no_setting_exception if a parameter isn't found
+   */
+  static long unsigned int api_builder_add_request(bool is_web,
+                                                   const std::string &api_name);
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H

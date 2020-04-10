@@ -85,6 +85,8 @@ ManagerRequest::create_corpus(std::string name,
 
   ApiDownloadBuilder dl_builder;
 
+  ApiRequestBuilder &builder_test = dl_builder;
+
   // if (source == "twitter") {
   //   logger::info("[*] Source Twitter OK");
   //   dl_builder.add_request("Twitter",
@@ -127,7 +129,38 @@ vector<string> ManagerRequest::get_apis() {
   return ApiFactory::get_api_names();
 }
 
-vector<shared_ptr<api_parameter_request>>
+const vector<shared_ptr<api_parameter_request>> &
 ManagerRequest::get_api_web_parameters(const string &api_name) {
   return ApiFactory::get_api(api_name)->get_request_parameters();
+}
+
+const vector<shared_ptr<api_parameter_response>> &
+ManagerRequest::get_api_db_parameters(const string &api_name) {
+  return ApiFactory::get_api(api_name)->get_response_parameters();
+}
+
+/*
+ * Methods relating to web APIs informations
+ */
+
+ApiRequestBuilder &ManagerRequest::api_builder_get_based_on_bool(bool is_web) {
+  if (is_web) {
+    return ManagerRequest::_dl_builder;
+  } else {
+    return ManagerRequest::_db_builder;
+  }
+}
+
+void ManagerRequest::api_builder_clear(bool is_web) {
+  ApiRequestBuilder &builder =
+      ManagerRequest::api_builder_get_based_on_bool(is_web);
+  builder.clear_all();
+}
+
+long unsigned int
+ManagerRequest::api_builder_add_request(bool is_web,
+                                        const std::string &api_name) {
+  ApiRequestBuilder &builder =
+      ManagerRequest::api_builder_get_based_on_bool(is_web);
+  return builder.add_request(api_name);
 }
