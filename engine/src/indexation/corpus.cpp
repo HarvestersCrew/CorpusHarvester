@@ -6,15 +6,13 @@
 
 Corpus::Corpus() {}
 
-Corpus::Corpus(std::string title, std::string creation_date,
-               std::list<shared_ptr<File>> files, std::string used_filters,
-               int id)
-    : DatabaseItem(id), _title(title), _creation_date(creation_date),
-      _files(files), _used_filters(used_filters) {}
+Corpus::Corpus(std::string title, std::list<shared_ptr<File>> files,
+               std::string used_filters, int id)
+    : DatabaseItem(id), _title(title), _files(files),
+      _used_filters(used_filters) {}
 
-Corpus::Corpus(std::string title, std::string creation_date, int id)
-    : DatabaseItem(id), _title(title), _creation_date(creation_date), _files(),
-      _used_filters("") {}
+Corpus::Corpus(std::string title, int id)
+    : DatabaseItem(id), _title(title), _files(), _used_filters("") {}
 
 std::string Corpus::header_string() const {
   std::ostringstream out;
@@ -39,8 +37,7 @@ bool Corpus::insert(sql::Connection *db) {
 
   prep_stmt = db->prepareStatement(INSERT_CORPUS_STATEMENT);
   prep_stmt->setString(1, _title);
-  prep_stmt->setString(2, _creation_date);
-  prep_stmt->setString(3, _used_filters);
+  prep_stmt->setString(2, _used_filters);
   prep_stmt->execute();
 
   this->_id = DatabaseItem::get_last_inserted_id(db);

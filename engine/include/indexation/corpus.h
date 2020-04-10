@@ -9,10 +9,11 @@
 #define CORPUS_CREATE_STATEMENT                                                \
   "CREATE TABLE IF NOT EXISTS Corpus(id INTEGER NOT NULL "                     \
   "AUTO_INCREMENT,title "                                                      \
-  "TEXT NOT NULL,creation_date TEXT NOT NULL,filters TEXT NOT NULL, PRIMARY "  \
+  "TEXT NOT NULL,creation_date TIMESTAMP NOT NULL DEFAULT NOW(),filters TEXT " \
+  "NOT NULL, PRIMARY "                                                         \
   "KEY (id));"
 #define INSERT_CORPUS_STATEMENT                                                \
-  "INSERT INTO Corpus (title, creation_date, filters) VALUES(?, ?, ?)"
+  "INSERT INTO Corpus (title, filters) VALUES(?, ?)"
 #define DROP_CORPUS_STATEMENT "DROP TABLE IF EXISTS Corpus;"
 
 #define CORPUS_FILES_CREATE_STATEMENT                                          \
@@ -65,22 +66,19 @@ public:
   /**
    * Creates a Corpus object without files
    * @param title the title of the corpus
-   * @param creation_date the creation date of the corpus
    * @param id the id of the corpus in the database
    */
-  Corpus(std::string title, std::string creation_date, int id = -1);
+  Corpus(std::string title, int id = -1);
 
   /**
    * Creates a Corpus object
    * @param title the title of the corpus
-   * @param creation_date the creation date of the corpus
    * @param files the corpus files
    * @param used_filters the corpus filters description
    * @param id the id of the corpus in the database
    */
-  Corpus(std::string title, std::string creation_date,
-         std::list<shared_ptr<File>> files, std::string used_filters,
-         int id = -1);
+  Corpus(std::string title, std::list<shared_ptr<File>> files,
+         std::string used_filters, int id = -1);
 
   /**
    * Fills the _files attribute fetching the files linked to this corpus in the

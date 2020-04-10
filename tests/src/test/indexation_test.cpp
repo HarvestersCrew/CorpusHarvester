@@ -210,8 +210,8 @@ void test_create_corpus() {
                                           ->logical_or()
                                           ->add_condition("name", "file3", "=")
                                           ->build();
-  Corpus corpus("file 6/8/3", "01/02/2020", files, sb.get_filters());
-  Corpus corpus2("empty", "02/03/2020");
+  Corpus corpus("file 6/8/3", files, sb.get_filters());
+  Corpus corpus2("empty");
   indexer.save_corpus(corpus);
   indexer.save_corpus(corpus2);
   sql::ResultSet *res_files;
