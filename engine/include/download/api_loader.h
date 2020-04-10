@@ -183,7 +183,10 @@ public:
   std::string to_string() const;
 
   /** Gets the official string of the API type used in JSON */
-  std::string api_type_string() const;
+  std::string get_api_type_string() const;
+
+  /** Gets the enum value representing the API type */
+  api_loader::api_type get_api_type() const;
 
   /**
    * Queries and parses

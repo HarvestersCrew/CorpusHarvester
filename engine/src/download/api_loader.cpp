@@ -89,7 +89,7 @@ std::string api_loader::to_string() const {
   out << "name: " << this->_name << std::endl;
   out << "method: " << this->_method << std::endl;
   out << "url: " << this->_url << std::endl;
-  out << "api_type: " << this->api_type_string() << std::endl;
+  out << "api_type: " << this->get_api_type_string() << std::endl;
   out << "main value name: " << this->_response_main_item << std::endl;
   out << "truncate before: " << this->_truncate_before.value_or(0) << std::endl;
   out << "truncate after: " << this->_truncate_after.value_or(0) << std::endl;
@@ -113,7 +113,7 @@ std::string api_loader::to_string() const {
   return out.str();
 }
 
-std::string api_loader::api_type_string() const {
+std::string api_loader::get_api_type_string() const {
   switch (this->_api_type) {
   case api_loader::api_type::TEXT:
     return API_TYPE_TXT;
@@ -123,6 +123,10 @@ std::string api_loader::api_type_string() const {
     break;
   }
   throw api_filetype_incompatible(std::to_string(this->_api_type));
+}
+
+api_loader::api_type api_loader::get_api_type() const {
+  return this->_api_type;
 }
 
 std::list<shared_ptr<File>>
@@ -145,7 +149,7 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
 
     if (params.find(el->_name) != params.end()) {
       if (!el->is_value_valid(params.at(el->_name)))
-        throw api_parameter_incompatible_value(el->get_type_string(),
+        throw api_parameter_incompatible_value(el->get_value_type_string(),
                                                el->get_name());
       val.emplace(params.at(el->_name));
     } else if (el->_default_value.has_value())

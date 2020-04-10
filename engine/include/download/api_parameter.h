@@ -48,7 +48,10 @@ public:
   /**
    * Gets the string associated to the parameter type
    */
-  virtual std::string get_type_string() const;
+  virtual std::string get_value_type_string() const;
+
+  /** Gets the parameter type */
+  virtual api_parameter_base::value_type get_value_type() const;
 
   /**
    * Converts the given JSON value to a string based on its type

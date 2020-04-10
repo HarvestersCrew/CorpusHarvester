@@ -28,12 +28,12 @@ std::string api_parameter_base::to_string() const {
   std::stringstream out;
   out << "------- api_name: " << this->_api_name << " -------" << std::endl;
   out << "name: " << this->_name << std::endl;
-  out << "value_type: " << this->get_type_string() << std::endl;
+  out << "value_type: " << this->get_value_type_string() << std::endl;
   out << "relevant: " << this->_relevant;
   return out.str();
 }
 
-std::string api_parameter_base::get_type_string() const {
+std::string api_parameter_base::get_value_type_string() const {
   switch (this->_value_type) {
   case api_parameter_base::value_type::INT:
     return API_PARAMETER_INT;
@@ -51,6 +51,10 @@ std::string api_parameter_base::get_type_string() const {
     throw std::runtime_error("Unsupported parameter type to string.");
     break;
   }
+}
+
+api_parameter_base::value_type api_parameter_base::get_value_type() const {
+  return this->_value_type;
 }
 
 std::string
@@ -81,7 +85,7 @@ api_parameter_request::api_parameter_request(const nlohmann::json &json)
       if (this->is_value_correctly_typed(val)) {
         this->_values.push_back(val);
       } else {
-        throw api_parameter_incompatible_value(this->get_type_string(),
+        throw api_parameter_incompatible_value(this->get_value_type_string(),
                                                "values");
       }
     }
@@ -154,7 +158,7 @@ bool api_parameter_request::is_value_correctly_typed(
 
 void api_parameter_request::set_default_value(const std::string &val) {
   if (!this->is_value_valid(val))
-    throw api_parameter_incompatible_value(this->get_type_string(),
+    throw api_parameter_incompatible_value(this->get_value_type_string(),
                                            this->get_name());
   this->_default_value = val;
 }
