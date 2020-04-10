@@ -1,13 +1,24 @@
 #ifndef CORPUSHARVESTER_CLENT_REQUEST_H
 #define CORPUSHARVESTER_CLENT_REQUEST_H
 
+#include "argparse.hpp"
 #include "database/harvester_database.h"
 #include "download/api_download_builder.h"
+#include "download/api_loader.h"
 #include "download/api_parameter.h"
+#include "download/download_manager.h"
 #include "indexation/api_database_builder.h"
 #include "indexation/corpus.h"
 #include "indexation/file.h"
+#include "indexation/indexer.h"
+#include "indexation/search_builder.h"
+#include "storage/storage.h"
+#include "utils/cli_parser.h"
+#include "utils/logger.h"
+#include "utils/utils.h"
+#include <iostream>
 #include <list>
+#include <map>
 #include <memory>
 #include <string>
 #include <unordered_map>

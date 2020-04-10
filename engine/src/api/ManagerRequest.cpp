@@ -1,20 +1,4 @@
-
 #include "api/ManagerRequest.h"
-#include "argparse.hpp"
-#include "download/api_loader.h"
-#include "download/download_manager.h"
-#include "indexation/corpus.h"
-#include "indexation/file.h"
-#include "indexation/indexer.h"
-#include "indexation/search_builder.h"
-#include "storage/storage.h"
-#include "utils/cli_parser.h"
-#include "utils/logger.h"
-#include "utils/utils.h"
-
-#include <iostream>
-#include <list>
-#include <map>
 
 ApiDownloadBuilder ManagerRequest::_dl_builder = ApiDownloadBuilder();
 ApiDatabaseBuilder ManagerRequest::_db_builder = ApiDatabaseBuilder();
