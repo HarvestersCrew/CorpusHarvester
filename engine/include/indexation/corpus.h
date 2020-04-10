@@ -111,6 +111,8 @@ public:
 
   bool has_file() { return !_files.empty(); }
 
+  virtual int get_id() const { return this->_id; };
+
   /**
    * Get a list of all the corpus.
    *

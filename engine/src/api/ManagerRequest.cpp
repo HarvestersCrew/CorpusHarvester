@@ -77,50 +77,63 @@ std::optional<Corpus *> ManagerRequest::visualisation_corpus(std::string name) {
   return corpus;
 }
 
-Corpus
-ManagerRequest::create_corpus(std::string name,
-                              std::vector<std::string> sources,
-                              std::map<std::string, std::string> &params) {
+// Corpus
+// ManagerRequest::create_corpus(std::string name,
+//                               std::vector<std::string> sources,
+//                               std::map<std::string, std::string> &params) {
 
-  // TODO :: At the moment, we manage only one source.
-  string source = sources.front();
+//   // TODO :: At the moment, we manage only one source.
+//   string source = sources.front();
 
-  logger::info("Creation of " + name + "'s corpus in progress...");
+//   logger::info("Creation of " + name + "'s corpus in progress...");
 
-  ApiDownloadBuilder dl_builder;
+//   ApiDownloadBuilder dl_builder;
 
-  ApiRequestBuilder &builder_test = dl_builder;
+//   ApiRequestBuilder &builder_test = dl_builder;
 
-  // if (source == "twitter") {
-  //   logger::info("[*] Source Twitter OK");
-  //   dl_builder.add_request("Twitter",
-  //                          unordered_map<string, string>({{"q", name}}));
-  // } else if (source == "TheMovieDB_Synopsis") {
-  //   logger::info("[*] Source TMDB OK");
-  //   // TODO :: Use the proper dl_builder
-  // } else {
-  //   logger::info("[*] Default source used !");
-  //   dl_builder.add_request("Twitter",
-  //                          unordered_map<string, string>({{"q", name}}));
-  // }
+//   // if (source == "twitter") {
+//   //   logger::info("[*] Source Twitter OK");
+//   //   dl_builder.add_request("Twitter",
+//   //                          unordered_map<string, string>({{"q", name}}));
+//   // } else if (source == "TheMovieDB_Synopsis") {
+//   //   logger::info("[*] Source TMDB OK");
+//   //   // TODO :: Use the proper dl_builder
+//   // } else {
+//   //   logger::info("[*] Default source used !");
+//   //   dl_builder.add_request("Twitter",
+//   //                          unordered_map<string, string>({{"q", name}}));
+//   // }
 
-  auto idx = dl_builder.add_request(source);
-  dl_builder.add_request_parameter(idx, "query", "star wars", "=");
-  dl_builder.build(0);
+//   auto idx = dl_builder.add_request(source);
+//   dl_builder.add_request_parameter(idx, "query", "star wars", "=");
+//   dl_builder.build(0);
 
-  Indexer indexer(HarvesterDatabase::init());
+//   Indexer indexer(HarvesterDatabase::init());
 
-  ApiDatabaseBuilder db_builder;
-  idx = db_builder.add_request("Twitter");
-  db_builder.add_request_parameter(idx, "retweet", "50", ">");
-  std::list<shared_ptr<File>> tweets = db_builder.build(0);
+//   ApiDatabaseBuilder db_builder;
+//   idx = db_builder.add_request("Twitter");
+//   db_builder.add_request_parameter(idx, "retweet", "50", ">");
+//   std::list<shared_ptr<File>> tweets = db_builder.build(0);
 
-  // Create our corpus from the fetch data and save it
-  Corpus corpus("tweets avec 0 retweet", tweets, db_builder.serialize().dump());
-  indexer.save_corpus(corpus);
-  HarvesterDatabase::close();
+//   // Create our corpus from the fetch data and save it
+//   Corpus corpus("tweets avec 0 retweet", tweets,
+//   db_builder.serialize().dump()); indexer.save_corpus(corpus);
+//   HarvesterDatabase::close();
 
-  return corpus;
+//   return corpus;
+// }
+
+int ManagerRequest::create_corpus(const string &name,
+                                  const list<shared_ptr<File>> &files,
+                                  const optional<ApiDatabaseBuilder> &builder) {
+  Corpus corpus;
+  if (builder.has_value()) {
+    corpus = Corpus(name, files, builder.value().serialize().dump());
+  } else {
+    corpus = Corpus(name, files, "");
+  }
+  corpus.insert(HarvesterDatabase::init());
+  return corpus.get_id();
 }
 
 /*

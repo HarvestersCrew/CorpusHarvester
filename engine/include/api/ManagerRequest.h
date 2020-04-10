@@ -20,10 +20,12 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
+using std::list;
 using std::shared_ptr;
 using std::string;
 using std::unordered_map;
@@ -82,9 +84,20 @@ public:
    *
    * @return Created corpus.
    */
-  static Corpus create_corpus(std::string name,
-                              std::vector<std::string> sources,
-                              std::map<std::string, std::string> &params);
+  // static Corpus create_corpus(std::string name,
+  //                             std::vector<std::string> sources,
+  //                             std::map<std::string, std::string> &params);
+
+  /**
+   * Create a corpus with files, a name and optional filters
+   * @param name name of the corpus
+   * @param files list of files
+   * @param builder DB builder used (empty if none)
+   * @return ID in the DB of the corpus
+   */
+  static int create_corpus(const string &name,
+                           const list<shared_ptr<File>> &files,
+                           const optional<ApiDatabaseBuilder> &builder);
 
   /**
    * Get all the data present in our database.

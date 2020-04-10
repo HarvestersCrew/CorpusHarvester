@@ -66,7 +66,7 @@ public:
     return res->getInt("id");
   }
 
-  int get_id() const { return _id; };
+  virtual int get_id() const { return _id; };
   void set_id(int id) { _id = id; };
 };
 
