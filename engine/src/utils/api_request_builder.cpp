@@ -28,3 +28,18 @@ const vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> &
 ApiRequestBuilder::get_requests() const {
   return this->_requests;
 }
+
+string ApiRequestBuilder::to_string() const {
+  stringstream res;
+
+  res << "Requests: " << endl;
+  for (const auto &request : this->get_requests()) {
+    res << request.first->get_name() << ": {";
+    for (const auto &param : request.second) {
+      res << param.first << ":" << param.second << ",";
+    }
+    res << "}";
+  }
+
+  return res.str();
+}

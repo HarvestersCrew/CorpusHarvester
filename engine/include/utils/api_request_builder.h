@@ -5,19 +5,23 @@
 #include "download/api_loader.h"
 #include "indexation/file.h"
 #include "utils/exceptions.h"
+#include <iostream>
 #include <list>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
 
+using std::endl;
 using std::list;
 using std::make_pair;
 using std::pair;
 using std::shared_ptr;
 using std::string;
+using std::stringstream;
 using std::unordered_map;
 using std::unordered_set;
 using std::vector;
@@ -91,6 +95,8 @@ public:
   virtual const vector<
       pair<shared_ptr<api_loader>, unordered_map<string, string>>> &
   get_requests() const;
+
+  virtual string to_string() const;
 };
 
 #endif
