@@ -74,6 +74,11 @@ protected:
 
 public:
   /**
+   * Resets everything in the builder
+   */
+  virtual void clear_all();
+
+  /**
    * Clears filled types
    */
   virtual void clear_types();

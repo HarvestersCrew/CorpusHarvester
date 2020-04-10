@@ -17,6 +17,11 @@ ApiRequestBuilder::get_types() const {
   return this->_types;
 }
 
+void ApiRequestBuilder::clear_all() {
+  this->clear_requests();
+  this->clear_types();
+}
+
 void ApiRequestBuilder::clear_requests() { this->_requests.clear(); }
 
 void ApiRequestBuilder::add_request(
