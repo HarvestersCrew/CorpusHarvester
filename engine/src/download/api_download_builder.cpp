@@ -2,6 +2,19 @@
 
 ApiDownloadBuilder::ApiDownloadBuilder() : ApiRequestBuilder() {}
 
+void ApiDownloadBuilder::add_request(
+    const string &api_name, const unordered_map<string, string> &params) {
+
+  const shared_ptr<api_loader> api = ApiFactory::get_api(api_name);
+  for (const auto &el : params) {
+    if (!api->find_request_parameter(el.first).has_value()) {
+      throw api_no_setting_exception(el.first);
+    }
+  }
+
+  ApiRequestBuilder::add_request(api_name, params);
+}
+
 list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
 
   list<shared_ptr<File>> res;

@@ -27,6 +27,16 @@ public:
   ApiDatabaseBuilder();
 
   /**
+   * Adds a new request
+   * @param api_name Name of the API to use
+   * @param params List of parameters to use for this request
+   * @throw api_factory_name_not_found if the given API is not found
+   * @throw api_no_setting_exception if a parameter isn't found
+   */
+  virtual void add_request(const string &api_name,
+                           const unordered_map<string, string> &params);
+
+  /**
    * Fetches the list of files from the DB
    * @param number number of elements to retrieve, 0 means everything that
    * matches is retrieved
