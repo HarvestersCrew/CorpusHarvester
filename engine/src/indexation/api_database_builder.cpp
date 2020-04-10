@@ -3,12 +3,18 @@
 ApiDatabaseBuilder::ApiDatabaseBuilder() : ApiRequestBuilder() {}
 
 void ApiDatabaseBuilder::add_request(
-    const string &api_name, const unordered_map<string, string> &params) {
+    const string &api_name,
+    const unordered_map<string, pair<string, string>> &params) {
 
   const shared_ptr<api_loader> api = ApiFactory::get_api(api_name);
   for (const auto &el : params) {
     if (!api->find_response_parameter(el.first).has_value()) {
       throw api_no_setting_exception(el.first);
+    }
+    const string &op = el.second.second;
+    if (op != "=" && op != "<=" && op != ">=" && op != "<" && op != ">" &&
+        op != "!=") {
+      throw api_builder_incompatible_operator(op, "database");
     }
   }
 
@@ -30,7 +36,8 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
        request_it != this->get_requests().end(); ++request_it) {
 
     const shared_ptr<api_loader> &api = request_it->first;
-    const unordered_map<string, string> &params = request_it->second;
+    const unordered_map<string, pair<string, string>> &params =
+        request_it->second;
 
     string select_distinct_api = select_distinct + " WHERE f.source = ?";
 
@@ -51,7 +58,7 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
       query << " AND t.name = ? AND t.value = ?";
       prepared_values.push_back(param_it->first);
-      prepared_values.push_back(param_it->second);
+      prepared_values.push_back(param_it->second.first);
     }
 
     query << ")";
@@ -76,7 +83,7 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
     res.push_back(file);
   }
 
-  logger::info("Retrieved " + to_string(res.size()) + " from DB");
+  logger::info("Retrieved " + std::to_string(res.size()) + " from DB");
 
   return res;
 }

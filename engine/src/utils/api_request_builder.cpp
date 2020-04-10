@@ -20,11 +20,14 @@ ApiRequestBuilder::get_types() const {
 void ApiRequestBuilder::clear_requests() { this->_requests.clear(); }
 
 void ApiRequestBuilder::add_request(
-    const string &api_name, const unordered_map<string, string> &params) {
+    const string &api_name,
+    const unordered_map<string, pair<string, string>> &params) {
+
   this->_requests.push_back(make_pair(ApiFactory::get_api(api_name), params));
 }
 
-const vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> &
+const vector<
+    pair<shared_ptr<api_loader>, unordered_map<string, pair<string, string>>>> &
 ApiRequestBuilder::get_requests() const {
   return this->_requests;
 }
@@ -36,7 +39,7 @@ string ApiRequestBuilder::to_string() const {
   for (const auto &request : this->get_requests()) {
     res << request.first->get_name() << ": {";
     for (const auto &param : request.second) {
-      res << param.first << ":" << param.second << ",";
+      res << param.first << param.second.second << param.second.first << ",";
     }
     res << "}";
   }

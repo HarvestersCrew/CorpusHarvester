@@ -18,7 +18,6 @@ using std::list;
 using std::shared_ptr;
 using std::string;
 using std::stringstream;
-using std::to_string;
 using std::unordered_map;
 using std::vector;
 
@@ -33,8 +32,9 @@ public:
    * @throw api_factory_name_not_found if the given API is not found
    * @throw api_no_setting_exception if a parameter isn't found
    */
-  virtual void add_request(const string &api_name,
-                           const unordered_map<string, string> &params);
+  virtual void
+  add_request(const string &api_name,
+              const unordered_map<string, pair<string, string>> &params);
 
   /**
    * Fetches the list of files from the DB

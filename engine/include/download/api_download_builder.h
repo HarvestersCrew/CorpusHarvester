@@ -17,7 +17,6 @@
 using std::list;
 using std::shared_ptr;
 using std::stoi;
-using std::to_string;
 using std::vector;
 
 /**
@@ -43,8 +42,9 @@ public:
    * @throw api_factory_name_not_found if the given API is not found
    * @throw api_no_setting_exception if a parameter isn't found
    */
-  virtual void add_request(const string &api_name,
-                           const unordered_map<string, string> &params);
+  virtual void
+  add_request(const string &api_name,
+              const unordered_map<string, pair<string, string>> &params);
 
   /**
    * Retrieves the files, stores them and index them

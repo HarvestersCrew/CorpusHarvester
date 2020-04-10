@@ -153,4 +153,12 @@ public:
                            param_name + "', expected " + expected_type) {}
 };
 
+class api_builder_incompatible_operator : public std::runtime_error {
+public:
+  api_builder_incompatible_operator(const std::string &op,
+                                    const std::string &builder_type)
+      : std::runtime_error("Incompatible operator '" + op + "' given to '" +
+                           builder_type + "' builder") {}
+};
+
 #endif

@@ -3,12 +3,17 @@
 ApiDownloadBuilder::ApiDownloadBuilder() : ApiRequestBuilder() {}
 
 void ApiDownloadBuilder::add_request(
-    const string &api_name, const unordered_map<string, string> &params) {
+    const string &api_name,
+    const unordered_map<string, pair<string, string>> &params) {
 
   const shared_ptr<api_loader> api = ApiFactory::get_api(api_name);
   for (const auto &el : params) {
     if (!api->find_request_parameter(el.first).has_value()) {
       throw api_no_setting_exception(el.first);
+    }
+    const string &op = el.second.second;
+    if (op != "=") {
+      throw api_builder_incompatible_operator(op, "download");
     }
   }
 
@@ -22,8 +27,18 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
   Indexer indexer(db);
   Storage storage(db);
 
-  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> requests(
-      this->get_requests());
+  // Convert the requests without operators
+  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> requests;
+  for (const auto &request : this->get_requests()) {
+
+    unordered_map<string, string> params;
+    for (const auto &param : request.second) {
+      params.emplace(param.first, param.second.first);
+    }
+
+    requests.push_back(make_pair(request.first, params));
+  }
+
   unsigned int page = 0;
 
   // Inits the page number for page compatible APIs (if not given in the
@@ -39,7 +54,7 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
             el.first->find_request_parameter("_page").value();
         unsigned int page_to_set =
             stoi(page_param->get_default_value().value_or("1"));
-        el.second.emplace("_page", to_string(page_to_set));
+        el.second.emplace("_page", std::to_string(page_to_set));
       }
     }
   }
@@ -50,7 +65,8 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
 
       // Update page if present
       if (it->second.find("_page") != it->second.end()) {
-        it->second.at("_page") = to_string(stoi(it->second.at("_page")) + page);
+        it->second.at("_page") =
+            std::to_string(stoi(it->second.at("_page")) + page);
       }
 
       // Do the query
@@ -87,7 +103,7 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
 
   } while (number > 0 && res.size() < number && requests.size() > 0);
 
-  logger::info("Downloaded " + to_string(res.size()) +
+  logger::info("Downloaded " + std::to_string(res.size()) +
                " new files with user request");
 
   return res;

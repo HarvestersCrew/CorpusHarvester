@@ -38,9 +38,11 @@ protected:
   /**
    * List of API-bound requests
    * 1st map: API name, map of parameters to use
-   * 2nd map: parameter name, value to use
+   * 2nd map: parameter name, value and operator to use
    */
-  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> _requests;
+  vector<
+      pair<shared_ptr<api_loader>, unordered_map<string, pair<string, string>>>>
+      _requests;
 
   /**
    * Search for these types if no requests are precised or if specified
@@ -59,8 +61,9 @@ protected:
    * @throw api_factory_name_not_found if the given API is not found
    * @throw api_no_setting_exception if a parameter isn't found
    */
-  virtual void add_request(const string &api_name,
-                           const unordered_map<string, string> &params);
+  virtual void
+  add_request(const string &api_name,
+              const unordered_map<string, pair<string, string>> &params);
 
   /**
    * Fetches the list of files from whatever source we want
@@ -93,8 +96,8 @@ public:
    * Get requests
    */
   virtual const vector<
-      pair<shared_ptr<api_loader>, unordered_map<string, string>>> &
-  get_requests() const;
+      pair<shared_ptr<api_loader>, unordered_map<string, pair<string, string>>>>
+      &get_requests() const;
 
   virtual string to_string() const;
 };
