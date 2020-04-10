@@ -34,27 +34,28 @@ void test_requests() {
   ApiDownloadBuilder a;
   Assertion::assert_equals(__FUNCTION__, 0, a.get_requests().size());
 
-  unordered_map<string, pair<string, string>> m;
-
-  m.emplace("q", make_pair("cats", "="));
   try {
-    a.add_request("Twitter", m);
+    a.add_request("fake_api");
+    Assertion::assert_throw(__FUNCTION__, "api_factory_name_not_found");
+  } catch (const api_factory_name_not_found &e) {
+  }
+
+  long unsigned int idx = a.add_request("Twitter");
+
+  try {
+    a.add_request_parameter(idx, "q", "val", "=");
     Assertion::assert_throw(__FUNCTION__, "api_no_setting_exception", __LINE__);
   } catch (const api_no_setting_exception &e) {
   }
 
-  m.clear();
-  m.emplace("query", make_pair("cats", ">"));
   try {
-    a.add_request("Twitter", m);
+    a.add_request_parameter(idx, "query", "val", "<");
     Assertion::assert_throw(__FUNCTION__, "api_builder_incompatible_operator",
                             __LINE__);
   } catch (const api_builder_incompatible_operator &e) {
   }
 
-  m.clear();
-  m.emplace("query", make_pair("cats", "="));
-  a.add_request("Twitter", m);
+  a.add_request_parameter(idx, "query", "val", "=");
   Assertion::assert_equals(__FUNCTION__, 1, a.get_requests().size());
   Assertion::assert_equals(__FUNCTION__, "Twitter",
                            a.get_requests().at(0).first->get_name());
@@ -67,9 +68,8 @@ void test_requests() {
 
 void test_api_dl_remove_ops() {
   ApiDownloadBuilder a;
-  unordered_map<string, pair<string, string>> m;
-  m.emplace("query", make_pair("cats", "="));
-  a.add_request("Twitter", m);
+  long unsigned int idx = a.add_request("Twitter");
+  a.add_request_parameter(idx, "query", "cats", "=");
   auto res = a.get_no_op_requests();
   Assertion::assert_equals(__FUNCTION__, 1, res.size());
   Assertion::assert_equals(__FUNCTION__, "Twitter",
