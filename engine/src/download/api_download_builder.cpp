@@ -2,7 +2,7 @@
 
 ApiDownloadBuilder::ApiDownloadBuilder() : ApiRequestBuilder() {}
 
-void ApiDownloadBuilder::add_request(
+long unsigned int ApiDownloadBuilder::add_request(
     const string &api_name,
     const unordered_map<string, pair<string, string>> &params) {
 
@@ -17,7 +17,7 @@ void ApiDownloadBuilder::add_request(
     }
   }
 
-  ApiRequestBuilder::add_request(api_name, params);
+  return ApiRequestBuilder::add_request(api_name, params);
 }
 
 list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {

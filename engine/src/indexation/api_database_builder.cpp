@@ -2,7 +2,7 @@
 
 ApiDatabaseBuilder::ApiDatabaseBuilder() : ApiRequestBuilder() {}
 
-void ApiDatabaseBuilder::add_request(
+long unsigned int ApiDatabaseBuilder::add_request(
     const string &api_name,
     const unordered_map<string, pair<string, string>> &params) {
 
@@ -18,7 +18,7 @@ void ApiDatabaseBuilder::add_request(
     }
   }
 
-  ApiRequestBuilder::add_request(api_name, params);
+  return ApiRequestBuilder::add_request(api_name, params);
 }
 
 list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {

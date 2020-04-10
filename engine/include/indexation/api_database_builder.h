@@ -29,10 +29,11 @@ public:
    * Adds a new request
    * @param api_name Name of the API to use
    * @param params List of parameters to use for this request
+   * @return index of the newly inserted request
    * @throw api_factory_name_not_found if the given API is not found
    * @throw api_no_setting_exception if a parameter isn't found
    */
-  virtual void
+  virtual long unsigned int
   add_request(const string &api_name,
               const unordered_map<string, pair<string, string>> &params);
 

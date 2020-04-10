@@ -24,11 +24,12 @@ void ApiRequestBuilder::clear_all() {
 
 void ApiRequestBuilder::clear_requests() { this->_requests.clear(); }
 
-void ApiRequestBuilder::add_request(
+long unsigned int ApiRequestBuilder::add_request(
     const string &api_name,
     const unordered_map<string, pair<string, string>> &params) {
 
   this->_requests.push_back(make_pair(ApiFactory::get_api(api_name), params));
+  return this->_requests.size() - 1;
 }
 
 vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>>
