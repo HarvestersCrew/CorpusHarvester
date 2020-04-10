@@ -54,6 +54,7 @@ protected:
    */
   ApiRequestBuilder();
 
+public:
   /**
    * Fetches the list of files from whatever source we want
    * @param number number of elements to retrieve, 0 means value not set and
@@ -61,7 +62,6 @@ protected:
    */
   virtual list<shared_ptr<File>> build(unsigned int number) const = 0;
 
-public:
   /**
    * Adds a new request
    * @param api_name Name of the API to use
