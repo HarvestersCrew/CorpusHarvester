@@ -26,6 +26,23 @@ void ApiRequestBuilder::add_request(
   this->_requests.push_back(make_pair(ApiFactory::get_api(api_name), params));
 }
 
+vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>>
+ApiRequestBuilder::get_no_op_requests() const {
+
+  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> requests;
+  for (const auto &request : this->get_requests()) {
+
+    unordered_map<string, string> params;
+    for (const auto &param : request.second) {
+      params.emplace(param.first, param.second.first);
+    }
+
+    requests.push_back(make_pair(request.first, params));
+  }
+
+  return requests;
+}
+
 const vector<
     pair<shared_ptr<api_loader>, unordered_map<string, pair<string, string>>>> &
 ApiRequestBuilder::get_requests() const {

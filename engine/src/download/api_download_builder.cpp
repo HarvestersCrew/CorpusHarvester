@@ -28,16 +28,7 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
   Storage storage(db);
 
   // Convert the requests without operators
-  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> requests;
-  for (const auto &request : this->get_requests()) {
-
-    unordered_map<string, string> params;
-    for (const auto &param : request.second) {
-      params.emplace(param.first, param.second.first);
-    }
-
-    requests.push_back(make_pair(request.first, params));
-  }
+  auto requests = this->get_no_op_requests();
 
   unsigned int page = 0;
 
