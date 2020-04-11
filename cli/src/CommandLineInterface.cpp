@@ -9,7 +9,21 @@
 CommandLineInterface::CommandLineInterface(int argc, char **argv)
     : parser(argv[0], "Corpus Harvester") {
 
+  //
   // Corpus function
+  //
+  cli_command &apiCommand = this->parser.add_command("apis", "Api function.");
+
+  cli_command &listApiCommand = apiCommand.add_command("list", "Api list");
+
+  listApiCommand.add_option("db", "See all the parameters for the database.",
+                            true);
+  listApiCommand.add_option(
+      "web", "See all the parameters for the web request.", true);
+
+  //
+  // Corpus function
+  //
   cli_command &corpusCommand =
       this->parser.add_command("corpus", "Corpus function.");
 
@@ -42,6 +56,22 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
       "list", "List of all the corpus with potentially a name.");
 
   listCorpus.add_option("name", "Corpus name that you want to search.", false);
+
+  // Get a corpus based on his id
+  listCorpus.add_option("id", "Id of a specific corpus.", false);
+
+  //
+  // Files search
+  //
+  cli_command &filesCommand =
+      this->parser.add_command("files", "Files function.");
+
+  // List of files
+  cli_command &listFiles =
+      filesCommand.add_command("list", "List of all the files.");
+
+  // Get a corpus bsaed on his id
+  listFiles.add_option("id", "Id of a specific file.", false);
 
   // Transform our array to a vector of string
   std::vector<string> allArgs(argv + 1, argv + argc);
