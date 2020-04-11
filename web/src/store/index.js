@@ -7,7 +7,11 @@ export default new Vuex.Store({
   state: {
     server: undefined
   },
-  mutations: {},
+  mutations: {
+    set_server: (state, val) => {
+      state.server = val;
+    }
+  },
   actions: {},
   modules: {}
 });

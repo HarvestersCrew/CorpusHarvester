@@ -41,7 +41,8 @@ export default {
   methods: {
     connect() {
       console.log(this.url);
-      this.$router.push("/home");
+      this.$store.commit("set_server", this.url);
+      this.$router.push("/files");
     }
   }
 };
