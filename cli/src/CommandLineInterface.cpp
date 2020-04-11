@@ -39,8 +39,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
                           true);
   createCorpus.add_option("video", "Set if you want video in your corpus.",
                           true);
-  createCorpus.add_option("text", "Set if you want text in your corpus.",
-                          true);
+  createCorpus.add_option("text", "Set if you want text in your corpus.", true);
 
   // Get all the api names
   vector<string> apiNames = ApiFactory::get_api_names();
@@ -57,8 +56,12 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 
   listCorpus.add_option("name", "Corpus name that you want to search.", false);
 
-  // Get a corpus based on his id
-  listCorpus.add_option("id", "Id of a specific corpus.", false);
+  // Get coprus based on his id.
+  cli_command &idCorpus =
+      corpusCommand.add_command("id", "Search a corpus based on his id.");
+
+  // Get a corpus bsaed on his id
+  idCorpus.add_option("id", "Id of a specific corpus.", false);
 
   //
   // Files search
@@ -70,8 +73,11 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   cli_command &listFiles =
       filesCommand.add_command("list", "List of all the files.");
 
+  cli_command &idFiles =
+      filesCommand.add_command("id", "Search a file based on his id.");
+
   // Get a corpus bsaed on his id
-  listFiles.add_option("id", "Id of a specific file.", false);
+  idFiles.add_option("id", "Id of a specific file.", false);
 
   // Transform our array to a vector of string
   std::vector<string> allArgs(argv + 1, argv + argc);
