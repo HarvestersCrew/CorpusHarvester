@@ -55,9 +55,7 @@
     </v-navigation-drawer>
 
     <v-content>
-      <v-container>
-        <slot></slot>
-      </v-container>
+      <slot></slot>
     </v-content>
   </div>
 </template>
