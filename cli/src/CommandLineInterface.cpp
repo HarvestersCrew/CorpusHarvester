@@ -16,6 +16,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 
   cli_command &listApiCommand = apiCommand.add_command("list", "Api list");
 
+  listApiCommand.add_option("name", "Name of the api.", false);
   listApiCommand.add_option("db", "See all the parameters for the database.",
                             true);
   listApiCommand.add_option(
@@ -209,16 +210,52 @@ void CommandLineInterface::api_manager() {
       this->commands.end()) {
     logger::debug("List request.");
 
+    vector<string> apis = ManagerRequest::get_apis();
+    string apiNameUser = "";
+
+    // Check if we have a value for the name
+    map<string, string>::iterator itSubCommand =
+        this->string_inputs.find("name");
+
+    if (itSubCommand != this->string_inputs.end() &&
+        itSubCommand->second != "") {
+      logger::debug("We got a name");
+
+      // Get the value of the name
+      apiNameUser = this->string_inputs.find("name")->second;
+
+      // Check if the name exist in our list of apis
+      if (find(apis.begin(), apis.end(), apiNameUser) == apis.end()) {
+        logger::error("Le nom de l'api n'est pas valide !");
+        logger::info("Apis available :");
+        for (string api : apis) {
+          logger::info(api);
+        }
+        exit(-1);
+      }
+    }
+
+    logger::debug("Here we go.");
+
     // Search for eventually subcommand
     if (this->bool_inputs.find("db")->second) {
       logger::debug("DB");
+      if (apiNameUser == "") {
+        logger::debug("NEED TO HAVE NAME");
+        // TODO :: Loop on all the api and show parameters
+      } else {
+        // Get specific parameter from the name
+        vector<shared_ptr<api_parameter_response>> db_parameters =
+            ManagerRequest::get_api_db_parameters(apiNameUser);
+        for (shared_ptr<api_parameter_response> parameter : db_parameters) {
+          logger::info(parameter.get()->to_string());
+        }
+      }
       // TODO :: List of all the DB parameter.
     } else if (this->bool_inputs.find("web")->second) {
       logger::debug("Web");
       // TODO :: List of all the Web parameter.
     } else {
-      // TODO :: List of all the source.
-      vector<string> apis = ManagerRequest::get_apis();
       logger::info("Apis availables :");
       for (string api : apis) {
         logger::info(api);
