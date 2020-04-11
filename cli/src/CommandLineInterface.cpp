@@ -235,30 +235,62 @@ void CommandLineInterface::api_manager() {
       }
     }
 
-    logger::debug("Here we go.");
-
     // Search for eventually subcommand
     if (this->bool_inputs.find("db")->second) {
       logger::debug("DB");
       if (apiNameUser == "") {
-        logger::debug("NEED TO HAVE NAME");
-        // TODO :: Loop on all the api and show parameters
+        for (string api : apis) {
+          std::cout << "Database parameter for : " << api << "\n" << std::endl;
+          vector<shared_ptr<api_parameter_response>> db_parameters =
+              ManagerRequest::get_api_db_parameters(api);
+          for (shared_ptr<api_parameter_response> parameter : db_parameters) {
+            std::cout << parameter.get()->to_string() << std::endl;
+          }
+          std::cout << "\n" << std::endl;
+        }
       } else {
+        std::cout << "Database parameter for : " << apiNameUser << "\n"
+                  << std::endl;
         // Get specific parameter from the name
         vector<shared_ptr<api_parameter_response>> db_parameters =
             ManagerRequest::get_api_db_parameters(apiNameUser);
         for (shared_ptr<api_parameter_response> parameter : db_parameters) {
-          logger::info(parameter.get()->to_string());
+          std::cout << parameter.get()->to_string() << std::endl;
         }
+        std::cout << "\n" << std::endl;
       }
-      // TODO :: List of all the DB parameter.
-    } else if (this->bool_inputs.find("web")->second) {
+    }
+
+    if (this->bool_inputs.find("web")->second) {
       logger::debug("Web");
-      // TODO :: List of all the Web parameter.
-    } else {
-      logger::info("Apis availables :");
+      if (apiNameUser == "") {
+        for (string api : apis) {
+          std::cout << "Web request parameter for : " << api << "\n"
+                    << std::endl;
+          vector<shared_ptr<api_parameter_request>> db_parameters =
+              ManagerRequest::get_api_web_parameters(api);
+          for (shared_ptr<api_parameter_request> parameter : db_parameters) {
+            std::cout << parameter.get()->to_string() << std::endl;
+          }
+          std::cout << "\n" << std::endl;
+        }
+      } else {
+        std::cout << "Web request for : " << apiNameUser << "\n" << std::endl;
+        // Get specific parameter from the name
+        vector<shared_ptr<api_parameter_request>> db_parameters =
+            ManagerRequest::get_api_web_parameters(apiNameUser);
+        for (shared_ptr<api_parameter_request> parameter : db_parameters) {
+          std::cout << parameter.get()->to_string() << std::endl;
+        }
+        std::cout << "\n" << std::endl;
+      }
+    }
+
+    if (!this->bool_inputs.find("db")->second &&
+        !this->bool_inputs.find("web")->second) {
+      std::cout << "Apis availables :" << std::endl;
       for (string api : apis) {
-        logger::info(api);
+        std::cout << api << std::endl;
       }
     }
   }
