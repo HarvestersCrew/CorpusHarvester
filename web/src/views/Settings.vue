@@ -1,13 +1,13 @@
 <template>
   <Bar>
-    <h1>Files</h1>
+    <h1>Settings</h1>
   </Bar>
 </template>
 
 <script>
 import Bar from "@/components/Bar.vue";
 export default {
-  name: "Files",
+  name: "Settings",
   components: { Bar }
 };
 </script>

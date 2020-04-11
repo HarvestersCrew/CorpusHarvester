@@ -30,6 +30,16 @@ const routes = [
     path: "/corpus",
     name: "Corpus",
     component: () => import("../views/Corpus.vue")
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: () => import("../views/Settings.vue")
+  },
+  {
+    path: "/info",
+    name: "Info",
+    component: () => import("../views/Info.vue")
   }
 ];
 
