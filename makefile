@@ -7,7 +7,7 @@ BINDIR := bin
 INCDIR := include
 ENGINEDIR := engine
 
-EXES := cli tests
+EXES := cli tests server
 EXESPATH := $(patsubst %,$(BINDIR)/%, $(EXES))
 DOCKERS := $(patsubst %, docker/%, $(EXES))
 
