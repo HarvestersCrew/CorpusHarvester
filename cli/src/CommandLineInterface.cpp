@@ -35,11 +35,11 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   createCorpus.add_option("name", "Name of the new corpus.", false);
   createCorpus.add_option(
       "n_element", "Number of element you wanted in your corpus.", false);
-  createCorpus.add_option("image", "Set if you want video in your corpus.",
+  createCorpus.add_option("image", "Set if you want image in your corpus.",
                           true);
   createCorpus.add_option("video", "Set if you want video in your corpus.",
                           true);
-  createCorpus.add_option("text", "Set if you want video in your corpus.",
+  createCorpus.add_option("text", "Set if you want text in your corpus.",
                           true);
 
   // Get all the api names
