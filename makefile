@@ -11,7 +11,7 @@ EXES := cli tests
 EXESPATH := $(patsubst %,$(BINDIR)/%, $(EXES))
 DOCKERS := $(patsubst %, docker/%, $(EXES))
 
-INCLUDES := $(patsubst %,-I%,$(shell find ../ -type d -name $(INCDIR)))
+INCLUDES := $(patsubst %,-I%,$(shell find ../ -maxdepth 2 -type d -name $(INCDIR)))
 LFLAGS := -Llib
 LIBS := -lcurl -lmysqlcppconn
 
