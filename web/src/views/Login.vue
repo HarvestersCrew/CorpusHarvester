@@ -42,7 +42,7 @@ export default {
     connect() {
       console.log(this.url);
       this.$store.commit("set_server", this.url);
-      this.$router.push("/files");
+      this.$router.push({ name: this.$store.state.home_page });
     }
   }
 };
