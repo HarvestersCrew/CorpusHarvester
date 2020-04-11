@@ -7,6 +7,8 @@
 #include "utils/utils.h"
 #include <filesystem>
 #include <fstream>
+#include <memory>
+#include <optional>
 #include <ostream>
 #include <sstream>
 #include <string>
@@ -19,8 +21,10 @@ using std::cout;
 using std::endl;
 using std::make_pair;
 using std::ofstream;
+using std::optional;
 using std::ostream;
 using std::pair;
+using std::shared_ptr;
 using std::stoi;
 using std::string;
 using std::stringstream;
@@ -28,6 +32,12 @@ using std::to_string;
 using std::vector;
 
 class Setting;
+
+/** Class to be used as a custom additional input for the logger */
+class LoggerCustomOutput {
+public:
+  virtual void output(const std::string &msg) const = 0;
+};
 
 /** Class used to manage logs, with levels and different outputs */
 class logger {
@@ -58,6 +68,8 @@ public:
 
   static string get_full_output_path();
 
+  static optional<shared_ptr<LoggerCustomOutput>> custom_output;
+
   /**
    * Calling this method checks and sets the settings from the DB and
    * starts outputting previously saved and future logs
@@ -69,6 +81,17 @@ public:
    * Stops the logging and starts saving logs in the backlog
    */
   static void stop();
+
+  /**
+   * Adds a custom output to use at the same time as the standard outputs
+   * @param out LoggerCustomOutput to use as additional output
+   */
+  static void add_custom_output(shared_ptr<LoggerCustomOutput> out);
+
+  /**
+   * Clears the custom output
+   */
+  static void clear_custom_output();
 
   /**
    * Logs a debug message
