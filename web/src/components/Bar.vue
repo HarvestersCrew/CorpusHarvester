@@ -9,7 +9,12 @@
           link
         >
           <v-list-item-icon>
-            <v-icon color="white">{{ item.icon }}</v-icon>
+            <v-tooltip right>
+              <template v-slot:activator="{ on }">
+                <v-icon color="white" v-on="on">{{ item.icon }}</v-icon>
+              </template>
+              <span>{{ item.title }}</span>
+            </v-tooltip>
           </v-list-item-icon>
 
           <v-list-item-content>
@@ -27,7 +32,12 @@
           link
         >
           <v-list-item-icon>
-            <v-icon color="white">{{ item.icon }}</v-icon>
+            <v-tooltip right>
+              <template v-slot:activator="{ on }">
+                <v-icon color="white" v-on="on">{{ item.icon }}</v-icon>
+              </template>
+              <span>{{ item.title }}</span>
+            </v-tooltip>
           </v-list-item-icon>
 
             <v-list-item-content>
