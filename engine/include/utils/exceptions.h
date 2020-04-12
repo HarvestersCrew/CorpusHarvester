@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 
+using std::string;
 using std::to_string;
 
 class TestFailedException {
@@ -30,6 +31,16 @@ public:
     }
     return what;
   }
+};
+
+class ExceptionWrapper : public std::runtime_error {
+protected:
+  string _exception_name;
+
+public:
+  ExceptionWrapper(const string &msg, const string &exception_name)
+      : std::runtime_error(msg), _exception_name(exception_name) {}
+  virtual const string exception_name() const { return _exception_name; }
 };
 
 class SettingNotFoundException : public std::runtime_error {
@@ -168,10 +179,11 @@ public:
                            " not found in builder") {}
 };
 
-class wss_cant_find_handler : public std::runtime_error {
+class wss_cant_find_handler : public ExceptionWrapper {
 public:
   wss_cant_find_handler()
-      : std::runtime_error("Given handled not found in server app") {}
+      : ExceptionWrapper("Given handled not found in server app",
+                         "wss_cant_find_handler") {}
 };
 
 #endif
