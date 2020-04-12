@@ -64,7 +64,8 @@ private:
   WebsocketServer() {}
 
   static websocketpp::server<websocketpp::config::asio> _server;
-  static map<connection_hdl, ConnectionData, owner_less<connection_hdl>>
+  static map<connection_hdl, shared_ptr<ConnectionData>,
+             owner_less<connection_hdl>>
       _websockets;
   static unsigned int _port;
   static mutex _connections_mut;

@@ -1,7 +1,7 @@
 #include "server/websocket_server.h"
 
 websocketpp::server<websocketpp::config::asio> WebsocketServer::_server;
-map<connection_hdl, ConnectionData, owner_less<connection_hdl>>
+map<connection_hdl, shared_ptr<ConnectionData>, owner_less<connection_hdl>>
     WebsocketServer::_websockets;
 unsigned int WebsocketServer::_port = 9002;
 mutex WebsocketServer::_connections_mut;
@@ -80,7 +80,7 @@ const ConnectionData &WebsocketServer::get_data_ref(const connection_hdl &hdl) {
   if (_websockets.find(hdl) == _websockets.end()) {
     throw wss_cant_find_handler();
   }
-  return _websockets.find(hdl)->second;
+  return *(_websockets.find(hdl)->second);
 }
 
 void WebsocketServer::stop() {
@@ -106,7 +106,7 @@ void WebsocketServer::stop() {
 
 bool WebsocketServer::on_open(connection_hdl hdl) {
   const lock_guard<mutex> lock(_connections_mut);
-  _websockets[hdl] = ConnectionData();
+  _websockets.emplace(hdl, make_shared<ConnectionData>());
   logger::debug("New connection to server");
   json j;
   j["hello"] = "world";
@@ -141,6 +141,9 @@ void WebsocketServer::on_message(
 
 void WebsocketServer::handle_message(const connection_hdl &hdl,
                                      const string msg) {
+  stringstream ss;
+  ss << &(WebsocketServer::get_data_ref(hdl));
+  logger::debug(ss.str());
   try {
     json j = json::parse(msg);
     auto res = server_handler::dispatch_request(
