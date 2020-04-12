@@ -1,4 +1,4 @@
-#include "websocket_server.h"
+#include "server/websocket_server.h"
 
 websocketpp::server<websocketpp::config::asio> WebsocketServer::_server;
 map<connection_hdl, connection_data, owner_less<connection_hdl>>

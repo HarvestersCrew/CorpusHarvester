@@ -3,11 +3,11 @@
 
 #define ASIO_STANDALONE
 
-#include "broadcast_log_output.h"
+#include "server/broadcast_log_output.h"
+#include "server/wss_logstream.h"
 #include "utils/exceptions.h"
 #include "utils/logger.h"
 #include "utils/nlohmann/json.hpp"
-#include "wss_logstream.h"
 #include <map>
 #include <memory>
 #include <mutex>

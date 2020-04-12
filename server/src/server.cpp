@@ -1,6 +1,5 @@
-#include "api/ManagerRequest.h"
-#include "websocket_server.h"
-#include <iostream>
+#include "database/harvester_database.h"
+#include "server/websocket_server.h"
 
 using std::cout;
 using std::endl;
