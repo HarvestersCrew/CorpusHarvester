@@ -100,6 +100,7 @@ void CommandLineInterface::corpus_manager() {
   vector<string> sources;
   map<string, string> params;
   map<string, string>::iterator itSubCommand;
+  ManagerRequest mr;
 
   logger::debug("Corpus method.");
 
@@ -118,7 +119,7 @@ void CommandLineInterface::corpus_manager() {
 
       // Search for the corpus with the given name
       std::optional<Corpus *> optionalCorpus =
-          ManagerRequest::visualisation_corpus(corpusName);
+          mr.visualisation_corpus(corpusName);
 
       // Check if we have a corpus
       if (optionalCorpus.has_value()) {
@@ -132,8 +133,7 @@ void CommandLineInterface::corpus_manager() {
 
       std::map<std::string, std::string> filters, orders;
 
-      std::list<Corpus *> corpusList =
-          ManagerRequest::visualisation_corpus(filters, orders);
+      std::list<Corpus *> corpusList = mr.visualisation_corpus(filters, orders);
 
       logger::info("Number of available corpus : " + corpusList.size());
 
@@ -205,12 +205,13 @@ void CommandLineInterface::corpus_manager() {
 }
 
 void CommandLineInterface::api_manager() {
+  ManagerRequest mr;
   logger::debug("Apis method.");
   if (std::find(this->commands.begin(), this->commands.end(), "list") !=
       this->commands.end()) {
     logger::debug("List request.");
 
-    vector<string> apis = ManagerRequest::get_apis();
+    vector<string> apis = mr.get_apis();
     string apiNameUser = "";
 
     // Check if we have a value for the name
@@ -242,7 +243,7 @@ void CommandLineInterface::api_manager() {
         for (string api : apis) {
           std::cout << "Database parameter for : " << api << "\n" << std::endl;
           vector<shared_ptr<api_parameter_response>> db_parameters =
-              ManagerRequest::get_api_db_parameters(api);
+              mr.get_api_db_parameters(api);
           for (shared_ptr<api_parameter_response> parameter : db_parameters) {
             std::cout << parameter.get()->to_string() << std::endl;
           }
@@ -253,7 +254,7 @@ void CommandLineInterface::api_manager() {
                   << std::endl;
         // Get specific parameter from the name
         vector<shared_ptr<api_parameter_response>> db_parameters =
-            ManagerRequest::get_api_db_parameters(apiNameUser);
+            mr.get_api_db_parameters(apiNameUser);
         for (shared_ptr<api_parameter_response> parameter : db_parameters) {
           std::cout << parameter.get()->to_string() << std::endl;
         }
@@ -268,7 +269,7 @@ void CommandLineInterface::api_manager() {
           std::cout << "Web request parameter for : " << api << "\n"
                     << std::endl;
           vector<shared_ptr<api_parameter_request>> db_parameters =
-              ManagerRequest::get_api_web_parameters(api);
+              mr.get_api_web_parameters(api);
           for (shared_ptr<api_parameter_request> parameter : db_parameters) {
             std::cout << parameter.get()->to_string() << std::endl;
           }
@@ -278,7 +279,7 @@ void CommandLineInterface::api_manager() {
         std::cout << "Web request for : " << apiNameUser << "\n" << std::endl;
         // Get specific parameter from the name
         vector<shared_ptr<api_parameter_request>> db_parameters =
-            ManagerRequest::get_api_web_parameters(apiNameUser);
+            mr.get_api_web_parameters(apiNameUser);
         for (shared_ptr<api_parameter_request> parameter : db_parameters) {
           std::cout << parameter.get()->to_string() << std::endl;
         }
