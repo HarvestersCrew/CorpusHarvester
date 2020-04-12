@@ -3,6 +3,7 @@
 
 #define ASIO_STANDALONE
 
+#include "api/ManagerRequest.h"
 #include "server/broadcast_log_output.h"
 #include "server/wss_logstream.h"
 #include "utils/exceptions.h"
@@ -33,7 +34,9 @@ using std::thread;
 using std::to_string;
 using websocketpp::connection_hdl;
 
-struct connection_data {};
+struct ConnectionData {
+  ManagerRequest _mr;
+};
 
 /**
  * Websocket server, heavily inspired by
@@ -57,7 +60,7 @@ private:
   WebsocketServer() {}
 
   static websocketpp::server<websocketpp::config::asio> _server;
-  static map<connection_hdl, connection_data, owner_less<connection_hdl>>
+  static map<connection_hdl, ConnectionData, owner_less<connection_hdl>>
       _websockets;
   static unsigned int _port;
   static mutex _connections_mut;
@@ -65,6 +68,7 @@ private:
   static ostream _os;
 
   static const connection_hdl &get_handle_ref(connection_hdl hdl);
+  static const ConnectionData &get_data_ref(const connection_hdl &hdl);
 
   static void handle_message(const connection_hdl &hdl, const string msg);
 
