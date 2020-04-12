@@ -18,6 +18,7 @@
 #define API_FACTORY_APIS_SUBFOLDER "apis/"
 
 namespace fs = std::filesystem;
+using std::const_pointer_cast;
 using std::make_pair;
 using std ::make_shared;
 using std::nullopt;
@@ -66,6 +67,11 @@ public:
    * optional isn't initialized
    */
   static const unordered_map<string, shared_ptr<api_loader>> &get_apis();
+
+  /**
+   * Returns an immuable list of API loaders
+   */
+  static const vector<shared_ptr<const api_loader>> get_api_loaders();
 
   /**
    * Returns a list of the API names

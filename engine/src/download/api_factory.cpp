@@ -130,6 +130,14 @@ const unordered_map<string, shared_ptr<api_loader>> &ApiFactory::get_apis() {
   return ApiFactory::_apis.value();
 }
 
+const vector<shared_ptr<const api_loader>> ApiFactory::get_api_loaders() {
+  vector<shared_ptr<const api_loader>> res;
+  for (const auto &el : ApiFactory::get_apis()) {
+    res.push_back(const_pointer_cast<const api_loader>(el.second));
+  }
+  return res;
+}
+
 vector<string> ApiFactory::get_api_names() {
   vector<string> names;
   for (const auto &el : ApiFactory::get_apis()) {
