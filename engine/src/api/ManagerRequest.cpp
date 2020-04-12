@@ -95,6 +95,11 @@ vector<string> ManagerRequest::get_apis() {
   return ApiFactory::get_api_names();
 }
 
+const vector<shared_ptr<const api_loader>>
+ManagerRequest::get_api_loaders() const {
+  return ApiFactory::get_api_loaders();
+}
+
 const vector<shared_ptr<api_parameter_request>> &
 ManagerRequest::get_api_web_parameters(const string &api_name) {
   return ApiFactory::get_api(api_name)->get_request_parameters();
