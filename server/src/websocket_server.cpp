@@ -19,6 +19,7 @@ bool WebsocketServer::init() {
 
   _server.set_open_handler(&WebsocketServer::on_open);
   _server.set_close_handler(&WebsocketServer::on_close);
+  _server.set_message_handler(&WebsocketServer::on_message);
 
   _server.listen(_port);
 
@@ -32,9 +33,24 @@ void WebsocketServer::run() {
   _server.run();
 }
 
+bool WebsocketServer::send_error_json(const connection_hdl &hdl,
+                                      const ExceptionWrapper &e) {
+  json to_send;
+  to_send["success"] = false;
+  to_send["error"] = e.exception_name();
+  return WebsocketServer::send_msg(hdl, to_send.dump());
+}
+
 bool WebsocketServer::send_json(const connection_hdl &hdl, const json &j) {
+  json to_send;
+  to_send["success"] = true;
+  to_send["data"] = j;
+  return WebsocketServer::send_msg(hdl, to_send.dump());
+}
+
+bool WebsocketServer::send_msg(const connection_hdl &hdl, const string &msg) {
   websocketpp::lib::error_code ec;
-  _server.send(hdl, j.dump(), websocketpp::frame::opcode::text,
+  _server.send(hdl, msg, websocketpp::frame::opcode::text,
                ec); // send text message.
   if (ec) {
     logger::error(ec.message());
@@ -88,4 +104,30 @@ void WebsocketServer::on_close(connection_hdl hdl) {
   } else {
     logger::error("Unsuccessful disconnection");
   }
+}
+
+void WebsocketServer::on_message(
+    connection_hdl hdl,
+    websocketpp::server<websocketpp::config::asio>::message_ptr message) {
+  // Tries to send the request to the handler with the reference to the
+  // connection in our login map
+  try {
+    // Create a thread to handle the query
+    thread t(&WebsocketServer::handle_message,
+             std::ref(WebsocketServer::get_handle_ref(hdl)),
+             message->get_payload());
+    t.detach();
+  } catch (const wss_cant_find_handler &e) {
+    WebsocketServer::send_error_json(hdl, e);
+  }
+}
+
+void WebsocketServer::handle_message(const connection_hdl &hdl,
+                                     const string msg) {
+  std::stringstream ss;
+  ss << std::this_thread::get_id();
+  json j;
+  j["id"] = ss.str();
+  j["msg"] = msg;
+  WebsocketServer::send_json(hdl, j);
 }
