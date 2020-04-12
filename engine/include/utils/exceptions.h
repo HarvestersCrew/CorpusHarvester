@@ -168,4 +168,10 @@ public:
                            " not found in builder") {}
 };
 
+class wss_cant_find_handler : public std::runtime_error {
+public:
+  wss_cant_find_handler()
+      : std::runtime_error("Given handled not found in server app") {}
+};
+
 #endif
