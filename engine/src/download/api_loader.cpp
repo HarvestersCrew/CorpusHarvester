@@ -84,6 +84,13 @@ string api_loader::get_api_schema_full_path() const {
   return ss.str();
 }
 
+nlohmann::json api_loader::serialize() const {
+  nlohmann::json j;
+  j["name"] = this->_name;
+  j["type"] = this->get_api_type_string();
+  return j;
+}
+
 std::string api_loader::to_string() const {
   std::stringstream out;
   out << "name: " << this->_name << std::endl;

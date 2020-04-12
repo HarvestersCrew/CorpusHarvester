@@ -20,14 +20,18 @@ struct ConnectionData;
 
 namespace server_handler {
 
-typedef pair<string, json> (*handler_function_data)(const ConnectionData &,
+typedef pair<string, json> (*handler_function_data)(ConnectionData &,
                                                     const json &);
 
-typedef pair<string, json> (*handler_function_no_data)(const ConnectionData &);
+typedef pair<string, json> (*handler_function_no_data)(ConnectionData &);
 
-pair<string, json> dispatch_request(const ConnectionData &con, const json &j);
+void fill_available_functions(
+    unordered_map<string, handler_function_data> &functions_data,
+    unordered_map<string, handler_function_no_data> &functions_no_data);
 
-pair<string, json> get_apis_infos(const ConnectionData &con);
+pair<string, json> dispatch_request(ConnectionData &con, const json &j);
+
+pair<string, json> get_apis_infos(ConnectionData &con);
 
 } // namespace server_handler
 

@@ -69,7 +69,7 @@ bool WebsocketServer::send_msg(const connection_hdl &hdl, const string &msg) {
   return true;
 }
 
-const ConnectionData &WebsocketServer::get_data_ref(const connection_hdl &hdl) {
+ConnectionData &WebsocketServer::get_data_ref(const connection_hdl &hdl) {
   if (_websockets.find(hdl) == _websockets.end()) {
     throw wss_cant_find_handler();
   }
@@ -133,8 +133,7 @@ void WebsocketServer::on_message(
   }
 }
 
-void WebsocketServer::handle_message(const ConnectionData &con,
-                                     const string msg) {
+void WebsocketServer::handle_message(ConnectionData &con, const string msg) {
   try {
     json j = json::parse(msg);
     auto res = server_handler::dispatch_request(con, j);

@@ -73,9 +73,9 @@ private:
   static WssLogstream _ls;
   static ostream _os;
 
-  static const ConnectionData &get_data_ref(const connection_hdl &hdl);
+  static ConnectionData &get_data_ref(const connection_hdl &hdl);
 
-  static void handle_message(const ConnectionData &con, const string msg);
+  static void handle_message(ConnectionData &con, const string msg);
 
   // callbacks
   static bool on_open(connection_hdl hdl);
