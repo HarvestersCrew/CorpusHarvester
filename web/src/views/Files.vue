@@ -6,7 +6,7 @@
           <v-col cols="4">
             <v-select
               v-model="filters.selectedTypes"
-              :items="filters.types"
+              :items="types"
               label="Types"
               dark
               outlined
@@ -20,7 +20,7 @@
           <v-col cols="4">
             <v-select
               v-model="filters.selectedSources"
-              :items="filters.sources"
+              :items="sources"
               item-text="name"
               item-value="api"
               label="Sources"
@@ -122,7 +122,7 @@
               </v-row>
             </v-list-item-content>
             <v-list-item-icon>
-              <v-icon>mdi-dots-vertical</v-icon>
+              <v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
             </v-list-item-icon>
           </v-list-item>
           <v-divider v-if="index + 1 < files.length" :key="index"></v-divider>
@@ -183,48 +183,48 @@ export default {
           file_date: new Date().toISOString().substring(0, 10)
         }
       ],
+      types: ["Text", "Image"],
+      sources: [
+        {
+          name: "Twitter",
+          api: {
+            api_name: "Twitter",
+            parameters: [
+              {
+                name: "nb_retweets",
+                type: "select_field",
+                options: ["< 500", "> 500"]
+              },
+              {
+                name: "word",
+                type: "text_field"
+              },
+              {
+                name: "tweet_date",
+                type: "date_field"
+              },
+              {
+                name: "word2",
+                type: "text_field"
+              }
+            ]
+          }
+        },
+        {
+          name: "TMDB",
+          api: {
+            api_name: "TMDB",
+            parameters: [
+              {
+                name: "word",
+                type: "text_field"
+              }
+            ]
+          }
+        }
+      ],
       filters: {
         date: undefined,
-        sources: [
-          {
-            name: "Twitter",
-            api: {
-              api_name: "Twitter",
-              parameters: [
-                {
-                  name: "nb_retweets",
-                  type: "select_field",
-                  options: ["< 500", "> 500"]
-                },
-                {
-                  name: "word",
-                  type: "text_field"
-                },
-                {
-                  name: "tweet_date",
-                  type: "date_field"
-                },
-                {
-                  name: "word2",
-                  type: "text_field"
-                }
-              ]
-            }
-          },
-          {
-            name: "TMDB",
-            api: {
-              api_name: "TMDB",
-              parameters: [
-                {
-                  name: "word",
-                  type: "text_field"
-                }
-              ]
-            }
-          }
-        ],
-        types: ["Text", "Image"],
         selectedSources: [],
         selectedTypes: []
       }
