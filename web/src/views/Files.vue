@@ -108,33 +108,30 @@
         </v-expansion-panels>
       </v-card-text>
     </v-card>
-    <v-list>
-      <v-list-item-group multiple active-class="blue--text">
-        <template v-for="(item, index) in files">
-          <v-list-item :key="index">
-            <v-list-item-content>
-              <v-row dense>
-                <v-col>{{ item.file_name }}</v-col>
-                <v-col>{{ item.file_type }}</v-col>
-                <v-col>{{ item.file_source }}</v-col>
-                <v-col>{{ item.file_date }}</v-col>
-                <!--<v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>-->
-              </v-row>
-            </v-list-item-content>
-            <v-list-item-icon>
-              <v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
-            </v-list-item-icon>
-          </v-list-item>
-          <v-divider v-if="index + 1 < files.length" :key="index"></v-divider>
-        </template>
-      </v-list-item-group>
+    <template v-for="(item, index) in files">
+      <v-list-item :key="index">
+        <v-checkbox></v-checkbox>
+        <v-list-item-content>
+          <v-row dense>
+            <v-col>{{ item.file_name }}</v-col>
+            <v-col>{{ item.file_type }}</v-col>
+            <v-col>{{ item.file_source }}</v-col>
+            <v-col>{{ item.file_date }}</v-col>
+            <!--<v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>-->
+          </v-row>
+        </v-list-item-content>
+        <v-list-item-icon>
+          <v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
+        </v-list-item-icon>
+      </v-list-item>
+      <v-divider v-if="index + 1 < files.length" :key="index"></v-divider>
+    </template>
 
-      <v-fab-transition>
-        <v-btn fab large fixed bottom right color="blue" dark>
-          <v-icon>mdi-check</v-icon>
-        </v-btn>
-      </v-fab-transition>
-    </v-list>
+    <v-fab-transition>
+      <v-btn fab large fixed bottom right color="blue" dark>
+        <v-icon>mdi-check</v-icon>
+      </v-btn>
+    </v-fab-transition>
   </Bar>
 </template>
 
