@@ -23,7 +23,7 @@ public:
         _line(line) {}
 
   std::string what() const throw() {
-    std::string what = " {{ ERROR }} Test of function " + _functionName +
+    std::string what = "{{ ERROR }} Test of function " + _functionName +
                        "() failed : expected [" + _expected + "], got [" +
                        _found + "]";
     if (_line != -1) {

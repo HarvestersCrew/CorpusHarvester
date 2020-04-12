@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "file.h"
+#include "storage/export_method.h"
 
 #define CORPUS_CREATE_STATEMENT                                                \
   "CREATE TABLE IF NOT EXISTS Corpus(id INTEGER NOT NULL "                     \
@@ -97,6 +98,8 @@ public:
 
   void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
+  std::string export_(ExportMethod *export_method);
+
   /**
    * Get the title of the corpus.
    * @return std::string the title of the corpus.
@@ -130,8 +133,8 @@ public:
    *
    * @return Optional Contain a corpus if the we have a result.
    */
-  static std::optional<Corpus *> get_corpus_from_name(sql::Connection *db,
-                                                      const std::string name);
+  static std::optional<Corpus *> get_corpus_from_title(sql::Connection *db,
+                                                       const std::string name);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H

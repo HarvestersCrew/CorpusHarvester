@@ -98,8 +98,8 @@ std::list<Corpus *> Corpus::get_all_corpuses(sql::Connection *db) {
   return corpuses;
 }
 
-std::optional<Corpus *> Corpus::get_corpus_from_name(sql::Connection *db,
-                                                     std::string name) {
+std::optional<Corpus *> Corpus::get_corpus_from_title(sql::Connection *db,
+                                                      std::string name) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
 
@@ -123,4 +123,8 @@ std::optional<Corpus *> Corpus::get_corpus_from_name(sql::Connection *db,
   return corpus == nullptr
              ? std::nullopt
              : std::optional<std::reference_wrapper<Corpus *>>{corpus};
+}
+
+string Corpus::export_(ExportMethod *export_method) {
+  return export_method->compressed_export(_files, _title);
 }

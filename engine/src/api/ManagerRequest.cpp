@@ -29,7 +29,7 @@ std::list<Corpus *> ManagerRequest::visualisation_corpus(
 
       logger::debug("Search corpus : " + title);
       std::optional<Corpus *> optionalCorpus =
-          Corpus::get_corpus_from_name(db, title);
+          Corpus::get_corpus_from_title(db, title);
 
       if (optionalCorpus.has_value()) {
         corpuses.push_back(optionalCorpus.value());
@@ -69,7 +69,7 @@ std::optional<Corpus *> ManagerRequest::visualisation_corpus(std::string name) {
   sql::Connection *db = HarvesterDatabase::init();
   Indexer indexer(db);
 
-  std::optional<Corpus *> corpus = Corpus::get_corpus_from_name(db, name);
+  std::optional<Corpus *> corpus = Corpus::get_corpus_from_title(db, name);
 
   return corpus;
 }

@@ -1,7 +1,6 @@
 #include "test/storage_test.h"
 
-sql::Connection *storage_db = HarvesterDatabase::init();
-Storage storage = Storage(storage_db);
+Storage storage = Storage(HarvesterDatabase::init());
 std::string STORED_PATH = storage.get_root_folder_name();
 std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
 shared_ptr<File> file =
@@ -11,7 +10,7 @@ void test_file_destination() {
   std::string fileDest = storage.file_destination(file);
   Assertion::assert_equals(
       __FUNCTION__,
-      STORED_PATH + "twitter/ddecebde/a58b5f26/4d27f1f7/909bab74.txt",
+      STORED_PATH + "download/twitter/ddecebde/a58b5f26/4d27f1f7/909bab74.txt",
       fileDest);
   file->set_source("wikicommons");
   file->set_name("harvester");
@@ -19,7 +18,8 @@ void test_file_destination() {
   fileDest = storage.file_destination(file);
   Assertion::assert_equals(
       __FUNCTION__,
-      STORED_PATH + "wikicommons/9f8f961b/5607b100/3cf830f4/4c67efc9.jpg",
+      STORED_PATH +
+          "download/wikicommons/9f8f961b/5607b100/3cf830f4/4c67efc9.jpg",
       fileDest);
 }
 
@@ -38,8 +38,8 @@ void test_store_one_file() {
   file->set_content(content);
   std::string file_dest = storage.store_file(file);
   std::string expected_destination =
-      STORED_PATH + "tmdb/098f6bcd/4621d373/cade4e83/2627b4f6.png";
-  std::string expected_path = "tmdb/098f6bcd/4621d373/cade4e83/";
+      STORED_PATH + "download/tmdb/098f6bcd/4621d373/cade4e83/2627b4f6.png";
+  std::string expected_path = "download/tmdb/098f6bcd/4621d373/cade4e83/";
   std::string expected_name = "2627b4f6";
   Assertion::assert_equals(__FUNCTION__, expected_destination, file_dest);
   Assertion::assert_equals(__FUNCTION__, expected_path, file->get_path());
@@ -48,10 +48,25 @@ void test_store_one_file() {
   Assertion::assert_equals(__FUNCTION__, content + "\n", ls);
 }
 
+void test_export_corpus_zip() {
+  std::list<shared_ptr<File>> files;
+  files.push_back(file);
+  shared_ptr<File> file2 =
+      std::make_shared<File>(File("", "test2", 100, "twitter", ".txt"));
+  storage.store_file(file2);
+  files.push_back(file2);
+  Corpus corpus = Corpus("corpus_test", files, "");
+  ExportMethod *zip_export = new ZipExport(HarvesterDatabase::init());
+  string path = corpus.export_(zip_export);
+  string ls = exec("ls " + path);
+  Assertion::assert_equals(__FUNCTION__, path + "\n", ls);
+}
+
 void storage_test() {
   std::cout << std::endl << "Storage tests : " << std::endl;
   Assertion::test(test_file_destination, "test_file_destination");
   Assertion::test(test_empty_file_name, "test_empty_file_name");
   Assertion::test(test_store_one_file, "test_store_one_file");
+  Assertion::test(test_export_corpus_zip, "test_export_corpus_zip");
   HarvesterDatabase::close();
 }

@@ -6,7 +6,10 @@ Storage::Storage() {}
 
 void Storage::init_root(sql::Connection *db) {
   Setting root_folder_name = Setting(Setting::STORAGE_ROOT, db);
-  _root_folder_name = root_folder_name.get_value() + DOWNLOAD_FOLDER;
+  _root_folder_name = root_folder_name.get_value();
+  if (!folder_exists_in_root(CORPUS_FOLDER)) {
+    create_folders_in_root(CORPUS_FOLDER);
+  }
 }
 
 bool Storage::create_folders_in_root(std::string folder_path) const {
@@ -34,7 +37,8 @@ std::string Storage::file_destination(shared_ptr<File> file) const {
   std::string file_name_for_folder =
       md5_file_name.substr(0, md5_file_name.length() - MD5_SPLIT);
   std::string file_folder = get_folder_path(file_name_for_folder);
-  std::string dest_folder_path = file->get_source() + "/" + file_folder;
+  std::string dest_folder_path =
+      DOWNLOAD_FOLDER + file->get_source() + "/" + file_folder;
   file->set_name(file_name);
   file->set_path(dest_folder_path);
 

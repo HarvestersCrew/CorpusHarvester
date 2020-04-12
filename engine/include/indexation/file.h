@@ -108,6 +108,7 @@ public:
 
   std::string get_tag_value(std::string name);
 
+  std::string get_full_path() const { return _path + "/" + _name + _format; }
   std::string get_path() const { return _path; }
   std::string get_name() const { return _name; }
   std::string get_source() const { return _source; }

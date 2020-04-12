@@ -32,4 +32,6 @@ std::string get_current_time(const char *patern);
 std::string add_string_every_n_chars(std::string input, std::string to_add,
                                      int n);
 
+std::list<string> split(const string &str, char delimiter);
+
 #endif
