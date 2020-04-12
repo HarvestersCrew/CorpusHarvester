@@ -5,10 +5,17 @@ map<connection_hdl, connection_data, owner_less<connection_hdl>>
     WebsocketServer::_websockets;
 unsigned int WebsocketServer::_port = 9002;
 mutex WebsocketServer::_connections_mut;
+WssLogstream WebsocketServer::_ls;
+ostream WebsocketServer::_os(&WebsocketServer::_ls);
 
 bool WebsocketServer::init() {
   _server.init_asio();
   _server.set_reuse_addr(true);
+
+  _server.get_alog().set_ostream(&_os);
+  _server.get_elog().set_ostream(&_os);
+  _server.set_error_channels(websocketpp::log::elevel::none);
+  _server.set_access_channels(websocketpp::log::alevel::none);
 
   _server.set_open_handler(&WebsocketServer::on_open);
   _server.set_close_handler(&WebsocketServer::on_close);

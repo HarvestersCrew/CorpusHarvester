@@ -6,8 +6,10 @@
 #include "utils/exceptions.h"
 #include "utils/logger.h"
 #include "utils/nlohmann/json.hpp"
+#include "wss_logstream.h"
 #include <map>
 #include <mutex>
+#include <ostream>
 #include <string>
 #include <utility>
 #include <websocketpp/config/asio_no_tls.hpp>
@@ -18,6 +20,7 @@ using std::lock_guard;
 using std::make_pair;
 using std::map;
 using std::mutex;
+using std::ostream;
 using std::owner_less;
 using std::pair;
 using std::string;
@@ -46,6 +49,8 @@ private:
       _websockets;
   static unsigned int _port;
   static mutex _connections_mut;
+  static WssLogstream _ls;
+  static ostream _os;
 
   static const connection_hdl &get_handle_ref(connection_hdl hdl);
 
