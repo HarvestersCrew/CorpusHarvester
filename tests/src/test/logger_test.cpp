@@ -43,7 +43,7 @@ void test_logger_get_ostream() {
 
   to_log = "Blabla";
   logger::ostream_log(ss, logger::level::DEBUG, to_log);
-  to_log = "[DEBUG]   - " + to_log + '\n';
+  to_log = "[DEBUG]   - " + to_log;
   Assertion::assert_equals(__FUNCTION__, to_log, ss.str());
   ss.clear();
 
@@ -59,7 +59,7 @@ void test_logger_get_ostream() {
   logger::ostream_log(ss, logger::level::DEBUG, to_log);
   Assertion::assert_equals(__FUNCTION__, "", ss.str());
   logger::ostream_log(ss, logger::level::ERROR, to_log);
-  to_log = "[ERROR]   - " + to_log + '\n';
+  to_log = "[ERROR]   - " + to_log;
   Assertion::assert_equals(__FUNCTION__, to_log, ss.str());
   ss.clear();
 }
@@ -77,8 +77,10 @@ void test_logger_output_log() {
 
   logger::print_log(logger::level::DEBUG, msg1.str());
   logger::ostream_log(expected, logger::level::DEBUG, msg1.str());
+  expected << endl;
   logger::print_log(logger::level::ERROR, msg2.str());
   logger::ostream_log(expected, logger::level::ERROR, msg2.str());
+  expected << endl;
 
   ifstream f(logger::get_full_output_path());
   result << f.rdbuf();
@@ -101,6 +103,7 @@ void test_logger_debug() {
 
   logger::debug(msg.str());
   logger::ostream_log(expected, logger::level::DEBUG, msg.str());
+  expected << endl;
   logger::set_level(logger::level::INFO);
   logger::ostream_log(expected, logger::level::DEBUG, msg.str());
 
@@ -124,6 +127,7 @@ void test_logger_info() {
 
   logger::info(msg.str());
   logger::ostream_log(expected, logger::level::INFO, msg.str());
+  expected << endl;
   logger::set_level(logger::level::WARNING);
   logger::ostream_log(expected, logger::level::INFO, msg.str());
 
@@ -147,6 +151,7 @@ void test_logger_warning() {
 
   logger::warning(msg.str());
   logger::ostream_log(expected, logger::level::WARNING, msg.str());
+  expected << endl;
   logger::set_level(logger::level::ERROR);
   logger::ostream_log(expected, logger::level::WARNING, msg.str());
 
@@ -170,6 +175,7 @@ void test_logger_error() {
 
   logger::error(msg.str());
   logger::ostream_log(expected, logger::level::ERROR, msg.str());
+  expected << endl;
   logger::set_level(logger::level::NONE);
   logger::ostream_log(expected, logger::level::ERROR, msg.str());
 
@@ -195,6 +201,7 @@ void test_logger_start() {
 
   logger::error(msg.str());
   logger::ostream_log(expected, logger::level::ERROR, msg.str());
+  expected << endl;
 
   ifstream f1(logger::get_full_output_path());
   result << f1.rdbuf();
