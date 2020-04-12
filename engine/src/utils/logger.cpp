@@ -92,7 +92,7 @@ void logger::ostream_log(ostream &os, logger::level level, const string &msg) {
     for (long unsigned int i = 0; i < warning_length - tag.size(); i++) {
       os << " ";
     }
-    os << "- " << msg << endl;
+    os << "- " << msg;
   }
 }
 
@@ -108,11 +108,11 @@ void logger::print_log(logger::level level, const string &msg) {
     if (ss.str() != "") {
       ofstream f(logger::get_output_path() + LOGGER_DEFAULT_FILENAME,
                  std::ofstream::app);
-      f << ss.str();
+      f << ss.str() << endl;
       f.close();
     }
   } else {
-    cout << ss.str();
+    cout << ss.str() << endl;
   }
 
   if (logger::custom_output.has_value()) {
