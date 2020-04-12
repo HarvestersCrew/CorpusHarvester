@@ -12,6 +12,8 @@ bool WebsocketServer::init() {
   _server.init_asio();
   _server.set_reuse_addr(true);
 
+  logger::add_custom_output(make_shared<BroadcastLogOutput>());
+
   _server.get_alog().set_ostream(&_os);
   _server.get_elog().set_ostream(&_os);
   _server.set_error_channels(websocketpp::log::elevel::none);
@@ -36,16 +38,23 @@ void WebsocketServer::run() {
 bool WebsocketServer::send_error_json(const connection_hdl &hdl,
                                       const ExceptionWrapper &e) {
   json to_send;
-  to_send["success"] = false;
-  to_send["error"] = e.exception_name();
+  to_send["type"] = "error";
+  to_send["data"] = e.exception_name();
   return WebsocketServer::send_msg(hdl, to_send.dump());
 }
 
-bool WebsocketServer::send_json(const connection_hdl &hdl, const json &j) {
+bool WebsocketServer::send_json(const connection_hdl &hdl, const string &type,
+                                const json &j) {
   json to_send;
-  to_send["success"] = true;
+  to_send["type"] = type;
   to_send["data"] = j;
   return WebsocketServer::send_msg(hdl, to_send.dump());
+}
+
+void WebsocketServer::broadcast_json(const string &type, const json &j) {
+  for (auto it = _websockets.begin(); it != _websockets.end(); ++it) {
+    WebsocketServer::send_json(it->first, type, j);
+  }
 }
 
 bool WebsocketServer::send_msg(const connection_hdl &hdl, const string &msg) {
@@ -93,7 +102,7 @@ bool WebsocketServer::on_open(connection_hdl hdl) {
   logger::debug("New connection to server");
   json j;
   j["hello"] = "world";
-  WebsocketServer::send_json(hdl, j);
+  WebsocketServer::send_json(hdl, "welcome", j);
   return true;
 }
 
@@ -129,5 +138,5 @@ void WebsocketServer::handle_message(const connection_hdl &hdl,
   json j;
   j["id"] = ss.str();
   j["msg"] = msg;
-  WebsocketServer::send_json(hdl, j);
+  WebsocketServer::send_json(hdl, "echo", j);
 }

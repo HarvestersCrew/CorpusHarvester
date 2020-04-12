@@ -3,11 +3,13 @@
 
 #define ASIO_STANDALONE
 
+#include "broadcast_log_output.h"
 #include "utils/exceptions.h"
 #include "utils/logger.h"
 #include "utils/nlohmann/json.hpp"
 #include "wss_logstream.h"
 #include <map>
+#include <memory>
 #include <mutex>
 #include <ostream>
 #include <string>
@@ -19,11 +21,13 @@
 using nlohmann::json;
 using std::lock_guard;
 using std::make_pair;
+using std::make_shared;
 using std::map;
 using std::mutex;
 using std::ostream;
 using std::owner_less;
 using std::pair;
+using std::shared_ptr;
 using std::string;
 using std::thread;
 using std::to_string;
@@ -43,7 +47,10 @@ public:
 
   static bool send_error_json(const connection_hdl &hdl,
                               const ExceptionWrapper &e);
-  static bool send_json(const connection_hdl &hdl, const json &j);
+  static bool send_json(const connection_hdl &hdl, const string &type,
+                        const json &j);
+  static void broadcast_json(const string &type, const json &j);
+
   static bool send_msg(const connection_hdl &hdl, const string &msg);
 
 private:

@@ -2,8 +2,10 @@
 #define BROADCAST_LOG_OUTPUT_H
 
 #include "utils/logger.h"
-#include <iostream>
+#include "utils/nlohmann/json.hpp"
+#include "websocket_server.h"
 
+using nlohmann::json;
 using std::endl;
 
 class BroadcastLogOutput : public LoggerCustomOutput {
