@@ -210,4 +210,10 @@ public:
                          "wss_invalid_json") {}
 };
 
+class wss_invalid_request : public ExceptionWrapper {
+public:
+  wss_invalid_request()
+      : ExceptionWrapper("Invalid client request", "wss_invalid_request") {}
+};
+
 #endif

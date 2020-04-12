@@ -5,6 +5,7 @@
 
 #include "api/ManagerRequest.h"
 #include "server/broadcast_log_output.h"
+#include "server/server_handler.h"
 #include "server/wss_logstream.h"
 #include "utils/exceptions.h"
 #include "utils/logger.h"
@@ -13,8 +14,10 @@
 #include <memory>
 #include <mutex>
 #include <ostream>
+#include <sstream>
 #include <string>
 #include <thread>
+#include <typeinfo>
 #include <utility>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
@@ -30,6 +33,7 @@ using std::owner_less;
 using std::pair;
 using std::shared_ptr;
 using std::string;
+using std::stringstream;
 using std::thread;
 using std::to_string;
 using websocketpp::connection_hdl;

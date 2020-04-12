@@ -40,6 +40,7 @@ bool WebsocketServer::send_error_json(const connection_hdl &hdl,
   json to_send;
   to_send["type"] = "error";
   to_send["data"] = e.exception_name();
+  logger::error(e.exception_name() + ": " + e.what());
   return WebsocketServer::send_msg(hdl, to_send.dump());
 }
 
@@ -140,11 +141,25 @@ void WebsocketServer::on_message(
 
 void WebsocketServer::handle_message(const connection_hdl &hdl,
                                      const string msg) {
-  json j;
   try {
-    j = json::parse(msg);
+    json j = json::parse(msg);
+    auto res = server_handler::dispatch_request(
+        hdl, WebsocketServer::get_data_ref(hdl), j);
+    WebsocketServer::send_json(hdl, res.first, res.second);
+
   } catch (const json::parse_error &e) {
     WebsocketServer::send_error_json(hdl, wss_invalid_json());
-    return;
+
+  } catch (const json::out_of_range &e) {
+    WebsocketServer::send_error_json(hdl, wss_invalid_json());
+
+  } catch (const ExceptionWrapper &e) {
+    WebsocketServer::send_error_json(hdl, e);
+
+  } catch (const std::exception &e) {
+    stringstream ss;
+    ss << "Encountered an error: " << typeid(e).name();
+    WebsocketServer::send_error_json(hdl,
+                                     ExceptionWrapper(ss.str(), "Unknown"));
   }
 }
