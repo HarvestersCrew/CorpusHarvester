@@ -203,4 +203,11 @@ public:
                          "wss_cant_find_handler") {}
 };
 
+class wss_invalid_json : public ExceptionWrapper {
+public:
+  wss_invalid_json()
+      : ExceptionWrapper("Can't parse JSON as it is invalid",
+                         "wss_invalid_json") {}
+};
+
 #endif

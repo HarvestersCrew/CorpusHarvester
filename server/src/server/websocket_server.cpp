@@ -140,13 +140,11 @@ void WebsocketServer::on_message(
 
 void WebsocketServer::handle_message(const connection_hdl &hdl,
                                      const string msg) {
-  std::stringstream ss;
-  ss << std::this_thread::get_id();
   json j;
-  j["id"] = ss.str();
-  j["msg"] = msg;
-  ss.clear();
-  ss << &(WebsocketServer::get_data_ref(hdl)._mr);
-  j["pointer"] = ss.str();
-  WebsocketServer::send_json(hdl, "echo", j);
+  try {
+    j = json::parse(msg);
+  } catch (const json::parse_error &e) {
+    WebsocketServer::send_error_json(hdl, wss_invalid_json());
+    return;
+  }
 }
