@@ -16,6 +16,7 @@
             >
             </v-select>
           </v-col>
+          <!-- TODO : allow to select one API multiple times -->
           <v-col cols="4">
             <v-select
               v-model="filters.selectedSources"
@@ -107,6 +108,33 @@
         </v-expansion-panels>
       </v-card-text>
     </v-card>
+    <v-list>
+      <v-list-item-group multiple active-class="blue--text">
+        <template v-for="(item, index) in files">
+          <v-list-item :key="index">
+            <v-list-item-content>
+              <v-row dense>
+                <v-col>{{ item.file_name }}</v-col>
+                <v-col>{{ item.file_type }}</v-col>
+                <v-col>{{ item.file_source }}</v-col>
+                <v-col>{{ item.file_date }}</v-col>
+                <!--<v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>-->
+              </v-row>
+            </v-list-item-content>
+            <v-list-item-icon>
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-list-item-icon>
+          </v-list-item>
+          <v-divider v-if="index + 1 < files.length" :key="index"></v-divider>
+        </template>
+      </v-list-item-group>
+
+      <v-fab-transition>
+        <v-btn fab large fixed bottom right color="blue" dark>
+          <v-icon>mdi-check</v-icon>
+        </v-btn>
+      </v-fab-transition>
+    </v-list>
   </Bar>
 </template>
 
@@ -117,7 +145,44 @@ export default {
   components: { Bar },
   data() {
     return {
-      files: undefined,
+      files: [
+        {
+          file_name: "A.txt",
+          file_type: "Text",
+          file_source: "Twitter",
+          file_date: new Date().toISOString().substring(0, 10)
+        },
+        {
+          file_name: "B.txt",
+          file_type: "Text",
+          file_source: "Twitter",
+          file_date: new Date().toISOString().substring(0, 10)
+        },
+        {
+          file_name: "C.txt",
+          file_type: "Text",
+          file_source: "Twitter",
+          file_date: new Date().toISOString().substring(0, 10)
+        },
+        {
+          file_name: "D.png",
+          file_type: "Image",
+          file_source: "Twitter",
+          file_date: new Date().toISOString().substring(0, 10)
+        },
+        {
+          file_name: "E.png",
+          file_type: "Image",
+          file_source: "Twitter",
+          file_date: new Date().toISOString().substring(0, 10)
+        },
+        {
+          file_name: "F.txt",
+          file_type: "Text",
+          file_source: "TMDB",
+          file_date: new Date().toISOString().substring(0, 10)
+        }
+      ],
       filters: {
         date: undefined,
         sources: [
