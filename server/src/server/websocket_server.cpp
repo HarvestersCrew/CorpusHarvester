@@ -69,13 +69,6 @@ bool WebsocketServer::send_msg(const connection_hdl &hdl, const string &msg) {
   return true;
 }
 
-const connection_hdl &WebsocketServer::get_handle_ref(connection_hdl hdl) {
-  if (_websockets.find(hdl) == _websockets.end()) {
-    throw wss_cant_find_handler();
-  }
-  return _websockets.find(hdl)->first;
-}
-
 const ConnectionData &WebsocketServer::get_data_ref(const connection_hdl &hdl) {
   if (_websockets.find(hdl) == _websockets.end()) {
     throw wss_cant_find_handler();
@@ -107,6 +100,7 @@ void WebsocketServer::stop() {
 bool WebsocketServer::on_open(connection_hdl hdl) {
   const lock_guard<mutex> lock(_connections_mut);
   _websockets.emplace(hdl, make_shared<ConnectionData>());
+  _websockets[hdl]->_hdl = hdl;
   logger::debug("New connection to server");
   json j;
   j["hello"] = "world";
@@ -131,7 +125,7 @@ void WebsocketServer::on_message(
   try {
     // Create a thread to handle the query
     thread t(&WebsocketServer::handle_message,
-             std::ref(WebsocketServer::get_handle_ref(hdl)),
+             std::ref(WebsocketServer::get_data_ref(hdl)),
              message->get_payload());
     t.detach();
   } catch (const wss_cant_find_handler &e) {
@@ -139,30 +133,26 @@ void WebsocketServer::on_message(
   }
 }
 
-void WebsocketServer::handle_message(const connection_hdl &hdl,
+void WebsocketServer::handle_message(const ConnectionData &con,
                                      const string msg) {
-  stringstream ss;
-  ss << &(WebsocketServer::get_data_ref(hdl));
-  logger::debug(ss.str());
   try {
     json j = json::parse(msg);
-    auto res = server_handler::dispatch_request(
-        hdl, WebsocketServer::get_data_ref(hdl), j);
-    WebsocketServer::send_json(hdl, res.first, res.second);
+    auto res = server_handler::dispatch_request(con, j);
+    WebsocketServer::send_json(con._hdl, res.first, res.second);
 
   } catch (const json::parse_error &e) {
-    WebsocketServer::send_error_json(hdl, wss_invalid_json());
+    WebsocketServer::send_error_json(con._hdl, wss_invalid_json());
 
   } catch (const json::out_of_range &e) {
-    WebsocketServer::send_error_json(hdl, wss_invalid_json());
+    WebsocketServer::send_error_json(con._hdl, wss_invalid_json());
 
   } catch (const ExceptionWrapper &e) {
-    WebsocketServer::send_error_json(hdl, e);
+    WebsocketServer::send_error_json(con._hdl, e);
 
   } catch (const std::exception &e) {
     stringstream ss;
     ss << "Encountered an error: " << typeid(e).name();
-    WebsocketServer::send_error_json(hdl,
+    WebsocketServer::send_error_json(con._hdl,
                                      ExceptionWrapper(ss.str(), "Unknown"));
   }
 }

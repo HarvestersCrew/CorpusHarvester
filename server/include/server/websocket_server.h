@@ -40,6 +40,7 @@ using websocketpp::connection_hdl;
 
 struct ConnectionData {
   ManagerRequest _mr;
+  connection_hdl _hdl;
 };
 
 /**
@@ -72,10 +73,9 @@ private:
   static WssLogstream _ls;
   static ostream _os;
 
-  static const connection_hdl &get_handle_ref(connection_hdl hdl);
   static const ConnectionData &get_data_ref(const connection_hdl &hdl);
 
-  static void handle_message(const connection_hdl &hdl, const string msg);
+  static void handle_message(const ConnectionData &con, const string msg);
 
   // callbacks
   static bool on_open(connection_hdl hdl);
