@@ -87,7 +87,21 @@ string api_loader::get_api_schema_full_path() const {
 nlohmann::json api_loader::serialize() const {
   nlohmann::json j;
   j["name"] = this->_name;
-  j["type"] = this->get_api_type_string();
+  j["api_type"] = this->get_api_type_string();
+  j["url"] = this->_url;
+  j["method"] = this->_method;
+  j["response_main_item"] = this->_response_main_item;
+  j["path_to_results"] = this->_path_to_results;
+  j["truncate_before"] = this->_truncate_before.value_or(0);
+  j["truncate_after"] = this->_truncate_after.value_or(0);
+  j["requests"] = nlohmann::json::array();
+  j["responses"] = nlohmann::json::array();
+  for (const auto &param : this->get_request_parameters()) {
+    j["requests"].push_back(param->serialize());
+  }
+  for (const auto &param : this->get_response_parameters()) {
+    j["responses"].push_back(param->serialize());
+  }
   return j;
 }
 
