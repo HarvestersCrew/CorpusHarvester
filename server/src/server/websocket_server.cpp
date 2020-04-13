@@ -150,7 +150,7 @@ void WebsocketServer::handle_message(ConnectionData &con, const string msg) {
 
   } catch (const std::exception &e) {
     stringstream ss;
-    ss << "Encountered an error: " << typeid(e).name();
+    ss << "Encountered " << typeid(e).name() << ": " << e.what();
     WebsocketServer::send_error_json(con._hdl,
                                      ExceptionWrapper(ss.str(), "Unknown"));
   }
