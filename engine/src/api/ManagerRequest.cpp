@@ -75,8 +75,15 @@ std::optional<Corpus *> ManagerRequest::visualisation_corpus(std::string name) {
 }
 
 std::optional<Corpus *> ManagerRequest::get_corpus_from_id(long id) {
-  // TODO ::
-  return std::nullopt;
+  logger::debug("Search corpus with id = " + std::to_string(id));
+
+  // Get the indexer
+  sql::Connection *db = HarvesterDatabase::init();
+  Indexer indexer(db);
+
+  std::optional<Corpus *> corpus = Corpus::get_corpus_from_id(db, id);
+
+  return corpus;
 }
 
 int ManagerRequest::create_corpus(const string &name,

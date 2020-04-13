@@ -120,9 +120,18 @@ void CommandLineInterface::corpus_by_id() {
     if (sz == idString.length()) {
       logger::debug("The id is OK");
 
+      // Search the corpus in our database
       ManagerRequest managerRequest;
+      std::optional<Corpus *> corpus =
+          managerRequest.get_corpus_from_id(idLong);
 
-      managerRequest.get_corpus_from_id(idLong);
+      // Check the answer
+      if (corpus.has_value()) {
+        cout << corpus.value()->header_string() << endl;
+      } else {
+        logger::info("No corpus have been found for the id : " +
+                     std::to_string(idLong));
+      }
       exit(0);
 
     } else {
@@ -133,6 +142,7 @@ void CommandLineInterface::corpus_by_id() {
 
   } else {
     logger::debug("we have no id");
+    exit(-1);
   }
 }
 
