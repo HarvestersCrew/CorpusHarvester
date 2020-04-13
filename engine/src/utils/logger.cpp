@@ -104,19 +104,19 @@ void logger::print_log(logger::level level, const string &msg) {
   stringstream ss;
   logger::ostream_log(ss, level, msg);
 
-  if (logger::get_output() == logger::output::FILE) {
-    if (ss.str() != "") {
+  if (ss.str() != "") {
+    if (logger::get_output() == logger::output::FILE) {
       ofstream f(logger::get_output_path() + LOGGER_DEFAULT_FILENAME,
                  std::ofstream::app);
       f << ss.str() << endl;
       f.close();
+    } else {
+      cout << ss.str() << endl;
     }
-  } else {
-    cout << ss.str() << endl;
-  }
 
-  if (logger::custom_output.has_value()) {
-    logger::custom_output.value()->output(ss.str());
+    if (logger::custom_output.has_value()) {
+      logger::custom_output.value()->output(ss.str());
+    }
   }
 }
 
