@@ -50,6 +50,29 @@
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-tooltip right>
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    :color="$store.state.socket.is_connected ? 'white' : 'red'"
+                    v-on="on"
+                    >{{
+                      $store.state.socket.is_connected
+                        ? "mdi-lan-connect"
+                        : "mdi-lan-disconnect"
+                    }}</v-icon
+                  >
+                </template>
+                <span>{{
+                  $store.state.socket.is_connected
+                    ? "Connected"
+                    : "Not connected"
+                }}</span>
+              </v-tooltip>
+            </v-list-item-icon>
+          </v-list-item>
         </v-list>
       </template>
     </v-navigation-drawer>

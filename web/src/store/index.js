@@ -9,7 +9,7 @@ export default new Vuex.Store({
     home_page: "Files",
     socket: {
       url: undefined,
-      isConnected: false,
+      is_connected: false,
       connecting: false,
       error: false
     },
@@ -22,13 +22,13 @@ export default new Vuex.Store({
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;
       state.socket.url = event.currentTarget.url;
-      state.socket.isConnected = true;
+      state.socket.is_connected = true;
       state.socket.connecting = false;
       state.socket.error = false;
       router.push({ name: state.home_page });
     },
     SOCKET_ONCLOSE(state) {
-      state.socket.isConnected = false;
+      state.socket.is_connected = false;
       state.socket.connecting = false;
       state.socket.error = true;
       state.socket.url = undefined;
