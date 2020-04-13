@@ -170,12 +170,14 @@ void CommandLineInterface::corpus_manager() {
       string corpusName = itSubCommand->second;
 
       // Search for the corpus with the given name
-      std::optional<shared_ptr<Corpus>> optionalCorpus =
+      std::list<shared_ptr<Corpus>> corpuses =
           mr.get_corpus_from_name(corpusName);
 
       // Check if we have a corpus
-      if (optionalCorpus.has_value()) {
-        logger::info(optionalCorpus.value()->header_string());
+      if (corpuses.size() > 0) {
+        for (const auto &corpus : corpuses) {
+          logger::info(corpus->header_string());
+        }
       } else {
         logger::info("No corpus have been found for the name : " + corpusName);
       }

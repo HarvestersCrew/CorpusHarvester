@@ -4,6 +4,13 @@
 #include "indexation/corpus.h"
 #include "indexation/file.h"
 
+unordered_map<Corpus::ordering_method, string> Corpus::_ordering_queries = {
+    {Corpus::ordering_method::DATE_ASC, CORPUS_ORDER_BY_DATE_ASC},
+    {Corpus::ordering_method::DATE_DESC, CORPUS_ORDER_BY_DATE_DESC},
+    {Corpus::ordering_method::NAME_ASC, CORPUS_ORDER_BY_NAME_ASC},
+    {Corpus::ordering_method::NAME_DESC, CORPUS_ORDER_BY_NAME_DESC},
+    {Corpus::ordering_method::NONE, ""}};
+
 Corpus::Corpus() {}
 
 Corpus::Corpus(std::string title, std::list<shared_ptr<File>> files,
@@ -80,12 +87,14 @@ void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   fetch_files(db);
 }
 
-std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(sql::Connection *db) {
+std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(sql::Connection *db,
+                                                       ordering_method order) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   std::list<shared_ptr<Corpus>> corpuses;
 
-  prep_stmt = db->prepareStatement(GET_ALL_CORPUS);
+  prep_stmt =
+      db->prepareStatement(GET_ALL_CORPUS + _ordering_queries.at(order));
   res = prep_stmt->executeQuery();
   delete prep_stmt;
 
@@ -124,12 +133,14 @@ Corpus::get_corpus_from_id(sql::Connection *db, const int id) {
 }
 
 std::list<shared_ptr<Corpus>>
-Corpus::get_corpus_from_name(sql::Connection *db, const std::string str) {
+Corpus::get_corpus_from_name(sql::Connection *db, const std::string str,
+                             ordering_method order) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   std::list<shared_ptr<Corpus>> corpuses;
 
-  prep_stmt = db->prepareStatement(GET_CORPUS_FROM_NAME);
+  prep_stmt =
+      db->prepareStatement(GET_CORPUS_FROM_NAME + _ordering_queries.at(order));
   prep_stmt->setString(1, "%" + str + "%");
   res = prep_stmt->executeQuery();
   delete prep_stmt;

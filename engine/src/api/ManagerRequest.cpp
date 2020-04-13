@@ -29,7 +29,8 @@ ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
       title = it->second;
 
       logger::debug("Search corpus : " + title);
-      corpuses = Corpus::get_corpus_from_name(db, title);
+      corpuses = Corpus::get_corpus_from_name(db, title,
+                                              Corpus::ordering_method::NONE);
 
       if (corpuses.size() == 0) {
         logger::info("No corpus have been found for the name : " + title);
@@ -39,7 +40,7 @@ ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
   } else {
     logger::debug("Get all corpuses : ");
     // TODO :: Problem here
-    corpuses = Corpus::get_all_corpuses(db);
+    corpuses = Corpus::get_all_corpuses(db, Corpus::ordering_method::NONE);
   }
 
   // Get the orders available
@@ -61,13 +62,15 @@ ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
 }
 
 list<shared_ptr<Corpus>> ManagerRequest::get_corpuses() const {
-  return Corpus::get_all_corpuses(HarvesterDatabase::init());
+  return Corpus::get_all_corpuses(HarvesterDatabase::init(),
+                                  Corpus::ordering_method::NONE);
 }
 
 list<shared_ptr<Corpus>>
 ManagerRequest::get_corpus_from_name(std::string name) {
   logger::debug("Search corpus : " + name);
-  return Corpus::get_corpus_from_name(HarvesterDatabase::init(), name);
+  return Corpus::get_corpus_from_name(HarvesterDatabase::init(), name,
+                                      Corpus::ordering_method::NONE);
 }
 
 std::optional<shared_ptr<Corpus>>

@@ -1,11 +1,12 @@
 #ifndef CORPUSHARVESTER_CORPUS_H
 #define CORPUSHARVESTER_CORPUS_H
 
-#include <list>
-#include <memory>
-
 #include "file.h"
 #include "storage/export_method.h"
+#include <list>
+#include <memory>
+#include <string>
+#include <unordered_map>
 
 #define CORPUS_CREATE_STATEMENT                                                \
   "CREATE TABLE IF NOT EXISTS Corpus(id INTEGER NOT NULL "                     \
@@ -31,13 +32,22 @@
 #define GET_CORPUS_FILES_STATEMENT                                             \
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
   "cf.file_id = f.id;"
+#define CORPUS_ORDER_BY_NAME_ASC " ORDER BY name ASC"
+#define CORPUS_ORDER_BY_NAME_DESC " ORDER BY name DESC"
+#define CORPUS_ORDER_BY_DATE_ASC " ORDER BY date ASC"
+#define CORPUS_ORDER_BY_DATE_DESC " ORDER BY date DESC"
 
 using std::shared_ptr;
+using std::string;
+using std::unordered_map;
 
 /**
  * Corpus class describes a Corpus table in the database
  */
 class Corpus : DatabaseItem {
+public:
+  enum ordering_method { NONE, NAME_ASC, NAME_DESC, DATE_ASC, DATE_DESC };
+
 private:
   /**
    * The title of the corpus.
@@ -58,6 +68,8 @@ private:
    * A description of the filters that were used to create this corpus
    */
   std::string _used_filters;
+
+  static unordered_map<ordering_method, string> _ordering_queries;
 
 public:
   /**
@@ -91,6 +103,9 @@ public:
 
   std::string to_string() const;
 
+  /**
+   * Gets some information about a corpus
+   */
   std::string header_string() const;
 
   bool insert(sql::Connection *db);
@@ -124,7 +139,8 @@ public:
    *
    * @return List of Corpus.
    */
-  static std::list<shared_ptr<Corpus>> get_all_corpuses(sql::Connection *db);
+  static std::list<shared_ptr<Corpus>> get_all_corpuses(sql::Connection *db,
+                                                        ordering_method order);
 
   /**
    * Get a corpus based on his ID.
@@ -146,7 +162,8 @@ public:
    * @return List of found corpuses.
    */
   static std::list<shared_ptr<Corpus>>
-  get_corpus_from_name(sql::Connection *db, const std::string str);
+  get_corpus_from_name(sql::Connection *db, const std::string str,
+                       ordering_method order);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H
