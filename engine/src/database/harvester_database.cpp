@@ -9,6 +9,7 @@ void HarvesterDatabase::open() {
 
     sql::Statement *stmt = _db->createStatement();
     stmt->execute("CREATE DATABASE IF NOT EXISTS " HARVESTER_DATABASE_NAME ";");
+    delete stmt;
 
     _db->setSchema(HARVESTER_DATABASE_NAME);
     logger::debug("Database opened");
@@ -27,6 +28,7 @@ void HarvesterDatabase::drop() {
   for (auto &drop_statement : drop_statements) {
     stmt->execute(drop_statement);
   }
+  delete stmt;
   logger::debug("Drop tables : OK");
 }
 
@@ -55,7 +57,9 @@ bool HarvesterDatabase::empty() {
     throw ClosedDatabaseException();
   }
   sql::Statement *stmt = _db->createStatement();
-  return stmt->executeQuery("SHOW TABLES")->next() == 0;
+  bool res = stmt->executeQuery("SHOW TABLES")->next() == 0;
+  delete stmt;
+  return res;
 }
 
 sql::Connection *HarvesterDatabase::init() {
@@ -69,6 +73,7 @@ void HarvesterDatabase::close() {
   logger::stop();
   if (_db != nullptr) {
     _db->close();
+    logger::debug("Database closed");
     delete _db;
     _db = nullptr;
   } else {
