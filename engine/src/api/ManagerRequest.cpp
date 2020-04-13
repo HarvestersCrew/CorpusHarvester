@@ -78,12 +78,7 @@ ManagerRequest::get_corpus_from_name(std::string name) {
 std::optional<shared_ptr<Corpus>>
 ManagerRequest::get_corpus_from_id(const int id) {
   logger::debug("Search corpus with id = " + std::to_string(id));
-
-  // Get the indexer
-  sql::Connection *db = HarvesterDatabase::init();
-  Indexer indexer(db);
-
-  return Corpus::get_corpus_from_id(db, id);
+  return Corpus::get_corpus_from_id(HarvesterDatabase::init(), id);
 }
 
 int ManagerRequest::create_corpus(const string &name,

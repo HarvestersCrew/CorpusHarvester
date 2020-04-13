@@ -127,26 +127,15 @@ public:
   static std::list<shared_ptr<Corpus>> get_all_corpuses(sql::Connection *db);
 
   /**
-   * Get a corpus based on his name.
+   * Get a corpus based on his ID.
    *
    * @param db Database
-   * @param name Name of the corpus
+   * @param id ID of the corpus
    *
    * @return Optional Contain a corpus if the we have a result.
    */
   static std::optional<shared_ptr<Corpus>>
-  get_corpus_from_title(sql::Connection *db, const std::string name);
-
-  /**
-   * Get a corpus based on his id.
-   *
-   * @param db Database
-   * @param id Id of the corpus
-   *
-   * @return Optional Contain a corpus if the we have a result.
-   */
-  static std::optional<shared_ptr<Corpus>>
-  get_corpus_from_id(sql::Connection *db, long id);
+  get_corpus_from_id(sql::Connection *db, const int id);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H

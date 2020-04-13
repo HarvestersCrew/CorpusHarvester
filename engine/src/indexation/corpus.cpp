@@ -99,13 +99,13 @@ std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(sql::Connection *db) {
 }
 
 std::optional<shared_ptr<Corpus>>
-Corpus::get_corpus_from_title(sql::Connection *db, std::string name) {
+Corpus::get_corpus_from_id(sql::Connection *db, const int id) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
 
   // Get the corpus based on the name
-  prep_stmt = db->prepareStatement(GET_CORPUS_FROM_NAME);
-  prep_stmt->setString(1, name);
+  prep_stmt = db->prepareStatement(GET_CORPUS_FROM_ID);
+  prep_stmt->setInt(1, id);
   res = prep_stmt->executeQuery();
   delete prep_stmt;
 
