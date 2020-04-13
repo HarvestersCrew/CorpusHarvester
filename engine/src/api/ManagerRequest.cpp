@@ -1,7 +1,9 @@
 #include "api/ManagerRequest.h"
 
 /*
+ * ------------------------------------------
  * METHODS RELATING TO CORPUS MANAGEMENT
+ * ------------------------------------------
  */
 
 std::list<Corpus *> ManagerRequest::visualisation_corpus(
@@ -93,7 +95,9 @@ int ManagerRequest::create_corpus(const string &name,
 }
 
 /*
- * Methods relating to web APIs informations
+ * ------------------------------------------
+ * METHODS RELATING TO WEB APIS INFORMATIONS
+ * ------------------------------------------
  */
 
 vector<string> ManagerRequest::get_apis() {
@@ -116,7 +120,9 @@ ManagerRequest::get_api_db_parameters(const string &api_name) {
 }
 
 /*
- * Methods relating to web APIs informations
+ * ------------------------------------------
+ * METHODS RELATING TO API BUILDERS
+ * ------------------------------------------
  */
 
 ApiRequestBuilder &ManagerRequest::api_builder_get_based_on_bool(bool is_web) {
