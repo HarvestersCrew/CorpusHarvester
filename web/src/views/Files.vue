@@ -20,9 +20,9 @@
           <v-col cols="4">
             <v-select
               v-model="filters.selectedSources"
-              :items="sources"
+              :items="$store.state.apis"
               item-text="name"
-              item-value="api"
+              item-value="name"
               label="Sources"
               dark
               outlined

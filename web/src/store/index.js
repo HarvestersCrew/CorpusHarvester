@@ -62,6 +62,7 @@ export default new Vuex.Store({
       state.first_init_done = boolval;
     }
   },
+
   actions: {
     send_obj: function(context, obj) {
       Vue.prototype.$socket.sendObj(obj);
@@ -78,5 +79,6 @@ export default new Vuex.Store({
       Vue.prototype.$connect("ws://" + val);
     }
   },
+
   modules: {}
 });
