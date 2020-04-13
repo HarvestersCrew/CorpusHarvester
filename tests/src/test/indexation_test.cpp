@@ -1,7 +1,5 @@
 #include "test/indexation_test.h"
 
-sql::Connection *indexer_db = HarvesterDatabase::init();
-Indexer indexer = Indexer(indexer_db);
 std::string tables[] = {"Corpus", "File", "Tag", "CorpusFiles", "Setting"};
 int tables_row_count[] = {0, 0, 0, 0, Setting::get_init_settings_count()};
 
@@ -12,7 +10,7 @@ void test_create_database() {
   HarvesterDatabase::drop();
   HarvesterDatabase::create();
   logger::set_level(logger::level::NONE);
-  sql::Statement *stmt = indexer_db->createStatement();
+  sql::Statement *stmt = HarvesterDatabase::init()->createStatement();
   sql::ResultSet *res_show = stmt->executeQuery("SHOW TABLES");
 
   int row_count = 0;
@@ -54,9 +52,9 @@ void test_indexation() {
     up_file->add_tag("_api_id", i_str);
     files.push_back(up_file);
   }
-  indexer.indexation(files);
+  Indexer(HarvesterDatabase::init()).indexation(files);
 
-  sql::Statement *stmt = indexer_db->createStatement();
+  sql::Statement *stmt = HarvesterDatabase::init()->createStatement();
   sql::ResultSet *res_files = stmt->executeQuery("SELECT * FROM File");
   sql::ResultSet *res_tags = stmt->executeQuery("SELECT * FROM Tag");
   // Tests if every expected files were inserted
@@ -73,7 +71,7 @@ void test_api_id_exists() {
   shared_ptr<File> file = std::make_shared<File>(
       File("api_id_exists", "api_id_exists", 100, "Tweeter", ".txt"));
   file->add_tag("_api_id", "0");
-  bool inserted = indexer.insert_file(file);
+  bool inserted = Indexer(HarvesterDatabase::init()).insert_file(file);
   Assertion::assert_false(__FUNCTION__, inserted);
 }
 
@@ -81,12 +79,12 @@ void test_same_api_id_different_source() {
   shared_ptr<File> file =
       std::make_shared<File>(File("path", "name", 150, "Tmdb", ".txt"));
   file->add_tag("_api_id", "0");
-  bool inserted = indexer.insert_file(file);
+  bool inserted = Indexer(HarvesterDatabase::init()).insert_file(file);
   Assertion::assert_true(__FUNCTION__, inserted);
 }
 
 void test_create_database2() {
-  sql::Statement *stmt = indexer_db->createStatement();
+  sql::Statement *stmt = HarvesterDatabase::init()->createStatement();
   std::string request;
   for (int i = 0; i < TABLES_COUNT - 1; i++) {
     request += tables[i] + ", ";
@@ -106,7 +104,8 @@ void test_create_database2() {
 
 void test_get_setting() {
   std::string name = "storage_root";
-  Setting setting = Setting(name, indexer.get_database());
+  Setting setting =
+      Setting(name, Indexer(HarvesterDatabase::init()).get_database());
   Assertion::assert_equals(__FUNCTION__, name, setting.get_name());
   Assertion::assert_equals(__FUNCTION__,
                            Setting::get_default_value(Setting::STORAGE_ROOT),
@@ -116,7 +115,8 @@ void test_get_setting() {
 void test_get_wrong_setting() {
   try {
     std::string name = "wrong_setting";
-    Setting setting = Setting(name, indexer.get_database());
+    Setting setting =
+        Setting(name, Indexer(HarvesterDatabase::init()).get_database());
     Assertion::assert_throw(__FUNCTION__, "SettingNotFoundException");
   } catch (SettingNotFoundException &e) {
     return;
@@ -124,25 +124,27 @@ void test_get_wrong_setting() {
 }
 
 void test_fetch_tweets() {
-  std::list<shared_ptr<File>> tweets = indexer.fetch_from_tag("type", "tweet");
+  std::list<shared_ptr<File>> tweets =
+      Indexer(HarvesterDatabase::init()).fetch_from_tag("type", "tweet");
   Assertion::assert_equals(__FUNCTION__, TWEET_COUNT, tweets.size());
 }
 
 void test_fetch_even_files() {
-  std::list<shared_ptr<File>> tweets = indexer.fetch_from_tag("is_even", "1");
+  std::list<shared_ptr<File>> tweets =
+      Indexer(HarvesterDatabase::init()).fetch_from_tag("is_even", "1");
   Assertion::assert_equals(__FUNCTION__, EVEN_FILES, tweets.size());
 }
 
 void test_fetch_by_name() {
   std::list<shared_ptr<File>> tweets =
-      indexer.fetch_from_attribute("name", "file12");
+      Indexer(HarvesterDatabase::init()).fetch_from_attribute("name", "file12");
   Assertion::assert_equals(__FUNCTION__, 1, tweets.size());
   shared_ptr<File> &tweet = *(tweets.begin());
   Assertion::assert_equals(__FUNCTION__, tweet->get_name(), "file12");
 }
 
 void test_fetch_by_size() {
-  SearchBuilder sb = indexer.get_search_builder();
+  SearchBuilder sb = Indexer(HarvesterDatabase::init()).get_search_builder();
   std::list<shared_ptr<File>> tweets =
       sb.add_condition("size", "110", "<=")->build();
   Assertion::assert_equals(__FUNCTION__, "size <= 110", sb.get_filters());
@@ -150,14 +152,14 @@ void test_fetch_by_size() {
 }
 
 void test_fetch_by_tag_lt() {
-  SearchBuilder sb = indexer.get_search_builder();
+  SearchBuilder sb = Indexer(HarvesterDatabase::init()).get_search_builder();
   std::list<shared_ptr<File>> tweets =
       sb.add_tag_condition("retweet", "65", "<")->build();
   Assertion::assert_equals(__FUNCTION__, 15, tweets.size());
 }
 
 void test_fetch_specific_files() {
-  SearchBuilder sb = indexer.get_search_builder();
+  SearchBuilder sb = Indexer(HarvesterDatabase::init()).get_search_builder();
   std::list<shared_ptr<File>> files =
       sb.add_tag_condition("is_even", "1", "=")
           ->logical_and()
@@ -175,7 +177,7 @@ void test_fetch_specific_files() {
 }
 
 void test_fetch_specific_files2() {
-  SearchBuilder sb = indexer.get_search_builder();
+  SearchBuilder sb = Indexer(HarvesterDatabase::init()).get_search_builder();
   std::list<shared_ptr<File>> files =
       sb.add_tag_condition("is_even", "1", "=")
           ->logical_and()
@@ -189,7 +191,7 @@ void test_fetch_specific_files2() {
 }
 
 void test_fetch_specific_files3() {
-  SearchBuilder sb = indexer.get_search_builder();
+  SearchBuilder sb = Indexer(HarvesterDatabase::init()).get_search_builder();
   std::list<shared_ptr<File>> files =
       sb.add_condition("name", "file6", "!=")
           ->logical_and()
@@ -203,7 +205,7 @@ void test_fetch_specific_files3() {
 }
 
 void test_create_corpus() {
-  SearchBuilder sb = indexer.get_search_builder();
+  SearchBuilder sb = Indexer(HarvesterDatabase::init()).get_search_builder();
   std::list<shared_ptr<File>> files = sb.add_condition("name", "file6", "=")
                                           ->logical_or()
                                           ->add_condition("name", "file8", "=")
@@ -212,12 +214,12 @@ void test_create_corpus() {
                                           ->build();
   Corpus corpus("file_6-8-3", files, sb.get_filters());
   Corpus corpus2("empty");
-  indexer.save_corpus(corpus);
-  indexer.save_corpus(corpus2);
+  Indexer(HarvesterDatabase::init()).save_corpus(corpus);
+  Indexer(HarvesterDatabase::init()).save_corpus(corpus2);
   sql::ResultSet *res_files;
-  sql::Statement *stmt = indexer_db->createStatement();
-  std::list<shared_ptr<Corpus>> corpuses =
-      Corpus::get_all_corpuses(indexer_db, Corpus::ordering_method::NONE);
+  sql::Statement *stmt = HarvesterDatabase::init()->createStatement();
+  std::list<shared_ptr<Corpus>> corpuses = Corpus::get_all_corpuses(
+      HarvesterDatabase::init(), Corpus::ordering_method::NONE);
   Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());
   shared_ptr<Corpus> first_element = *corpuses.begin();
   Assertion::assert_equals(__FUNCTION__, "file_6-8-3",
@@ -231,7 +233,7 @@ void test_create_corpus() {
 
 void test_wrong_search() {
   try {
-    SearchBuilder sb = indexer.get_search_builder();
+    SearchBuilder sb = Indexer(HarvesterDatabase::init()).get_search_builder();
     sb.add_condition("name", "file6", "=")->logical_or()->logical_or()->build();
     Assertion::assert_throw(__FUNCTION__, "SQLException");
   } catch (sql::SQLException &e) {
@@ -241,7 +243,7 @@ void test_wrong_search() {
 
 void test_wrong_search2() {
   try {
-    SearchBuilder sb = indexer.get_search_builder();
+    SearchBuilder sb = Indexer(HarvesterDatabase::init()).get_search_builder();
     sb.add_condition("name", "file6", "=")
         ->add_condition("name", "file3", "=")
         ->logical_or()
@@ -257,8 +259,9 @@ void test_update_setting() {
   std::string name = "storage_root";
   std::string new_value = "/new/path";
   Setting setting = Setting(name, new_value);
-  setting.update(indexer.get_database());
-  Setting updated_setting(name, indexer.get_database());
+  setting.update(Indexer(HarvesterDatabase::init()).get_database());
+  Setting updated_setting(name,
+                          Indexer(HarvesterDatabase::init()).get_database());
   Assertion::assert_equals(__FUNCTION__, new_value,
                            updated_setting.get_value());
 }
@@ -267,8 +270,10 @@ void test_insert_setting() {
   std::string name = "new_setting";
   std::string value = "value";
   Setting setting = Setting(name, value);
-  bool inserted = setting.insert(indexer.get_database());
-  Setting inserted_setting(name, indexer.get_database());
+  bool inserted =
+      setting.insert(Indexer(HarvesterDatabase::init()).get_database());
+  Setting inserted_setting(name,
+                           Indexer(HarvesterDatabase::init()).get_database());
   Assertion::assert_true(__FUNCTION__, inserted);
   Assertion::assert_equals(__FUNCTION__, name, inserted_setting.get_name());
   Assertion::assert_equals(__FUNCTION__, value, inserted_setting.get_value());
@@ -276,10 +281,12 @@ void test_insert_setting() {
 
 void test_insert_existing_setting() {
   std::string name = "storage_root";
-  Setting existing_setting(name, indexer.get_database());
+  Setting existing_setting(name,
+                           Indexer(HarvesterDatabase::init()).get_database());
   std::string value = "value";
   Setting setting = Setting(name, value);
-  bool inserted = setting.insert(indexer.get_database());
+  bool inserted =
+      setting.insert(Indexer(HarvesterDatabase::init()).get_database());
   Assertion::assert_false(__FUNCTION__, inserted);
   Assertion::assert_not_equals(__FUNCTION__, value,
                                existing_setting.get_value());
