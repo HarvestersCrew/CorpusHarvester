@@ -3,7 +3,6 @@
 #define CORPUSHARVESTER_CLIENTLINEINTERFACE_H
 
 #include "api/ManagerRequest.h"
-#include "argparse.hpp"
 #include "download/api_loader.h"
 #include "download/download_manager.h"
 #include "indexation/file.h"

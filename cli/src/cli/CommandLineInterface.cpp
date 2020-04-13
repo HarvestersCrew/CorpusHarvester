@@ -1,5 +1,5 @@
 
-#include "CommandLineInterface.h"
+#include "cli/CommandLineInterface.h"
 #include "download/api_factory.h"
 #include "utils/cli_parser.h"
 #include "utils/logger.h"
