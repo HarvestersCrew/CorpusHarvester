@@ -106,10 +106,10 @@ void CommandLineInterface::corpus_by_id() {
     // Get the value of the id
     string idString = this->string_inputs.find("id")->second;
     string::size_type sz;
-    long idLong = 0;
+    int id = 0;
 
     try {
-      idLong = stol(idString, &sz);
+      id = stoi(idString, &sz);
     } catch (const std::invalid_argument &ia) {
       logger::error(
           "The input id is not an integer ! Please check your input.");
@@ -123,14 +123,14 @@ void CommandLineInterface::corpus_by_id() {
       // Search the corpus in our database
       ManagerRequest managerRequest;
       std::optional<shared_ptr<Corpus>> corpus =
-          managerRequest.get_corpus_from_id(idLong);
+          managerRequest.get_corpus_from_id(id);
 
       // Check the answer
       if (corpus.has_value()) {
         cout << corpus.value()->header_string() << endl;
       } else {
         logger::info("No corpus have been found for the id : " +
-                     std::to_string(idLong));
+                     std::to_string(id));
       }
       exit(0);
 

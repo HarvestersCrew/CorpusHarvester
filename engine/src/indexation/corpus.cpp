@@ -124,7 +124,7 @@ Corpus::get_corpus_from_title(sql::Connection *db, std::string name) {
 }
 
 std::optional<shared_ptr<Corpus>>
-Corpus::get_corpus_from_id(sql::Connection *db, long id) {
+Corpus::get_corpus_from_id(sql::Connection *db, int id) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
 

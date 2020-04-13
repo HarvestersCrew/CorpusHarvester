@@ -216,9 +216,9 @@ void test_create_corpus() {
   indexer.save_corpus(corpus2);
   sql::ResultSet *res_files;
   sql::Statement *stmt = indexer_db->createStatement();
-  std::list<Corpus *> corpuses = Corpus::get_all_corpuses(indexer_db);
+  std::list<shared_ptr<Corpus>> corpuses = Corpus::get_all_corpuses(indexer_db);
   Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());
-  Corpus *first_element = *corpuses.begin();
+  shared_ptr<Corpus> first_element = *corpuses.begin();
   Assertion::assert_equals(__FUNCTION__, "file_6-8-3",
                            first_element->get_title());
   Assertion::assert_false(__FUNCTION__, first_element->has_file());

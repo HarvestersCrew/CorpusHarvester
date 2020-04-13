@@ -146,7 +146,7 @@ public:
    * @return Optional Contain a corpus if the we have a result.
    */
   static std::optional<shared_ptr<Corpus>>
-  get_corpus_from_id(sql::Connection *db, long id);
+  get_corpus_from_id(sql::Connection *db, int id);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H
