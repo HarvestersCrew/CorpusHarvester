@@ -7,13 +7,13 @@ BINDIR := bin
 INCDIR := include
 ENGINEDIR := engine
 
-EXES := cli tests
+EXES := cli tests server
 EXESPATH := $(patsubst %,$(BINDIR)/%, $(EXES))
 DOCKERS := $(patsubst %, docker/%, $(EXES))
 
-INCLUDES := $(patsubst %,-I%,$(shell find ../ -type d -name $(INCDIR)))
+INCLUDES := $(patsubst %,-I%,$(shell find ../ -maxdepth 2 -type d -name $(INCDIR)))
 LFLAGS := -Llib
-LIBS := -lcurl -lmysqlcppconn
+LIBS := -lcurl -lmysqlcppconn -lpthread -lzip
 
 SRCS := $(shell find -type f -name "*.cpp")
 INCS := $(shell find -type f -name "*.h")

@@ -92,7 +92,7 @@ void logger::ostream_log(ostream &os, logger::level level, const string &msg) {
     for (long unsigned int i = 0; i < warning_length - tag.size(); i++) {
       os << " ";
     }
-    os << "- " << msg << endl;
+    os << "- " << msg;
   }
 }
 
@@ -101,17 +101,22 @@ void logger::print_log(logger::level level, const string &msg) {
     logger::_backlog.push_back(make_pair(level, msg));
     return;
   }
+  stringstream ss;
+  logger::ostream_log(ss, level, msg);
+
   if (logger::get_output() == logger::output::FILE) {
-    stringstream ss;
-    logger::ostream_log(ss, level, msg);
     if (ss.str() != "") {
       ofstream f(logger::get_output_path() + LOGGER_DEFAULT_FILENAME,
                  std::ofstream::app);
-      f << ss.str();
+      f << ss.str() << endl;
       f.close();
     }
   } else {
-    logger::ostream_log(cout, level, msg);
+    cout << ss.str() << endl;
+  }
+
+  if (logger::custom_output.has_value()) {
+    logger::custom_output.value()->output(ss.str());
   }
 }
 
@@ -147,6 +152,12 @@ void logger::stop() {
   logger::_initialized = false;
 }
 
+void logger::add_custom_output(shared_ptr<LoggerCustomOutput> out) {
+  logger::custom_output = out;
+}
+
+void logger::clear_custom_output() { logger::custom_output.reset(); }
+
 void logger::debug(const string &msg) {
   logger::print_log(logger::level::DEBUG, msg);
 }
@@ -168,3 +179,4 @@ Setting logger::_setting_level;
 Setting logger::_setting_output;
 Setting logger::_setting_output_path;
 vector<pair<logger::level, string>> logger::_backlog;
+optional<shared_ptr<LoggerCustomOutput>> logger::custom_output = std::nullopt;

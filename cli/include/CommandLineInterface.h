@@ -49,11 +49,14 @@ private:
   void show_help_menu();
 
   /**
-   * Create a new Corpus.
-   *
-   * @return Corpus created
+   * Manage the api request.
    */
-  Corpus create_corpus(const std::string name);
+  void api_manager();
+
+  /**
+   * Manage the corpus request.
+   */
+  void corpus_manager();
 
   /**
    * Show all the corpus created

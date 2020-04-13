@@ -31,6 +31,15 @@ std::string api_parameter_base::to_string() const {
   return out.str();
 }
 
+nlohmann::json api_parameter_base::serialize() const {
+  nlohmann::json j;
+  j["api_name"] = this->_api_name;
+  j["name"] = this->_name;
+  j["value_type"] = this->get_value_type_string();
+  j["relevant"] = this->_relevant;
+  return j;
+}
+
 std::string api_parameter_base::get_value_type_string() const {
   switch (this->_value_type) {
   case api_parameter_base::value_type::INT:
@@ -120,6 +129,17 @@ std::string api_parameter_request::to_string() const {
   for (const std::string &el : this->_values)
     out << el << ", ";
   return out.str();
+}
+
+nlohmann::json api_parameter_request::serialize() const {
+  nlohmann::json j = api_parameter_base::serialize();
+  j["position"] = this->_position;
+  j["required"] = this->_required;
+  j["default_value"] = nullptr;
+  if (this->_default_value.has_value())
+    j["default_value"] = this->_default_value.value();
+  j["values"] = this->_values;
+  return j;
 }
 
 bool api_parameter_request::is_value_valid(const std::string &val) const {
@@ -212,4 +232,11 @@ std::string api_parameter_response::to_string() const {
   out << "]";
 
   return out.str();
+}
+
+nlohmann::json api_parameter_response::serialize() const {
+  nlohmann::json j = api_parameter_base::serialize();
+  j["string_prepends"] = this->_string_prepends;
+  j["string_appends"] = this->_string_appends;
+  return j;
 }

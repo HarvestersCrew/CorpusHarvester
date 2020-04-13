@@ -102,3 +102,13 @@ std::string add_string_every_n_chars(std::string input, std::string to_add,
   }
   return split_string;
 }
+
+std::list<string> split(const string &str, char delimiter) {
+  std::list<string> elements;
+  stringstream ss(str);
+  string sub_str;
+  while (getline(ss, sub_str, delimiter)) {
+    elements.push_back(sub_str);
+  }
+  return elements;
+}

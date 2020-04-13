@@ -14,6 +14,7 @@
 using std::shared_ptr;
 
 #define DOWNLOAD_FOLDER "download/"
+#define CORPUS_FOLDER "corpus/"
 #define MD5_SPLIT 8
 
 /**
@@ -26,20 +27,6 @@ private:
    * The name of the root folder where the files are stored
    */
   std::string _root_folder_name;
-
-  /**
-   * Creates the missing folder in the given path from the root folder
-   * @param folder_path the path to create from the root folder
-   * @return 0 if something went wrong, 1 otherwise
-   */
-  bool create_folders_in_root(std::string folder_path) const;
-
-  /**
-   * Checks if the given folder path exists fro mthe root folder
-   * @param folder_path the path to create from the root folder
-   * @return true if exists, false otherwise
-   */
-  bool folder_exists_in_root(std::string folder_path) const;
 
 public:
   /**
@@ -56,6 +43,20 @@ public:
   void init_root(sql::Connection *db);
 
   std::string get_folder_path(std::string file_name) const;
+
+  /**
+   * Creates the missing folder in the given path from the root folder
+   * @param folder_path the path to create from the root folder
+   * @return 0 if something went wrong, 1 otherwise
+   */
+  bool create_folders_in_root(std::string folder_path) const;
+
+  /**
+   * Checks if the given folder path exists fro mthe root folder
+   * @param folder_path the path to create from the root folder
+   * @return true if exists, false otherwise
+   */
+  bool folder_exists_in_root(std::string folder_path) const;
 
   /**
    * Given the name of a file and its source (api) name, finds destination of
@@ -85,6 +86,9 @@ public:
    */
   void store_files(std::list<shared_ptr<File>> files) const;
 
+  std::string get_corpus_path() const {
+    return _root_folder_name + CORPUS_FOLDER;
+  }
   std::string get_root_folder_name() const { return _root_folder_name; }
   void set_root_folder_name(std::string root_folder_name) {
     _root_folder_name = root_folder_name;

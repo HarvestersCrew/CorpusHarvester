@@ -171,6 +171,12 @@ public:
              const std::string &default_values_path);
 
   /**
+   * Serializes the API informations to a JSON
+   * @return JSON of the API
+   */
+  nlohmann::json serialize() const;
+
+  /**
    * @param key key of the default value
    * @param val default value to set
    */

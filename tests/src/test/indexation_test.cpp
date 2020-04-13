@@ -210,7 +210,7 @@ void test_create_corpus() {
                                           ->logical_or()
                                           ->add_condition("name", "file3", "=")
                                           ->build();
-  Corpus corpus("file 6/8/3", files, sb.get_filters());
+  Corpus corpus("file_6-8-3", files, sb.get_filters());
   Corpus corpus2("empty");
   indexer.save_corpus(corpus);
   indexer.save_corpus(corpus2);
@@ -219,7 +219,7 @@ void test_create_corpus() {
   std::list<Corpus *> corpuses = Corpus::get_all_corpuses(indexer_db);
   Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());
   Corpus *first_element = *corpuses.begin();
-  Assertion::assert_equals(__FUNCTION__, "file 6/8/3",
+  Assertion::assert_equals(__FUNCTION__, "file_6-8-3",
                            first_element->get_title());
   Assertion::assert_false(__FUNCTION__, first_element->has_file());
   res_files = stmt->executeQuery(GET_ALL_CORPUS_FILES);

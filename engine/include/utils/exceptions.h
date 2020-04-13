@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 
+using std::string;
 using std::to_string;
 
 class TestFailedException {
@@ -22,7 +23,7 @@ public:
         _line(line) {}
 
   std::string what() const throw() {
-    std::string what = " {{ ERROR }} Test of function " + _functionName +
+    std::string what = "{{ ERROR }} Test of function " + _functionName +
                        "() failed : expected [" + _expected + "], got [" +
                        _found + "]";
     if (_line != -1) {
@@ -32,140 +33,187 @@ public:
   }
 };
 
-class SettingNotFoundException : public std::runtime_error {
+class ExceptionWrapper : public std::runtime_error {
+protected:
+  string _exception_name;
+
+public:
+  ExceptionWrapper(const string &msg, const string &exception_name)
+      : std::runtime_error(msg), _exception_name(exception_name) {}
+  virtual const string exception_name() const { return _exception_name; }
+};
+
+class SettingNotFoundException : public ExceptionWrapper {
 
 public:
   SettingNotFoundException(std::string &name)
-      : std::runtime_error("Setting with name '" + name +
-                           "' was not found in the database") {}
+      : ExceptionWrapper("Setting with name '" + name +
+                             "' was not found in the database",
+                         "SettingNotFoundException") {}
 };
 
-class CommandException : public std::runtime_error {
+class CommandException : public ExceptionWrapper {
 
 public:
   CommandException(std::string &error_message)
-      : std::runtime_error(error_message) {}
+      : ExceptionWrapper(error_message, "CommandException") {}
 };
 
-class ClosedDatabaseException : public std::runtime_error {
+class ClosedDatabaseException : public ExceptionWrapper {
 
 public:
-  ClosedDatabaseException() : std::runtime_error("Database is closed") {}
+  ClosedDatabaseException()
+      : ExceptionWrapper("Database is closed", "ClosedDatabaseException") {}
 };
 
-class api_no_setting_exception : public std::runtime_error {
+class api_no_setting_exception : public ExceptionWrapper {
 public:
   api_no_setting_exception(const std::string &key)
-      : std::runtime_error("Given setting key not existing in API: " + key) {}
+      : ExceptionWrapper("Given setting key not existing in API: " + key,
+                         "api_no_setting_exception") {}
 };
 
-class api_missing_settings_exception : public std::runtime_error {
+class api_missing_settings_exception : public ExceptionWrapper {
 public:
   api_missing_settings_exception(const std::string &setting)
-      : std::runtime_error("Missing setting to call an API: " + setting) {}
+      : ExceptionWrapper("Missing setting to call an API: " + setting,
+                         "api_missing_settings_exception") {}
 };
 
-class api_filetype_incompatible : public std::runtime_error {
+class api_filetype_incompatible : public ExceptionWrapper {
 public:
   api_filetype_incompatible(const std::string &type)
-      : std::runtime_error("Can't manage filetype: " + type) {}
+      : ExceptionWrapper("Can't manage filetype: " + type,
+                         "api_filetype_incompatible") {}
 };
 
-class api_unrecognized_settings_exception : public std::runtime_error {
+class api_unrecognized_settings_exception : public ExceptionWrapper {
 public:
   api_unrecognized_settings_exception()
-      : std::runtime_error("An API setting was unrecognized") {}
+      : ExceptionWrapper("An API setting was unrecognized",
+                         "api_unrecognized_settings_exception") {}
   api_unrecognized_settings_exception(const std::string &key,
                                       const std::string &val)
-      : std::runtime_error("An API setting value was unrecognized: " + key +
-                           " = " + val) {}
+      : ExceptionWrapper("An API setting value was unrecognized: " + key +
+                             " = " + val,
+                         "api_unrecognized_settings_exception") {}
 };
 
-class download_no_200_exception : public std::runtime_error {
+class download_no_200_exception : public ExceptionWrapper {
 public:
   download_no_200_exception()
-      : std::runtime_error("HTTP call didn't succeed") {}
+      : ExceptionWrapper("HTTP call didn't succeed",
+                         "download_no_200_exception") {}
   download_no_200_exception(int http_code)
-      : std::runtime_error("HTTP call didn't succeed: " +
-                           to_string(http_code)) {}
+      : ExceptionWrapper("HTTP call didn't succeed: " + to_string(http_code),
+                         "download_no_200_exception") {}
 };
 
-class logger_exception : public std::runtime_error {
-
+class logger_exception : public ExceptionWrapper {
 public:
   logger_exception(std::string error_message)
-      : std::runtime_error(error_message) {}
+      : ExceptionWrapper(error_message, "logger_exception") {}
 };
 
-class cli_parser_exception : public std::runtime_error {
+class cli_parser_exception : public ExceptionWrapper {
 public:
   cli_parser_exception(std::string error_message)
-      : std::runtime_error(error_message) {}
+      : ExceptionWrapper(error_message, "cli_parser_exception") {}
 };
 
-class cli_parser_bad_parse_exception : public std::runtime_error {
+class cli_parser_bad_parse_exception : public ExceptionWrapper {
 public:
   cli_parser_bad_parse_exception(std::string error_message)
-      : std::runtime_error(error_message) {}
+      : ExceptionWrapper(error_message, "cli_parser_bad_parse_exception") {}
 };
 
-class cli_parser_help_asked_exception : public std::runtime_error {
+class cli_parser_help_asked_exception : public ExceptionWrapper {
 public:
   cli_parser_help_asked_exception()
-      : std::runtime_error("User asked for help on CLI") {}
+      : ExceptionWrapper("User asked for help on CLI",
+                         "cli_parser_help_asked_exception") {}
 };
 
-class api_default_not_in_schema : public std::runtime_error {
+class api_default_not_in_schema : public ExceptionWrapper {
 public:
   api_default_not_in_schema(std::string param)
-      : std::runtime_error("Default parameter '" + param +
-                           "' not found in schema") {}
+      : ExceptionWrapper("Default parameter '" + param +
+                             "' not found in schema",
+                         "api_default_not_in_schema") {}
 };
 
-class api_twice_same_name : public std::runtime_error {
+class api_twice_same_name : public ExceptionWrapper {
 public:
   api_twice_same_name(std::string name)
-      : std::runtime_error("Another '" + name + "' already exists") {}
+      : ExceptionWrapper("Another '" + name + "' already exists",
+                         "api_twice_same_name") {}
 };
 
-class api_factory_name_not_found : public std::runtime_error {
+class api_factory_name_not_found : public ExceptionWrapper {
 public:
   api_factory_name_not_found(std::string name)
-      : std::runtime_error("API '" + name + "' not found by API discover") {}
+      : ExceptionWrapper("API '" + name + "' not found by API discover",
+                         "api_factory_name_not_found") {}
 };
 
-class logger_not_started_exception : public std::runtime_error {
+class logger_not_started_exception : public ExceptionWrapper {
 public:
-  logger_not_started_exception() : std::runtime_error("Logger not started") {}
+  logger_not_started_exception()
+      : ExceptionWrapper("Logger not started", "logger_not_started_exception") {
+  }
 };
 
-class api_request_builder_invalid_type : public std::runtime_error {
+class api_request_builder_invalid_type : public ExceptionWrapper {
 public:
   api_request_builder_invalid_type(int val)
-      : std::runtime_error("Invalid API type: " + to_string(val)) {}
+      : ExceptionWrapper("Invalid API type: " + to_string(val),
+                         "api_request_builder_invalid_type") {}
 };
 
-class api_parameter_incompatible_value : public std::runtime_error {
+class api_parameter_incompatible_value : public ExceptionWrapper {
 public:
   api_parameter_incompatible_value(const std::string &expected_type,
                                    const std::string &param_name)
-      : std::runtime_error("Incompatible type when setting value of '" +
-                           param_name + "', expected " + expected_type) {}
+      : ExceptionWrapper("Incompatible type when setting value of '" +
+                             param_name + "', expected " + expected_type,
+                         "api_parameter_incompatible_value") {}
 };
 
-class api_builder_incompatible_operator : public std::runtime_error {
+class api_builder_incompatible_operator : public ExceptionWrapper {
 public:
   api_builder_incompatible_operator(const std::string &op,
                                     const std::string &builder_type)
-      : std::runtime_error("Incompatible operator '" + op + "' given to '" +
-                           builder_type + "' builder") {}
+      : ExceptionWrapper("Incompatible operator '" + op + "' given to '" +
+                             builder_type + "' builder",
+                         "api_builder_incompatible_operator") {}
 };
 
-class api_builder_request_not_found : public std::runtime_error {
+class api_builder_request_not_found : public ExceptionWrapper {
 public:
   api_builder_request_not_found(long unsigned int id)
-      : std::runtime_error("Request ID " + to_string(id) +
-                           " not found in builder") {}
+      : ExceptionWrapper("Request ID " + to_string(id) +
+                             " not found in builder",
+                         "api_builder_request_not_found") {}
+};
+
+class wss_cant_find_handler : public ExceptionWrapper {
+public:
+  wss_cant_find_handler()
+      : ExceptionWrapper("Given handled not found in server app",
+                         "wss_cant_find_handler") {}
+};
+
+class wss_invalid_json : public ExceptionWrapper {
+public:
+  wss_invalid_json()
+      : ExceptionWrapper("Can't parse JSON as it is invalid",
+                         "wss_invalid_json") {}
+};
+
+class wss_invalid_request : public ExceptionWrapper {
+public:
+  wss_invalid_request()
+      : ExceptionWrapper("Invalid client request", "wss_invalid_request") {}
 };
 
 #endif

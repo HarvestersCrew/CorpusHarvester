@@ -45,6 +45,11 @@ public:
   virtual std::string to_string() const;
 
   /**
+   * JSON serialization of parameter
+   */
+  virtual nlohmann::json serialize() const;
+
+  /**
    * Gets the string associated to the parameter type
    */
   virtual std::string get_value_type_string() const;
@@ -119,6 +124,11 @@ public:
   virtual std::string to_string() const;
 
   /**
+   * JSON serialization of parameter
+   */
+  virtual nlohmann::json serialize() const;
+
+  /**
    * Checks if a given value as a string can be typed to the parameter type and
    * is present in the enum of values (if it exists)
    * @param val value to check
@@ -187,6 +197,11 @@ public:
    * @return std::string state of the parameter
    */
   virtual std::string to_string() const;
+
+  /**
+   * JSON serialization of parameter
+   */
+  virtual nlohmann::json serialize() const;
 };
 
 #endif
