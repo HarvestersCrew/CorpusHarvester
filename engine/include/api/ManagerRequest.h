@@ -77,12 +77,10 @@ public:
 
   /**
    * Get a corpus from his id.
-   *
    * @param id of the corpus in the database.
-   *
    * @return The desired corpus.
    */
-  std::optional<Corpus *> get_corpus_from_id(const long id);
+  std::optional<shared_ptr<Corpus>> get_corpus_from_id(const int id);
 
   /**
    * Create a corpus with files, a name and optional filters
