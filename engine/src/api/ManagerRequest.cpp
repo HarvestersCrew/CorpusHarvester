@@ -83,7 +83,7 @@ ManagerRequest::get_corpus_from_id(const int id) {
   sql::Connection *db = HarvesterDatabase::init();
   Indexer indexer(db);
 
-  return Corpus::get_corpus_from_title(db, id);
+  return Corpus::get_corpus_from_id(db, id);
 }
 
 int ManagerRequest::create_corpus(const string &name,

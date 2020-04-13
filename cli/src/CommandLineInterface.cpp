@@ -122,7 +122,7 @@ void CommandLineInterface::corpus_by_id() {
 
       // Search the corpus in our database
       ManagerRequest managerRequest;
-      std::optional<Corpus *> corpus =
+      std::optional<shared_ptr<Corpus>> corpus =
           managerRequest.get_corpus_from_id(idLong);
 
       // Check the answer

@@ -123,8 +123,8 @@ Corpus::get_corpus_from_title(sql::Connection *db, std::string name) {
   return corpus;
 }
 
-std::optional<Corpus *> Corpus::get_corpus_from_id(sql::Connection *db,
-                                                   long id) {
+std::optional<shared_ptr<Corpus>>
+Corpus::get_corpus_from_id(sql::Connection *db, long id) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
 
@@ -134,20 +134,18 @@ std::optional<Corpus *> Corpus::get_corpus_from_id(sql::Connection *db,
   res = prep_stmt->executeQuery();
   delete prep_stmt;
 
-  // Define by default a nullptr for the corpus
-  Corpus *corpus = nullptr;
+  // Define by default an empty optional for the corpus
+  std::optional<shared_ptr<Corpus>> corpus;
 
   // If we have got a value, we put it in the variable
   while (res->next()) {
-    corpus = new Corpus();
-    corpus->fill_attribute_from_statement(res);
+    corpus.emplace(new Corpus());
+    corpus.value()->fill_attribute_from_statement(res);
   }
   delete res;
 
   // Based on the result, we return an optional
-  return corpus == nullptr
-             ? std::nullopt
-             : std::optional<std::reference_wrapper<Corpus *>>{corpus};
+  return corpus;
 }
 
 string Corpus::export_(ExportMethod *export_method) {
