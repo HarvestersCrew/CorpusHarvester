@@ -109,7 +109,7 @@ void CommandLineInterface::corpus_by_id() {
     int id = 0;
 
     try {
-      id = stoi(idString, &sz);
+      id = std::stoi(idString, &sz);
     } catch (const std::invalid_argument &ia) {
       logger::error(
           "The input id is not an integer ! Please check your input.");
