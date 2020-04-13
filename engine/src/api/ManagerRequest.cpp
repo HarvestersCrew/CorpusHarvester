@@ -29,15 +29,15 @@ std::list<shared_ptr<Corpus>> ManagerRequest::visualisation_corpus(
     if (it != filters.end()) {
       title = it->second;
 
-      logger::debug("Search corpus : " + title);
-      std::optional<shared_ptr<Corpus>> optionalCorpus =
-          Corpus::get_corpus_from_title(db, title);
+      // logger::debug("Search corpus : " + title);
+      // std::optional<shared_ptr<Corpus>> optionalCorpus =
+      //     Corpus::get_corpus_from_title(db, title);
 
-      if (optionalCorpus.has_value()) {
-        corpuses.push_back(optionalCorpus.value());
-      } else {
-        logger::info("No corpus have been found for the name : " + title);
-      }
+      // if (optionalCorpus.has_value()) {
+      //   corpuses.push_back(optionalCorpus.value());
+      // } else {
+      //   logger::info("No corpus have been found for the name : " + title);
+      // }
     }
 
   } else {

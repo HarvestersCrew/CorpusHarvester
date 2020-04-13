@@ -123,31 +123,6 @@ Corpus::get_corpus_from_id(sql::Connection *db, const int id) {
   return corpus;
 }
 
-std::optional<shared_ptr<Corpus>>
-Corpus::get_corpus_from_id(sql::Connection *db, int id) {
-  sql::PreparedStatement *prep_stmt;
-  sql::ResultSet *res;
-
-  // Get the corpus based on the name
-  prep_stmt = db->prepareStatement(GET_CORPUS_FROM_ID);
-  prep_stmt->setInt(1, id);
-  res = prep_stmt->executeQuery();
-  delete prep_stmt;
-
-  // Define by default an empty optional for the corpus
-  std::optional<shared_ptr<Corpus>> corpus;
-
-  // If we have got a value, we put it in the variable
-  while (res->next()) {
-    corpus.emplace(new Corpus());
-    corpus.value()->fill_attribute_from_statement(res);
-  }
-  delete res;
-
-  // Based on the result, we return an optional
-  return corpus;
-}
-
 std::list<shared_ptr<Corpus>>
 Corpus::get_corpus_from_name(sql::Connection *db, const std::string str) {
   sql::PreparedStatement *prep_stmt;
