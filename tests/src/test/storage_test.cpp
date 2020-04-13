@@ -56,7 +56,7 @@ void test_export_corpus_zip() {
   storage.store_file(file2);
   files.push_back(file2);
   Corpus corpus = Corpus("corpus_test", files, "");
-  ExportMethod *zip_export = new ZipExport(HarvesterDatabase::init());
+  ExportMethod *zip_export = new ZipExport();
   string path = corpus.export_(zip_export);
   string ls = exec("ls " + path);
   Assertion::assert_equals(__FUNCTION__, path + "\n", ls);

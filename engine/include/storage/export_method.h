@@ -16,12 +16,7 @@ using std::string;
  */
 class ExportMethod {
 
-protected:
-  sql::Connection *_db;
-
 public:
-  ExportMethod(sql::Connection *db) : _db(db) {}
-
   virtual string compressed_export(std::list<shared_ptr<File>> files,
                                    string archive_name) = 0;
 };

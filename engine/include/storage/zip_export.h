@@ -1,13 +1,13 @@
 #ifndef ZIP_EXPORT_H
 #define ZIP_EXPORT_H
 
-#include <iostream>
-#include <list>
-#include <memory>
-
+#include "database/harvester_database.h"
 #include "export_method.h"
 #include "indexation/file.h"
 #include "storage/storage.h"
+#include <iostream>
+#include <list>
+#include <memory>
 
 using std::shared_ptr;
 using std::string;
@@ -18,8 +18,6 @@ using std::string;
 class ZipExport : public ExportMethod {
 
 public:
-  ZipExport(sql::Connection *db) : ExportMethod(db) {}
-
   string compressed_export(std::list<shared_ptr<File>> files,
                            string archive_name);
 };
