@@ -35,8 +35,8 @@ export default new Vuex.Store({
       console.error(state, event);
     },
     // default handler called for all methods
-    SOCKET_ONMESSAGE(state, message) {
-      console.log(message);
+    SOCKET_ONMESSAGE() {
+      // console.log(message);
     },
 
     set_socket_connecting(state, boolval) {
@@ -47,8 +47,9 @@ export default new Vuex.Store({
       state.first_init_done = boolval;
     },
 
-    set_apis(state, data) {
-      state.apis = data;
+    SOCKET_get_apis(state, data) {
+      // state.apis = data;
+      console.log(data);
     }
   },
   actions: {
