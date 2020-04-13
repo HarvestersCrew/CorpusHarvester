@@ -14,6 +14,8 @@ export default new Vuex.Store({
       error: false
     },
     first_init_done: false,
+
+    logs: [],
     apis: undefined
   },
   mutations: {
@@ -35,8 +37,21 @@ export default new Vuex.Store({
       console.error(state, event);
     },
     // default handler called for all methods
-    SOCKET_ONMESSAGE() {
-      // console.log(message);
+    SOCKET_ONMESSAGE(state, obj) {
+      if (obj.type !== undefined) {
+        switch (obj.type) {
+          case "get_apis":
+            state.apis = obj.data;
+            break;
+
+          case "logger":
+            state.logs.push(obj.data.message);
+            break;
+
+          default:
+            break;
+        }
+      }
     },
 
     set_socket_connecting(state, boolval) {
@@ -45,11 +60,6 @@ export default new Vuex.Store({
 
     set_first_init_done(state, boolval) {
       state.first_init_done = boolval;
-    },
-
-    SOCKET_get_apis(state, data) {
-      // state.apis = data;
-      console.log(data);
     }
   },
   actions: {
