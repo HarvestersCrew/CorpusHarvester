@@ -75,7 +75,8 @@ ManagerRequest::get_corpus_from_name(std::string name) {
   return Corpus::get_corpus_from_title(db, name);
 }
 
-std::optional<Corpus *> ManagerRequest::get_corpus_from_id(long id) {
+std::optional<shared_ptr<Corpus>>
+ManagerRequest::get_corpus_from_id(const int id) {
   // TODO ::
   return std::nullopt;
 }
