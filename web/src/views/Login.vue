@@ -17,11 +17,19 @@
                   hint="URL of the Harvester server"
                   label="URL"
                   v-model="url"
+                  :error-messages="$store.state.socket.error ? error_msg : ''"
+                  prefix="ws://"
+                  :disabled="$store.state.socket.connecting"
                 />
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="primary" @click="connect">Connect</v-btn>
+                <v-btn
+                  color="primary"
+                  @click="connect"
+                  :loading="$store.state.socket.connecting"
+                  >Connect</v-btn
+                >
               </v-card-actions>
             </v-form>
           </v-card>
@@ -34,15 +42,16 @@
 export default {
   data() {
     return {
-      url: ""
+      url: "",
+      error_msg: "Can't connect to given socket"
     };
   },
   name: "Login",
   methods: {
     connect() {
-      console.log(this.url);
-      this.$store.commit("set_server", this.url);
-      this.$router.push({ name: this.$store.state.home_page });
+      this.$store.dispatch("connect_server", this.url);
+      // this.$store.commit("set_server", this.url);
+      // this.$router.push({ name: this.$store.state.home_page });
     }
   }
 };

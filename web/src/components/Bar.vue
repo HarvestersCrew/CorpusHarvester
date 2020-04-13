@@ -64,7 +64,7 @@
 export default {
   beforeCreate() {
     // Will check presence in local storage of a server
-    if (this.$store.state.server === undefined) {
+    if (this.$store.state.socket.url === undefined) {
       this.$router.push("login");
     }
   },
