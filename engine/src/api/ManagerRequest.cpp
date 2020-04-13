@@ -74,6 +74,11 @@ std::optional<Corpus *> ManagerRequest::visualisation_corpus(std::string name) {
   return corpus;
 }
 
+std::optional<Corpus *> ManagerRequest::get_corpus_from_id(long id) {
+  // TODO ::
+  return std::nullopt;
+}
+
 int ManagerRequest::create_corpus(const string &name,
                                   const list<shared_ptr<File>> &files,
                                   const optional<ApiDatabaseBuilder> &builder) {

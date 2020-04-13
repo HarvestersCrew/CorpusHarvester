@@ -73,6 +73,15 @@ public:
   std::optional<Corpus *> visualisation_corpus(const std::string name);
 
   /**
+   * Get a corpus from his id.
+   *
+   * @param id of the corpus in the database.
+   *
+   * @return The desired corpus.
+   */
+  std::optional<Corpus *> get_corpus_from_id(const long id);
+
+  /**
    * Create a corpus with files, a name and optional filters
    * @param name name of the corpus
    * @param files list of files

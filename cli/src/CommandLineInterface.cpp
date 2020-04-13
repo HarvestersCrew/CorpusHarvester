@@ -94,6 +94,48 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   }
 }
 
+void CommandLineInterface::corpus_by_id() {
+  logger::debug("Search corpus by his ID");
+
+  // Check if we have a value for the name
+  map<string, string>::iterator itSubCommand = this->string_inputs.find("id");
+
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    logger::debug("We got an id");
+
+    // Get the value of the id
+    string idString = this->string_inputs.find("id")->second;
+    string::size_type sz;
+    long idLong = 0;
+
+    try {
+      idLong = stol(idString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input id is not an integer ! Please check your input.");
+      exit(-1);
+    }
+
+    // Check if the input and the transform have the same size
+    if (sz == idString.length()) {
+      logger::debug("The id is OK");
+
+      ManagerRequest managerRequest;
+
+      managerRequest.get_corpus_from_id(idLong);
+      exit(0);
+
+    } else {
+      logger::error("The input id contains a non valid character. Please, "
+                    "check your input.");
+      exit(-1);
+    }
+
+  } else {
+    logger::debug("we have no id");
+  }
+}
+
 void CommandLineInterface::corpus_manager() {
 
   string source = "";
@@ -141,6 +183,11 @@ void CommandLineInterface::corpus_manager() {
         logger::info(corpus->header_string());
       }
     }
+  }
+
+  if (std::find(this->commands.begin(), this->commands.end(), "id") !=
+      this->commands.end()) {
+    this->corpus_by_id();
   }
 
   // Check if the user want to create a corpus.

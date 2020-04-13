@@ -59,6 +59,11 @@ private:
   void corpus_manager();
 
   /**
+   * See a corpus by his id
+   */
+  void corpus_by_id();
+
+  /**
    * Show all the corpus created
    *
    * @return list of corpus
