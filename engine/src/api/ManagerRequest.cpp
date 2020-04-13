@@ -64,15 +64,10 @@ std::list<shared_ptr<Corpus>> ManagerRequest::visualisation_corpus(
   return corpuses;
 }
 
-std::optional<shared_ptr<Corpus>>
+list<shared_ptr<Corpus>>
 ManagerRequest::get_corpus_from_name(std::string name) {
   logger::debug("Search corpus : " + name);
-
-  // Get the indexer
-  sql::Connection *db = HarvesterDatabase::init();
-  Indexer indexer(db);
-
-  return Corpus::get_corpus_from_title(db, name);
+  return Corpus::get_corpus_from_name(HarvesterDatabase::init(), name);
 }
 
 std::optional<shared_ptr<Corpus>>

@@ -148,6 +148,26 @@ Corpus::get_corpus_from_id(sql::Connection *db, long id) {
   return corpus;
 }
 
+std::list<shared_ptr<Corpus>>
+Corpus::get_corpus_from_name(sql::Connection *db, const std::string str) {
+  sql::PreparedStatement *prep_stmt;
+  sql::ResultSet *res;
+  std::list<shared_ptr<Corpus>> corpuses;
+
+  prep_stmt = db->prepareStatement(GET_CORPUS_FROM_NAME);
+  prep_stmt->setString(1, "%" + str + "%");
+  res = prep_stmt->executeQuery();
+  delete prep_stmt;
+
+  while (res->next()) {
+    shared_ptr<Corpus> corpus(new Corpus());
+    corpus->fill_attribute_from_statement(res);
+    corpuses.push_back(corpus);
+  }
+  delete res;
+  return corpuses;
+}
+
 string Corpus::export_(ExportMethod *export_method) {
   return export_method->compressed_export(_files, _title);
 }

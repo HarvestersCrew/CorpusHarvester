@@ -66,14 +66,13 @@ public:
                        std::map<std::string, std::string> &orders);
 
   /**
-   * Get a corpus based on his name.
+   * Get corpuses based on a name.
    *
    * @param name Corpus' name we want to visualized.
    *
-   * @return Corpus Object
+   * @return List of corpuses
    */
-  std::optional<shared_ptr<Corpus>>
-  get_corpus_from_name(const std::string name);
+  list<shared_ptr<Corpus>> get_corpus_from_name(const std::string name);
 
   /**
    * Get a corpus from his id.
