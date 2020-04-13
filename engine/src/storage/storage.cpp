@@ -1,11 +1,10 @@
 #include "storage/storage.h"
 
-Storage::Storage(sql::Connection *db) { init_root(db); }
+Storage::Storage() { init_root(); }
 
-Storage::Storage() {}
-
-void Storage::init_root(sql::Connection *db) {
-  Setting root_folder_name = Setting(Setting::STORAGE_ROOT, db);
+void Storage::init_root() {
+  Setting root_folder_name =
+      Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init());
   _root_folder_name = root_folder_name.get_value();
   if (!folder_exists_in_root(CORPUS_FOLDER)) {
     create_folders_in_root(CORPUS_FOLDER);

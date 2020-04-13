@@ -7,7 +7,7 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
   list<shared_ptr<File>> res;
   sql::Connection *db = HarvesterDatabase::init();
   Indexer indexer(db);
-  Storage storage(db);
+  Storage storage;
 
   // Convert the requests without operators
   auto requests = this->get_no_op_requests();

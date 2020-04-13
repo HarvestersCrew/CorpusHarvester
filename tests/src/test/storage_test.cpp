@@ -1,6 +1,6 @@
 #include "test/storage_test.h"
 
-Storage storage = Storage(HarvesterDatabase::init());
+Storage storage;
 std::string STORED_PATH = storage.get_root_folder_name();
 std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
 shared_ptr<File> file =
