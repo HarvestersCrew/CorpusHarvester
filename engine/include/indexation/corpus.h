@@ -26,7 +26,6 @@
 #define DROP_CORPUS_FILES_STATEMENT "DROP TABLE IF EXISTS CorpusFiles;"
 #define GET_ALL_CORPUS "SELECT * FROM Corpus"
 #define GET_CORPUS_FROM_NAME "SELECT * FROM Corpus WHERE title = ?"
-#define GET_CORPUS_FROM_ID "SELECT * FROM Corpus WHERE id = ?"
 #define GET_ALL_CORPUS_FILES "SELECT * FROM CorpusFiles"
 #define GET_CORPUS_FILES_STATEMENT                                             \
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
@@ -124,7 +123,7 @@ public:
    *
    * @return List of Corpus.
    */
-  static std::list<Corpus *> get_all_corpuses(sql::Connection *db);
+  static std::list<shared_ptr<Corpus>> get_all_corpuses(sql::Connection *db);
 
   /**
    * Get a corpus based on his name.
@@ -134,19 +133,8 @@ public:
    *
    * @return Optional Contain a corpus if the we have a result.
    */
-  static std::optional<Corpus *> get_corpus_from_title(sql::Connection *db,
-                                                       const std::string name);
-
-  /**
-   * Get a corpus based on his id.
-   *
-   * @param db Database
-   * @param id Id of the corpus.
-   *
-   * @return Optional Corpus The desired corpus.
-   */
-  static std::optional<Corpus *> get_corpus_from_id(sql::Connection *db,
-                                                    const long id);
+  static std::optional<shared_ptr<Corpus>>
+  get_corpus_from_title(sql::Connection *db, const std::string name);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H

@@ -40,7 +40,9 @@ public:
   ManagerRequest() {}
 
   /*
+   * ------------------------------------------
    * METHODS RELATING TO CORPUS MANAGEMENT
+   * ------------------------------------------
    */
 
   /**
@@ -59,7 +61,7 @@ public:
    *
    * @return std::list<Corpus> List of all the corpus.
    */
-  std::list<Corpus *>
+  std::list<shared_ptr<Corpus>>
   visualisation_corpus(std::map<std::string, std::string> &filters,
                        std::map<std::string, std::string> &orders);
 
@@ -70,7 +72,8 @@ public:
    *
    * @return Corpus Object
    */
-  std::optional<Corpus *> visualisation_corpus(const std::string name);
+  std::optional<shared_ptr<Corpus>>
+  get_corpus_from_name(const std::string name);
 
   /**
    * Get a corpus from his id.
@@ -91,30 +94,10 @@ public:
   int create_corpus(const string &name, const list<shared_ptr<File>> &files,
                     const optional<ApiDatabaseBuilder> &builder);
 
-  /**
-   * Get all the data present in our database.
-   * Allow the user to add specific filters in order to search in the
-   * database the data. Different kind of filters is available :
-   *      - Type : Type of the data.
-   *      - Sources : Source where the data come from.
-   *      - Latest : Based on the input data, the latest data.
-   *      - Oldest : Based on the input data, the oldest data.
-   *
-   * Allow the possibility to order the result by :
-   *      - Date : Order the data by the date of the creation.
-   *      - Alphabetical : Order the data by alphabetical.
-   *
-   * @param filters Filters for the data research.
-   * @param orders Indicate how to order our data.
-   *
-   * @return std::list<File> List of all the data.
-   */
-  std::list<File>
-  visualisation_data(const std::map<std::string, std::string> &filters,
-                     const std::map<std::string, std::string> &orders);
-
   /*
-   * Methods relating to web APIs informations
+   * ------------------------------------------
+   * METHODS RELATING TO WEB APIS INFORMATIONS
+   * ------------------------------------------
    */
 
   /**
@@ -147,7 +130,9 @@ public:
   get_api_db_parameters(const string &api_name);
 
   /*
-   * Methods relating to web APIs informations
+   * ------------------------------------------
+   * METHODS RELATING TO API BUILDERS
+   * ------------------------------------------
    */
 
   /**
