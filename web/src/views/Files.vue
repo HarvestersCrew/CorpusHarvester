@@ -108,24 +108,22 @@
         </v-expansion-panels>
       </v-card-text>
     </v-card>
-    <template v-for="(item, index) in files">
-      <v-list-item :key="index">
-        <v-checkbox></v-checkbox>
-        <v-list-item-content>
-          <v-row dense>
-            <v-col>{{ item.file_name }}</v-col>
-            <v-col>{{ item.file_type }}</v-col>
-            <v-col>{{ item.file_source }}</v-col>
-            <v-col>{{ item.file_date }}</v-col>
-            <!--<v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>-->
-          </v-row>
-        </v-list-item-content>
-        <v-list-item-icon>
-          <v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
-        </v-list-item-icon>
-      </v-list-item>
+    <v-list-item v-for="(item, index) in files" :key="index">
+      <v-checkbox></v-checkbox>
+      <v-list-item-content>
+        <v-row dense>
+          <v-col>{{ item.file_name }}</v-col>
+          <v-col>{{ item.file_type }}</v-col>
+          <v-col>{{ item.file_source }}</v-col>
+          <v-col>{{ item.file_date }}</v-col>
+          <!--<v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>-->
+        </v-row>
+      </v-list-item-content>
+      <v-list-item-icon>
+        <v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
+      </v-list-item-icon>
       <v-divider v-if="index + 1 < files.length" :key="index"></v-divider>
-    </template>
+    </v-list-item>
 
     <v-fab-transition>
       <v-btn fab large fixed bottom right color="blue" dark>
