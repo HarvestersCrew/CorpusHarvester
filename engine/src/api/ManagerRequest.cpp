@@ -8,11 +8,7 @@
 
 std::list<shared_ptr<Corpus>>
 ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
-                             std::map<std::string, std::string> &orders) const {
-
-  // Define the string available for the research
-  std::string title, latest, oldest;
-  std::string date, alphabetical;
+                             Corpus::ordering_method order) const {
 
   std::map<std::string, std::string>::iterator it;
 
@@ -26,11 +22,10 @@ ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
     // Check if we have a value for the title
     it = filters.find("title");
     if (it != filters.end()) {
-      title = it->second;
+      string title = it->second;
 
       logger::debug("Search corpus : " + title);
-      corpuses = Corpus::get_corpus_from_name(db, title,
-                                              Corpus::ordering_method::NONE);
+      corpuses = Corpus::get_corpus_from_name(db, title, order);
 
       if (corpuses.size() == 0) {
         logger::info("No corpus have been found for the name : " + title);
@@ -39,26 +34,26 @@ ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
 
   } else {
     logger::debug("Get all corpuses : ");
-    // TODO :: Problem here
-    corpuses = Corpus::get_all_corpuses(db, Corpus::ordering_method::NONE);
-  }
-
-  // Get the orders available
-  if (!orders.empty()) {
-    // Check if we have a value for the date
-    it = orders.find("date");
-    if (it != orders.end()) {
-      date = it->second;
-    }
-
-    // Check if we have a value for the latest
-    it = orders.find("alphabetical");
-    if (it != orders.end()) {
-      alphabetical = it->second;
-    }
+    corpuses = Corpus::get_all_corpuses(db, order);
   }
 
   return corpuses;
+}
+
+std::list<shared_ptr<Corpus>>
+ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
+                             const string &order) const {
+  Corpus::ordering_method order_parsed = Corpus::ordering_method::NONE;
+  if (order == "date_asc") {
+    order_parsed = Corpus::ordering_method::DATE_ASC;
+  } else if (order == "date_desc") {
+    order_parsed = Corpus::ordering_method::DATE_DESC;
+  } else if (order == "name_asc") {
+    order_parsed = Corpus::ordering_method::NAME_ASC;
+  } else if (order == "name_desc") {
+    order_parsed = Corpus::ordering_method::NAME_DESC;
+  }
+  return this->get_corpuses(filters, order_parsed);
 }
 
 list<shared_ptr<Corpus>> ManagerRequest::get_corpuses() const {

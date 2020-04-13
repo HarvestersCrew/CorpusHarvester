@@ -185,10 +185,13 @@ void CommandLineInterface::corpus_manager() {
     } else {
       logger::info("List of all the corpus.");
 
-      std::map<std::string, std::string> filters, orders;
+      std::map<std::string, std::string> filters;
 
+      // TODO
+      // Use either the get_corpuses parser to give the parsing method as a
+      // string, or parse it here before passing it as a Corpus::ordering_method
       std::list<shared_ptr<Corpus>> corpusList =
-          mr.get_corpuses(filters, orders);
+          mr.get_corpuses(filters, Corpus::ordering_method::NONE);
 
       logger::info("Number of available corpus : " + corpusList.size());
 

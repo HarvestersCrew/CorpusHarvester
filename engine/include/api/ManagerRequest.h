@@ -51,11 +51,6 @@ public:
    * the corpus. Different kind of filters is available :
    *      - 'title' : Corpus which contains the title.
    *
-   * Also, we allow the possibility of the user to order the result of the data
-   * by :
-   *      - 'date' : Order the corpus by the date of the creation.
-   *      - 'alphabetical' : Order the corpus by alphabetical.
-   *
    * @param filters Filters for the corpus research.
    * @param orders Indicate how to order our corpus.
    *
@@ -63,7 +58,21 @@ public:
    */
   std::list<shared_ptr<Corpus>>
   get_corpuses(std::map<std::string, std::string> &filters,
-               std::map<std::string, std::string> &orders) const;
+               Corpus::ordering_method order) const;
+
+  /**
+   * @see get_corpuses above
+   * Difference is that here a string for the order is accepted
+   * "date_asc"
+   * "date_desc"
+   * "name_asc"
+   * "name_desc"
+   * "none"
+   * By default it is "none"
+   */
+  std::list<shared_ptr<Corpus>>
+  get_corpuses(std::map<std::string, std::string> &filters,
+               const string &order) const;
 
   /**
    * Retrieves all the corpuses
