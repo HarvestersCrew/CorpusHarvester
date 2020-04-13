@@ -6,9 +6,9 @@
  * ------------------------------------------
  */
 
-std::list<shared_ptr<Corpus>> ManagerRequest::visualisation_corpus(
-    std::map<std::string, std::string> &filters,
-    std::map<std::string, std::string> &orders) {
+std::list<shared_ptr<Corpus>>
+ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
+                             std::map<std::string, std::string> &orders) const {
 
   // Define the string available for the research
   std::string title, latest, oldest;
@@ -20,7 +20,6 @@ std::list<shared_ptr<Corpus>> ManagerRequest::visualisation_corpus(
 
   // Get the indexer
   sql::Connection *db = HarvesterDatabase::init();
-  Indexer indexer(db);
 
   // Get the filters available
   if (!filters.empty()) {
@@ -29,15 +28,12 @@ std::list<shared_ptr<Corpus>> ManagerRequest::visualisation_corpus(
     if (it != filters.end()) {
       title = it->second;
 
-      // logger::debug("Search corpus : " + title);
-      // std::optional<shared_ptr<Corpus>> optionalCorpus =
-      //     Corpus::get_corpus_from_title(db, title);
+      logger::debug("Search corpus : " + title);
+      corpuses = Corpus::get_corpus_from_name(db, title);
 
-      // if (optionalCorpus.has_value()) {
-      //   corpuses.push_back(optionalCorpus.value());
-      // } else {
-      //   logger::info("No corpus have been found for the name : " + title);
-      // }
+      if (corpuses.size() == 0) {
+        logger::info("No corpus have been found for the name : " + title);
+      }
     }
 
   } else {
@@ -64,7 +60,7 @@ std::list<shared_ptr<Corpus>> ManagerRequest::visualisation_corpus(
   return corpuses;
 }
 
-list<shared_ptr<Corpus>> ManagerRequest::get_all_corpuses() const {
+list<shared_ptr<Corpus>> ManagerRequest::get_corpuses() const {
   return Corpus::get_all_corpuses(HarvesterDatabase::init());
 }
 

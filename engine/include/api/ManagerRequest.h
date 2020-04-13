@@ -62,14 +62,14 @@ public:
    * @return std::list<Corpus> List of all the corpus.
    */
   std::list<shared_ptr<Corpus>>
-  visualisation_corpus(std::map<std::string, std::string> &filters,
-                       std::map<std::string, std::string> &orders);
+  get_corpuses(std::map<std::string, std::string> &filters,
+               std::map<std::string, std::string> &orders) const;
 
   /**
    * Retrieves all the corpuses
    * @return List of pointers to corpuses
    */
-  list<shared_ptr<Corpus>> get_all_corpuses() const;
+  list<shared_ptr<Corpus>> get_corpuses() const;
 
   /**
    * Get corpuses based on a name.

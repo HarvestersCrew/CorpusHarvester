@@ -186,7 +186,7 @@ void CommandLineInterface::corpus_manager() {
       std::map<std::string, std::string> filters, orders;
 
       std::list<shared_ptr<Corpus>> corpusList =
-          mr.visualisation_corpus(filters, orders);
+          mr.get_corpuses(filters, orders);
 
       logger::info("Number of available corpus : " + corpusList.size());
 
