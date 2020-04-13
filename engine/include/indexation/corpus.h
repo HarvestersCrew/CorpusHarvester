@@ -2,9 +2,12 @@
 #define CORPUSHARVESTER_CORPUS_H
 
 #include "file.h"
+#include "indexation/file.h"
 #include "storage/export_method.h"
+#include <cppconn/prepared_statement.h>
 #include <list>
 #include <memory>
+#include <mysql_connection.h>
 #include <string>
 #include <unordered_map>
 

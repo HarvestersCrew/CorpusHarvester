@@ -1,8 +1,4 @@
-#include "mysql_connection.h"
-#include <cppconn/prepared_statement.h>
-
 #include "indexation/corpus.h"
-#include "indexation/file.h"
 
 unordered_map<Corpus::ordering_method, string> Corpus::_ordering_queries = {
     {Corpus::ordering_method::DATE_ASC, CORPUS_ORDER_BY_DATE_ASC},
