@@ -20,27 +20,30 @@
 #define UPDATE_SETTING_STATEMENT "UPDATE Setting SET value = ? WHERE name = ?"
 #define DROP_SETTING_STATEMENT "DROP TABLE IF EXISTS Setting;"
 
+using std::map;
+using std::string;
+
 /**
  * Setting class describes a Setting table in the database
  */
 class Setting : public DatabaseItem {
 
   /** A map describing the default settings */
-  static std::map<std::string, std::string> _default_settings;
+  static map<string, string> _default_settings;
 
   /** The path of the setting */
-  std::string _name;
+  string _name;
 
   /** The name of the setting */
-  std::string _value;
+  string _value;
 
 public:
   /* Settings name */
-  static std::string STORAGE_ROOT;
+  static string STORAGE_ROOT;
 
-  static std::string LOGGER_LEVEL;
-  static std::string LOGGER_OUTPUT;
-  static std::string LOGGER_OUTPUT_PATH;
+  static string LOGGER_LEVEL;
+  static string LOGGER_OUTPUT;
+  static string LOGGER_OUTPUT_PATH;
 
   /**
    * Default constructor
@@ -52,16 +55,20 @@ public:
    * @param name the name of the setting
    * @param value the value of the setting
    */
-  Setting(std::string name, std::string value);
+  Setting(string name, string value);
 
   /**
    * Creates a Setting object from name fetching value in database
    * @param name the name of the setting
    */
-  Setting(std::string name, sql::Connection *db);
+  Setting(string name, sql::Connection *db);
 
-  std::string to_string() const;
+  string to_string() const;
 
+  /**
+   * Inserts the current setting in the DB
+   * @param db the DB pointer
+   */
   bool insert(sql::Connection *db);
 
   /**
@@ -70,21 +77,38 @@ public:
    */
   void update(sql::Connection *db);
 
+  /**
+   * Fills this setting from a DB resultset
+   * @param db DB pointer
+   * @param res result from the DB for a setting
+   */
   void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
-  std::string get_name() const { return _name; }
-  std::string get_value() const { return _value; }
+  string get_name() const { return _name; }
+  string get_value() const { return _value; }
+
   static int get_init_settings_count() { return _default_settings.size(); }
-  static std::string get_default_value(std::string name) {
+  /**
+   * Get the default value of a given setting
+   * @param name setting name to get default value
+   */
+  static string get_default_value(string name) {
     return _default_settings[name];
   }
-  std::string get_default_value() { return _default_settings.at(this->_name); }
+  /**
+   * Get the default of the current setting
+   */
+  string get_default_value() { return _default_settings.at(this->_name); }
 
-  void set_name(std::string name) { _name = name; }
-  void set_value(std::string value) { _value = value; }
+  void set_name(string name) { _name = name; }
+  void set_value(string value) { _value = value; }
 
-  static void set_default_value(const std::string &name,
-                                const std::string &value);
+  /**
+   * Edit (for the current execution) the default value of a given setting
+   * @param name setting to edit
+   * @param value to use
+   */
+  static void set_default_value(const string &name, const string &value);
 
   /**
    * Initializes the default settings in the database

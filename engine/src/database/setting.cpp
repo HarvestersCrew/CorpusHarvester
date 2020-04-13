@@ -2,12 +2,12 @@
 
 /* STATIC VARIABLES */
 
-std::string Setting::STORAGE_ROOT = "storage_root";
-std::string Setting::LOGGER_LEVEL = "logger_level";
-std::string Setting::LOGGER_OUTPUT = "logger_output";
-std::string Setting::LOGGER_OUTPUT_PATH = "logger_output_path";
+string Setting::STORAGE_ROOT = "storage_root";
+string Setting::LOGGER_LEVEL = "logger_level";
+string Setting::LOGGER_OUTPUT = "logger_output";
+string Setting::LOGGER_OUTPUT_PATH = "logger_output_path";
 
-std::map<std::string, std::string> Setting::_default_settings = {
+std::map<string, string> Setting::_default_settings = {
     {Setting::STORAGE_ROOT, "/tmp/stored/"},
     {Setting::LOGGER_LEVEL, "0"},
     {Setting::LOGGER_OUTPUT, "0"},
@@ -15,10 +15,10 @@ std::map<std::string, std::string> Setting::_default_settings = {
 
 /* METHODS */
 
-Setting::Setting(std::string name, std::string value)
+Setting::Setting(string name, string value)
     : DatabaseItem(-1), _name(name), _value(value) {}
 
-Setting::Setting(std::string name, sql::Connection *db) : DatabaseItem(-1) {
+Setting::Setting(string name, sql::Connection *db) : DatabaseItem(-1) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   prep_stmt = db->prepareStatement(GET_SETTING_FROM_KEY);
@@ -28,11 +28,13 @@ Setting::Setting(std::string name, sql::Connection *db) : DatabaseItem(-1) {
     throw SettingNotFoundException(name);
   }
   fill_from_statement(db, res);
+  delete prep_stmt;
+  delete res;
 }
 
 Setting::Setting() : DatabaseItem(0), _name(""), _value("") {}
 
-std::string Setting::to_string() const {
+string Setting::to_string() const {
   std::ostringstream out;
   out << "Setting{_id=" << _id << ", _name=" << _name << ", _value=" << _value
       << "}";
@@ -41,9 +43,10 @@ std::string Setting::to_string() const {
 
 bool Setting::insert(sql::Connection *db) {
 
+  sql::PreparedStatement *prep_stmt;
+  sql::ResultSet *res;
+
   try {
-    sql::PreparedStatement *prep_stmt;
-    sql::ResultSet *res;
     prep_stmt = db->prepareStatement(GET_SETTING_FROM_KEY);
     prep_stmt->setString(1, _name);
     res = prep_stmt->executeQuery();
@@ -57,12 +60,14 @@ bool Setting::insert(sql::Connection *db) {
     prep_stmt->setString(2, _value);
     prep_stmt->execute();
     _id = DatabaseItem::get_last_inserted_id(db);
-    delete res;
-    delete prep_stmt;
+    logger::debug("Setting inserted '" + _name + "' to DB");
   } catch (sql::SQLException &e) {
     log_sql_exception(e);
     return false;
   }
+
+  delete res;
+  delete prep_stmt;
 
   return true;
 }
@@ -75,6 +80,7 @@ void Setting::update(sql::Connection *db) {
   prep_stmt->setString(2, _name);
   prep_stmt->execute();
   delete prep_stmt;
+  logger::debug("Setting '" + _name + "' updated in DB");
 }
 
 void Setting::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
@@ -84,8 +90,7 @@ void Setting::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   db->isClosed();
 }
 
-void Setting::set_default_value(const std::string &name,
-                                const std::string &value) {
+void Setting::set_default_value(const string &name, const string &value) {
   Setting::_default_settings.at(name) = value;
 }
 
