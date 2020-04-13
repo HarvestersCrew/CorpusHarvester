@@ -66,6 +66,12 @@ export default {
     // Will check presence in local storage of a server
     if (this.$store.state.socket.url === undefined) {
       this.$router.push("login");
+    } else if (!this.$store.state.first_init_done) {
+      this.$store.dispatch("send_request", {
+        type: "get_apis_infos",
+        data: {}
+      });
+      this.$store.commit("set_first_init_done", true);
     }
   },
   data() {

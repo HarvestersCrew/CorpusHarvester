@@ -12,7 +12,9 @@ export default new Vuex.Store({
       isConnected: false,
       connecting: false,
       error: false
-    }
+    },
+    first_init_done: false,
+    apis: undefined
   },
   mutations: {
     SOCKET_ONOPEN(state, event) {
@@ -34,17 +36,32 @@ export default new Vuex.Store({
     },
     // default handler called for all methods
     SOCKET_ONMESSAGE(state, message) {
-      state.socket.message = message;
+      console.log(message);
     },
 
     set_socket_connecting(state, boolval) {
       state.socket.connecting = boolval;
+    },
+
+    set_first_init_done(state, boolval) {
+      state.first_init_done = boolval;
+    },
+
+    set_apis(state, data) {
+      state.apis = data;
     }
   },
   actions: {
-    // sendMessage: function(context, message) {
-    //   Vue.prototype.$socket.send(message);
-    // }
+    send_obj: function(context, obj) {
+      Vue.prototype.$socket.sendObj(obj);
+    },
+    send_request: (context, { type, data }) => {
+      let obj = { request: type };
+      if (Object.keys(data).length !== 0) {
+        obj["data"] = data;
+      }
+      context.dispatch("send_obj", obj);
+    },
     connect_server: (context, val) => {
       context.commit("set_socket_connecting", true);
       Vue.prototype.$connect("ws://" + val);
