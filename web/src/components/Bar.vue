@@ -15,7 +15,12 @@
           link
         >
           <v-list-item-icon>
-            <v-icon color="white">{{ item.icon }}</v-icon>
+            <v-tooltip right>
+              <template v-slot:activator="{ on }">
+                <v-icon color="white" v-on="on">{{ item.icon }}</v-icon>
+              </template>
+              <span>{{ item.title }}</span>
+            </v-tooltip>
           </v-list-item-icon>
 
           <v-list-item-content>
@@ -33,7 +38,12 @@
             link
           >
             <v-list-item-icon>
-              <v-icon color="white">{{ item.icon }}</v-icon>
+              <v-tooltip right>
+                <template v-slot:activator="{ on }">
+                  <v-icon color="white" v-on="on">{{ item.icon }}</v-icon>
+                </template>
+                <span>{{ item.title }}</span>
+              </v-tooltip>
             </v-list-item-icon>
 
             <v-list-item-content>
@@ -45,9 +55,7 @@
     </v-navigation-drawer>
 
     <v-content>
-      <v-container>
-        <slot></slot>
-      </v-container>
+      <slot></slot>
     </v-content>
   </div>
 </template>
@@ -56,8 +64,14 @@
 export default {
   beforeCreate() {
     // Will check presence in local storage of a server
-    if (this.$store.state.server === undefined) {
+    if (this.$store.state.socket.url === undefined) {
       this.$router.push("login");
+    } else if (!this.$store.state.first_init_done) {
+      this.$store.dispatch("send_request", {
+        type: "get_apis_infos",
+        data: {}
+      });
+      this.$store.commit("set_first_init_done", true);
     }
   },
   data() {

@@ -6,6 +6,13 @@ import vuetify from "./plugins/vuetify";
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@mdi/font/css/materialdesignicons.css";
 
+import VueNativeSock from "vue-native-websocket";
+Vue.use(VueNativeSock, "ws://localhost:9002", {
+  store: store,
+  format: "json",
+  connectManually: true
+});
+
 Vue.config.productionTip = false;
 
 new Vue({
