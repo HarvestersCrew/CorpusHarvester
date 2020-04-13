@@ -64,6 +64,10 @@ std::list<shared_ptr<Corpus>> ManagerRequest::visualisation_corpus(
   return corpuses;
 }
 
+list<shared_ptr<Corpus>> ManagerRequest::get_all_corpuses() const {
+  return Corpus::get_all_corpuses(HarvesterDatabase::init());
+}
+
 list<shared_ptr<Corpus>>
 ManagerRequest::get_corpus_from_name(std::string name) {
   logger::debug("Search corpus : " + name);

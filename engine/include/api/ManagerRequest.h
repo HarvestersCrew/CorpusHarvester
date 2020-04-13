@@ -66,10 +66,14 @@ public:
                        std::map<std::string, std::string> &orders);
 
   /**
+   * Retrieves all the corpuses
+   * @return List of pointers to corpuses
+   */
+  list<shared_ptr<Corpus>> get_all_corpuses() const;
+
+  /**
    * Get corpuses based on a name.
-   *
    * @param name Corpus' name we want to visualized.
-   *
    * @return List of corpuses
    */
   list<shared_ptr<Corpus>> get_corpus_from_name(const std::string name);
