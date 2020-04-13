@@ -14,7 +14,10 @@
 #include <cstdlib>
 #include <deque>
 #include <iostream>
+#include <memory>
 #include <string>
+
+using std::shared_ptr;
 
 /**
  * CommandLineInterface class.

@@ -6,7 +6,7 @@
  * ------------------------------------------
  */
 
-std::list<Corpus *> ManagerRequest::visualisation_corpus(
+std::list<shared_ptr<Corpus>> ManagerRequest::visualisation_corpus(
     std::map<std::string, std::string> &filters,
     std::map<std::string, std::string> &orders) {
 
@@ -16,7 +16,7 @@ std::list<Corpus *> ManagerRequest::visualisation_corpus(
 
   std::map<std::string, std::string>::iterator it;
 
-  std::list<Corpus *> corpuses;
+  std::list<shared_ptr<Corpus>> corpuses;
 
   // Get the indexer
   sql::Connection *db = HarvesterDatabase::init();
@@ -30,7 +30,7 @@ std::list<Corpus *> ManagerRequest::visualisation_corpus(
       title = it->second;
 
       logger::debug("Search corpus : " + title);
-      std::optional<Corpus *> optionalCorpus =
+      std::optional<shared_ptr<Corpus>> optionalCorpus =
           Corpus::get_corpus_from_title(db, title);
 
       if (optionalCorpus.has_value()) {
@@ -64,16 +64,15 @@ std::list<Corpus *> ManagerRequest::visualisation_corpus(
   return corpuses;
 }
 
-std::optional<Corpus *> ManagerRequest::visualisation_corpus(std::string name) {
+std::optional<shared_ptr<Corpus>>
+ManagerRequest::get_corpus_from_name(std::string name) {
   logger::debug("Search corpus : " + name);
 
   // Get the indexer
   sql::Connection *db = HarvesterDatabase::init();
   Indexer indexer(db);
 
-  std::optional<Corpus *> corpus = Corpus::get_corpus_from_title(db, name);
-
-  return corpus;
+  return Corpus::get_corpus_from_title(db, name);
 }
 
 std::optional<Corpus *> ManagerRequest::get_corpus_from_id(long id) {

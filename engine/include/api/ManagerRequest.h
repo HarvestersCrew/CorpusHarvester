@@ -61,7 +61,7 @@ public:
    *
    * @return std::list<Corpus> List of all the corpus.
    */
-  std::list<Corpus *>
+  std::list<shared_ptr<Corpus>>
   visualisation_corpus(std::map<std::string, std::string> &filters,
                        std::map<std::string, std::string> &orders);
 
@@ -72,7 +72,8 @@ public:
    *
    * @return Corpus Object
    */
-  std::optional<Corpus *> visualisation_corpus(const std::string name);
+  std::optional<shared_ptr<Corpus>>
+  get_corpus_from_name(const std::string name);
 
   /**
    * Get a corpus from his id.

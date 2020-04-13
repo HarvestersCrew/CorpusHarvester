@@ -160,8 +160,8 @@ void CommandLineInterface::corpus_manager() {
       string corpusName = itSubCommand->second;
 
       // Search for the corpus with the given name
-      std::optional<Corpus *> optionalCorpus =
-          mr.visualisation_corpus(corpusName);
+      std::optional<shared_ptr<Corpus>> optionalCorpus =
+          mr.get_corpus_from_name(corpusName);
 
       // Check if we have a corpus
       if (optionalCorpus.has_value()) {
@@ -175,11 +175,12 @@ void CommandLineInterface::corpus_manager() {
 
       std::map<std::string, std::string> filters, orders;
 
-      std::list<Corpus *> corpusList = mr.visualisation_corpus(filters, orders);
+      std::list<shared_ptr<Corpus>> corpusList =
+          mr.visualisation_corpus(filters, orders);
 
       logger::info("Number of available corpus : " + corpusList.size());
 
-      for (const Corpus *corpus : corpusList) {
+      for (const auto corpus : corpusList) {
         logger::info(corpus->header_string());
       }
     }

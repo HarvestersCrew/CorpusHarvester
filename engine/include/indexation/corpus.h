@@ -1,11 +1,11 @@
 #ifndef CORPUSHARVESTER_CORPUS_H
 #define CORPUSHARVESTER_CORPUS_H
 
-#include <list>
-#include <memory>
-
 #include "file.h"
 #include "storage/export_method.h"
+#include <list>
+#include <memory>
+#include <optional>
 
 #define CORPUS_CREATE_STATEMENT                                                \
   "CREATE TABLE IF NOT EXISTS Corpus(id INTEGER NOT NULL "                     \
@@ -31,6 +31,7 @@
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
   "cf.file_id = f.id;"
 
+using std::make_shared;
 using std::shared_ptr;
 
 /**
@@ -123,7 +124,7 @@ public:
    *
    * @return List of Corpus.
    */
-  static std::list<Corpus *> get_all_corpuses(sql::Connection *db);
+  static std::list<shared_ptr<Corpus>> get_all_corpuses(sql::Connection *db);
 
   /**
    * Get a corpus based on his name.
@@ -133,8 +134,8 @@ public:
    *
    * @return Optional Contain a corpus if the we have a result.
    */
-  static std::optional<Corpus *> get_corpus_from_title(sql::Connection *db,
-                                                       const std::string name);
+  static std::optional<shared_ptr<Corpus>>
+  get_corpus_from_title(sql::Connection *db, const std::string name);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H
