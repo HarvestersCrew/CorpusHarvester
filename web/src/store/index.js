@@ -22,6 +22,7 @@ export default new Vuex.Store({
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;
       state.socket.url = event.currentTarget.url;
+      localStorage.harvester_socket = state.socket.url;
       state.socket.is_connected = true;
       state.socket.connecting = false;
       state.socket.error = false;

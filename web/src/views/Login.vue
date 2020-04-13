@@ -47,11 +47,15 @@ export default {
     };
   },
   name: "Login",
+  mounted() {
+    if (localStorage.harvester_socket !== undefined) {
+      this.url = localStorage.harvester_socket.split("ws://")[1];
+      this.connect();
+    }
+  },
   methods: {
     connect() {
       this.$store.dispatch("connect_server", this.url);
-      // this.$store.commit("set_server", this.url);
-      // this.$router.push({ name: this.$store.state.home_page });
     }
   }
 };
