@@ -25,7 +25,7 @@
   "INSERT INTO CorpusFiles (corpus_id, file_id) VALUES(?, ?)"
 #define DROP_CORPUS_FILES_STATEMENT "DROP TABLE IF EXISTS CorpusFiles;"
 #define GET_ALL_CORPUS "SELECT * FROM Corpus"
-#define GET_CORPUS_FROM_NAME "SELECT * FROM Corpus WHERE title = ?"
+#define GET_CORPUS_FROM_NAME "SELECT * FROM Corpus WHERE title LIKE ?"
 #define GET_CORPUS_FROM_ID "SELECT * FROM Corpus WHERE id = ?"
 #define GET_ALL_CORPUS_FILES "SELECT * FROM CorpusFiles"
 #define GET_CORPUS_FILES_STATEMENT                                             \
@@ -127,26 +127,26 @@ public:
   static std::list<shared_ptr<Corpus>> get_all_corpuses(sql::Connection *db);
 
   /**
-   * Get a corpus based on his name.
+   * Get a corpus based on his ID.
    *
    * @param db Database
-   * @param name Name of the corpus
+   * @param id ID of the corpus
    *
    * @return Optional Contain a corpus if the we have a result.
    */
   static std::optional<shared_ptr<Corpus>>
-  get_corpus_from_title(sql::Connection *db, const std::string name);
+  get_corpus_from_id(sql::Connection *db, const int id);
 
   /**
-   * Get a corpus based on his id.
+   * Search corpuses based on a string.
    *
    * @param db Database
-   * @param id Id of the corpus
+   * @param str string to search
    *
-   * @return Optional Contain a corpus if the we have a result.
+   * @return List of found corpuses.
    */
-  static std::optional<shared_ptr<Corpus>>
-  get_corpus_from_id(sql::Connection *db, int id);
+  static std::list<shared_ptr<Corpus>>
+  get_corpus_from_name(sql::Connection *db, const std::string str);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H
