@@ -45,6 +45,7 @@
 #define CORPUS_ORDER_BY_DATE_ASC " ORDER BY creation_date ASC"
 #define CORPUS_ORDER_BY_DATE_DESC " ORDER BY creation_date DESC"
 
+using std::optional;
 using std::shared_ptr;
 using std::string;
 using std::unordered_map;
