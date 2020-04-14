@@ -92,7 +92,7 @@ string ManagerRequest::export_corpus(const int id,
                                      ExportMethod::methods method) const {
   const auto corpus = this->get_corpus_from_id(id);
   corpus->export_(method);
-  if (!corpus->get_extraction_path) {
+  if (!corpus->get_extraction_path()) {
     throw manager_request_unhandled_exception(
         "No corpus exportation path even though there should be one");
   }
