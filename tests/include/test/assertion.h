@@ -109,6 +109,7 @@ public:
         std::cout << "{{ OK }} " << function_name << "()" << std::endl;
         ++Assertion::successes;
       } catch (const std::exception &e) {
+        std::cout << e.what() << std::endl;
         throw TestFailedException(function_name, "no exception",
                                   typeid(e).name());
       }

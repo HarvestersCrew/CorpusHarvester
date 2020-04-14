@@ -216,4 +216,16 @@ public:
       : ExceptionWrapper("Invalid client request", "wss_invalid_request") {}
 };
 
+class db_id_not_found : public ExceptionWrapper {
+public:
+  db_id_not_found()
+      : ExceptionWrapper("ID not found in DB", "db_id_not_found") {}
+};
+
+class manager_request_unhandled_exception : public ExceptionWrapper {
+public:
+  manager_request_unhandled_exception(const string &msg)
+      : ExceptionWrapper(msg, "manager_request_unhandled_exception") {}
+};
+
 #endif

@@ -138,3 +138,28 @@ std::string File::get_tag_value(std::string name) {
   }
   return value;
 }
+
+std::optional<shared_ptr<File>> File::get_file_from_id(sql::Connection *db,
+                                                       const int id) {
+  sql::PreparedStatement *prep_stmt;
+  sql::ResultSet *res;
+
+  // Get the file based on the id
+  prep_stmt = db->prepareStatement(GET_FILE_FROM_ID);
+  prep_stmt->setInt(1, id);
+  res = prep_stmt->executeQuery();
+  delete prep_stmt;
+
+  // Define by default an empty optional for the corpus
+  std::optional<shared_ptr<File>> file;
+
+  // If we have got a value, we put it in the variable
+  while (res->next()) {
+    file.emplace(new File());
+    file.value()->fill_from_statement(db, res);
+  }
+  delete res;
+
+  // Based on the result, we return an optional
+  return file;
+}

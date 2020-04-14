@@ -28,7 +28,9 @@
 #define INSERT_FILE_STATEMENT                                                  \
   "INSERT INTO File (path, name, size, source, format) VALUES(?, ?, ?, ?, ?)"
 #define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
+#define GET_FILE_FROM_ID "SELECT * FROM File WHERE id = ?"
 
+using std::shared_ptr;
 using std::unique_ptr;
 
 /**
@@ -128,6 +130,17 @@ public:
   void set_size(int size) { _size = size; }
 
   void store(const std::string &path) const;
+
+  /**
+   * Get a file based on his id
+   *
+   * @param db Database
+   * @param id Id of the file.
+   *
+   * @return The desired file.
+   */
+  static std::optional<shared_ptr<File>> get_file_from_id(sql::Connection *db,
+                                                          const int id);
 };
 
 #endif

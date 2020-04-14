@@ -53,11 +53,10 @@ public:
    * @param filters Filters for the corpus research.
    * @param orders Indicate how to order our corpus.
    *
-   * @return std::list<Corpus> List of all the corpus.
+   * @return list<Corpus> List of all the corpus.
    */
-  std::list<shared_ptr<Corpus>>
-  get_corpuses(std::map<std::string, std::string> &filters,
-               Corpus::ordering_method order) const;
+  list<shared_ptr<Corpus>> get_corpuses(std::map<string, string> &filters,
+                                        Corpus::ordering_method order) const;
 
   /**
    * @see get_corpuses above
@@ -69,9 +68,8 @@ public:
    * "none"
    * By default it is "none"
    */
-  std::list<shared_ptr<Corpus>>
-  get_corpuses(std::map<std::string, std::string> &filters,
-               const string &order) const;
+  list<shared_ptr<Corpus>> get_corpuses(std::map<string, string> &filters,
+                                        const string &order) const;
 
   /**
    * Retrieves all the corpuses
@@ -84,14 +82,15 @@ public:
    * @param name Corpus' name we want to visualized.
    * @return List of corpuses
    */
-  list<shared_ptr<Corpus>> get_corpus_from_name(const std::string name);
+  list<shared_ptr<Corpus>> get_corpus_from_name(const string name) const;
 
   /**
    * Get a corpus from his id.
    * @param id of the corpus in the database.
    * @return The desired corpus.
+   * @throw db_id_not_found if corpus wasn't found
    */
-  std::optional<shared_ptr<Corpus>> get_corpus_from_id(const int id);
+  shared_ptr<Corpus> get_corpus_from_id(const int id) const;
 
   /**
    * Create a corpus with files, a name and optional filters
@@ -102,6 +101,41 @@ public:
    */
   int create_corpus(const string &name, const list<shared_ptr<File>> &files,
                     const optional<ApiDatabaseBuilder> &builder);
+
+  /**
+   * Exports a given corpus ID with a certain format
+   * @param id ID of the corpus
+   * @param method Export method
+   * @return Path to the exported corpus
+   * @throw db_id_not_found if corpus wasn't found
+   */
+  string export_corpus(const int id, ExportMethod::methods method) const;
+
+  /**
+   * Exports a given corpus ID with a certain format
+   * @param id ID of the corpus
+   * @param method Export method as a string
+   * "zip" available
+   * "zip" by default
+   * @return Path to the exported corpus
+   * @throw db_id_not_found if corpus wasn't found
+   * @throw manager_request_unhandled_exception if no exportation path is found
+   * after the exportation, shouldn't happen
+   */
+  string export_corpus(const int id, const string &method) const;
+
+  /*
+   * ------------------------------------------
+   * METHODS RELATING TO FILES
+   * ------------------------------------------
+   */
+
+  /**
+   * Get a file from his id.
+   * @param id of the file in the database.
+   * @return The desired file.
+   */
+  std::optional<shared_ptr<File>> get_file_from_id(const int id) const;
 
   /*
    * ------------------------------------------
@@ -170,7 +204,7 @@ public:
    * @throw api_no_setting_exception if a parameter isn't found
    */
   long unsigned int api_builder_add_request(bool is_web,
-                                            const std::string &api_name);
+                                            const string &api_name);
 
   /**
    * Inserts or replace a parameter value and operator in the request defined by

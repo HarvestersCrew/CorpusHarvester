@@ -24,11 +24,7 @@ void test_cli_parser_add_command() {
   Assertion::assert_equals(__FUNCTION__, &child,
                            &(root.get_command("subcommand")));
   child.add_option("option", "desc", false);
-  try {
-    child.add_command("wrong_command", "desc");
-    Assertion::assert_throw(__FUNCTION__, "cli_parser_exception");
-  } catch (const cli_parser_exception &e) {
-  }
+  child.add_command("wrong_command", "desc");
 
   cli_command option("init_option", "desc", true, false);
   try {
@@ -47,11 +43,7 @@ void test_cli_parser_add_command() {
 void test_cli_parser_add_option() {
   cli_command root("initial", "my description");
   root.add_command("command", "desc");
-  try {
-    root.add_option("wrong_option", "desc", false);
-    Assertion::assert_throw(__FUNCTION__, "cli_parser_exception");
-  } catch (const cli_parser_exception &e) {
-  }
+  root.add_option("option", "desc", false);
 
   cli_command root2("initial", "my description");
   root2.add_option("option", "desc", false);
@@ -66,13 +58,15 @@ void test_cli_parser_parser() {
   vector<string> subcommands;
   map<string, string> string_args;
   map<string, bool> bool_args;
+  vector<pair<string, string>> unspecified_args;
 
   cli_command root("initial", "desc");
-  std::tie(subcommands, string_args, bool_args) =
+  std::tie(subcommands, string_args, bool_args, unspecified_args) =
       cli_parser::parse(root, vector<string>());
   Assertion::assert_equals(__FUNCTION__, 0, subcommands.size());
   Assertion::assert_equals(__FUNCTION__, 0, string_args.size());
   Assertion::assert_equals(__FUNCTION__, 0, bool_args.size());
+  Assertion::assert_equals(__FUNCTION__, 0, unspecified_args.size());
 
   try {
     cli_parser::parse(root, vector<string>({"-h"}));
@@ -87,6 +81,7 @@ void test_cli_parser_parser() {
   }
 
   root.add_command("subcommand1", "subcommand1 desc");
+  root.add_option("option4", "option4 at root", false);
   cli_command &sub2 = root.add_command("subcommand2", "subcommand2 desc");
   sub2.add_option("option1", "option1 desc", true);
   sub2.add_option("option2", "option2 desc", false);
@@ -98,11 +93,31 @@ void test_cli_parser_parser() {
   } catch (const cli_parser_help_asked_exception &e) {
   }
 
-  std::tie(subcommands, string_args, bool_args) = cli_parser::parse(
-      root, vector<string>({"subcommand2", "--option2", "value", "--option1"}));
+  try {
+    cli_parser::parse(root,
+                      vector<string>{"--option4", "value", "subcommand1"});
+    Assertion::assert_throw(__FUNCTION__, "cli_parser_bad_parse_exception");
+  } catch (const cli_parser_bad_parse_exception &e) {
+  }
+
+  std::tie(subcommands, string_args, bool_args, unspecified_args) =
+      cli_parser::parse(root, vector<string>({"--option4", "val"}));
+  Assertion::assert_equals(__FUNCTION__, 0, subcommands.size());
+  Assertion::assert_equals(__FUNCTION__, 1, string_args.size());
+  Assertion::assert_equals(__FUNCTION__, 0, bool_args.size());
+  Assertion::assert_equals(__FUNCTION__, 0, unspecified_args.size());
+  Assertion::assert_equals(__FUNCTION__, "val",
+                           string_args.find("option4")->second);
+
+  std::tie(subcommands, string_args, bool_args, unspecified_args) =
+      cli_parser::parse(
+          root,
+          vector<string>({"subcommand2", "--option2", "value", "--option1",
+                          "--unspecified", "unspecified_val"}));
   Assertion::assert_equals(__FUNCTION__, 1, subcommands.size());
   Assertion::assert_equals(__FUNCTION__, 1, string_args.size());
   Assertion::assert_equals(__FUNCTION__, 2, bool_args.size());
+  Assertion::assert_equals(__FUNCTION__, 1, unspecified_args.size());
   Assertion::assert_equals(__FUNCTION__, "subcommand2", subcommands.at(0));
   Assertion::assert_equals(__FUNCTION__, "value",
                            string_args.find("option2")->second);
@@ -110,6 +125,10 @@ void test_cli_parser_parser() {
                            bool_args.find("option1")->second);
   Assertion::assert_equals(__FUNCTION__, false,
                            bool_args.find("option3")->second);
+  Assertion::assert_equals(__FUNCTION__, "unspecified",
+                           unspecified_args.at(0).first);
+  Assertion::assert_equals(__FUNCTION__, "unspecified_val",
+                           unspecified_args.at(0).second);
 }
 
 void cli_parser_test() {

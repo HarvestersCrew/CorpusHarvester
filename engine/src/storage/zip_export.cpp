@@ -1,8 +1,9 @@
-#include "storage/zip_export.h"
+#include "storage/export_method.h"
+#include "storage/storage.h"
 
 string ZipExport::compressed_export(std::list<shared_ptr<File>> files,
                                     string archive_name) {
-  Storage storage = Storage(_db);
+  Storage storage;
   int error;
   string archive_path = storage.get_corpus_path() + archive_name + ".zip";
   zip_t *corpus = zip_open(archive_path.c_str(), ZIP_EXCL | ZIP_CREATE, &error);

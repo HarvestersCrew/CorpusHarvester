@@ -13,10 +13,6 @@ cli_command &cli_command::add_command(const string &name,
   if (this->_is_option) {
     throw cli_parser_exception("Can't add a subcommand to an option");
   }
-  if (this->_options.size() > 0) {
-    throw cli_parser_exception(
-        "Can't add a subcommand as it already has options");
-  }
   if (this->_commands.find(name) != this->_commands.end()) {
     throw cli_parser_exception("Can't add subcommand '" + name +
                                "' because it already exists");
@@ -30,10 +26,6 @@ void cli_command::add_option(const string &name, const string &description,
                              bool is_option_bool) {
   if (this->_is_option) {
     throw cli_parser_exception("Can't add an option to an option");
-  }
-  if (this->_commands.size() > 0) {
-    throw cli_parser_exception(
-        "Can't add an option as it already has commands");
   }
   if (this->_options.find(name) != this->_options.end()) {
     throw cli_parser_exception("Can't add option '" + name +
@@ -95,33 +87,33 @@ bool cli_command::is_terminal() const { return this->_commands.size() == 0; }
 string cli_command::get_help() const {
   stringstream ss;
 
-  ss << "Usage: " << this->_initial_call;
-  if (this->_commands.size() > 0) {
-    ss << " [subcommand]" << endl;
-    ss << "Description: " << this->_description << endl;
-    ss << endl << "Subcommand(s):";
-    ss << endl << "-h: displays help";
-    for (const auto &el : this->_commands) {
-      ss << endl << el.first << ": " << el.second.get_description();
-    }
-  } else if (this->_options.size() > 0) {
-    ss << " [option]..." << endl;
-    ss << "Description: " << this->_description << endl;
-    ss << endl << "Option(s):";
-    for (const auto &el : this->_options) {
-      ss << endl << "--" << el.first;
-      if (!el.second.is_option_bool()) {
+  ss << "Current call: " << _initial_call << endl;
+  ss << "Description: " << _description << endl;
+  ss << "-h: displays this help";
+
+  if (_options.size() > 0) {
+    ss << endl << endl << _initial_call << " [option(s)]...";
+    for (const auto &option : _options) {
+      ss << endl << "--" << option.first;
+      if (!option.second.is_option_bool()) {
         ss << " \"string\"";
       }
-      ss << ": " << el.second.get_description();
+      ss << ": " << option.second.get_description();
     }
-  } else {
-    ss << endl << "Description: " << this->_description;
   }
+
+  if (_commands.size() > 0) {
+    ss << endl << endl << _initial_call << " [subcommand]";
+    for (const auto &sub : _commands) {
+      ss << endl << sub.first << ": " << sub.second.get_description();
+    }
+  }
+
   return ss.str();
 }
 
-tuple<vector<string>, map<string, string>, map<string, bool>>
+tuple<vector<string>, map<string, string>, map<string, bool>,
+      vector<pair<string, string>>>
 cli_parser::parse(const cli_command &root, vector<string> cli_args) {
 
   if (cli_args.size() > 0 && cli_args.at(0) == "-h") {
@@ -131,9 +123,18 @@ cli_parser::parse(const cli_command &root, vector<string> cli_args) {
 
   try {
 
-    if (root.is_terminal()) {
+    bool is_next_param_option = false;
+    try {
+      string next_param = cli_args.at(0);
+      string first_two = next_param.substr(0, 2);
+      is_next_param_option = first_two == "--";
+    } catch (const std::out_of_range &e) {
+    }
+
+    if (root.is_terminal() || is_next_param_option) {
       auto res = cli_parser::parse_terminal(root, cli_args);
-      return make_tuple(vector<string>(), res.first, res.second);
+      return make_tuple(vector<string>(), get<0>(res), get<1>(res),
+                        get<2>(res));
     } else {
 
       const string first_arg = cli_args.at(0);
@@ -155,11 +156,13 @@ cli_parser::parse(const cli_command &root, vector<string> cli_args) {
   }
 }
 
-pair<map<string, string>, map<string, bool>>
+tuple<map<string, string>, map<string, bool>, vector<pair<string, string>>>
 cli_parser::parse_terminal(const cli_command &root,
                            const vector<string> &cli_args) {
   map<string, string> string_args;
   map<string, bool> bool_args;
+  vector<pair<string, string>> undefined_args;
+
   const auto &available_options = root.get_options();
 
   for (const auto &el : available_options) {
@@ -172,19 +175,25 @@ cli_parser::parse_terminal(const cli_command &root,
 
     string first_two = cli_args.at(i).substr(0, 2);
     if (first_two != "--") {
-      throw cli_parser_exception("Unexpected parameter not preceded by --");
+      throw cli_parser_bad_parse_exception(
+          "Unexpected parameter not preceded by --");
     }
 
     string option_name = cli_args.at(i).substr(2);
-    const cli_command &option = root.get_option(option_name);
 
-    if (option.is_option_bool()) {
-      bool_args.at(option_name) = true;
-    } else {
-      string_args.insert_or_assign(option_name, cli_args.at(i + 1));
+    try {
+      const cli_command &option = root.get_option(option_name);
+      if (option.is_option_bool()) {
+        bool_args.at(option_name) = true;
+      } else {
+        string_args.insert_or_assign(option_name, cli_args.at(i + 1));
+        ++i;
+      }
+    } catch (const cli_parser_exception &e) {
+      undefined_args.push_back(make_pair(option_name, cli_args.at(i + 1)));
       ++i;
     }
   }
 
-  return make_pair(string_args, bool_args);
+  return make_tuple(string_args, bool_args, undefined_args);
 }

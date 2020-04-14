@@ -1,13 +1,16 @@
 #ifndef CORPUSHARVESTER_CORPUS_H
 #define CORPUSHARVESTER_CORPUS_H
 
+#include "database/harvester_database.h"
 #include "file.h"
 #include "indexation/file.h"
 #include "storage/export_method.h"
+#include "utils/exceptions.h"
 #include <cppconn/prepared_statement.h>
 #include <list>
 #include <memory>
 #include <mysql_connection.h>
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -15,10 +18,12 @@
   "CREATE TABLE IF NOT EXISTS Corpus(id INTEGER NOT NULL "                     \
   "AUTO_INCREMENT,title "                                                      \
   "TEXT NOT NULL,creation_date TIMESTAMP NOT NULL DEFAULT NOW(),filters TEXT " \
-  "NOT NULL, PRIMARY "                                                         \
+  "NOT NULL, extraction_path TEXT DEFAULT NULL, PRIMARY "                      \
   "KEY (id));"
 #define INSERT_CORPUS_STATEMENT                                                \
   "INSERT INTO Corpus (title, filters) VALUES(?, ?)"
+#define UPDATE_CORPUS_EXTRACTION_PATH                                          \
+  "UPDATE Corpus SET extraction_path = ? WHERE id = ?;"
 #define DROP_CORPUS_STATEMENT "DROP TABLE IF EXISTS Corpus;"
 
 #define CORPUS_FILES_CREATE_STATEMENT                                          \
@@ -35,11 +40,12 @@
 #define GET_CORPUS_FILES_STATEMENT                                             \
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
   "cf.file_id = f.id;"
-#define CORPUS_ORDER_BY_NAME_ASC " ORDER BY name ASC"
-#define CORPUS_ORDER_BY_NAME_DESC " ORDER BY name DESC"
-#define CORPUS_ORDER_BY_DATE_ASC " ORDER BY date ASC"
-#define CORPUS_ORDER_BY_DATE_DESC " ORDER BY date DESC"
+#define CORPUS_ORDER_BY_TITLE_ASC " ORDER BY title ASC"
+#define CORPUS_ORDER_BY_TITLE_DESC " ORDER BY title DESC"
+#define CORPUS_ORDER_BY_DATE_ASC " ORDER BY creation_date ASC"
+#define CORPUS_ORDER_BY_DATE_DESC " ORDER BY creation_date DESC"
 
+using std::optional;
 using std::shared_ptr;
 using std::string;
 using std::unordered_map;
@@ -71,6 +77,11 @@ private:
    * A description of the filters that were used to create this corpus
    */
   std::string _used_filters;
+
+  /**
+   * The path where the corpus archive is stored
+   */
+  std::optional<std::string> _extraction_path;
 
   static unordered_map<ordering_method, string> _ordering_queries;
 
@@ -117,22 +128,14 @@ public:
 
   void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
-  std::string export_(ExportMethod *export_method);
+  void export_(ExportMethod::methods method);
 
-  /**
-   * Get the title of the corpus.
-   * @return std::string the title of the corpus.
-   */
+  void update_extraction_path();
+
   std::string get_title() const { return _title; }
-
-  /**
-   * Set a title to the corpus.
-   * @param title std::string the new name of the copus.
-   */
+  optional<std::string> get_extraction_path() const { return _extraction_path; }
   void set_title(const std::string title) { _title = title; }
-
   bool has_file() { return !_files.empty(); }
-
   virtual int get_id() const { return this->_id; };
 
   /**
@@ -151,10 +154,11 @@ public:
    * @param db Database
    * @param id ID of the corpus
    *
-   * @return Optional Contain a corpus if the we have a result.
+   * @return Resulting corpus
+   * @throw db_id_not_found if corpus wasn't found
    */
-  static std::optional<shared_ptr<Corpus>>
-  get_corpus_from_id(sql::Connection *db, const int id);
+  static shared_ptr<Corpus> get_corpus_from_id(sql::Connection *db,
+                                               const int id);
 
   /**
    * Search corpuses based on a string.

@@ -227,8 +227,80 @@ void test_create_corpus() {
   Assertion::assert_false(__FUNCTION__, first_element->has_file());
   res_files = stmt->executeQuery(GET_ALL_CORPUS_FILES);
   Assertion::assert_equals(__FUNCTION__, 3, res_files->rowsCount());
+
+  stmt->execute("DELETE FROM CorpusFiles");
+  stmt->execute("DELETE FROM Corpus");
+
   delete stmt;
   delete res_files;
+}
+
+void test_fetch_corpuses() {
+  sql::Statement *stmt = HarvesterDatabase::init()->createStatement();
+  delete stmt;
+  std::list<shared_ptr<Corpus>> corpuses;
+  std::vector<shared_ptr<Corpus>> corpuses_vec;
+
+  try {
+    Corpus::get_corpus_from_id(HarvesterDatabase::init(), 0);
+    Assertion::assert_throw(__FUNCTION__, "db_id_not_found");
+  } catch (const db_id_not_found &e) {
+  }
+
+  Corpus c1("Jurassic Park");
+  Corpus c2("Zootopia");
+  Corpus c3("Avengers");
+  c1.insert(HarvesterDatabase::init());
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  c2.insert(HarvesterDatabase::init());
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  c3.insert(HarvesterDatabase::init());
+
+  Corpus::get_corpus_from_id(HarvesterDatabase::init(), c1.get_id());
+
+  corpuses = Corpus::get_all_corpuses(HarvesterDatabase::init(),
+                                      Corpus::ordering_method::DATE_ASC);
+  corpuses_vec = vector<shared_ptr<Corpus>>{corpuses.begin(), corpuses.end()};
+  Assertion::assert_equals(__FUNCTION__, 3, corpuses_vec.size());
+  Assertion::assert_equals(__FUNCTION__, "Jurassic Park",
+                           corpuses_vec.at(0)->get_title());
+  Assertion::assert_equals(__FUNCTION__, "Zootopia",
+                           corpuses_vec.at(1)->get_title());
+  Assertion::assert_equals(__FUNCTION__, "Avengers",
+                           corpuses_vec.at(2)->get_title());
+
+  corpuses = Corpus::get_all_corpuses(HarvesterDatabase::init(),
+                                      Corpus::ordering_method::DATE_DESC);
+  corpuses_vec = vector<shared_ptr<Corpus>>{corpuses.begin(), corpuses.end()};
+  Assertion::assert_equals(__FUNCTION__, 3, corpuses_vec.size());
+  Assertion::assert_equals(__FUNCTION__, "Jurassic Park",
+                           corpuses_vec.at(2)->get_title());
+  Assertion::assert_equals(__FUNCTION__, "Zootopia",
+                           corpuses_vec.at(1)->get_title());
+  Assertion::assert_equals(__FUNCTION__, "Avengers",
+                           corpuses_vec.at(0)->get_title());
+
+  corpuses = Corpus::get_all_corpuses(HarvesterDatabase::init(),
+                                      Corpus::ordering_method::NAME_ASC);
+  corpuses_vec = vector<shared_ptr<Corpus>>{corpuses.begin(), corpuses.end()};
+  Assertion::assert_equals(__FUNCTION__, 3, corpuses_vec.size());
+  Assertion::assert_equals(__FUNCTION__, "Jurassic Park",
+                           corpuses_vec.at(1)->get_title());
+  Assertion::assert_equals(__FUNCTION__, "Zootopia",
+                           corpuses_vec.at(2)->get_title());
+  Assertion::assert_equals(__FUNCTION__, "Avengers",
+                           corpuses_vec.at(0)->get_title());
+
+  corpuses = Corpus::get_all_corpuses(HarvesterDatabase::init(),
+                                      Corpus::ordering_method::NAME_DESC);
+  corpuses_vec = vector<shared_ptr<Corpus>>{corpuses.begin(), corpuses.end()};
+  Assertion::assert_equals(__FUNCTION__, 3, corpuses_vec.size());
+  Assertion::assert_equals(__FUNCTION__, "Jurassic Park",
+                           corpuses_vec.at(1)->get_title());
+  Assertion::assert_equals(__FUNCTION__, "Zootopia",
+                           corpuses_vec.at(0)->get_title());
+  Assertion::assert_equals(__FUNCTION__, "Avengers",
+                           corpuses_vec.at(2)->get_title());
 }
 
 void test_wrong_search() {
@@ -311,6 +383,7 @@ void indexation_test() {
   Assertion::test(test_fetch_specific_files2, "test_fetch_specific_files2");
   Assertion::test(test_fetch_specific_files3, "test_fetch_specific_files3");
   Assertion::test(test_create_corpus, "test_create_corpus");
+  Assertion::test(test_fetch_corpuses, "test_fetch_corpuses");
   Assertion::test(test_wrong_search, "test_wrong_search");
   Assertion::test(test_wrong_search2, "test_wrong_search2");
   Assertion::test(test_update_setting, "test_update_setting");

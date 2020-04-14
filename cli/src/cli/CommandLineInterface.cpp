@@ -56,6 +56,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
       "list", "List of all the corpus with potentially a name.");
 
   listCorpus.add_option("name", "Corpus name that you want to search.", false);
+  listCorpus.add_option("order", "Set the order of the output corpus.", false);
 
   // Get coprus based on his id.
   cli_command &idCorpus =
@@ -77,7 +78,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   cli_command &idFiles =
       filesCommand.add_command("id", "Search a file based on his id.");
 
-  // Get a corpus bsaed on his id
+  // Get a corpus based on his id
   idFiles.add_option("id", "Id of a specific file.", false);
 
   // Transform our array to a vector of string
@@ -85,7 +86,8 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 
   // Get and store all the parameter
   try {
-    std::tie(this->commands, this->string_inputs, this->bool_inputs) =
+    std::tie(this->commands, this->string_inputs, this->bool_inputs,
+             this->unspecified_inputs) =
         cli_parser::parse(this->parser, allArgs);
   } catch (const cli_parser_bad_parse_exception &e) {
     exit(EXIT_FAILURE);
@@ -97,7 +99,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 void CommandLineInterface::corpus_by_id() {
   logger::debug("Search corpus by his ID");
 
-  // Check if we have a value for the name
+  // Check if we have a value for the id
   map<string, string>::iterator itSubCommand = this->string_inputs.find("id");
 
   if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
@@ -122,13 +124,11 @@ void CommandLineInterface::corpus_by_id() {
 
       // Search the corpus in our database
       ManagerRequest managerRequest;
-      std::optional<shared_ptr<Corpus>> corpus =
-          managerRequest.get_corpus_from_id(id);
 
-      // Check the answer
-      if (corpus.has_value()) {
-        cout << corpus.value()->header_string() << endl;
-      } else {
+      try {
+        shared_ptr<Corpus> corpus = managerRequest.get_corpus_from_id(id);
+        cout << corpus->header_string() << endl;
+      } catch (const db_id_not_found &e) {
         logger::info("No corpus have been found for the id : " +
                      std::to_string(id));
       }
@@ -146,7 +146,78 @@ void CommandLineInterface::corpus_by_id() {
   }
 }
 
-void CommandLineInterface::corpus_manager() {
+void CommandLineInterface::corpus_list() {
+
+  Corpus::ordering_method orderingMethod = Corpus::ordering_method::NONE;
+  map<string, string>::iterator itSubCommand;
+  map<string, string>::iterator itOrderCommand;
+  ManagerRequest mr;
+
+  // Check if we have a value for the name
+  itSubCommand = this->string_inputs.find("name");
+
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    // Get the name of the corpus
+    string corpusName = itSubCommand->second;
+
+    // Search for the corpus with the given name
+    std::list<shared_ptr<Corpus>> corpuses =
+        mr.get_corpus_from_name(corpusName);
+
+    // Check if we have a corpus
+    if (corpuses.size() > 0) {
+      for (const auto &corpus : corpuses) {
+        logger::info(corpus->header_string());
+      }
+    } else {
+      logger::info("No corpus have been found for the name : " + corpusName);
+    }
+
+  } else {
+    logger::info("List of all the corpus.");
+
+    std::map<std::string, std::string> filters;
+
+    // Check if the user wants a specific order
+    itOrderCommand = this->string_inputs.find("order");
+    if (itOrderCommand != this->string_inputs.end() &&
+        itOrderCommand->second != "") {
+
+      string order = itOrderCommand->second;
+
+      if (order == "date_asc") {
+        orderingMethod = Corpus::ordering_method::DATE_ASC;
+      } else if (order == "date_desc") {
+        orderingMethod = Corpus::ordering_method::DATE_DESC;
+      } else if (order == "name_asc") {
+        orderingMethod = Corpus::ordering_method::NAME_ASC;
+      } else if (order == "name_desc") {
+        orderingMethod = Corpus::ordering_method::NAME_DESC;
+      } else {
+        logger::error("The value " + order +
+                      " for the order attribute is not valid. Please check "
+                      "with the different values present : \n" +
+                      "- date_asc \n" + +"- date_desc \n" + +"- name_asc \n" +
+                      +"- name_desc \n");
+        exit(-1);
+      }
+    }
+
+    // Get the corpus from the database
+    std::list<shared_ptr<Corpus>> corpusList =
+        mr.get_corpuses(filters, orderingMethod);
+
+    logger::info("Number of available corpus : " +
+                 std::to_string(corpusList.size()));
+
+    for (const auto corpus : corpusList) {
+      logger::info(corpus->header_string());
+    }
+  }
+}
+
+void CommandLineInterface::corpus_create() {
 
   string source = "";
   vector<string> sources;
@@ -154,51 +225,68 @@ void CommandLineInterface::corpus_manager() {
   map<string, string>::iterator itSubCommand;
   ManagerRequest mr;
 
+  // Check if we have a value for the name
+  itSubCommand = this->string_inputs.find("name");
+
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    if (this->bool_inputs.find("image")->second) {
+      // TODO :: We got the "image" label
+      logger::debug("We have the image label");
+    }
+
+    if (this->bool_inputs.find("video")->second) {
+      // TODO :: We got the "video" label
+      logger::debug("We have the video label");
+    }
+
+    if (this->bool_inputs.find("text")->second) {
+      // TODO :: We got the "text" label
+      logger::debug("We have the text label");
+    }
+
+    // Check if we have a value for the source
+    map<string, string>::iterator itSource = this->string_inputs.find("source");
+
+    if (itSource != this->string_inputs.end() && itSource->second != "") {
+      // Get the source
+      source = this->string_inputs.find("source")->second;
+
+      // Check the source
+      vector<string> apiNames = ApiFactory::get_api_names();
+      if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
+        logger::error("Le nom de la source n'est pas valide ! ");
+        // TODO :: End the program ? Add user confirmation.
+        source = "";
+        sources.push_back(source);
+      } else {
+        logger::debug("Source: " + source);
+        sources.push_back(source);
+      }
+    }
+
+    // Get the name of the corpus
+    string corpusName = itSubCommand->second;
+
+    // Create the corpus and show it
+    // Corpus corpus =
+    //     ManagerRequest::create_corpus(corpusName, sources, params);
+    // logger::info(corpus.to_string());
+
+  } else {
+    logger::error("We have no name !");
+    exit(-1);
+  }
+}
+
+void CommandLineInterface::corpus_manager() {
+
   logger::debug("Corpus method.");
 
   // Check if we want to list the corpus
   if (std::find(this->commands.begin(), this->commands.end(), "list") !=
       this->commands.end()) {
-
-    // Check if we have a value for the name
-    itSubCommand = this->string_inputs.find("name");
-
-    if (itSubCommand != this->string_inputs.end() &&
-        itSubCommand->second != "") {
-
-      // Get the name of the corpus
-      string corpusName = itSubCommand->second;
-
-      // Search for the corpus with the given name
-      std::list<shared_ptr<Corpus>> corpuses =
-          mr.get_corpus_from_name(corpusName);
-
-      // Check if we have a corpus
-      if (corpuses.size() > 0) {
-        for (const auto &corpus : corpuses) {
-          logger::info(corpus->header_string());
-        }
-      } else {
-        logger::info("No corpus have been found for the name : " + corpusName);
-      }
-
-    } else {
-      logger::info("List of all the corpus.");
-
-      std::map<std::string, std::string> filters;
-
-      // TODO
-      // Use either the get_corpuses parser to give the parsing method as a
-      // string, or parse it here before passing it as a Corpus::ordering_method
-      std::list<shared_ptr<Corpus>> corpusList =
-          mr.get_corpuses(filters, Corpus::ordering_method::NONE);
-
-      logger::info("Number of available corpus : " + corpusList.size());
-
-      for (const auto corpus : corpusList) {
-        logger::info(corpus->header_string());
-      }
-    }
+    this->corpus_list();
   }
 
   if (std::find(this->commands.begin(), this->commands.end(), "id") !=
@@ -209,61 +297,76 @@ void CommandLineInterface::corpus_manager() {
   // Check if the user want to create a corpus.
   if (std::find(this->commands.begin(), this->commands.end(), "create") !=
       this->commands.end()) {
+    this->corpus_create();
+  }
+}
 
-    // Check if we have a value for the name
-    itSubCommand = this->string_inputs.find("name");
+void CommandLineInterface::files_list() {
+  // TODO ::
+  exit(0);
+}
 
-    if (itSubCommand != this->string_inputs.end() &&
-        itSubCommand->second != "") {
+void CommandLineInterface::files_by_id() {
+  logger::debug("Search files by his ID");
 
-      if (this->bool_inputs.find("image")->second) {
-        // TODO :: We got the "image" label
-        logger::debug("We have the image label");
-      }
+  // Check if we have a value for the id
+  map<string, string>::iterator itSubCommand = this->string_inputs.find("id");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
 
-      if (this->bool_inputs.find("video")->second) {
-        // TODO :: We got the "video" label
-        logger::debug("We have the video label");
-      }
+    // Get the value of the id
+    string idString = this->string_inputs.find("id")->second;
+    string::size_type sz;
+    int id = 0;
 
-      if (this->bool_inputs.find("text")->second) {
-        // TODO :: We got the "text" label
-        logger::debug("We have the text label");
-      }
-
-      // Check if we have a value for the source
-      map<string, string>::iterator itSource =
-          this->string_inputs.find("source");
-
-      if (itSource != this->string_inputs.end() && itSource->second != "") {
-        // Get the source
-        source = this->string_inputs.find("source")->second;
-
-        // Check the source
-        vector<string> apiNames = ApiFactory::get_api_names();
-        if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
-          logger::error("Le nom de la source n'est pas valide ! ");
-          // TODO :: End the program ? Add user confirmation.
-          source = "";
-          sources.push_back(source);
-        } else {
-          logger::debug("Source: " + source);
-          sources.push_back(source);
-        }
-      }
-
-      // Get the name of the corpus
-      string corpusName = itSubCommand->second;
-
-      // Create the corpus and show it
-      // Corpus corpus =
-      //     ManagerRequest::create_corpus(corpusName, sources, params);
-      // logger::info(corpus.to_string());
-
-    } else {
-      logger::error("We have no name !");
+    try {
+      id = std::stoi(idString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input id is not an integer ! Please check your input.");
       exit(-1);
     }
+
+    // Check if the input and the transform have the same size
+    if (sz == idString.length()) {
+      logger::debug("The id is OK");
+
+      // Search the corpus in our database
+      ManagerRequest managerRequest;
+      std::optional<shared_ptr<File>> file =
+          managerRequest.get_file_from_id(id);
+
+      // Check the answer
+      if (file.has_value()) {
+        cout << file.value()->to_string() << endl;
+      } else {
+        logger::info("No file have been found for the id : " +
+                     std::to_string(id));
+      }
+      exit(0);
+
+    } else {
+      logger::error("The input id contains a non valid character. Please, "
+                    "check your input.");
+      exit(-1);
+    }
+
+  } else {
+    logger::debug("we have no id");
+    exit(-1);
+  }
+}
+
+void CommandLineInterface::files_manager() {
+
+  logger::debug("Files method.");
+
+  // Check if we want to list the corpus
+  if (std::find(this->commands.begin(), this->commands.end(), "list") !=
+      this->commands.end()) {
+    this->files_list();
+  } else if (std::find(this->commands.begin(), this->commands.end(), "id") !=
+             this->commands.end()) {
+    this->files_by_id();
   }
 }
 
@@ -366,6 +469,9 @@ void CommandLineInterface::run() {
   if (std::find(this->commands.begin(), this->commands.end(), "corpus") !=
       this->commands.end()) {
     this->corpus_manager();
+  } else if (std::find(this->commands.begin(), this->commands.end(), "files") !=
+             this->commands.end()) {
+    this->files_manager();
   } else if (std::find(this->commands.begin(), this->commands.end(), "apis") !=
              this->commands.end()) {
     this->api_manager();

@@ -91,6 +91,9 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
     res.push_back(file);
   }
 
+  delete prep_stmt;
+  delete sql_res;
+
   logger::info("Retrieved " + std::to_string(res.size()) + " from DB");
 
   return res;
