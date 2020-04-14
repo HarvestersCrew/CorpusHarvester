@@ -56,6 +56,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
       "list", "List of all the corpus with potentially a name.");
 
   listCorpus.add_option("name", "Corpus name that you want to search.", false);
+  listCorpus.add_option("order", "Set the order of the output corpus.", false);
 
   // Get coprus based on his id.
   cli_command &idCorpus =
@@ -146,12 +147,84 @@ void CommandLineInterface::corpus_by_id() {
   }
 }
 
+void CommandLineInterface::corpus_list() {
+
+  Corpus::ordering_method orderingMethod = Corpus::ordering_method::NONE;
+  map<string, string>::iterator itSubCommand;
+  map<string, string>::iterator itOrderCommand;
+  ManagerRequest mr;
+
+  // Check if we have a value for the name
+  itSubCommand = this->string_inputs.find("name");
+
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    // Get the name of the corpus
+    string corpusName = itSubCommand->second;
+
+    // Search for the corpus with the given name
+    std::list<shared_ptr<Corpus>> corpuses =
+        mr.get_corpus_from_name(corpusName);
+
+    // Check if we have a corpus
+    if (corpuses.size() > 0) {
+      for (const auto &corpus : corpuses) {
+        logger::info(corpus->header_string());
+      }
+    } else {
+      logger::info("No corpus have been found for the name : " + corpusName);
+    }
+
+  } else {
+    logger::info("List of all the corpus.");
+
+    std::map<std::string, std::string> filters;
+
+    // Check if the user wants a specific order
+    itOrderCommand = this->string_inputs.find("order");
+    if (itOrderCommand != this->string_inputs.end() &&
+        itOrderCommand->second != "") {
+
+      string order = itOrderCommand->second;
+
+      if (order == "date_asc") {
+        orderingMethod = Corpus::ordering_method::DATE_ASC;
+      } else if (order == "date_desc") {
+        orderingMethod = Corpus::ordering_method::DATE_DESC;
+      } else if (order == "name_asc") {
+        orderingMethod = Corpus::ordering_method::NAME_ASC;
+      } else if (order == "name_desc") {
+        orderingMethod = Corpus::ordering_method::NAME_DESC;
+      } else {
+        logger::error("The value " + order +
+                      " for the order attribute is not valid. Please check "
+                      "with the different values present : \n" +
+                      "- date_asc \n" + +"- date_desc \n" + +"- name_asc \n" +
+                      +"- name_desc \n");
+        exit(-1);
+      }
+    }
+
+    // Get the corpus from the database
+    std::list<shared_ptr<Corpus>> corpusList =
+        mr.get_corpuses(filters, orderingMethod);
+
+    logger::info("Number of available corpus : " +
+                 std::to_string(corpusList.size()));
+
+    for (const auto corpus : corpusList) {
+      logger::info(corpus->header_string());
+    }
+  }
+}
+
 void CommandLineInterface::corpus_manager() {
 
   string source = "";
   vector<string> sources;
   map<string, string> params;
   map<string, string>::iterator itSubCommand;
+  map<string, string>::iterator itOrderCommand;
   ManagerRequest mr;
 
   logger::debug("Corpus method.");
@@ -159,46 +232,7 @@ void CommandLineInterface::corpus_manager() {
   // Check if we want to list the corpus
   if (std::find(this->commands.begin(), this->commands.end(), "list") !=
       this->commands.end()) {
-
-    // Check if we have a value for the name
-    itSubCommand = this->string_inputs.find("name");
-
-    if (itSubCommand != this->string_inputs.end() &&
-        itSubCommand->second != "") {
-
-      // Get the name of the corpus
-      string corpusName = itSubCommand->second;
-
-      // Search for the corpus with the given name
-      std::list<shared_ptr<Corpus>> corpuses =
-          mr.get_corpus_from_name(corpusName);
-
-      // Check if we have a corpus
-      if (corpuses.size() > 0) {
-        for (const auto &corpus : corpuses) {
-          logger::info(corpus->header_string());
-        }
-      } else {
-        logger::info("No corpus have been found for the name : " + corpusName);
-      }
-
-    } else {
-      logger::info("List of all the corpus.");
-
-      std::map<std::string, std::string> filters;
-
-      // TODO
-      // Use either the get_corpuses parser to give the parsing method as a
-      // string, or parse it here before passing it as a Corpus::ordering_method
-      std::list<shared_ptr<Corpus>> corpusList =
-          mr.get_corpuses(filters, Corpus::ordering_method::NONE);
-
-      logger::info("Number of available corpus : " + corpusList.size());
-
-      for (const auto corpus : corpusList) {
-        logger::info(corpus->header_string());
-      }
-    }
+    this->corpus_list();
   }
 
   if (std::find(this->commands.begin(), this->commands.end(), "id") !=

@@ -65,6 +65,12 @@ private:
   void corpus_by_id();
 
   /**
+   * See a list of corpus.
+   * Method : ./bin/cli corpus list
+   */
+  void corpus_list();
+
+  /**
    * Show all the corpus created
    *
    * @return list of corpus
