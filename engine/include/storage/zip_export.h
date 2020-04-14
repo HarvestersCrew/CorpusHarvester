@@ -5,6 +5,7 @@
 #include "export_method.h"
 #include "indexation/file.h"
 #include "storage/storage.h"
+#include "utils/utils.h"
 #include <iostream>
 #include <list>
 #include <memory>

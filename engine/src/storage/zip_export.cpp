@@ -4,7 +4,8 @@ string ZipExport::compressed_export(std::list<shared_ptr<File>> files,
                                     string archive_name) {
   Storage storage;
   int error;
-  string archive_path = storage.get_corpus_path() + archive_name + ".zip";
+  string archive_path =
+      storage.get_corpus_path() + archive_name + "-" + random_str(6) + ".zip";
   zip_t *corpus = zip_open(archive_path.c_str(), ZIP_EXCL | ZIP_CREATE, &error);
   if (error == ZIP_ER_EXISTS) {
     return archive_path;
