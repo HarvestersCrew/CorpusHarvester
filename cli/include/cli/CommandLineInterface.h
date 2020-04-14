@@ -15,8 +15,13 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <utility>
 
+using std::map;
+using std::pair;
 using std::shared_ptr;
+using std::string;
+using std::vector;
 
 /**
  * CommandLineInterface class.
@@ -44,6 +49,12 @@ private:
    * Map indicates if there are options
    */
   map<string, bool> bool_inputs;
+
+  /**
+   * Lists of options the user typed but weren't put by the developper in a
+   * command
+   */
+  vector<pair<string, string>> unspecified_inputs;
 
   /**
    * Print in the user terminal all the possible actions.

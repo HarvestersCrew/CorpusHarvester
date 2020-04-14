@@ -86,7 +86,8 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 
   // Get and store all the parameter
   try {
-    std::tie(this->commands, this->string_inputs, this->bool_inputs) =
+    std::tie(this->commands, this->string_inputs, this->bool_inputs,
+             this->unspecified_inputs) =
         cli_parser::parse(this->parser, allArgs);
   } catch (const cli_parser_bad_parse_exception &e) {
     exit(EXIT_FAILURE);
