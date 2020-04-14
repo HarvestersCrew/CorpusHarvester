@@ -112,7 +112,8 @@ string cli_command::get_help() const {
   return ss.str();
 }
 
-tuple<vector<string>, map<string, string>, map<string, bool>>
+tuple<vector<string>, map<string, string>, map<string, bool>,
+      vector<pair<string, string>>>
 cli_parser::parse(const cli_command &root, vector<string> cli_args) {
 
   if (cli_args.size() > 0 && cli_args.at(0) == "-h") {
@@ -132,7 +133,8 @@ cli_parser::parse(const cli_command &root, vector<string> cli_args) {
 
     if (root.is_terminal() || is_next_param_option) {
       auto res = cli_parser::parse_terminal(root, cli_args);
-      return make_tuple(vector<string>(), res.first, res.second);
+      return make_tuple(vector<string>(), get<0>(res), get<1>(res),
+                        get<2>(res));
     } else {
 
       const string first_arg = cli_args.at(0);
@@ -154,7 +156,7 @@ cli_parser::parse(const cli_command &root, vector<string> cli_args) {
   }
 }
 
-pair<map<string, string>, map<string, bool>>
+tuple<map<string, string>, map<string, bool>, vector<pair<string, string>>>
 cli_parser::parse_terminal(const cli_command &root,
                            const vector<string> &cli_args) {
   map<string, string> string_args;
@@ -193,5 +195,5 @@ cli_parser::parse_terminal(const cli_command &root,
     }
   }
 
-  return make_pair(string_args, bool_args);
+  return make_tuple(string_args, bool_args, undefined_args);
 }
