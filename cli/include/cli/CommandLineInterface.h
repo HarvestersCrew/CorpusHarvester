@@ -71,6 +71,12 @@ private:
   void corpus_list();
 
   /**
+   * Create a new corpus.
+   * Methode : ./bin/cli corpus create
+   */
+  void corpus_create();
+
+  /**
    * Show all the corpus created
    *
    * @return list of corpus

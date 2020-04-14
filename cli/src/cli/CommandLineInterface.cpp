@@ -218,14 +218,69 @@ void CommandLineInterface::corpus_list() {
   }
 }
 
-void CommandLineInterface::corpus_manager() {
+void CommandLineInterface::corpus_create() {
 
   string source = "";
   vector<string> sources;
   map<string, string> params;
   map<string, string>::iterator itSubCommand;
-  map<string, string>::iterator itOrderCommand;
   ManagerRequest mr;
+
+  // Check if we have a value for the name
+  itSubCommand = this->string_inputs.find("name");
+
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    if (this->bool_inputs.find("image")->second) {
+      // TODO :: We got the "image" label
+      logger::debug("We have the image label");
+    }
+
+    if (this->bool_inputs.find("video")->second) {
+      // TODO :: We got the "video" label
+      logger::debug("We have the video label");
+    }
+
+    if (this->bool_inputs.find("text")->second) {
+      // TODO :: We got the "text" label
+      logger::debug("We have the text label");
+    }
+
+    // Check if we have a value for the source
+    map<string, string>::iterator itSource = this->string_inputs.find("source");
+
+    if (itSource != this->string_inputs.end() && itSource->second != "") {
+      // Get the source
+      source = this->string_inputs.find("source")->second;
+
+      // Check the source
+      vector<string> apiNames = ApiFactory::get_api_names();
+      if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
+        logger::error("Le nom de la source n'est pas valide ! ");
+        // TODO :: End the program ? Add user confirmation.
+        source = "";
+        sources.push_back(source);
+      } else {
+        logger::debug("Source: " + source);
+        sources.push_back(source);
+      }
+    }
+
+    // Get the name of the corpus
+    string corpusName = itSubCommand->second;
+
+    // Create the corpus and show it
+    // Corpus corpus =
+    //     ManagerRequest::create_corpus(corpusName, sources, params);
+    // logger::info(corpus.to_string());
+
+  } else {
+    logger::error("We have no name !");
+    exit(-1);
+  }
+}
+
+void CommandLineInterface::corpus_manager() {
 
   logger::debug("Corpus method.");
 
@@ -243,61 +298,7 @@ void CommandLineInterface::corpus_manager() {
   // Check if the user want to create a corpus.
   if (std::find(this->commands.begin(), this->commands.end(), "create") !=
       this->commands.end()) {
-
-    // Check if we have a value for the name
-    itSubCommand = this->string_inputs.find("name");
-
-    if (itSubCommand != this->string_inputs.end() &&
-        itSubCommand->second != "") {
-
-      if (this->bool_inputs.find("image")->second) {
-        // TODO :: We got the "image" label
-        logger::debug("We have the image label");
-      }
-
-      if (this->bool_inputs.find("video")->second) {
-        // TODO :: We got the "video" label
-        logger::debug("We have the video label");
-      }
-
-      if (this->bool_inputs.find("text")->second) {
-        // TODO :: We got the "text" label
-        logger::debug("We have the text label");
-      }
-
-      // Check if we have a value for the source
-      map<string, string>::iterator itSource =
-          this->string_inputs.find("source");
-
-      if (itSource != this->string_inputs.end() && itSource->second != "") {
-        // Get the source
-        source = this->string_inputs.find("source")->second;
-
-        // Check the source
-        vector<string> apiNames = ApiFactory::get_api_names();
-        if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
-          logger::error("Le nom de la source n'est pas valide ! ");
-          // TODO :: End the program ? Add user confirmation.
-          source = "";
-          sources.push_back(source);
-        } else {
-          logger::debug("Source: " + source);
-          sources.push_back(source);
-        }
-      }
-
-      // Get the name of the corpus
-      string corpusName = itSubCommand->second;
-
-      // Create the corpus and show it
-      // Corpus corpus =
-      //     ManagerRequest::create_corpus(corpusName, sources, params);
-      // logger::info(corpus.to_string());
-
-    } else {
-      logger::error("We have no name !");
-      exit(-1);
-    }
+    this->corpus_create();
   }
 }
 
