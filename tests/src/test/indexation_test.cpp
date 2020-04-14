@@ -237,8 +237,15 @@ void test_create_corpus() {
 
 void test_fetch_corpuses() {
   sql::Statement *stmt = HarvesterDatabase::init()->createStatement();
+  delete stmt;
   std::list<shared_ptr<Corpus>> corpuses;
   std::vector<shared_ptr<Corpus>> corpuses_vec;
+
+  try {
+    Corpus::get_corpus_from_id(HarvesterDatabase::init(), 0);
+    Assertion::assert_throw(__FUNCTION__, "db_id_not_found");
+  } catch (const db_id_not_found &e) {
+  }
 
   Corpus c1("Jurassic Park");
   Corpus c2("Zootopia");
@@ -248,6 +255,8 @@ void test_fetch_corpuses() {
   c2.insert(HarvesterDatabase::init());
   std::this_thread::sleep_for(std::chrono::seconds(1));
   c3.insert(HarvesterDatabase::init());
+
+  Corpus::get_corpus_from_id(HarvesterDatabase::init(), c1.get_id());
 
   corpuses = Corpus::get_all_corpuses(HarvesterDatabase::init(),
                                       Corpus::ordering_method::DATE_ASC);
@@ -292,8 +301,6 @@ void test_fetch_corpuses() {
                            corpuses_vec.at(0)->get_title());
   Assertion::assert_equals(__FUNCTION__, "Avengers",
                            corpuses_vec.at(2)->get_title());
-
-  delete stmt;
 }
 
 void test_wrong_search() {

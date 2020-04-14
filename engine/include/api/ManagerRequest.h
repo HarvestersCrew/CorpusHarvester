@@ -88,8 +88,9 @@ public:
    * Get a corpus from his id.
    * @param id of the corpus in the database.
    * @return The desired corpus.
+   * @throw db_id_not_found if corpus wasn't found
    */
-  std::optional<shared_ptr<Corpus>> get_corpus_from_id(const int id);
+  shared_ptr<Corpus> get_corpus_from_id(const int id) const;
 
   /**
    * Create a corpus with files, a name and optional filters

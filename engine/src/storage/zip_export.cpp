@@ -1,4 +1,5 @@
-#include "storage/zip_export.h"
+#include "storage/export_method.h"
+#include "storage/storage.h"
 
 string ZipExport::compressed_export(std::list<shared_ptr<File>> files,
                                     string archive_name) {

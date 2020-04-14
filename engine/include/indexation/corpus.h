@@ -4,6 +4,7 @@
 #include "file.h"
 #include "indexation/file.h"
 #include "storage/export_method.h"
+#include "utils/exceptions.h"
 #include <cppconn/prepared_statement.h>
 #include <list>
 #include <memory>
@@ -151,10 +152,11 @@ public:
    * @param db Database
    * @param id ID of the corpus
    *
-   * @return Optional Contain a corpus if the we have a result.
+   * @return Resulting corpus
+   * @throw db_id_not_found if corpus wasn't found
    */
-  static std::optional<shared_ptr<Corpus>>
-  get_corpus_from_id(sql::Connection *db, const int id);
+  static shared_ptr<Corpus> get_corpus_from_id(sql::Connection *db,
+                                               const int id);
 
   /**
    * Search corpuses based on a string.

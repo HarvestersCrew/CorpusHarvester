@@ -10,6 +10,7 @@
 #include "indexation/search_builder.h"
 #include "storage/storage.h"
 #include "utils/cli_parser.h"
+#include "utils/exceptions.h"
 #include <deque>
 #include <iostream>
 #include <memory>

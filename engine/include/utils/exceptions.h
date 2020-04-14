@@ -216,4 +216,10 @@ public:
       : ExceptionWrapper("Invalid client request", "wss_invalid_request") {}
 };
 
+class db_id_not_found : public ExceptionWrapper {
+public:
+  db_id_not_found()
+      : ExceptionWrapper("ID not found in DB", "db_id_not_found") {}
+};
+
 #endif

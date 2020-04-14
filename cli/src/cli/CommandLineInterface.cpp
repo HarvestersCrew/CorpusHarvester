@@ -123,13 +123,11 @@ void CommandLineInterface::corpus_by_id() {
 
       // Search the corpus in our database
       ManagerRequest managerRequest;
-      std::optional<shared_ptr<Corpus>> corpus =
-          managerRequest.get_corpus_from_id(id);
 
-      // Check the answer
-      if (corpus.has_value()) {
-        cout << corpus.value()->header_string() << endl;
-      } else {
+      try {
+        shared_ptr<Corpus> corpus = managerRequest.get_corpus_from_id(id);
+        cout << corpus->header_string() << endl;
+      } catch (const db_id_not_found &e) {
         logger::info("No corpus have been found for the id : " +
                      std::to_string(id));
       }

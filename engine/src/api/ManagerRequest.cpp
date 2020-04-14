@@ -68,8 +68,7 @@ ManagerRequest::get_corpus_from_name(string name) const {
   return this->get_corpuses(search, Corpus::ordering_method::NONE);
 }
 
-std::optional<shared_ptr<Corpus>>
-ManagerRequest::get_corpus_from_id(const int id) {
+shared_ptr<Corpus> ManagerRequest::get_corpus_from_id(const int id) const {
   logger::debug("Search corpus with id = " + std::to_string(id));
   return Corpus::get_corpus_from_id(HarvesterDatabase::init(), id);
 }
