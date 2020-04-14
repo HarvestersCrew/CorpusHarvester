@@ -31,10 +31,10 @@ void cli_command::add_option(const string &name, const string &description,
   if (this->_is_option) {
     throw cli_parser_exception("Can't add an option to an option");
   }
-  if (this->_commands.size() > 0) {
-    throw cli_parser_exception(
-        "Can't add an option as it already has commands");
-  }
+  // if (this->_commands.size() > 0) {
+  //   throw cli_parser_exception(
+  //       "Can't add an option as it already has commands");
+  // }
   if (this->_options.find(name) != this->_options.end()) {
     throw cli_parser_exception("Can't add option '" + name +
                                "' because it already exists");
