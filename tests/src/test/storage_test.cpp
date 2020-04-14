@@ -58,8 +58,7 @@ void test_export_corpus_zip() {
   Corpus corpus = Corpus("corpus_test", files, "");
   shared_ptr<ZipExport> zip_export = std::make_shared<ZipExport>();
   string path = corpus.export_(zip_export);
-  string ls = exec("ls " + path);
-  Assertion::assert_equals(__FUNCTION__, path + "\n", ls);
+  Assertion::assert_true(__FUNCTION__, std::filesystem::exists(path));
 }
 
 void storage_test() {

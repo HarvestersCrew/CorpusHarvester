@@ -8,6 +8,7 @@
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 #include "utils/utils.h"
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <sys/stat.h>
