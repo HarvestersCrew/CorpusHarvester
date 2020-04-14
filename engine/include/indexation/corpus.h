@@ -18,10 +18,10 @@
   "CREATE TABLE IF NOT EXISTS Corpus(id INTEGER NOT NULL "                     \
   "AUTO_INCREMENT,title "                                                      \
   "TEXT NOT NULL,creation_date TIMESTAMP NOT NULL DEFAULT NOW(),filters TEXT " \
-  "NOT NULL, extraction_path TEXT, PRIMARY "                                   \
+  "NOT NULL, extraction_path TEXT DEFAULT NULL, PRIMARY "                      \
   "KEY (id));"
 #define INSERT_CORPUS_STATEMENT                                                \
-  "INSERT INTO Corpus (title, filters, extraction_path) VALUES(?, ?, ?)"
+  "INSERT INTO Corpus (title, filters) VALUES(?, ?)"
 #define UPDATE_CORPUS_EXTRACTION_PATH                                          \
   "UPDATE Corpus SET extraction_path = ? WHERE id = ?;"
 #define DROP_CORPUS_STATEMENT "DROP TABLE IF EXISTS Corpus;"

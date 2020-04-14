@@ -41,7 +41,6 @@ bool Corpus::insert(sql::Connection *db) {
   prep_stmt = db->prepareStatement(INSERT_CORPUS_STATEMENT);
   prep_stmt->setString(1, _title);
   prep_stmt->setString(2, _used_filters);
-  prep_stmt->setString(3, _extraction_path.value_or(""));
   prep_stmt->execute();
 
   this->_id = DatabaseItem::get_last_inserted_id(db);
@@ -77,7 +76,11 @@ void Corpus::fill_attribute_from_statement(sql::ResultSet *res) {
   this->_title = res->getString("title");
   this->_creation_date = res->getString("creation_date");
   this->_used_filters = res->getString("filters");
-  this->_extraction_path = res->getString("extraction_path");
+  if (res->isNull("extraction_path")) {
+    this->_extraction_path = std::nullopt;
+  } else {
+    this->_extraction_path = res->getString("extraction_path");
+  }
 }
 
 void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
@@ -168,7 +171,11 @@ void Corpus::update_extraction_path() {
   sql::PreparedStatement *prep_stmt;
   prep_stmt = HarvesterDatabase::init()->prepareStatement(
       UPDATE_CORPUS_EXTRACTION_PATH);
-  prep_stmt->setString(1, _extraction_path.value_or(""));
+  if (_extraction_path) {
+    prep_stmt->setString(1, _extraction_path.value());
+  } else {
+    prep_stmt->setNull(1, 0);
+  }
   prep_stmt->setInt(2, _id);
   prep_stmt->executeQuery();
   delete prep_stmt;
