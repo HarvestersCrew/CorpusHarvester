@@ -3,8 +3,8 @@
 
 #include "indexation/file.h"
 #include "indexation/indexer.h"
+#include "storage/export_method.h"
 #include "storage/storage.h"
-#include "storage/zip_export.h"
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 #include "utils/utils.h"
