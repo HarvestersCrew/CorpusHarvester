@@ -89,8 +89,7 @@ int ManagerRequest::create_corpus(const string &name,
 
 std::optional<shared_ptr<File>>
 ManagerRequest::get_file_from_id(const int id) const {
-  // TODO :: Get a file from the database by his id
-  return std::nullopt;
+  return File::get_file_from_id(HarvesterDatabase::init(), id);
 }
 
 /*

@@ -108,7 +108,7 @@ Corpus::get_corpus_from_id(sql::Connection *db, const int id) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
 
-  // Get the corpus based on the name
+  // Get the corpus based on the id
   prep_stmt = db->prepareStatement(GET_CORPUS_FROM_ID);
   prep_stmt->setInt(1, id);
   res = prep_stmt->executeQuery();
