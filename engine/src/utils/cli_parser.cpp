@@ -95,29 +95,28 @@ bool cli_command::is_terminal() const { return this->_commands.size() == 0; }
 string cli_command::get_help() const {
   stringstream ss;
 
-  ss << "Usage: " << this->_initial_call;
-  if (this->_commands.size() > 0) {
-    ss << " [subcommand]" << endl;
-    ss << "Description: " << this->_description << endl;
-    ss << endl << "Subcommand(s):";
-    ss << endl << "-h: displays help";
-    for (const auto &el : this->_commands) {
-      ss << endl << el.first << ": " << el.second.get_description();
-    }
-  } else if (this->_options.size() > 0) {
-    ss << " [option]..." << endl;
-    ss << "Description: " << this->_description << endl;
-    ss << endl << "Option(s):";
-    for (const auto &el : this->_options) {
-      ss << endl << "--" << el.first;
-      if (!el.second.is_option_bool()) {
+  ss << "Current call: " << _initial_call << endl;
+  ss << "Description: " << _description << endl;
+  ss << "-h: displays this help";
+
+  if (_options.size() > 0) {
+    ss << endl << endl << _initial_call << " [option(s)]...";
+    for (const auto &option : _options) {
+      ss << endl << "--" << option.first;
+      if (!option.second.is_option_bool()) {
         ss << " \"string\"";
       }
-      ss << ": " << el.second.get_description();
+      ss << ": " << option.second.get_description();
     }
-  } else {
-    ss << endl << "Description: " << this->_description;
   }
+
+  if (_commands.size() > 0) {
+    ss << endl << endl << _initial_call << " [subcommand]";
+    for (const auto &sub : _commands) {
+      ss << endl << sub.first << ": " << sub.second.get_description();
+    }
+  }
+
   return ss.str();
 }
 
