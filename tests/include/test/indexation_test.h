@@ -7,10 +7,12 @@
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 #include "utils/utils.h"
+#include <chrono>
 #include <cstring>
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <thread>
 
 #define TABLES_COUNT 5
 #define FILE_COUNT 50
@@ -33,6 +35,7 @@ void test_fetch_specific_files();
 void test_fetch_specific_files2();
 void test_fetch_specific_files3();
 void test_create_corpus();
+void test_fetch_corpuses();
 void test_wrong_search();
 void test_wrong_search2();
 void indexation_test();

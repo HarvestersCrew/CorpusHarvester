@@ -37,8 +37,8 @@
   "cf.file_id = f.id;"
 #define CORPUS_ORDER_BY_TITLE_ASC " ORDER BY title ASC"
 #define CORPUS_ORDER_BY_TITLE_DESC " ORDER BY title DESC"
-#define CORPUS_ORDER_BY_DATE_ASC " ORDER BY date ASC"
-#define CORPUS_ORDER_BY_DATE_DESC " ORDER BY date DESC"
+#define CORPUS_ORDER_BY_DATE_ASC " ORDER BY creation_date ASC"
+#define CORPUS_ORDER_BY_DATE_DESC " ORDER BY creation_date DESC"
 
 using std::shared_ptr;
 using std::string;
