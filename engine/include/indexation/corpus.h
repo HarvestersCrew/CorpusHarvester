@@ -35,8 +35,8 @@
 #define GET_CORPUS_FILES_STATEMENT                                             \
   "SELECT f.* FROM CorpusFiles cf, File f WHERE cf.corpus_id = ? and "         \
   "cf.file_id = f.id;"
-#define CORPUS_ORDER_BY_NAME_ASC " ORDER BY name ASC"
-#define CORPUS_ORDER_BY_NAME_DESC " ORDER BY name DESC"
+#define CORPUS_ORDER_BY_TITLE_ASC " ORDER BY title ASC"
+#define CORPUS_ORDER_BY_TITLE_DESC " ORDER BY title DESC"
 #define CORPUS_ORDER_BY_DATE_ASC " ORDER BY date ASC"
 #define CORPUS_ORDER_BY_DATE_DESC " ORDER BY date DESC"
 

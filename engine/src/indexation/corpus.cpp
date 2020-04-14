@@ -3,8 +3,8 @@
 unordered_map<Corpus::ordering_method, string> Corpus::_ordering_queries = {
     {Corpus::ordering_method::DATE_ASC, CORPUS_ORDER_BY_DATE_ASC},
     {Corpus::ordering_method::DATE_DESC, CORPUS_ORDER_BY_DATE_DESC},
-    {Corpus::ordering_method::NAME_ASC, CORPUS_ORDER_BY_NAME_ASC},
-    {Corpus::ordering_method::NAME_DESC, CORPUS_ORDER_BY_NAME_DESC},
+    {Corpus::ordering_method::NAME_ASC, CORPUS_ORDER_BY_TITLE_ASC},
+    {Corpus::ordering_method::NAME_DESC, CORPUS_ORDER_BY_TITLE_DESC},
     {Corpus::ordering_method::NONE, ""}};
 
 Corpus::Corpus() {}
