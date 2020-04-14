@@ -91,8 +91,6 @@ void test_cli_parser_parser() {
   } catch (const cli_parser_help_asked_exception &e) {
   }
 
-  std::cout << "trying new example" << std::endl;
-
   try {
     cli_parser::parse(root,
                       vector<string>{"--option4", "value", "subcommand1"});
@@ -105,6 +103,8 @@ void test_cli_parser_parser() {
   Assertion::assert_equals(__FUNCTION__, 0, subcommands.size());
   Assertion::assert_equals(__FUNCTION__, 1, string_args.size());
   Assertion::assert_equals(__FUNCTION__, 0, bool_args.size());
+  Assertion::assert_equals(__FUNCTION__, "val",
+                           string_args.find("option4")->second);
 
   std::tie(subcommands, string_args, bool_args) = cli_parser::parse(
       root, vector<string>({"subcommand2", "--option2", "value", "--option1"}));

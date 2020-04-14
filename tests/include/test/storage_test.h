@@ -9,8 +9,10 @@
 #include "utils/exceptions.h"
 #include "utils/utils.h"
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include <sys/stat.h>
 
 void test_file_destination();
