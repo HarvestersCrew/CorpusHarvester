@@ -48,6 +48,18 @@ void test_store_one_file() {
   Assertion::assert_equals(__FUNCTION__, content + "\n", ls);
 }
 
+void test_export_methods() {
+  std::list<shared_ptr<File>> files;
+  files.push_back(file);
+  string path = ExportMethod::compressed_export(files, "test_indirect",
+                                                ExportMethod::methods::ZIP);
+  Assertion::assert_true(__FUNCTION__, std::filesystem::exists(path));
+
+  shared_ptr<ZipExport> z = std::make_shared<ZipExport>();
+  path = z->compressed_export(files, "test_direct");
+  Assertion::assert_true(__FUNCTION__, std::filesystem::exists(path));
+}
+
 void test_export_corpus_zip() {
   std::list<shared_ptr<File>> files;
   files.push_back(file);
@@ -56,12 +68,7 @@ void test_export_corpus_zip() {
   storage.store_file(file2);
   files.push_back(file2);
   Corpus corpus = Corpus("corpus_test", files, "");
-  shared_ptr<ZipExport> zip_export = std::make_shared<ZipExport>();
-  string path = corpus.export_(zip_export);
-  Assertion::assert_true(__FUNCTION__, std::filesystem::exists(path));
-
-  path = ExportMethod::compressed_export(files, "test_direct",
-                                         ExportMethod::methods::ZIP);
+  string path = corpus.export_(ExportMethod::methods::ZIP);
   Assertion::assert_true(__FUNCTION__, std::filesystem::exists(path));
 }
 
@@ -70,6 +77,7 @@ void storage_test() {
   Assertion::test(test_file_destination, "test_file_destination");
   Assertion::test(test_empty_file_name, "test_empty_file_name");
   Assertion::test(test_store_one_file, "test_store_one_file");
+  Assertion::test(test_export_methods, "test_export_methods");
   Assertion::test(test_export_corpus_zip, "test_export_corpus_zip");
   HarvesterDatabase::close();
 }

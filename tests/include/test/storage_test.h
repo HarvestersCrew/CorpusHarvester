@@ -16,6 +16,7 @@
 void test_file_destination();
 void test_move_one_file();
 void test_store_one_file();
+void test_export_methods();
 void test_export_corpus_zip();
 void storage_test();
 

@@ -49,6 +49,7 @@ public:
  * ZipExport class is used to export a corpus as a zip file
  */
 class ZipExport : public ExportMethod {
+public:
   virtual string compressed_export(std::list<shared_ptr<File>> files,
                                    string archive_name);
 };
