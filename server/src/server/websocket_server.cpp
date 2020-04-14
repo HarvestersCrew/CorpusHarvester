@@ -3,12 +3,12 @@
 websocketpp::server<websocketpp::config::asio> WebsocketServer::_server;
 map<connection_hdl, shared_ptr<ConnectionData>, owner_less<connection_hdl>>
     WebsocketServer::_websockets;
-unsigned int WebsocketServer::_port = 9002;
+unsigned int WebsocketServer::_port;
 mutex WebsocketServer::_connections_mut;
 WssLogstream WebsocketServer::_ls;
 ostream WebsocketServer::_os(&WebsocketServer::_ls);
 
-bool WebsocketServer::init() {
+bool WebsocketServer::init(unsigned int port) {
   _server.init_asio();
   _server.set_reuse_addr(true);
 
@@ -23,6 +23,7 @@ bool WebsocketServer::init() {
   _server.set_close_handler(&WebsocketServer::on_close);
   _server.set_message_handler(&WebsocketServer::on_message);
 
+  _port = port;
   _server.listen(_port);
 
   _server.start_accept();

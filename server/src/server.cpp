@@ -1,27 +1,56 @@
 #include "database/harvester_database.h"
 #include "server/websocket_server.h"
+#include "utils/cli_parser.h"
 #include <chrono>
 #include <cppconn/exception.h>
 #include <iostream>
+#include <string>
 #include <thread>
+#include <tuple>
 
 using std::cout;
 using std::endl;
+using std::get;
+
+#define SERVER_PORT 9002
 
 int main(int argc, char **argv) {
-  bool db_ready = false;
 
+  cli_command cli_root(argv[0], "Harvester server");
+  cli_root.add_option("port", "Port to be used by the server", false);
+
+  std::vector<string> all_args(argv + 1, argv + argc);
+  unsigned int port = SERVER_PORT;
+
+  try {
+    const auto cli_res = cli_parser::parse(cli_root, all_args);
+
+    if (get<1>(cli_res).find("port") != get<1>(cli_res).end()) {
+      std::string port_str = get<1>(cli_res).at("port");
+      try {
+        port = std::stoul(port_str);
+      } catch (const std::invalid_argument &e) {
+        std::cerr << "Invalid port argument, must be an unsigned int"
+                  << std::endl;
+        exit(-1);
+      }
+    }
+
+  } catch (const cli_parser_help_asked_exception &e) {
+    exit(0);
+  }
+
+  bool db_ready = false;
   do {
     try {
       HarvesterDatabase::init();
       db_ready = true;
     } catch (const sql::SQLException &e) {
-      std::cout << "Failure connecting to DB, will retry in 10 seconds"
-                << std::endl;
+      cout << "Failure connecting to DB, will retry in 10 seconds" << endl;
       std::this_thread::sleep_for(std::chrono::seconds(10));
     }
   } while (!db_ready);
 
-  WebsocketServer::init();
+  WebsocketServer::init(port);
   WebsocketServer::run();
 }

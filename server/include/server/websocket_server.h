@@ -49,7 +49,7 @@ struct ConnectionData {
  */
 class WebsocketServer {
 public:
-  static bool init();
+  static bool init(unsigned int port);
   static void run();
   static void stop();
 
