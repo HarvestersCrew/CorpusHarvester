@@ -52,6 +52,8 @@ ManagerRequest::get_corpuses(std::map<string, string> &filters,
     order_parsed = Corpus::ordering_method::NAME_ASC;
   } else if (order == "name_desc") {
     order_parsed = Corpus::ordering_method::NAME_DESC;
+  } else if (order != "none") {
+    logger::warning("Ordering method for corpuses unsupported, using 'none'");
   }
   return this->get_corpuses(filters, order_parsed);
 }
@@ -84,6 +86,20 @@ int ManagerRequest::create_corpus(const string &name,
   }
   corpus.insert(HarvesterDatabase::init());
   return corpus.get_id();
+}
+
+string ManagerRequest::export_corpus(const int id,
+                                     ExportMethod::methods method) const {
+  const auto corpus = this->get_corpus_from_id(id);
+  return corpus->export_(method);
+}
+
+string ManagerRequest::export_corpus(const int id, const string &method) const {
+  ExportMethod::methods method_parsed = ExportMethod::methods::ZIP;
+  if (method != "zip") {
+    logger::warning("Export method not supported, using zip");
+  }
+  return this->export_corpus(id, method_parsed);
 }
 
 std::optional<shared_ptr<File>>

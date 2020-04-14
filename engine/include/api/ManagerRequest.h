@@ -103,6 +103,26 @@ public:
                     const optional<ApiDatabaseBuilder> &builder);
 
   /**
+   * Exports a given corpus ID with a certain format
+   * @param id ID of the corpus
+   * @param method Export method
+   * @return Path to the exported corpus
+   * @throw db_id_not_found if corpus wasn't found
+   */
+  string export_corpus(const int id, ExportMethod::methods method) const;
+
+  /**
+   * Exports a given corpus ID with a certain format
+   * @param id ID of the corpus
+   * @param method Export method as a string
+   * "zip" available
+   * "zip" by default
+   * @return Path to the exported corpus
+   * @throw db_id_not_found if corpus wasn't found
+   */
+  string export_corpus(const int id, const string &method) const;
+
+  /**
    * Get a file from his id.
    * @param id of the file in the database.
    * @return The desired file.
