@@ -4,7 +4,7 @@ Storage storage;
 std::string STORED_PATH = storage.get_root_folder_name();
 std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
 shared_ptr<File> file =
-    std::make_shared<File>(File("", "storage", 100, "twitter", ".txt"));
+    std::make_shared<File>(File("null", "storage", 100, "twitter", ".txt"));
 
 void test_file_destination() {
   std::string fileDest = storage.file_destination(file);
@@ -30,7 +30,6 @@ void test_empty_file_name() {
 }
 
 void test_store_one_file() {
-  file->set_path("");
   file->set_source("tmdb");
   file->set_name("test");
   file->set_format(".png");
@@ -64,12 +63,31 @@ void test_export_corpus_zip() {
   std::list<shared_ptr<File>> files;
   files.push_back(file);
   shared_ptr<File> file2 =
-      std::make_shared<File>(File("", "test2", 100, "twitter", ".txt"));
+      std::make_shared<File>(File("null", "test2", 100, "twitter", ".txt"));
   storage.store_file(file2);
   files.push_back(file2);
-  Corpus corpus = Corpus("corpus_test", files, "");
-  string path = corpus.export_(ExportMethod::methods::ZIP);
-  Assertion::assert_true(__FUNCTION__, std::filesystem::exists(path));
+  logger::set_level(logger::DEBUG);
+  for (auto &file : files) {
+    file->insert(HarvesterDatabase::init());
+  }
+  Corpus corpus = Corpus("corpus_test", files, "something");
+  corpus.insert(HarvesterDatabase::init());
+  corpus.export_(ExportMethod::methods::ZIP);
+  std::string new_extraction_path =
+      storage.get_corpus_path() + std::to_string(corpus.get_id()) + ".zip";
+  Assertion::assert_equals(__FUNCTION__, new_extraction_path,
+                           corpus.get_extraction_path());
+  Assertion::assert_true(__FUNCTION__,
+                         std::filesystem::exists(corpus.get_extraction_path()));
+
+  sql::PreparedStatement *prep_stmt;
+  sql::ResultSet *res;
+  prep_stmt = HarvesterDatabase::init()->prepareStatement(GET_CORPUS_FROM_ID);
+  prep_stmt->setInt(1, corpus.get_id());
+  res = prep_stmt->executeQuery();
+  res->next();
+  Assertion::assert_equals(__FUNCTION__, new_extraction_path,
+                           res->getString("extraction_path"));
 }
 
 void storage_test() {

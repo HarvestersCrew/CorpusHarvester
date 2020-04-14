@@ -1,6 +1,7 @@
 #ifndef CORPUSHARVESTER_CORPUS_H
 #define CORPUSHARVESTER_CORPUS_H
 
+#include "database/harvester_database.h"
 #include "file.h"
 #include "indexation/file.h"
 #include "storage/export_method.h"
@@ -16,10 +17,12 @@
   "CREATE TABLE IF NOT EXISTS Corpus(id INTEGER NOT NULL "                     \
   "AUTO_INCREMENT,title "                                                      \
   "TEXT NOT NULL,creation_date TIMESTAMP NOT NULL DEFAULT NOW(),filters TEXT " \
-  "NOT NULL, PRIMARY "                                                         \
+  "NOT NULL, extraction_path TEXT, PRIMARY "                                   \
   "KEY (id));"
 #define INSERT_CORPUS_STATEMENT                                                \
-  "INSERT INTO Corpus (title, filters) VALUES(?, ?)"
+  "INSERT INTO Corpus (title, filters, extraction_path) VALUES(?, ?, ?)"
+#define UPDATE_CORPUS_EXTRACTION_PATH                                          \
+  "UPDATE Corpus SET extraction_path = ? WHERE id = ?;"
 #define DROP_CORPUS_STATEMENT "DROP TABLE IF EXISTS Corpus;"
 
 #define CORPUS_FILES_CREATE_STATEMENT                                          \
@@ -73,6 +76,11 @@ private:
    */
   std::string _used_filters;
 
+  /**
+   * The path where the corpus archive is stored
+   */
+  std::string _extraction_path;
+
   static unordered_map<ordering_method, string> _ordering_queries;
 
 public:
@@ -118,22 +126,14 @@ public:
 
   void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
-  std::string export_(ExportMethod::methods method) const;
+  void export_(ExportMethod::methods method);
 
-  /**
-   * Get the title of the corpus.
-   * @return std::string the title of the corpus.
-   */
+  void update_extraction_path();
+
   std::string get_title() const { return _title; }
-
-  /**
-   * Set a title to the corpus.
-   * @param title std::string the new name of the copus.
-   */
+  std::string get_extraction_path() const { return _extraction_path; }
   void set_title(const std::string title) { _title = title; }
-
   bool has_file() { return !_files.empty(); }
-
   virtual int get_id() const { return this->_id; };
 
   /**

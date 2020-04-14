@@ -91,7 +91,8 @@ int ManagerRequest::create_corpus(const string &name,
 string ManagerRequest::export_corpus(const int id,
                                      ExportMethod::methods method) const {
   const auto corpus = this->get_corpus_from_id(id);
-  return corpus->export_(method);
+  corpus->export_(method);
+  return corpus->get_extraction_path();
 }
 
 string ManagerRequest::export_corpus(const int id, const string &method) const {

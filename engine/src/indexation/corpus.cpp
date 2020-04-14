@@ -12,22 +12,23 @@ Corpus::Corpus() {}
 Corpus::Corpus(std::string title, std::list<shared_ptr<File>> files,
                std::string used_filters, int id)
     : DatabaseItem(id), _title(title), _files(files),
-      _used_filters(used_filters) {}
+      _used_filters(used_filters), _extraction_path(" ") {}
 
 Corpus::Corpus(std::string title, int id)
-    : DatabaseItem(id), _title(title), _files(), _used_filters("") {}
+    : DatabaseItem(id), _title(title), _files(), _used_filters(" "),
+      _extraction_path("") {}
 
 std::string Corpus::header_string() const {
   std::ostringstream out;
   out << "Corpus{_id=" << _id << ", _title=" << _title
-      << ", _creation_date=" << _creation_date << "}";
+      << ", _creation_date=" << _creation_date
+      << ", _extraction_path=" << _extraction_path << "}";
   return out.str();
 }
 
 std::string Corpus::to_string() const {
   std::ostringstream out;
-  out << "Corpus{_id=" << _id << ", _title=" << _title
-      << ", _creation_date=" << _creation_date << ", _files=[\n";
+  out << header_string() << ", _files=[\n";
   for (auto &file : _files) {
     out << file->to_string() << "\n";
   }
@@ -41,6 +42,7 @@ bool Corpus::insert(sql::Connection *db) {
   prep_stmt = db->prepareStatement(INSERT_CORPUS_STATEMENT);
   prep_stmt->setString(1, _title);
   prep_stmt->setString(2, _used_filters);
+  prep_stmt->setString(3, _extraction_path);
   prep_stmt->execute();
 
   this->_id = DatabaseItem::get_last_inserted_id(db);
@@ -76,6 +78,7 @@ void Corpus::fill_attribute_from_statement(sql::ResultSet *res) {
   this->_title = res->getString("title");
   this->_creation_date = res->getString("creation_date");
   this->_used_filters = res->getString("filters");
+  this->_extraction_path = res->getString("extraction_path");
 }
 
 void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
@@ -154,6 +157,20 @@ Corpus::get_corpus_from_name(sql::Connection *db, const std::string str,
   return corpuses;
 }
 
-string Corpus::export_(ExportMethod::methods method) const {
-  return ExportMethod::compressed_export(_files, std::to_string(_id), method);
+void Corpus::export_(ExportMethod::methods method) {
+  if (_extraction_path == " ") {
+    _extraction_path =
+        ExportMethod::compressed_export(_files, std::to_string(_id), method);
+    update_extraction_path();
+  }
+}
+
+void Corpus::update_extraction_path() {
+  sql::PreparedStatement *prep_stmt;
+  prep_stmt = HarvesterDatabase::init()->prepareStatement(
+      UPDATE_CORPUS_EXTRACTION_PATH);
+  prep_stmt->setString(1, _extraction_path);
+  prep_stmt->setInt(2, _id);
+  prep_stmt->executeQuery();
+  delete prep_stmt;
 }
