@@ -123,9 +123,21 @@ public:
   void add_option(const string &name, const string &description,
                   bool is_option_bool);
 
+  /**
+   * @throw cli_parser_exception if command isn't found
+   */
   cli_command &get_command(const string &name);
+  /**
+   * @throw cli_parser_exception if option isn't found
+   */
   cli_command &get_option(const string &name);
+  /**
+   * @throw cli_parser_exception if command isn't found
+   */
   const cli_command &get_command(const string &name) const;
+  /**
+   * @throw cli_parser_exception if option isn't found
+   */
   const cli_command &get_option(const string &name) const;
   const map<string, cli_command> &get_commands() const;
   const map<string, cli_command> &get_options() const;

@@ -159,6 +159,8 @@ cli_parser::parse_terminal(const cli_command &root,
                            const vector<string> &cli_args) {
   map<string, string> string_args;
   map<string, bool> bool_args;
+  vector<pair<string, string>> undefined_args;
+
   const auto &available_options = root.get_options();
 
   for (const auto &el : available_options) {
@@ -176,12 +178,17 @@ cli_parser::parse_terminal(const cli_command &root,
     }
 
     string option_name = cli_args.at(i).substr(2);
-    const cli_command &option = root.get_option(option_name);
 
-    if (option.is_option_bool()) {
-      bool_args.at(option_name) = true;
-    } else {
-      string_args.insert_or_assign(option_name, cli_args.at(i + 1));
+    try {
+      const cli_command &option = root.get_option(option_name);
+      if (option.is_option_bool()) {
+        bool_args.at(option_name) = true;
+      } else {
+        string_args.insert_or_assign(option_name, cli_args.at(i + 1));
+        ++i;
+      }
+    } catch (const cli_parser_exception &e) {
+      undefined_args.push_back(make_pair(option_name, cli_args.at(i + 1)));
       ++i;
     }
   }
