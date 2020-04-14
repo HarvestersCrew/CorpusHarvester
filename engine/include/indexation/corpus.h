@@ -10,6 +10,7 @@
 #include <list>
 #include <memory>
 #include <mysql_connection.h>
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -79,7 +80,7 @@ private:
   /**
    * The path where the corpus archive is stored
    */
-  std::string _extraction_path;
+  std::optional<std::string> _extraction_path;
 
   static unordered_map<ordering_method, string> _ordering_queries;
 
@@ -131,7 +132,7 @@ public:
   void update_extraction_path();
 
   std::string get_title() const { return _title; }
-  std::string get_extraction_path() const { return _extraction_path; }
+  optional<std::string> get_extraction_path() const { return _extraction_path; }
   void set_title(const std::string title) { _title = title; }
   bool has_file() { return !_files.empty(); }
   virtual int get_id() const { return this->_id; };

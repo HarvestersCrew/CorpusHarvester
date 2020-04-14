@@ -77,9 +77,10 @@ void test_export_corpus_zip() {
   std::string new_extraction_path =
       storage.get_corpus_path() + std::to_string(corpus.get_id()) + ".zip";
   Assertion::assert_equals(__FUNCTION__, new_extraction_path,
-                           corpus.get_extraction_path());
-  Assertion::assert_true(__FUNCTION__,
-                         std::filesystem::exists(corpus.get_extraction_path()));
+                           corpus.get_extraction_path().value_or(""));
+  Assertion::assert_true(
+      __FUNCTION__,
+      std::filesystem::exists(corpus.get_extraction_path().value_or("")));
 
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
