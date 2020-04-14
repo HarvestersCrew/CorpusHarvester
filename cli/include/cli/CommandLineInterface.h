@@ -49,10 +49,23 @@ private:
    */
   void show_help_menu();
 
+  //
+  // API MANAGER
+  //
+
   /**
    * Manage the api request.
    */
   void api_manager();
+
+  /**
+   * Create a new API.
+   */
+  void create_api();
+
+  //
+  // CORPUS MANAGER
+  //
 
   /**
    * Manage the corpus request.
@@ -61,6 +74,7 @@ private:
 
   /**
    * See a corpus by his id
+   * Method : ./bin/cli corpus id --id "1234"
    */
   void corpus_by_id();
 
@@ -72,21 +86,30 @@ private:
 
   /**
    * Create a new corpus.
-   * Methode : ./bin/cli corpus create
+   * Method : ./bin/cli corpus create --name "Name of my corpus"
    */
   void corpus_create();
 
-  /**
-   * Show all the corpus created
-   *
-   * @return list of corpus
-   */
-  std::list<Corpus *> list_corpus();
+  //
+  // FILES MANAGER
+  //
 
   /**
-   * Create a new API.
+   * Manage the files request.
    */
-  void create_api();
+  void files_manager();
+
+  /**
+   * List of files present in the database.
+   * Method : ./bin/cli files list
+   */
+  void files_list();
+
+  /**
+   * Get a file by his id
+   * Method : ./bin/cli files id --id "mon_id"
+   */
+  void files_by_id();
 
 public:
   /**

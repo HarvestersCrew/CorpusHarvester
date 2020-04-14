@@ -103,6 +103,13 @@ public:
   int create_corpus(const string &name, const list<shared_ptr<File>> &files,
                     const optional<ApiDatabaseBuilder> &builder);
 
+  /**
+   * Get a file from his id.
+   * @param id of the file in the database.
+   * @return The desired file.
+   */
+  std::optional<shared_ptr<File>> get_file_from_id(const int id) const;
+
   /*
    * ------------------------------------------
    * METHODS RELATING TO WEB APIS INFORMATIONS

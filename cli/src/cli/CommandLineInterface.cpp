@@ -78,7 +78,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   cli_command &idFiles =
       filesCommand.add_command("id", "Search a file based on his id.");
 
-  // Get a corpus bsaed on his id
+  // Get a corpus based on his id
   idFiles.add_option("id", "Id of a specific file.", false);
 
   // Transform our array to a vector of string
@@ -98,7 +98,7 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
 void CommandLineInterface::corpus_by_id() {
   logger::debug("Search corpus by his ID");
 
-  // Check if we have a value for the name
+  // Check if we have a value for the id
   map<string, string>::iterator itSubCommand = this->string_inputs.find("id");
 
   if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
@@ -302,6 +302,75 @@ void CommandLineInterface::corpus_manager() {
   }
 }
 
+void CommandLineInterface::files_list() {
+  // TODO ::
+  exit(0);
+}
+
+void CommandLineInterface::files_by_id() {
+  logger::debug("Search files by his ID");
+
+  // Check if we have a value for the id
+  map<string, string>::iterator itSubCommand = this->string_inputs.find("id");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    // Get the value of the id
+    string idString = this->string_inputs.find("id")->second;
+    string::size_type sz;
+    int id = 0;
+
+    try {
+      id = std::stoi(idString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input id is not an integer ! Please check your input.");
+      exit(-1);
+    }
+
+    // Check if the input and the transform have the same size
+    if (sz == idString.length()) {
+      logger::debug("The id is OK");
+
+      // Search the corpus in our database
+      ManagerRequest managerRequest;
+      std::optional<shared_ptr<File>> file =
+          managerRequest.get_file_from_id(id);
+
+      // Check the answer
+      if (file.has_value()) {
+        cout << file.value()->to_string() << endl;
+      } else {
+        logger::info("No file have been found for the id : " +
+                     std::to_string(id));
+      }
+      exit(0);
+
+    } else {
+      logger::error("The input id contains a non valid character. Please, "
+                    "check your input.");
+      exit(-1);
+    }
+
+  } else {
+    logger::debug("we have no id");
+    exit(-1);
+  }
+}
+
+void CommandLineInterface::files_manager() {
+
+  logger::debug("Files method.");
+
+  // Check if we want to list the corpus
+  if (std::find(this->commands.begin(), this->commands.end(), "list") !=
+      this->commands.end()) {
+    this->files_list();
+  } else if (std::find(this->commands.begin(), this->commands.end(), "id") !=
+             this->commands.end()) {
+    this->files_by_id();
+  }
+}
+
 void CommandLineInterface::api_manager() {
   ManagerRequest mr;
   logger::debug("Apis method.");
@@ -401,6 +470,9 @@ void CommandLineInterface::run() {
   if (std::find(this->commands.begin(), this->commands.end(), "corpus") !=
       this->commands.end()) {
     this->corpus_manager();
+  } else if (std::find(this->commands.begin(), this->commands.end(), "files") !=
+             this->commands.end()) {
+    this->files_manager();
   } else if (std::find(this->commands.begin(), this->commands.end(), "apis") !=
              this->commands.end()) {
     this->api_manager();

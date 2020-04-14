@@ -87,6 +87,12 @@ int ManagerRequest::create_corpus(const string &name,
   return corpus.get_id();
 }
 
+std::optional<shared_ptr<File>>
+ManagerRequest::get_file_from_id(const int id) const {
+  // TODO :: Get a file from the database by his id
+  return std::nullopt;
+}
+
 /*
  * ------------------------------------------
  * METHODS RELATING TO WEB APIS INFORMATIONS
