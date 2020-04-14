@@ -102,7 +102,8 @@ export default {
       drawer: true,
       items: [
         { title: "Files", icon: "mdi-pencil" },
-        { title: "Corpus", icon: "mdi-file" }
+        { title: "Corpus", icon: "mdi-file" },
+        { title: "Logs", icon: "mdi-clipboard-alert" }
       ],
       items2: [
         { title: "Settings", icon: "mdi-settings" },
