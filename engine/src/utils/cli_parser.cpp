@@ -13,10 +13,6 @@ cli_command &cli_command::add_command(const string &name,
   if (this->_is_option) {
     throw cli_parser_exception("Can't add a subcommand to an option");
   }
-  if (this->_options.size() > 0) {
-    throw cli_parser_exception(
-        "Can't add a subcommand as it already has options");
-  }
   if (this->_commands.find(name) != this->_commands.end()) {
     throw cli_parser_exception("Can't add subcommand '" + name +
                                "' because it already exists");
@@ -31,10 +27,6 @@ void cli_command::add_option(const string &name, const string &description,
   if (this->_is_option) {
     throw cli_parser_exception("Can't add an option to an option");
   }
-  // if (this->_commands.size() > 0) {
-  //   throw cli_parser_exception(
-  //       "Can't add an option as it already has commands");
-  // }
   if (this->_options.find(name) != this->_options.end()) {
     throw cli_parser_exception("Can't add option '" + name +
                                "' because it already exists");
@@ -130,7 +122,15 @@ cli_parser::parse(const cli_command &root, vector<string> cli_args) {
 
   try {
 
-    if (root.is_terminal()) {
+    bool is_next_param_option = false;
+    try {
+      string next_param = cli_args.at(0);
+      string first_two = next_param.substr(0, 2);
+      is_next_param_option = first_two == "--";
+    } catch (const std::out_of_range &e) {
+    }
+
+    if (root.is_terminal() || is_next_param_option) {
       auto res = cli_parser::parse_terminal(root, cli_args);
       return make_tuple(vector<string>(), res.first, res.second);
     } else {
