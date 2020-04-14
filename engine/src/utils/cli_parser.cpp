@@ -171,7 +171,8 @@ cli_parser::parse_terminal(const cli_command &root,
 
     string first_two = cli_args.at(i).substr(0, 2);
     if (first_two != "--") {
-      throw cli_parser_exception("Unexpected parameter not preceded by --");
+      throw cli_parser_bad_parse_exception(
+          "Unexpected parameter not preceded by --");
     }
 
     string option_name = cli_args.at(i).substr(2);

@@ -24,11 +24,7 @@ void test_cli_parser_add_command() {
   Assertion::assert_equals(__FUNCTION__, &child,
                            &(root.get_command("subcommand")));
   child.add_option("option", "desc", false);
-  try {
-    child.add_command("wrong_command", "desc");
-    Assertion::assert_throw(__FUNCTION__, "cli_parser_exception");
-  } catch (const cli_parser_exception &e) {
-  }
+  child.add_command("wrong_command", "desc");
 
   cli_command option("init_option", "desc", true, false);
   try {
@@ -47,11 +43,7 @@ void test_cli_parser_add_command() {
 void test_cli_parser_add_option() {
   cli_command root("initial", "my description");
   root.add_command("command", "desc");
-  try {
-    root.add_option("wrong_option", "desc", false);
-    Assertion::assert_throw(__FUNCTION__, "cli_parser_exception");
-  } catch (const cli_parser_exception &e) {
-  }
+  root.add_option("option", "desc", false);
 
   cli_command root2("initial", "my description");
   root2.add_option("option", "desc", false);
@@ -87,6 +79,7 @@ void test_cli_parser_parser() {
   }
 
   root.add_command("subcommand1", "subcommand1 desc");
+  root.add_option("option4", "option4 at root", false);
   cli_command &sub2 = root.add_command("subcommand2", "subcommand2 desc");
   sub2.add_option("option1", "option1 desc", true);
   sub2.add_option("option2", "option2 desc", false);
@@ -97,6 +90,21 @@ void test_cli_parser_parser() {
     Assertion::assert_throw(__FUNCTION__, "cli_parser_help_asked_exception");
   } catch (const cli_parser_help_asked_exception &e) {
   }
+
+  std::cout << "trying new example" << std::endl;
+
+  try {
+    cli_parser::parse(root,
+                      vector<string>{"--option4", "value", "subcommand1"});
+    Assertion::assert_throw(__FUNCTION__, "cli_parser_bad_parse_exception");
+  } catch (const cli_parser_bad_parse_exception &e) {
+  }
+
+  std::tie(subcommands, string_args, bool_args) =
+      cli_parser::parse(root, vector<string>({"--option4", "val"}));
+  Assertion::assert_equals(__FUNCTION__, 0, subcommands.size());
+  Assertion::assert_equals(__FUNCTION__, 1, string_args.size());
+  Assertion::assert_equals(__FUNCTION__, 0, bool_args.size());
 
   std::tie(subcommands, string_args, bool_args) = cli_parser::parse(
       root, vector<string>({"subcommand2", "--option2", "value", "--option1"}));
