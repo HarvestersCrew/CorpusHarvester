@@ -6,13 +6,13 @@
  * ------------------------------------------
  */
 
-std::list<shared_ptr<Corpus>>
-ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
+list<shared_ptr<Corpus>>
+ManagerRequest::get_corpuses(std::map<string, string> &filters,
                              Corpus::ordering_method order) const {
 
-  std::map<std::string, std::string>::iterator it;
+  std::map<string, string>::iterator it;
 
-  std::list<shared_ptr<Corpus>> corpuses;
+  list<shared_ptr<Corpus>> corpuses;
 
   // Get the indexer
   sql::Connection *db = HarvesterDatabase::init();
@@ -40,8 +40,8 @@ ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
   return corpuses;
 }
 
-std::list<shared_ptr<Corpus>>
-ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
+list<shared_ptr<Corpus>>
+ManagerRequest::get_corpuses(std::map<string, string> &filters,
                              const string &order) const {
   Corpus::ordering_method order_parsed = Corpus::ordering_method::NONE;
   if (order == "date_asc") {
@@ -57,15 +57,15 @@ ManagerRequest::get_corpuses(std::map<std::string, std::string> &filters,
 }
 
 list<shared_ptr<Corpus>> ManagerRequest::get_corpuses() const {
-  return Corpus::get_all_corpuses(HarvesterDatabase::init(),
-                                  Corpus::ordering_method::NONE);
+  std::map<string, string> empty;
+  return this->get_corpuses(empty, Corpus::ordering_method::NONE);
 }
 
 list<shared_ptr<Corpus>>
-ManagerRequest::get_corpus_from_name(std::string name) {
+ManagerRequest::get_corpus_from_name(string name) const {
   logger::debug("Search corpus : " + name);
-  return Corpus::get_corpus_from_name(HarvesterDatabase::init(), name,
-                                      Corpus::ordering_method::NONE);
+  std::map<string, string> search{{"title", name}};
+  return this->get_corpuses(search, Corpus::ordering_method::NONE);
 }
 
 std::optional<shared_ptr<Corpus>>
@@ -138,8 +138,7 @@ void ManagerRequest::api_builder_clear(bool is_web) {
 }
 
 long unsigned int
-ManagerRequest::api_builder_add_request(bool is_web,
-                                        const std::string &api_name) {
+ManagerRequest::api_builder_add_request(bool is_web, const string &api_name) {
   ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
   return builder.add_request(api_name);
 }

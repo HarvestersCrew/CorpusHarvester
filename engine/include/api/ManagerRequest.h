@@ -53,11 +53,10 @@ public:
    * @param filters Filters for the corpus research.
    * @param orders Indicate how to order our corpus.
    *
-   * @return std::list<Corpus> List of all the corpus.
+   * @return list<Corpus> List of all the corpus.
    */
-  std::list<shared_ptr<Corpus>>
-  get_corpuses(std::map<std::string, std::string> &filters,
-               Corpus::ordering_method order) const;
+  list<shared_ptr<Corpus>> get_corpuses(std::map<string, string> &filters,
+                                        Corpus::ordering_method order) const;
 
   /**
    * @see get_corpuses above
@@ -69,9 +68,8 @@ public:
    * "none"
    * By default it is "none"
    */
-  std::list<shared_ptr<Corpus>>
-  get_corpuses(std::map<std::string, std::string> &filters,
-               const string &order) const;
+  list<shared_ptr<Corpus>> get_corpuses(std::map<string, string> &filters,
+                                        const string &order) const;
 
   /**
    * Retrieves all the corpuses
@@ -84,7 +82,7 @@ public:
    * @param name Corpus' name we want to visualized.
    * @return List of corpuses
    */
-  list<shared_ptr<Corpus>> get_corpus_from_name(const std::string name);
+  list<shared_ptr<Corpus>> get_corpus_from_name(const string name) const;
 
   /**
    * Get a corpus from his id.
@@ -177,7 +175,7 @@ public:
    * @throw api_no_setting_exception if a parameter isn't found
    */
   long unsigned int api_builder_add_request(bool is_web,
-                                            const std::string &api_name);
+                                            const string &api_name);
 
   /**
    * Inserts or replace a parameter value and operator in the request defined by
