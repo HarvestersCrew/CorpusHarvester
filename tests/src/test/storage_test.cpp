@@ -44,8 +44,8 @@ void test_store_one_file() {
   Assertion::assert_equals(__FUNCTION__, expected_destination, file_dest);
   Assertion::assert_equals(__FUNCTION__, expected_path, file->get_path());
   Assertion::assert_equals(__FUNCTION__, expected_name, file->get_name());
-  std::string ls = exec("cat " + expected_destination);
-  Assertion::assert_equals(__FUNCTION__, content + "\n", ls);
+  std::string cat = exec("cat " + expected_destination);
+  Assertion::assert_equals(__FUNCTION__, content + "\n", cat);
 }
 
 void test_export_methods() {
