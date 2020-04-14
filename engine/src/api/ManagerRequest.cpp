@@ -92,7 +92,11 @@ string ManagerRequest::export_corpus(const int id,
                                      ExportMethod::methods method) const {
   const auto corpus = this->get_corpus_from_id(id);
   corpus->export_(method);
-  return corpus->get_extraction_path();
+  if (!corpus->get_extraction_path) {
+    throw manager_request_unhandled_exception(
+        "No corpus exportation path even though there should be one");
+  }
+  return corpus->get_extraction_path().value();
 }
 
 string ManagerRequest::export_corpus(const int id, const string &method) const {
@@ -102,6 +106,12 @@ string ManagerRequest::export_corpus(const int id, const string &method) const {
   }
   return this->export_corpus(id, method_parsed);
 }
+
+/*
+ * ------------------------------------------
+ * METHODS RELATING TO FILES
+ * ------------------------------------------
+ */
 
 std::optional<shared_ptr<File>>
 ManagerRequest::get_file_from_id(const int id) const {

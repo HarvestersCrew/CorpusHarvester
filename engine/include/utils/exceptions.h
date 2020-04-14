@@ -222,4 +222,10 @@ public:
       : ExceptionWrapper("ID not found in DB", "db_id_not_found") {}
 };
 
+class manager_request_unhandled_exception : public ExceptionWrapper {
+public:
+  manager_request_unhandled_exception(const string &msg)
+      : ExceptionWrapper(msg, "manager_request_unhandled_exception") {}
+};
+
 #endif

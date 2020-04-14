@@ -119,8 +119,16 @@ public:
    * "zip" by default
    * @return Path to the exported corpus
    * @throw db_id_not_found if corpus wasn't found
+   * @throw manager_request_unhandled_exception if no exportation path is found
+   * after the exportation, shouldn't happen
    */
   string export_corpus(const int id, const string &method) const;
+
+  /*
+   * ------------------------------------------
+   * METHODS RELATING TO FILES
+   * ------------------------------------------
+   */
 
   /**
    * Get a file from his id.
