@@ -31,8 +31,10 @@
 
 #define API_LOADER_SCHEMA_NAME "api_schema.json"
 
+using nlohmann::json;
 using std::list;
 using std::make_shared;
+using std::optional;
 using std::pair;
 using std::shared_ptr;
 using std::string;
@@ -59,46 +61,46 @@ public:
   /** Enum used to define the type of the main API value */
   enum api_type { TEXT, IMAGE };
 
-  std::string get_name() const;
+  string get_name() const;
 
 private:
   /** Base URL of the API to call queries on */
-  std::string _url;
+  string _url;
 
   /** HTTP method to execute queries */
-  std::string _method;
+  string _method;
 
   /** Name of the API */
-  std::string _name;
+  string _name;
 
   /** API type */
   api_type _api_type;
 
   /** API main response value */
-  std::string _response_main_item;
+  string _response_main_item;
 
   /** Path to an array of objects in resulting JSON */
-  std::vector<std::string> _path_to_results;
+  vector<string> _path_to_results;
 
   /** List of parameters used in requests */
-  std::vector<shared_ptr<api_parameter_request>> _requests;
+  vector<shared_ptr<api_parameter_request>> _requests;
 
   /** List of responses from a query */
-  std::vector<shared_ptr<api_parameter_response>> _responses;
+  vector<shared_ptr<api_parameter_response>> _responses;
 
   /** Number of characters to truncate at the start of the response to parse it
    */
-  std::optional<int> _truncate_before;
+  optional<int> _truncate_before;
 
   /** Number of characters to truncate at the end of the response to parse it */
-  std::optional<int> _truncate_after;
+  optional<int> _truncate_after;
 
   /**
    * Takes a JSON describing the API, checks against the defined schema and
    * insert it in the object
    * @param j JSON of the API to load into the object
    */
-  void init(const nlohmann::json &j);
+  void init(const json &j);
 
   /**
    * Gets the full path of the API schema
@@ -123,7 +125,7 @@ private:
    * @param api_result given value by the API
    * @param file_to_save_to file to save results to
    */
-  void manage_text(const std::string &api_result,
+  void manage_text(const string &api_result,
                    shared_ptr<File> file_to_save_to) const;
 
   /**
@@ -134,7 +136,7 @@ private:
    * @param file_to_save_to file to save results to
    * @param dl download manager
    */
-  void manage_media(const std::string &path_api,
+  void manage_media(const string &path_api,
                     const shared_ptr<const api_parameter_response> param,
                     shared_ptr<File> file_to_save_to,
                     const download_manager &dl) const;
@@ -151,45 +153,44 @@ public:
    * Creates the object from a JSON describing the API
    * @param j JSON of the API
    */
-  api_loader(const nlohmann::json &j);
+  api_loader(const json &j);
 
   /**
    * Creates the object from a JSON describing the API at schema_path
-   * @param schema_path path to the JSON file (pass it as std::string, not a C
+   * @param schema_path path to the JSON file (pass it as string, not a C
    * char string)
    */
-  api_loader(const std::string &schema_path);
+  api_loader(const string &schema_path);
 
   /**
    * Creates the object from a JSON describing the API at schema_path and loads
    * additionnal default values from default_values_path
-   * @param schema_path path to the JSON file (pass it as std::string, not a C
+   * @param schema_path path to the JSON file (pass it as string, not a C
    * char string)
    * @param default_values_path path to the JSON file
    */
-  api_loader(const std::string &schema_path,
-             const std::string &default_values_path);
+  api_loader(const string &schema_path, const string &default_values_path);
 
   /**
    * Serializes the API informations to a JSON
    * @return JSON of the API
    */
-  nlohmann::json serialize() const;
+  json serialize() const;
 
   /**
    * @param key key of the default value
    * @param val default value to set
    */
-  void set_parameter_request_default_value(const std::string &key,
-                                           const std::string &val);
+  void set_parameter_request_default_value(const string &key,
+                                           const string &val);
 
   /**
    * Returns a string to print the object
    */
-  std::string to_string() const;
+  string to_string() const;
 
   /** Gets the official string of the API type used in JSON */
-  std::string get_api_type_string() const;
+  string get_api_type_string() const;
 
   /** Gets the enum value representing the API type */
   api_loader::api_type get_api_type() const;
@@ -198,41 +199,41 @@ public:
    * Queries and parses
    * @param params map parameters to insert in place of the default ones
    * @param dl download manager
-   * @return std::list<shared_ptr<File>> Parsed response suitable for the
+   * @return list<shared_ptr<File>> Parsed response suitable for the
    * Harvester
    */
-  std::list<shared_ptr<File>>
+  list<shared_ptr<File>>
   query_and_parse(const unordered_map<string, string> &params,
                   const download_manager &dl) const;
 
   /**
    * Gets a request parameter named as
    * @param name API name to search for
-   * @return std::optional<api_parameter_request *> optional containing maybe
+   * @return optional<api_parameter_request *> optional containing maybe
    * the parameter pointer
    */
-  std::optional<shared_ptr<api_parameter_request>>
-  find_request_parameter(const std::string &name) const;
+  optional<shared_ptr<api_parameter_request>>
+  find_request_parameter(const string &name) const;
 
   /**
    * Gets a response parameter named as
    * @param name API name to search for
-   * @return std::optional<api_parameter_request *> optional containing maybe
+   * @return optional<api_parameter_request *> optional containing maybe
    * the parameter pointer
    */
-  std::optional<shared_ptr<api_parameter_response>>
-  find_response_parameter(const std::string &name) const;
+  optional<shared_ptr<api_parameter_response>>
+  find_response_parameter(const string &name) const;
 
   /**
    * Gets vector of available request parameters
    */
-  const std::vector<shared_ptr<api_parameter_request>> &
+  const vector<shared_ptr<api_parameter_request>> &
   get_request_parameters() const;
 
   /**
    * Gets vector of available response parameters
    */
-  const std::vector<shared_ptr<api_parameter_response>> &
+  const vector<shared_ptr<api_parameter_response>> &
   get_response_parameters() const;
 };
 
