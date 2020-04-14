@@ -150,6 +150,6 @@ Corpus::get_corpus_from_name(sql::Connection *db, const std::string str,
   return corpuses;
 }
 
-string Corpus::export_(ExportMethod *export_method) {
+string Corpus::export_(shared_ptr<ExportMethod> export_method) {
   return export_method->compressed_export(_files, std::to_string(_id));
 }

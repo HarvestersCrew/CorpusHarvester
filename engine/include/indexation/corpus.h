@@ -117,7 +117,7 @@ public:
 
   void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
 
-  std::string export_(ExportMethod *export_method);
+  std::string export_(shared_ptr<ExportMethod> export_method);
 
   /**
    * Get the title of the corpus.
