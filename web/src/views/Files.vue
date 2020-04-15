@@ -22,7 +22,7 @@
               v-model="filters.selectedSources"
               :items="$store.state.apis"
               item-text="name"
-              item-value="name"
+              return-object
               label="Sources"
               dark
               outlined
@@ -57,51 +57,37 @@
             v-for="(item, i) in filters.selectedSources"
             :key="i"
           >
-            <v-expansion-panel-header>{{
-              item.api_name
-            }}</v-expansion-panel-header>
+            <v-expansion-panel-header>{{ item.name }}</v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-row>
-                <v-col
-                  cols="4"
-                  v-for="(parameter, j) in item.parameters"
-                  :key="j"
-                >
-                  <v-select
-                    v-if="parameter.type === 'select_field'"
-                    :items="parameter.options"
-                    :label="parameter.name"
-                    outlined
-                    dense
-                    hide-details
+                <template v-for="(parameter, j) in item.responses">
+                  <v-col
+                    :key="j"
+                    cols="4"
+                    v-if="
+                      parameter.value_type === 'int' ||
+                        parameter.value_type === 'string'
+                    "
                   >
-                  </v-select>
-                  <v-text-field
-                    v-if="parameter.type === 'text_field'"
-                    :label="parameter.name"
-                    outlined
-                    dense
-                    hide-details
-                  >
-                  </v-text-field>
-                  <v-menu
-                    v-if="parameter.type === 'date_field'"
-                    :close-on-content-click="false"
-                  >
-                    <template v-slot:activator="{ on }">
-                      <v-text-field
-                        :label="parameter.name"
-                        v-model="date"
-                        v-on="on"
-                        outlined
-                        dense
-                        hide-details
-                      >
-                      </v-text-field>
-                    </template>
-                    <v-date-picker v-model="date"></v-date-picker>
-                  </v-menu>
-                </v-col>
+                    <v-text-field
+                      v-if="parameter.value_type === 'int'"
+                      :label="parameter.name"
+                      outlined
+                      dense
+                      hide-details
+                      @keypress="isNumber($event)"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                      v-if="parameter.value_type === 'string'"
+                      :label="parameter.name"
+                      outlined
+                      dense
+                      hide-details
+                    >
+                    </v-text-field>
+                  </v-col>
+                </template>
               </v-row>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -117,7 +103,6 @@
             <v-col>{{ item.file_type }}</v-col>
             <v-col>{{ item.file_source }}</v-col>
             <v-col>{{ item.file_date }}</v-col>
-            <!--<v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>-->
           </v-row>
         </v-list-item-content>
         <v-list-item-icon>
@@ -127,11 +112,19 @@
       <v-divider v-if="index + 1 < files.length"></v-divider>
     </div>
 
-    <v-fab-transition>
-      <v-btn fab large fixed bottom right color="blue" dark>
-        <v-icon>mdi-check</v-icon>
-      </v-btn>
-    </v-fab-transition>
+    <v-tooltip left>
+      <template v-slot:activator="{ on }">
+        <v-fab-transition>
+          <v-btn fab large fixed bottom right color="blue" dark v-on="on">
+            <v-icon>mdi-check</v-icon>
+          </v-btn>
+        </v-fab-transition>
+      </template>
+      <span
+        >Create corpus <br />
+        with selected files</span
+      >
+    </v-tooltip>
   </Bar>
 </template>
 
@@ -178,46 +171,6 @@ export default {
           file_type: "Text",
           file_source: "TMDB",
           file_date: new Date().toISOString().substring(0, 10)
-        }
-      ],
-      types: ["Text", "Image"],
-      sources: [
-        {
-          name: "Twitter",
-          api: {
-            api_name: "Twitter",
-            parameters: [
-              {
-                name: "nb_retweets",
-                type: "select_field",
-                options: ["< 500", "> 500"]
-              },
-              {
-                name: "word",
-                type: "text_field"
-              },
-              {
-                name: "tweet_date",
-                type: "date_field"
-              },
-              {
-                name: "word2",
-                type: "text_field"
-              }
-            ]
-          }
-        },
-        {
-          name: "TMDB",
-          api: {
-            api_name: "TMDB",
-            parameters: [
-              {
-                name: "word",
-                type: "text_field"
-              }
-            ]
-          }
         }
       ],
       filters: {
