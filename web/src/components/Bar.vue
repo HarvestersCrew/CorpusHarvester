@@ -1,12 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer
-      app
-      v-model="drawer"
-      color="blue"
-      mini-variant
-      permanent
-    >
+    <v-navigation-drawer app color="blue" mini-variant permanent>
       <v-list dense nav>
         <v-list-item
           v-for="item in items"
@@ -109,7 +103,6 @@ export default {
   },
   data() {
     return {
-      drawer: true,
       items: [
         { title: "Files", icon: "mdi-pencil" },
         { title: "Corpus", icon: "mdi-file" },
