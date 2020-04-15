@@ -40,6 +40,7 @@ export default {
 }
 
 #logs {
+  overflow-y: scroll;
   padding-top: 32px;
   height: 100vh;
   background-color: #39404a;
