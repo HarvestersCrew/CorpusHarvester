@@ -40,9 +40,8 @@ export default {
 }
 
 #logs {
-  margin-top: 32px;
-  height: calc(100vh - 32px);
-  overflow-y: auto;
+  padding-top: 32px;
+  height: 100vh;
   background-color: #39404a;
   font-family: "SF Mono Powerline", "Courier New", monospace;
 }
