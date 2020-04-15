@@ -50,17 +50,21 @@ void logger::save_to_db() {
       logger::get_level()) {
     logger::_setting_level.set_value(to_string(logger::get_level()));
     logger::_setting_level.update(HarvesterDatabase::init());
+    logger::info("New logger level saved: " +
+                 _level_strings.at(logger::get_level()));
   }
   if ((logger::output)stoi(logger::_setting_output.get_value()) !=
       logger::get_output()) {
     logger::_setting_output.set_value(to_string(logger::get_output()));
     logger::_setting_output.update(HarvesterDatabase::init());
-    logger::debug("Saved logger output to DB");
+    logger::info("New logger output saved: " +
+                 _output_strings.at(logger::get_output()));
   }
   if (logger::_setting_output_path.get_value() != logger::get_output_path()) {
     logger::_setting_output_path.set_value(logger::get_output_path());
     logger::_setting_output_path.update(HarvesterDatabase::init());
-    logger::debug("Saved logger output path to DB");
+    logger::info("New logger output path saved: " +
+                 logger::get_full_output_path());
   }
 }
 
@@ -180,3 +184,13 @@ Setting logger::_setting_output;
 Setting logger::_setting_output_path;
 vector<pair<logger::level, string>> logger::_backlog;
 optional<shared_ptr<LoggerCustomOutput>> logger::custom_output = std::nullopt;
+
+unordered_map<logger::level, string> logger::_level_strings = {
+    {logger::level::DEBUG, "debug"},
+    {logger::level::INFO, "info"},
+    {logger::level::WARNING, "warning"},
+    {logger::level::ERROR, "error"},
+    {logger::level::NONE, "none"}};
+
+unordered_map<logger::output, string> logger::_output_strings = {
+    {logger::output::STDOUT, "stdout"}, {logger::output::FILE, "file"}};

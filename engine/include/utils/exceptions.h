@@ -228,4 +228,11 @@ public:
       : ExceptionWrapper(msg, "manager_request_unhandled_exception") {}
 };
 
+class manager_request_invalid_parameter : public ExceptionWrapper {
+public:
+  manager_request_invalid_parameter()
+      : ExceptionWrapper("Invalid value sent to the manager request",
+                         "manager_request_invalid_parameter") {}
+};
+
 #endif

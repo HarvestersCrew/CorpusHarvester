@@ -12,6 +12,7 @@
 #include <ostream>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -29,6 +30,7 @@ using std::stoi;
 using std::string;
 using std::stringstream;
 using std::to_string;
+using std::unordered_map;
 using std::vector;
 
 class Setting;
@@ -54,6 +56,9 @@ public:
   logger();
   enum level { DEBUG, INFO, WARNING, ERROR, NONE };
   enum output { STDOUT, FILE };
+
+  static unordered_map<level, string> _level_strings;
+  static unordered_map<output, string> _output_strings;
 
   static logger::level get_level();
   static void set_level(logger::level level);

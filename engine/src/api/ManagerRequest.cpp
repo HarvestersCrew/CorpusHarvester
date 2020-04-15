@@ -181,3 +181,60 @@ list<shared_ptr<File>> ManagerRequest::api_builder_build(bool is_web,
   ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
   return builder.build(number);
 }
+
+/*
+ * ------------------------------------------
+ * METHODS RELATING TO HARVESTER SETTINGS
+ * ------------------------------------------
+ */
+
+tuple<string, string, string> ManagerRequest::get_logger_settings() const {
+  tuple<string, string, string> res;
+  get<0>(res) = logger::_level_strings.at(logger::get_level());
+  get<1>(res) = logger::_output_strings.at(logger::get_output());
+  get<2>(res) = logger::get_output_path();
+  return res;
+}
+
+tuple<string, string, string>
+ManagerRequest::set_logger_level(const string &level) {
+  bool found = false;
+  for (const auto &assoc : logger::_level_strings) {
+    if (assoc.second == level) {
+      found = true;
+      logger::set_level(assoc.first);
+      logger::save_to_db();
+      break;
+    }
+  }
+  if (!found)
+    throw manager_request_invalid_parameter();
+  return this->get_logger_settings();
+}
+
+tuple<string, string, string>
+ManagerRequest::set_logger_output(const string &output) {
+  bool found = false;
+  for (const auto &assoc : logger::_output_strings) {
+    if (assoc.second == output) {
+      found = true;
+      logger::set_output(assoc.first);
+      logger::save_to_db();
+      break;
+    }
+  }
+  if (!found)
+    throw manager_request_invalid_parameter();
+  return this->get_logger_settings();
+}
+
+tuple<string, string, string>
+ManagerRequest::set_logger_output_path(const string &output_path) {
+  logger::set_output_path(output_path);
+  logger::save_to_db();
+  return this->get_logger_settings();
+}
+
+string ManagerRequest::get_storage_path() const {
+  return Storage().get_root_folder_name();
+}

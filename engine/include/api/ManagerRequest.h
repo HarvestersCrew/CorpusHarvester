@@ -2,6 +2,7 @@
 #define CORPUSHARVESTER_CLENT_REQUEST_H
 
 #include "database/harvester_database.h"
+#include "database/setting.h"
 #include "download/api_download_builder.h"
 #include "download/api_loader.h"
 #include "download/api_parameter.h"
@@ -21,9 +22,11 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <tuple>
 #include <unordered_map>
 #include <vector>
 
+using std::get;
 using std::list;
 using std::shared_ptr;
 using std::string;
@@ -233,6 +236,58 @@ public:
    * DownloadBuilder -> 0 = single pass over the sources
    */
   list<shared_ptr<File>> api_builder_build(bool is_web, unsigned int number);
+
+  /*
+   * ------------------------------------------
+   * METHODS RELATING TO HARVESTER SETTINGS
+   * ------------------------------------------
+   */
+
+  /**
+   * Retrieves current logger informations
+   *
+   * level: debug, info, warning, error, none
+   *
+   * method: stdout, file
+   *
+   * path: if the output method is file
+   *
+   * @return logger informations
+   */
+  tuple<string, string, string> get_logger_settings() const;
+
+  /**
+   * Set the new logger level
+   * @param level debug, info, warning, error, none
+   * @return new logger informations
+   * @see get_logger_settings
+   * @throw manager_request_invalid_parameter if the given value is invalid
+   */
+  tuple<string, string, string> set_logger_level(const string &level);
+
+  /**
+   * Set the new logger output
+   * @param output stdout, file
+   * @return new logger informations
+   * @see get_logger_settings
+   * @throw manager_request_invalid_parameter if the given value is invalid
+   */
+  tuple<string, string, string> set_logger_output(const string &output);
+
+  /**
+   * Set the new logger output path
+   * @param path path to the log file
+   * @return new logger informations
+   * @see get_logger_settings
+   * @throw logger_exception if the path is invalid
+   */
+  tuple<string, string, string>
+  set_logger_output_path(const string &output_path);
+
+  /**
+   * Gets the storage path
+   */
+  string get_storage_path() const;
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H
