@@ -27,11 +27,9 @@ In order to have access to our software, the basic method is to use :
         Example : `./bin/cli corpus list`
         Example : `./bin/cli corpus list --name "star wars"`
         
-    - `id` : Get a corpus by his id.
-        - `--id ""` : Set the id of the corpus.
+    - `--id ""` : Get a corpus by his id.
         
 - `files` : Files function.
     - `list` : List of the files.
-    - `id` : Get from his id.
-        - `--id ""` : Specify the id.
+    - `--id ""` : Get from his id.
     
