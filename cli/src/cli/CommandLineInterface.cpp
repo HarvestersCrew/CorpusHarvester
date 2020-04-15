@@ -58,12 +58,8 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   listCorpus.add_option("name", "Corpus name that you want to search.", false);
   listCorpus.add_option("order", "Set the order of the output corpus.", false);
 
-  // Get coprus based on his id.
-  cli_command &idCorpus =
-      corpusCommand.add_command("id", "Search a corpus based on his id.");
-
-  // Get a corpus bsaed on his id
-  idCorpus.add_option("id", "Id of a specific corpus.", false);
+  // Get a corpus based on his id
+  corpusCommand.add_option("id", "Id of a specific corpus.", false);
 
   //
   // Files search
@@ -75,11 +71,8 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   cli_command &listFiles =
       filesCommand.add_command("list", "List of all the files.");
 
-  cli_command &idFiles =
-      filesCommand.add_command("id", "Search a file based on his id.");
-
   // Get a corpus based on his id
-  idFiles.add_option("id", "Id of a specific file.", false);
+  filesCommand.add_option("id", "Search a file based on his id.", false);
 
   // Transform our array to a vector of string
   std::vector<string> allArgs(argv + 1, argv + argc);
@@ -289,15 +282,16 @@ void CommandLineInterface::corpus_manager() {
     this->corpus_list();
   }
 
-  if (std::find(this->commands.begin(), this->commands.end(), "id") !=
-      this->commands.end()) {
-    this->corpus_by_id();
-  }
-
   // Check if the user want to create a corpus.
   if (std::find(this->commands.begin(), this->commands.end(), "create") !=
       this->commands.end()) {
     this->corpus_create();
+  }
+
+  // Check if the user want to get a specific corpus
+  map<string, string>::iterator itSubCommand = this->string_inputs.find("id");
+  if (itSubCommand != this->string_inputs.end()) {
+    this->corpus_by_id();
   }
 }
 
@@ -364,9 +358,11 @@ void CommandLineInterface::files_manager() {
   if (std::find(this->commands.begin(), this->commands.end(), "list") !=
       this->commands.end()) {
     this->files_list();
-  } else if (std::find(this->commands.begin(), this->commands.end(), "id") !=
-             this->commands.end()) {
-    this->files_by_id();
+  } else {
+    map<string, string>::iterator itSubCommand = this->string_inputs.find("id");
+    if (itSubCommand != this->string_inputs.end()) {
+      this->files_by_id();
+    }
   }
 }
 
