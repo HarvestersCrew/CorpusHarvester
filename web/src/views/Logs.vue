@@ -4,11 +4,20 @@
       <v-icon>mdi-alert</v-icon>
       <span>Logs</span>
     </v-system-bar>
-    <div id="logs">
-      <v-list-item v-for="(log, index) in $store.state.logs" :key="index">
-        <span>[{{ index }}] > {{ log }}</span>
-      </v-list-item>
-    </div>
+    <v-container fluid class="mt-4">
+      <v-col cols="11" class="mx-auto">
+        <v-list color="#39404a" dense>
+          <v-list-item v-for="(log, index) in $store.state.logs" :key="index">
+            <v-list-item-content
+              id="logs"
+              class="grey--text text--lighten-4 text-left"
+            >
+              [{{ index }}] > {{ log }}
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-col>
+    </v-container>
   </Bar>
 </template>
 
@@ -28,15 +37,6 @@ export default {
 }
 
 #logs {
-  overflow-y: auto;
-  position: fixed;
-  background-color: #39404a;
   font-family: "SF Mono Powerline", "Courier New", monospace;
-  height: calc(100% - 32px);
-  width: 100%;
-  margin-top: 32px;
-  span {
-    color: #dcdcdc;
-  }
 }
 </style>
