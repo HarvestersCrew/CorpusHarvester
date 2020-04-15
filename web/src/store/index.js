@@ -26,6 +26,12 @@ export default new Vuex.Store({
       messages: []
     },
 
+    logger_settings: {
+      level: undefined,
+      output: undefined,
+      output_path: undefined
+    },
+
     apis: undefined
   },
   mutations: {
@@ -65,13 +71,20 @@ export default new Vuex.Store({
             state.logs.unread++;
             break;
 
+          case "get_logger_infos":
+            state.logger_settings.level = obj.data.level;
+            state.logger_settings.output = obj.data.output;
+            state.logger_settings.output_path = obj.data.output_path;
+            break;
+
           default:
             break;
         }
 
         if (obj.token !== undefined && obj.token in state.tokenized_request) {
-          // console.log("received matched token");
-          state.tokenized_request[obj.token](obj);
+          if (state.tokenized_request[obj.token] !== undefined) {
+            state.tokenized_request[obj.token](obj);
+          }
           delete state.tokenized_request[obj.token];
         }
       }

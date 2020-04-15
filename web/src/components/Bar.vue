@@ -102,6 +102,10 @@ export default {
         type: "get_apis_infos",
         data: {}
       });
+      this.$store.dispatch("send_request", {
+        type: "get_logger_infos",
+        data: {}
+      });
       this.$store.commit("set_first_init_done", true);
     }
   },
