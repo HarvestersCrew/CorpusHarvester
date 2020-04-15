@@ -80,15 +80,18 @@
       </template>
     </v-navigation-drawer>
 
-    <slot name="content_prepend"></slot>
-    <v-content>
+    <TopBar></TopBar>
+
+    <v-content style="height:100vh">
       <slot></slot>
     </v-content>
   </div>
 </template>
 
 <script>
+import TopBar from "@/components/TopBar.vue";
 export default {
+  components: { TopBar },
   beforeCreate() {
     // Will check presence in local storage of a server
     if (this.$store.state.socket.url === undefined) {
