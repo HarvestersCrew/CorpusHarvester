@@ -60,12 +60,17 @@ pair<string, json> server_handler::get_logger_infos(ConnectionData &con) {
 
 pair<string, json> server_handler::update_logger(ConnectionData &con,
                                                  const json &j) {
-  if (j.contains("level")) {
-    con._mr.set_logger_level(j.at("level").get<string>());
-  } else if (j.contains("output")) {
-    con._mr.set_logger_output(j.at("output").get<string>());
-  } else if (j.contains("output_path")) {
-    con._mr.set_logger_output_path(j.at("output_path").get<string>());
+  if (!j.contains("setting") || !j.contains("value")) {
+    throw wss_invalid_request();
+  }
+  string setting = j.at("setting").get<string>();
+  string value = j.at("value").get<string>();
+  if (setting == "level") {
+    con._mr.set_logger_level(value);
+  } else if (setting == "output") {
+    con._mr.set_logger_output(value);
+  } else if (setting == "output_path") {
+    con._mr.set_logger_output_path(value);
   }
   return get_logger_infos(con);
 }
