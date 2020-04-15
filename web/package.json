@@ -10,6 +10,7 @@
   "dependencies": {
     "@mdi/font": "^3.6.95",
     "core-js": "^3.6.4",
+    "randomstring": "^1.1.5",
     "roboto-fontface": "*",
     "vue": "^2.6.11",
     "vue-native-websocket": "^2.0.14",

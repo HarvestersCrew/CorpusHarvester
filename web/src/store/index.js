@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import router from "../router";
+import randomstring from "randomstring";
 
 Vue.use(Vuex);
 
@@ -8,18 +9,23 @@ export default new Vuex.Store({
   state: {
     home_page: "Files",
     redirect_page: undefined,
+
     socket: {
       url: undefined,
       is_connected: false,
       connecting: false,
       error: false
     },
+
+    tokenized_request: {},
+
     first_init_done: false,
 
     logs: {
       unread: 0,
       messages: []
     },
+
     apis: undefined
   },
   mutations: {
@@ -62,6 +68,12 @@ export default new Vuex.Store({
           default:
             break;
         }
+
+        if (obj.token !== undefined && obj.token in state.tokenized_request) {
+          // console.log("received matched token");
+          state.tokenized_request[obj.token](obj);
+          delete state.tokenized_request[obj.token];
+        }
       }
     },
 
@@ -79,6 +91,10 @@ export default new Vuex.Store({
 
     clear_unread_logs(state) {
       state.logs.unread = 0;
+    },
+
+    add_tokenized_request(state, { callback, token }) {
+      state.tokenized_request[token] = callback;
     }
   },
 
@@ -86,6 +102,7 @@ export default new Vuex.Store({
     send_obj: function(context, obj) {
       Vue.prototype.$socket.sendObj(obj);
     },
+
     send_request: (context, { type, data }) => {
       let obj = { request: type };
       if (Object.keys(data).length !== 0) {
@@ -93,6 +110,19 @@ export default new Vuex.Store({
       }
       context.dispatch("send_obj", obj);
     },
+
+    send_tokenized_request: (context, { type, data, callback }) => {
+      let obj = { request: type, token: randomstring.generate(7) };
+      if (Object.keys(data).length !== 0) {
+        obj["data"] = data;
+      }
+      context.commit("add_tokenized_request", {
+        callback: callback,
+        token: obj.token
+      });
+      context.dispatch("send_obj", obj);
+    },
+
     connect_server: (context, val) => {
       context.commit("set_socket_connecting", true);
       Vue.prototype.$connect("ws://" + val);
