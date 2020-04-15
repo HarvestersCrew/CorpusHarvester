@@ -8,14 +8,14 @@
       <v-col cols="12">
         <v-list color="#39404a" dense>
           <v-list-item
-            v-for="(log, index) in $store.state.logs.slice().reverse()"
+            v-for="(log, index) in $store.state.logs.messages.slice().reverse()"
             :key="index"
           >
             <v-list-item-content
               id="logs"
               class="grey--text text--lighten-4 text-left"
             >
-              [{{ $store.state.logs.length - index }}] > {{ log }}
+              [{{ $store.state.logs.messages.length - index }}] > {{ log }}
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -28,7 +28,10 @@
 import Bar from "@/components/Bar.vue";
 export default {
   name: "Logs",
-  components: { Bar }
+  components: { Bar },
+  mounted() {
+    this.$store.commit("clear_unread_logs");
+  }
 };
 </script>
 

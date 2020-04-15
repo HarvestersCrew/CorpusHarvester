@@ -15,7 +15,10 @@ export default new Vuex.Store({
     },
     first_init_done: false,
 
-    logs: [],
+    logs: {
+      unread: 0,
+      messages: []
+    },
     apis: undefined
   },
   mutations: {
@@ -46,7 +49,8 @@ export default new Vuex.Store({
             break;
 
           case "logger":
-            state.logs.push(obj.data.message);
+            state.logs.messages.push(obj.data.message);
+            state.logs.unread++;
             break;
 
           default:
@@ -61,6 +65,10 @@ export default new Vuex.Store({
 
     set_first_init_done(state, boolval) {
       state.first_init_done = boolval;
+    },
+
+    clear_unread_logs(state) {
+      state.logs.unread = 0;
     }
   },
 

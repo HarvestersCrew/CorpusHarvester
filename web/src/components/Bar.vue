@@ -17,7 +17,16 @@
           <v-list-item-icon>
             <v-tooltip right>
               <template v-slot:activator="{ on }">
-                <v-icon color="white" v-on="on">{{ item.icon }}</v-icon>
+                <v-badge
+                  :value="
+                    item.badge !== undefined && own_getter(item.badge) !== 0
+                  "
+                  color="red"
+                  overlap
+                  dot
+                >
+                  <v-icon color="white" v-on="on">{{ item.icon }}</v-icon>
+                </v-badge>
               </template>
               <span>{{ item.title }}</span>
             </v-tooltip>
@@ -103,13 +112,23 @@ export default {
       items: [
         { title: "Files", icon: "mdi-pencil" },
         { title: "Corpus", icon: "mdi-file" },
-        { title: "Logs", icon: "mdi-clipboard-alert" }
+        {
+          title: "Logs",
+          icon: "mdi-clipboard-alert",
+          badge: "unread"
+        }
       ],
       items2: [
         { title: "Settings", icon: "mdi-settings" },
         { title: "Info", icon: "mdi-information-outline" }
       ]
     };
+  },
+  methods: {
+    own_getter(type) {
+      if (type === "unread") return this.$store.state.logs.unread;
+      else return undefined;
+    }
   }
 };
 </script>
