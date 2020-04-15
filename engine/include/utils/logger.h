@@ -16,8 +16,6 @@
 #include <utility>
 #include <vector>
 
-#define LOGGER_DEFAULT_FILENAME "harvester_logs"
-
 using std::cout;
 using std::endl;
 using std::make_pair;
@@ -32,6 +30,8 @@ using std::stringstream;
 using std::to_string;
 using std::unordered_map;
 using std::vector;
+
+namespace fs = std::filesystem;
 
 class Setting;
 
@@ -70,8 +70,6 @@ public:
 
   static string get_output_path();
   static void set_output_path(string path);
-
-  static string get_full_output_path();
 
   static optional<shared_ptr<LoggerCustomOutput>> custom_output;
 

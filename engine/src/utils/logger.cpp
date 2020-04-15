@@ -26,20 +26,17 @@ void logger::set_output(const string &output) {
 
 string logger::get_output_path() { return logger::_output_path; }
 void logger::set_output_path(string path) {
-  if (path.back() != '/') {
-    path += '/';
+  const auto given_path = fs::path(path);
+  if (given_path.is_relative()) {
+    throw logger_exception("Output path must be absolute");
   }
-  if (!std::filesystem::exists(path)) {
-    string msg = "Logging path not found: " + path;
-    throw logger_exception(msg);
+  if (fs::is_directory(given_path)) {
+    throw logger_exception("Output path must specify filename");
+  }
+  if (!fs::exists(given_path.parent_path())) {
+    throw logger_exception("Output path folder structure must already exist");
   }
   logger::_output_path = path;
-}
-
-string logger::get_full_output_path() {
-  stringstream ss;
-  ss << logger::get_output_path() << LOGGER_DEFAULT_FILENAME;
-  return ss.str();
 }
 
 void logger::save_to_db() {
@@ -63,8 +60,7 @@ void logger::save_to_db() {
   if (logger::_setting_output_path.get_value() != logger::get_output_path()) {
     logger::_setting_output_path.set_value(logger::get_output_path());
     logger::_setting_output_path.update(HarvesterDatabase::init());
-    logger::info("New logger output path saved: " +
-                 logger::get_full_output_path());
+    logger::info("New logger output path saved: " + logger::get_output_path());
   }
 }
 
@@ -110,8 +106,7 @@ void logger::print_log(logger::level level, const string &msg) {
 
   if (ss.str() != "") {
     if (logger::get_output() == logger::output::FILE) {
-      ofstream f(logger::get_output_path() + LOGGER_DEFAULT_FILENAME,
-                 std::ofstream::app);
+      ofstream f(logger::get_output_path(), std::ofstream::app);
       f << ss.str() << endl;
       f.close();
     } else {
