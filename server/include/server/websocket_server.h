@@ -13,6 +13,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <ostream>
 #include <sstream>
 #include <string>
@@ -28,6 +29,8 @@ using std::make_pair;
 using std::make_shared;
 using std::map;
 using std::mutex;
+using std::nullopt;
+using std::optional;
 using std::ostream;
 using std::owner_less;
 using std::pair;
@@ -54,9 +57,10 @@ public:
   static void stop();
 
   static bool send_error_json(const connection_hdl &hdl,
-                              const ExceptionWrapper &e);
+                              const ExceptionWrapper &e,
+                              const optional<string> token);
   static bool send_json(const connection_hdl &hdl, const string &type,
-                        const json &j);
+                        const json &j, const optional<string> token);
   static void broadcast_json(const string &type, const json &j);
 
   static bool send_msg(const connection_hdl &hdl, const string &msg);
