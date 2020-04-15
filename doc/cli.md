@@ -47,3 +47,7 @@ files: Files function.
         - `--type TYPE` : type of files to find
         - `--order ORDER` : display in the specified order (name asc/desc or date asc/desc), values to pass to be defined
     - `--id ID` : displays informations about the file with the given ID
+
+## Settings
+- `list` : displays all settings and their value
+- `--setting_name VALUE` : update the setting `seting_name` with the given value
