@@ -4,7 +4,7 @@
       <v-card>
         <v-card-title>Logger settings</v-card-title>
         <v-card-text>
-          <v-form>
+          <v-form @submit.prevent="on_output_path_send">
             <v-row>
               <v-col cols="10" md="5" class="mx-auto">
                 <p class="subtitle-2 text-left">
@@ -19,7 +19,7 @@
                   class="ml-4"
                   :value="vuex_logger_level"
                   dense
-                  :disabled="vuex_logger_level === undefined || level_updating"
+                  :disabled="vuex_logger_level === undefined || level_disabled"
                   @change="on_level_change"
                 >
                   <v-radio
@@ -45,7 +45,7 @@
                   class="ml-4"
                   :value="vuex_logger_output"
                   dense
-                  :disabled="vuex_logger_output == undefined || level_updating"
+                  :disabled="vuex_logger_output == undefined || output_disabled"
                   @change="on_output_change"
                 >
                   <v-radio
@@ -64,7 +64,22 @@
                     hint="Path to the log file"
                     outlined
                     :placeholder="vuex_logger_output_path"
-                  ></v-text-field>
+                    v-model="specified_output_path"
+                    :disabled="output_path_disabled"
+                    :error-messages="output_path_error"
+                  >
+                    <template v-slot:append-outer>
+                      <v-icon
+                        @click="on_output_path_send"
+                        color="blue"
+                        :disabled="
+                          specified_output_path.length === 0 ||
+                            output_path_disabled
+                        "
+                        >mdi-send</v-icon
+                      >
+                    </template>
+                  </v-text-field>
                 </template>
               </v-col>
             </v-row>
@@ -88,8 +103,11 @@ export default {
   }),
   data() {
     return {
-      level_updating: false,
-      output_updating: false,
+      specified_output_path: "",
+      level_disabled: false,
+      output_disabled: false,
+      output_path_disabled: false,
+      output_path_error: undefined,
       logger_levels: [
         { name: "Debug", val: "debug" },
         { name: "Info", val: "info" },
@@ -105,7 +123,7 @@ export default {
   },
   methods: {
     on_level_change(new_val) {
-      this.level_updating = true;
+      this.level_disabled = true;
       this.$store.dispatch("send_tokenized_request", {
         type: "update_logger",
         data: { setting: "level", value: new_val },
@@ -113,10 +131,10 @@ export default {
       });
     },
     on_level_changed() {
-      this.level_updating = false;
+      this.level_disabled = false;
     },
     on_output_change(new_val) {
-      this.output_updating = true;
+      this.output_disabled = true;
       this.$store.dispatch("send_tokenized_request", {
         type: "update_logger",
         data: { setting: "output", value: new_val },
@@ -124,7 +142,25 @@ export default {
       });
     },
     on_output_changed() {
-      this.output_updating = false;
+      this.output_disabled = false;
+    },
+    on_output_path_send() {
+      this.output_path_disabled = true;
+      this.output_path_error = undefined;
+      this.$store.dispatch("send_tokenized_request", {
+        type: "update_logger",
+        data: { setting: "output_path", value: this.specified_output_path },
+        callback: this.on_output_path_changed
+      });
+    },
+    on_output_path_changed(data) {
+      this.output_path_disabled = false;
+      if (data.type !== undefined && data.type === "error") {
+        this.output_path_error =
+          "Invalid path. It must be an already created absolute path with the filename";
+      } else {
+        this.specified_output_path = "";
+      }
     }
   }
 };
