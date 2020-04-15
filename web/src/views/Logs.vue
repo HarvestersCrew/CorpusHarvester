@@ -5,14 +5,17 @@
       <span>Logs</span>
     </v-system-bar>
     <v-container fluid class="mt-4">
-      <v-col cols="11" class="mx-auto">
+      <v-col cols="12">
         <v-list color="#39404a" dense>
-          <v-list-item v-for="(log, index) in $store.state.logs" :key="index">
+          <v-list-item
+            v-for="(log, index) in $store.state.logs.slice().reverse()"
+            :key="index"
+          >
             <v-list-item-content
               id="logs"
               class="grey--text text--lighten-4 text-left"
             >
-              [{{ index }}] > {{ log }}
+              [{{ $store.state.logs.length - index }}] > {{ log }}
             </v-list-item-content>
           </v-list-item>
         </v-list>
