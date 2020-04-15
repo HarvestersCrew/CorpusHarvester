@@ -10,3 +10,18 @@ string ExportMethod::compressed_export(std::list<shared_ptr<File>> files,
   return ExportMethod::available_methods.at(method)->compressed_export(
       files, archive_name);
 }
+
+void ExportMethod::add_metadata(std::list<shared_ptr<File>> files,
+                                std::string tmp_path) {
+  string metadata_name = "metadata.txt";
+  string metadata_path = tmp_path + metadata_name;
+  ofstream metadata(metadata_path);
+  if (!metadata.is_open()) {
+    return;
+  }
+  for (auto &file : files) {
+    metadata << file->get_extraction_metadata() << std::endl;
+  }
+  metadata.close();
+  add_file(metadata_path, metadata_name);
+}

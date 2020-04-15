@@ -102,6 +102,12 @@ public:
   void fetch_tags(sql::Connection *db);
 
   /**
+   * Gets the metadata with the corresponding format for extraction
+   * return the formated metadata
+   */
+  std::string get_extraction_metadata();
+
+  /**
    * Adds a tag in the list of tags
    * @param name the name of the tag
    * @param value the value of the tag

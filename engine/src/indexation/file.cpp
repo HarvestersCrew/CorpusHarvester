@@ -94,6 +94,11 @@ void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   fetch_tags(db);
 }
 
+std::string File::get_extraction_metadata() {
+  // TEMPORARY
+  return _name;
+}
+
 void File::add_tag(std::string name, std::string value) {
   _tags.push_back(std::make_unique<Tag>(Tag(name, value)));
 }
