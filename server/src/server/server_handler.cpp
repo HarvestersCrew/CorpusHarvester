@@ -5,6 +5,9 @@ void server_handler::fill_available_functions(
     unordered_map<string, handler_function_no_data> &functions_no_data) {
 
   functions_no_data.emplace("get_apis_infos", &get_apis_infos);
+  functions_no_data.emplace("get_logger_infos", &get_logger_infos);
+
+  functions_data.emplace("update_logger", &update_logger);
 }
 
 pair<string, json> server_handler::dispatch_request(ConnectionData &con,
@@ -26,10 +29,43 @@ pair<string, json> server_handler::dispatch_request(ConnectionData &con,
   }
 }
 
+/**
+ * ---------------------
+ * METHODS WITHOUT DATA
+ * ---------------------
+ */
+
 pair<string, json> server_handler::get_apis_infos(ConnectionData &con) {
   json res = json::array();
   for (const auto &api : con._mr.get_api_loaders()) {
     res.push_back(api->serialize());
   }
   return make_pair("get_apis", res);
+}
+
+pair<string, json> server_handler::get_logger_infos(ConnectionData &con) {
+  const auto loggers = con._mr.get_logger_settings();
+  json j;
+  j["level"] = get<0>(loggers);
+  j["output"] = get<1>(loggers);
+  j["output_path"] = get<2>(loggers);
+  return make_pair("get_logger_infos", j);
+}
+
+/**
+ * ---------------------
+ * METHODS WITH DATA
+ * ---------------------
+ */
+
+pair<string, json> server_handler::update_logger(ConnectionData &con,
+                                                 const json &j) {
+  if (j.contains("level")) {
+    con._mr.set_logger_level(j.at("level").get<string>());
+  } else if (j.contains("output")) {
+    con._mr.set_logger_output(j.at("output").get<string>());
+  } else if (j.contains("output_path")) {
+    con._mr.set_logger_output_path(j.at("output_path").get<string>());
+  }
+  return get_logger_infos(con);
 }

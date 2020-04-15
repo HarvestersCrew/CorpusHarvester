@@ -192,7 +192,7 @@ tuple<string, string, string> ManagerRequest::get_logger_settings() const {
   tuple<string, string, string> res;
   get<0>(res) = logger::_level_strings.at(logger::get_level());
   get<1>(res) = logger::_output_strings.at(logger::get_output());
-  get<2>(res) = logger::get_output_path();
+  get<2>(res) = logger::get_full_output_path();
   return res;
 }
 
