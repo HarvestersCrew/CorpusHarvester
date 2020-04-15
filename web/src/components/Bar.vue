@@ -97,6 +97,7 @@ export default {
   beforeCreate() {
     // Will check presence in local storage of a server
     if (this.$store.state.socket.url === undefined) {
+      this.$store.commit("set_redirect_page", this.$router.currentRoute.name);
       this.$router.push("login");
     } else if (!this.$store.state.first_init_done) {
       this.$store.dispatch("send_request", {

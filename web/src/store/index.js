@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     home_page: "Files",
+    redirect_page: undefined,
     socket: {
       url: undefined,
       is_connected: false,
@@ -29,7 +30,12 @@ export default new Vuex.Store({
       state.socket.is_connected = true;
       state.socket.connecting = false;
       state.socket.error = false;
-      router.push({ name: state.home_page });
+      router.push({
+        name:
+          state.redirect_page !== undefined
+            ? state.redirect_page
+            : state.home_page
+      });
     },
     SOCKET_ONCLOSE(state) {
       state.socket.is_connected = false;
@@ -65,6 +71,10 @@ export default new Vuex.Store({
 
     set_first_init_done(state, boolval) {
       state.first_init_done = boolval;
+    },
+
+    set_redirect_page(state, val) {
+      state.redirect_page = val;
     },
 
     clear_unread_logs(state) {
