@@ -37,25 +37,30 @@ void WebsocketServer::run() {
 }
 
 bool WebsocketServer::send_error_json(const connection_hdl &hdl,
-                                      const ExceptionWrapper &e) {
+                                      const ExceptionWrapper &e,
+                                      const optional<string> token) {
   json to_send;
   to_send["type"] = "error";
   to_send["data"] = e.exception_name();
+  if (token)
+    to_send["token"] = token.value();
   logger::error(e.exception_name() + ": " + e.what());
   return WebsocketServer::send_msg(hdl, to_send.dump());
 }
 
 bool WebsocketServer::send_json(const connection_hdl &hdl, const string &type,
-                                const json &j) {
+                                const json &j, const optional<string> token) {
   json to_send;
   to_send["type"] = type;
   to_send["data"] = j;
+  if (token)
+    to_send["token"] = token.value();
   return WebsocketServer::send_msg(hdl, to_send.dump());
 }
 
 void WebsocketServer::broadcast_json(const string &type, const json &j) {
   for (auto it = _websockets.begin(); it != _websockets.end(); ++it) {
-    WebsocketServer::send_json(it->first, type, j);
+    WebsocketServer::send_json(it->first, type, j, nullopt);
   }
 }
 
@@ -105,7 +110,7 @@ bool WebsocketServer::on_open(connection_hdl hdl) {
   logger::debug("New connection to server");
   json j;
   j["hello"] = "world";
-  WebsocketServer::send_json(hdl, "welcome", j);
+  WebsocketServer::send_json(hdl, "welcome", j, nullopt);
   return true;
 }
 
@@ -130,29 +135,33 @@ void WebsocketServer::on_message(
              message->get_payload());
     t.detach();
   } catch (const wss_cant_find_handler &e) {
-    WebsocketServer::send_error_json(hdl, e);
+    WebsocketServer::send_error_json(hdl, e, nullopt);
   }
 }
 
 void WebsocketServer::handle_message(ConnectionData &con, const string msg) {
+  optional<string> token = nullopt;
   try {
     json j = json::parse(msg);
     auto res = server_handler::dispatch_request(con, j);
-    WebsocketServer::send_json(con._hdl, res.first, res.second);
+    if (j.contains("token")) {
+      token = j.at("token").get<string>();
+    }
+    WebsocketServer::send_json(con._hdl, res.first, res.second, token);
 
   } catch (const json::parse_error &e) {
-    WebsocketServer::send_error_json(con._hdl, wss_invalid_json());
+    WebsocketServer::send_error_json(con._hdl, wss_invalid_json(), token);
 
   } catch (const json::out_of_range &e) {
-    WebsocketServer::send_error_json(con._hdl, wss_invalid_json());
+    WebsocketServer::send_error_json(con._hdl, wss_invalid_json(), token);
 
   } catch (const ExceptionWrapper &e) {
-    WebsocketServer::send_error_json(con._hdl, e);
+    WebsocketServer::send_error_json(con._hdl, e, token);
 
   } catch (const std::exception &e) {
     stringstream ss;
     ss << "Encountered " << typeid(e).name() << ": " << e.what();
-    WebsocketServer::send_error_json(con._hdl,
-                                     ExceptionWrapper(ss.str(), "Unknown"));
+    WebsocketServer::send_error_json(
+        con._hdl, ExceptionWrapper(ss.str(), "Unknown"), token);
   }
 }
