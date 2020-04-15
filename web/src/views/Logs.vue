@@ -28,7 +28,7 @@ export default {
 
 <style lang="scss">
 #logs {
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 100%;
   background-color: #39404a;
   font-family: "SF Mono Powerline", "Courier New", monospace;
