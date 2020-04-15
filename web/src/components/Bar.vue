@@ -80,6 +80,7 @@
       </template>
     </v-navigation-drawer>
 
+    <slot name="content_prepend"></slot>
     <v-content>
       <slot></slot>
     </v-content>
