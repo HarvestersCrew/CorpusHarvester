@@ -143,10 +143,10 @@ void WebsocketServer::handle_message(ConnectionData &con, const string msg) {
   optional<string> token = nullopt;
   try {
     json j = json::parse(msg);
-    auto res = server_handler::dispatch_request(con, j);
     if (j.contains("token")) {
       token = j.at("token").get<string>();
     }
+    auto res = server_handler::dispatch_request(con, j);
     WebsocketServer::send_json(con._hdl, res.first, res.second, token);
 
   } catch (const json::parse_error &e) {
