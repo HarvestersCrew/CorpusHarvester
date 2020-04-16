@@ -32,10 +32,6 @@ export default new Vuex.Store({
       output_path: undefined
     },
 
-    storage: {
-      path: undefined
-    },
-
     apis: undefined
   },
   mutations: {
@@ -79,10 +75,6 @@ export default new Vuex.Store({
             state.logger_settings.level = obj.data.level;
             state.logger_settings.output = obj.data.output;
             state.logger_settings.output_path = obj.data.output_path;
-            break;
-
-          case "get_storage_path":
-            state.storage.path = obj.data.storage_path;
             break;
 
           default:
