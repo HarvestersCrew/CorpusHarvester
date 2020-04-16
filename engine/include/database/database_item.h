@@ -56,15 +56,10 @@ public:
 
   /**
    * Gets the id of the last inserted object in the database
-   * @param db the database
+   * @param db please pass nullptr
    * @return the id of the last inserted object in the database
    */
-  static int get_last_inserted_id(sql::Connection *db) {
-    sql::Statement *stmt = db->createStatement();
-    sql::ResultSet *res = stmt->executeQuery("SELECT LAST_INSERT_ID() AS id");
-    res->next();
-    return res->getInt("id");
-  }
+  static int get_last_inserted_id(sql::Connection *db);
 
   virtual int get_id() const { return _id; };
   void set_id(int id) { _id = id; };
