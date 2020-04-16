@@ -104,3 +104,12 @@ void Setting::init_settings(sql::Connection *db) {
     setting.insert();
   }
 }
+
+void Setting::init_settings(shared_ptr<sql::Connection> db) {
+  Setting setting = Setting();
+  for (auto &pair : _default_settings) {
+    setting.set_name(pair.first);
+    setting.set_value(pair.second);
+    setting.insert();
+  }
+}

@@ -26,7 +26,7 @@ void PoolDB::create() {
     }
     logger::debug("Create tables : OK");
 
-    Setting::init_settings(con.get());
+    Setting::init_settings(con);
     logger::debug("Init Setting tables : OK");
     delete stmt;
     PoolDB::unborrow_from_pool(con);

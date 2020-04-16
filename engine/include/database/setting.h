@@ -8,6 +8,7 @@
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
+#include <memory>
 #include <sstream>
 
 #define SETTING_CREATE_STATEMENT                                               \
@@ -22,6 +23,7 @@
 #define DROP_SETTING_STATEMENT "DROP TABLE IF EXISTS Setting;"
 
 using std::map;
+using std::shared_ptr;
 using std::string;
 
 /**
@@ -115,6 +117,7 @@ public:
    * @param db the database
    */
   static void init_settings(sql::Connection *db);
+  static void init_settings(shared_ptr<sql::Connection> db);
 };
 
 #endif
