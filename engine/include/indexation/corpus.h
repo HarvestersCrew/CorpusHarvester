@@ -114,7 +114,7 @@ public:
    * database
    * @param db the database
    */
-  void fetch_files(sql::Connection *db);
+  void fetch_files();
 
   std::string to_string() const;
 

@@ -56,20 +56,22 @@ bool Corpus::insert() {
   return true;
 }
 
-void Corpus::fetch_files(sql::Connection *db) {
+void Corpus::fetch_files() {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
+  auto con = PoolDB::borrow_from_pool();
 
-  prep_stmt = db->prepareStatement(GET_CORPUS_FILES_STATEMENT);
+  prep_stmt = con->prepareStatement(GET_CORPUS_FILES_STATEMENT);
   prep_stmt->setInt(1, _id);
   res = prep_stmt->executeQuery();
   delete prep_stmt;
 
   while (res->next()) {
     shared_ptr<File> file = std::make_shared<File>();
-    file->fill_from_statement(db, res);
+    file->fill_from_statement(con.get(), res);
     _files.push_back(file);
   }
+  PoolDB::unborrow_from_pool(con);
   delete res;
 }
 
@@ -87,7 +89,7 @@ void Corpus::fill_attribute_from_statement(sql::ResultSet *res) {
 
 void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   fill_attribute_from_statement(res);
-  fetch_files(db);
+  fetch_files();
 }
 
 std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(sql::Connection *db,
