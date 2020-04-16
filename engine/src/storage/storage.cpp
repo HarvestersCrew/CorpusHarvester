@@ -3,21 +3,19 @@
 Storage::Storage() { init_root(); }
 
 void Storage::init_root() {
-  Setting root_folder_name =
-      Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init());
-  _root_folder_name = root_folder_name.get_value();
+  _root_folder_name = Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init());
   if (!folder_exists_in_root(CORPUS_FOLDER)) {
     create_folders_in_root(CORPUS_FOLDER);
   }
 }
 
 bool Storage::create_folders_in_root(std::string folder_path) const {
-  std::string dest_folder_name = _root_folder_name + folder_path;
+  std::string dest_folder_name = _root_folder_name.get_value() + folder_path;
   return std::filesystem::create_directories(dest_folder_name);
 }
 
 bool Storage::folder_exists_in_root(std::string folder_path) const {
-  std::string dest_folder_name = _root_folder_name + folder_path;
+  std::string dest_folder_name = _root_folder_name.get_value() + folder_path;
   return std::filesystem::exists(dest_folder_name);
 }
 
@@ -49,19 +47,9 @@ std::string Storage::file_destination(shared_ptr<File> file) const {
       throw CommandException(error_message);
     }
   }
-  return _root_folder_name + dest_folder_path + file_name + file->get_format();
+  return _root_folder_name.get_value() + dest_folder_path + file_name +
+         file->get_format();
 }
-
-// void Storage::move_file(shared_ptr<File> file) const {
-//   std::string file_dest = file_destination(file);
-//   try {
-//     std::filesystem::rename(file->get_path(), file_dest);
-//   } catch (std::filesystem::filesystem_error &e) {
-//     std::string error_message =
-//         "Error moving : " + file->get_path() + " to " + file_dest;
-//     throw CommandException(error_message);
-//   }
-// }
 
 std::string Storage::store_file(shared_ptr<File> file) const {
   std::string file_dest = file_destination(file);
@@ -74,3 +62,5 @@ void Storage::store_files(std::list<shared_ptr<File>> files) const {
     store_file(file);
   }
 }
+
+void Storage::migrate(std::string new_path) {}

@@ -27,7 +27,7 @@ private:
   /**
    * The name of the root folder where the files are stored
    */
-  std::string _root_folder_name;
+  Setting _root_folder_name;
 
 public:
   /**
@@ -81,12 +81,17 @@ public:
    */
   void store_files(std::list<shared_ptr<File>> files) const;
 
+  /**
+   * Moves the root folder of the storage in another folder
+   * @param new_path the new folder of the storage
+   */
+  void migrate(std::string new_path);
+
   std::string get_corpus_path() const {
-    return _root_folder_name + CORPUS_FOLDER;
+    return _root_folder_name.get_value() + CORPUS_FOLDER;
   }
-  std::string get_root_folder_name() const { return _root_folder_name; }
-  void set_root_folder_name(std::string root_folder_name) {
-    _root_folder_name = root_folder_name;
+  std::string get_root_folder_name() const {
+    return _root_folder_name.get_value();
   }
 };
 
