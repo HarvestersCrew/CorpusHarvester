@@ -37,58 +37,48 @@ void test_closed_db_exceptions() {
 }
 
 void test_open_pool() {
-  HarvesterDatabase::open_pool(5);
-  Assertion::assert_equals(__FUNCTION__, 5,
-                           HarvesterDatabase::_available_pool.size());
-  Assertion::assert_equals(__FUNCTION__, 0,
-                           HarvesterDatabase::_borrowed_pool.size());
+  PoolDB::open_pool(5);
+  Assertion::assert_equals(__FUNCTION__, 5, PoolDB::_available_pool.size());
+  Assertion::assert_equals(__FUNCTION__, 0, PoolDB::_borrowed_pool.size());
 }
 
 void test_close_pool() {
-  HarvesterDatabase::close_pool();
-  Assertion::assert_equals(__FUNCTION__, 0,
-                           HarvesterDatabase::_available_pool.size());
-  Assertion::assert_equals(__FUNCTION__, 0,
-                           HarvesterDatabase::_borrowed_pool.size());
+  PoolDB::close_pool();
+  Assertion::assert_equals(__FUNCTION__, 0, PoolDB::_available_pool.size());
+  Assertion::assert_equals(__FUNCTION__, 0, PoolDB::_borrowed_pool.size());
 }
 
 void test_borrow_from_pool() {
-  HarvesterDatabase::open_pool(2);
-  auto ptr1 = HarvesterDatabase::borrow_from_pool();
-  auto ptr2 = HarvesterDatabase::borrow_from_pool();
+  PoolDB::open_pool(2);
+  auto ptr1 = PoolDB::borrow_from_pool();
+  auto ptr2 = PoolDB::borrow_from_pool();
   Assertion::assert_equals(__FUNCTION__, 2, ptr1.use_count());
   Assertion::assert_equals(__FUNCTION__, 2, ptr2.use_count());
   try {
-    HarvesterDatabase::borrow_from_pool();
+    PoolDB::borrow_from_pool();
     Assertion::assert_throw(__FUNCTION__, "db_no_free_connection");
   } catch (const db_no_free_connection &e) {
   }
-  HarvesterDatabase::unborrow_from_pool(ptr1);
-  auto ptr3 = HarvesterDatabase::borrow_from_pool();
+  PoolDB::unborrow_from_pool(ptr1);
+  auto ptr3 = PoolDB::borrow_from_pool();
   Assertion::assert_equals(__FUNCTION__, 2, ptr3.use_count());
   Assertion::assert_equals(__FUNCTION__, 0, ptr1.use_count());
 }
 
 void test_reassign_free_borrowed_pool() {
-  HarvesterDatabase::open_pool(2);
+  PoolDB::open_pool(2);
 
-  HarvesterDatabase::borrow_from_pool();
-  Assertion::assert_equals(__FUNCTION__, 1,
-                           HarvesterDatabase::_available_pool.size());
-  Assertion::assert_equals(__FUNCTION__, 1,
-                           HarvesterDatabase::_borrowed_pool.size());
+  PoolDB::borrow_from_pool();
+  Assertion::assert_equals(__FUNCTION__, 1, PoolDB::_available_pool.size());
+  Assertion::assert_equals(__FUNCTION__, 1, PoolDB::_borrowed_pool.size());
 
-  HarvesterDatabase::borrow_from_pool();
-  Assertion::assert_equals(__FUNCTION__, 0,
-                           HarvesterDatabase::_available_pool.size());
-  Assertion::assert_equals(__FUNCTION__, 2,
-                           HarvesterDatabase::_borrowed_pool.size());
+  PoolDB::borrow_from_pool();
+  Assertion::assert_equals(__FUNCTION__, 0, PoolDB::_available_pool.size());
+  Assertion::assert_equals(__FUNCTION__, 2, PoolDB::_borrowed_pool.size());
 
-  HarvesterDatabase::borrow_from_pool();
-  Assertion::assert_equals(__FUNCTION__, 1,
-                           HarvesterDatabase::_available_pool.size());
-  Assertion::assert_equals(__FUNCTION__, 1,
-                           HarvesterDatabase::_borrowed_pool.size());
+  PoolDB::borrow_from_pool();
+  Assertion::assert_equals(__FUNCTION__, 1, PoolDB::_available_pool.size());
+  Assertion::assert_equals(__FUNCTION__, 1, PoolDB::_borrowed_pool.size());
 }
 
 void database_test() {

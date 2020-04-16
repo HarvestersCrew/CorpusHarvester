@@ -2,6 +2,7 @@
 #define DATABASE_TEST_H
 
 #include "database/harvester_database.h"
+#include "database/pool_db.h"
 #include "test/assertion.h"
 #include "utils/exceptions.h"
 
