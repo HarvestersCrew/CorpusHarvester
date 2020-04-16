@@ -1,11 +1,5 @@
 # Command Line Interface
 
-harvester corpus list
-harvester corpus id "id"
-harvester corpus search "texte Ã  chercher"
-harvester files list (--page en option)
-harvester files id "id"
-
 This file's goal is to document all command line commands available. All commands are to be appended to the executable file.
 
 ## General operation
