@@ -237,7 +237,7 @@ void test_create_corpus() {
   sql::ResultSet *res_files;
   sql::Statement *stmt = con.get()->createStatement();
   std::list<shared_ptr<Corpus>> corpuses =
-      Corpus::get_all_corpuses(con.get(), Corpus::ordering_method::NONE);
+      Corpus::get_all_corpuses(Corpus::ordering_method::NONE);
   Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());
   shared_ptr<Corpus> first_element = *corpuses.begin();
   Assertion::assert_equals(__FUNCTION__, "file_6-8-3",
@@ -255,14 +255,11 @@ void test_create_corpus() {
 }
 
 void test_fetch_corpuses() {
-  auto con = PoolDB::borrow_from_pool();
-  sql::Statement *stmt = con->createStatement();
-  delete stmt;
   std::list<shared_ptr<Corpus>> corpuses;
   std::vector<shared_ptr<Corpus>> corpuses_vec;
 
   try {
-    Corpus::get_corpus_from_id(con.get(), 0);
+    Corpus::get_corpus_from_id(0);
     Assertion::assert_throw(__FUNCTION__, "db_id_not_found");
   } catch (const db_id_not_found &e) {
   }
@@ -276,10 +273,9 @@ void test_fetch_corpuses() {
   std::this_thread::sleep_for(std::chrono::seconds(1));
   c3.insert();
 
-  Corpus::get_corpus_from_id(con.get(), c1.get_id());
+  Corpus::get_corpus_from_id(c1.get_id());
 
-  corpuses =
-      Corpus::get_all_corpuses(con.get(), Corpus::ordering_method::DATE_ASC);
+  corpuses = Corpus::get_all_corpuses(Corpus::ordering_method::DATE_ASC);
   corpuses_vec = vector<shared_ptr<Corpus>>{corpuses.begin(), corpuses.end()};
   Assertion::assert_equals(__FUNCTION__, 3, corpuses_vec.size());
   Assertion::assert_equals(__FUNCTION__, "Jurassic Park",
@@ -289,8 +285,7 @@ void test_fetch_corpuses() {
   Assertion::assert_equals(__FUNCTION__, "Avengers",
                            corpuses_vec.at(2)->get_title());
 
-  corpuses =
-      Corpus::get_all_corpuses(con.get(), Corpus::ordering_method::DATE_DESC);
+  corpuses = Corpus::get_all_corpuses(Corpus::ordering_method::DATE_DESC);
   corpuses_vec = vector<shared_ptr<Corpus>>{corpuses.begin(), corpuses.end()};
   Assertion::assert_equals(__FUNCTION__, 3, corpuses_vec.size());
   Assertion::assert_equals(__FUNCTION__, "Jurassic Park",
@@ -300,8 +295,7 @@ void test_fetch_corpuses() {
   Assertion::assert_equals(__FUNCTION__, "Avengers",
                            corpuses_vec.at(0)->get_title());
 
-  corpuses =
-      Corpus::get_all_corpuses(con.get(), Corpus::ordering_method::NAME_ASC);
+  corpuses = Corpus::get_all_corpuses(Corpus::ordering_method::NAME_ASC);
   corpuses_vec = vector<shared_ptr<Corpus>>{corpuses.begin(), corpuses.end()};
   Assertion::assert_equals(__FUNCTION__, 3, corpuses_vec.size());
   Assertion::assert_equals(__FUNCTION__, "Jurassic Park",
@@ -311,8 +305,7 @@ void test_fetch_corpuses() {
   Assertion::assert_equals(__FUNCTION__, "Avengers",
                            corpuses_vec.at(0)->get_title());
 
-  corpuses =
-      Corpus::get_all_corpuses(con.get(), Corpus::ordering_method::NAME_DESC);
+  corpuses = Corpus::get_all_corpuses(Corpus::ordering_method::NAME_DESC);
   corpuses_vec = vector<shared_ptr<Corpus>>{corpuses.begin(), corpuses.end()};
   Assertion::assert_equals(__FUNCTION__, 3, corpuses_vec.size());
   Assertion::assert_equals(__FUNCTION__, "Jurassic Park",
@@ -321,8 +314,6 @@ void test_fetch_corpuses() {
                            corpuses_vec.at(0)->get_title());
   Assertion::assert_equals(__FUNCTION__, "Avengers",
                            corpuses_vec.at(2)->get_title());
-
-  PoolDB::unborrow_from_pool(con);
 }
 
 void test_wrong_search() {

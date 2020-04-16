@@ -141,36 +141,29 @@ public:
   /**
    * Get a list of all the corpus.
    *
-   * @param db
-   *
    * @return List of Corpus.
    */
-  static std::list<shared_ptr<Corpus>> get_all_corpuses(sql::Connection *db,
-                                                        ordering_method order);
+  static std::list<shared_ptr<Corpus>> get_all_corpuses(ordering_method order);
 
   /**
    * Get a corpus based on his ID.
    *
-   * @param db Database
    * @param id ID of the corpus
    *
    * @return Resulting corpus
    * @throw db_id_not_found if corpus wasn't found
    */
-  static shared_ptr<Corpus> get_corpus_from_id(sql::Connection *db,
-                                               const int id);
+  static shared_ptr<Corpus> get_corpus_from_id(const int id);
 
   /**
    * Search corpuses based on a string.
    *
-   * @param db Database
    * @param str string to search
    *
    * @return List of found corpuses.
    */
   static std::list<shared_ptr<Corpus>>
-  get_corpus_from_name(sql::Connection *db, const std::string str,
-                       ordering_method order);
+  get_corpus_from_name(const std::string str, ordering_method order);
 };
 
 #endif // CORPUSHARVESTER_CORPUS_H

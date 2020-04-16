@@ -14,9 +14,6 @@ ManagerRequest::get_corpuses(std::map<string, string> &filters,
 
   list<shared_ptr<Corpus>> corpuses;
 
-  // Get the indexer
-  sql::Connection *db = HarvesterDatabase::init();
-
   // Get the filters available
   if (!filters.empty()) {
     // Check if we have a value for the title
@@ -25,7 +22,7 @@ ManagerRequest::get_corpuses(std::map<string, string> &filters,
       string title = it->second;
 
       logger::debug("Search corpus : " + title);
-      corpuses = Corpus::get_corpus_from_name(db, title, order);
+      corpuses = Corpus::get_corpus_from_name(title, order);
 
       if (corpuses.size() == 0) {
         logger::info("No corpus have been found for the name : " + title);
@@ -34,7 +31,7 @@ ManagerRequest::get_corpuses(std::map<string, string> &filters,
 
   } else {
     logger::debug("Get all corpuses : ");
-    corpuses = Corpus::get_all_corpuses(db, order);
+    corpuses = Corpus::get_all_corpuses(order);
   }
 
   return corpuses;
@@ -75,7 +72,7 @@ ManagerRequest::get_corpus_from_name(string name) const {
 
 shared_ptr<Corpus> ManagerRequest::get_corpus_from_id(const int id) const {
   logger::debug("Search corpus with id = " + std::to_string(id));
-  return Corpus::get_corpus_from_id(HarvesterDatabase::init(), id);
+  return Corpus::get_corpus_from_id(id);
 }
 
 int ManagerRequest::create_corpus(const string &name,

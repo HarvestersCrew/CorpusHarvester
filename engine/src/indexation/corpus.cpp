@@ -92,16 +92,17 @@ void Corpus::fill_from_statement(sql::ResultSet *res) {
   fetch_files();
 }
 
-std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(sql::Connection *db,
-                                                       ordering_method order) {
+std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(ordering_method order) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   std::list<shared_ptr<Corpus>> corpuses;
+  auto con = PoolDB::borrow_from_pool();
 
   prep_stmt =
-      db->prepareStatement(GET_ALL_CORPUS + _ordering_queries.at(order));
+      con->prepareStatement(GET_ALL_CORPUS + _ordering_queries.at(order));
   res = prep_stmt->executeQuery();
   delete prep_stmt;
+  PoolDB::unborrow_from_pool(con);
 
   while (res->next()) {
     shared_ptr<Corpus> corpus(new Corpus());
@@ -112,16 +113,17 @@ std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(sql::Connection *db,
   return corpuses;
 }
 
-shared_ptr<Corpus> Corpus::get_corpus_from_id(sql::Connection *db,
-                                              const int id) {
+shared_ptr<Corpus> Corpus::get_corpus_from_id(const int id) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
+  auto con = PoolDB::borrow_from_pool();
 
   // Get the corpus based on the id
-  prep_stmt = db->prepareStatement(GET_CORPUS_FROM_ID);
+  prep_stmt = con->prepareStatement(GET_CORPUS_FROM_ID);
   prep_stmt->setInt(1, id);
   res = prep_stmt->executeQuery();
   delete prep_stmt;
+  PoolDB::unborrow_from_pool(con);
 
   // Define by default an empty optional for the corpus
   shared_ptr<Corpus> corpus;
@@ -142,17 +144,18 @@ shared_ptr<Corpus> Corpus::get_corpus_from_id(sql::Connection *db,
 }
 
 std::list<shared_ptr<Corpus>>
-Corpus::get_corpus_from_name(sql::Connection *db, const std::string str,
-                             ordering_method order) {
+Corpus::get_corpus_from_name(const std::string str, ordering_method order) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   std::list<shared_ptr<Corpus>> corpuses;
+  auto con = PoolDB::borrow_from_pool();
 
   prep_stmt =
-      db->prepareStatement(GET_CORPUS_FROM_NAME + _ordering_queries.at(order));
+      con->prepareStatement(GET_CORPUS_FROM_NAME + _ordering_queries.at(order));
   prep_stmt->setString(1, "%" + str + "%");
   res = prep_stmt->executeQuery();
   delete prep_stmt;
+  PoolDB::unborrow_from_pool(con);
 
   while (res->next()) {
     shared_ptr<Corpus> corpus(new Corpus());
