@@ -7,8 +7,9 @@ In order to have access to our software, the basic method is to use :
 
 - `apis` : Api function.
     - `list` : Api list 
-        - `--db` : Search specific parameter for the database.
-        - `--web` : Search specific parameter for the web.
+    - `--name ""` : Specify a api
+        - `--db` : Show specific parameter for the database.
+        - `--web` : Show specific parameter for the web.
 
 - `corpus` : Corpus function. 
     - `create`̀ Allow us to create a corpus with a given `--name`.

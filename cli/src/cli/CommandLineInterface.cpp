@@ -14,13 +14,12 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   //
   cli_command &apiCommand = this->parser.add_command("apis", "Api function.");
 
-  cli_command &listApiCommand = apiCommand.add_command("list", "Api list");
+  apiCommand.add_command("list", "Api list");
 
-  listApiCommand.add_option("name", "Name of the api.", false);
-  listApiCommand.add_option("db", "See all the parameters for the database.",
-                            true);
-  listApiCommand.add_option(
-      "web", "See all the parameters for the web request.", true);
+  apiCommand.add_option("name", "Name of the api.", false);
+  apiCommand.add_option("db", "See all the parameters for the database.", true);
+  apiCommand.add_option("web", "See all the parameters for the web request.",
+                        true);
 
   //
   // Corpus function
@@ -366,97 +365,125 @@ void CommandLineInterface::files_manager() {
   }
 }
 
-void CommandLineInterface::api_manager() {
+void CommandLineInterface::api_list() {
+  logger::debug("List request.");
+
   ManagerRequest mr;
-  logger::debug("Apis method.");
-  if (std::find(this->commands.begin(), this->commands.end(), "list") !=
-      this->commands.end()) {
-    logger::debug("List request.");
+  vector<string> apis = mr.get_apis();
 
-    vector<string> apis = mr.get_apis();
-    string apiNameUser = "";
+  std::cout << "Apis availables :" << std::endl;
+  for (string api : apis) {
+    std::cout << api << std::endl;
+  }
+  exit(0);
+}
 
-    // Check if we have a value for the name
-    map<string, string>::iterator itSubCommand =
-        this->string_inputs.find("name");
+void CommandLineInterface::detail_api() {
+  logger::debug("Detail api.");
 
-    if (itSubCommand != this->string_inputs.end() &&
-        itSubCommand->second != "") {
-      logger::debug("We got a name");
+  ManagerRequest mr;
 
-      // Get the value of the name
-      apiNameUser = this->string_inputs.find("name")->second;
+  vector<string> apis = mr.get_apis();
+  string apiNameUser = "";
 
-      // Check if the name exist in our list of apis
-      if (find(apis.begin(), apis.end(), apiNameUser) == apis.end()) {
-        logger::error("Le nom de l'api n'est pas valide !");
-        logger::info("Apis available :");
-        for (string api : apis) {
-          logger::info(api);
-        }
-        exit(-1);
+  // Check if we have a value for the name
+  map<string, string>::iterator itSubCommand = this->string_inputs.find("name");
+
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    logger::debug("We got a name");
+
+    // Get the value of the name
+    apiNameUser = this->string_inputs.find("name")->second;
+
+    // Check if the name exist in our list of apis
+    if (find(apis.begin(), apis.end(), apiNameUser) == apis.end()) {
+      logger::error("The name of the api is not valid !");
+      logger::info("Apis available :");
+      for (string api : apis) {
+        logger::info(api);
       }
+      exit(-1);
     }
+  } else {
+    // We have no name
+    logger::error("Please precise the name of the api");
+    exit(-1);
+  }
 
-    // Search for eventually subcommand
-    if (this->bool_inputs.find("db")->second) {
-      logger::debug("DB");
-      if (apiNameUser == "") {
-        for (string api : apis) {
-          std::cout << "Database parameter for : " << api << "\n" << std::endl;
-          vector<shared_ptr<api_parameter_response>> db_parameters =
-              mr.get_api_db_parameters(api);
-          for (shared_ptr<api_parameter_response> parameter : db_parameters) {
-            std::cout << parameter.get()->to_string() << std::endl;
-          }
-          std::cout << "\n" << std::endl;
-        }
-      } else {
-        std::cout << "Database parameter for : " << apiNameUser << "\n"
-                  << std::endl;
-        // Get specific parameter from the name
+  // Search for eventually subcommand
+  if (this->bool_inputs.find("db")->second) {
+    logger::debug("DB");
+    if (apiNameUser == "") {
+      for (string api : apis) {
+        std::cout << "Database parameter for : " << api << "\n" << std::endl;
         vector<shared_ptr<api_parameter_response>> db_parameters =
-            mr.get_api_db_parameters(apiNameUser);
+            mr.get_api_db_parameters(api);
         for (shared_ptr<api_parameter_response> parameter : db_parameters) {
           std::cout << parameter.get()->to_string() << std::endl;
         }
         std::cout << "\n" << std::endl;
       }
+    } else {
+      std::cout << "Database parameter for : " << apiNameUser << "\n"
+                << std::endl;
+      // Get specific parameter from the name
+      vector<shared_ptr<api_parameter_response>> db_parameters =
+          mr.get_api_db_parameters(apiNameUser);
+      for (shared_ptr<api_parameter_response> parameter : db_parameters) {
+        std::cout << parameter.get()->to_string() << std::endl;
+      }
+      std::cout << "\n" << std::endl;
     }
+  }
 
-    if (this->bool_inputs.find("web")->second) {
-      logger::debug("Web");
-      if (apiNameUser == "") {
-        for (string api : apis) {
-          std::cout << "Web request parameter for : " << api << "\n"
-                    << std::endl;
-          vector<shared_ptr<api_parameter_request>> db_parameters =
-              mr.get_api_web_parameters(api);
-          for (shared_ptr<api_parameter_request> parameter : db_parameters) {
-            std::cout << parameter.get()->to_string() << std::endl;
-          }
-          std::cout << "\n" << std::endl;
-        }
-      } else {
-        std::cout << "Web request for : " << apiNameUser << "\n" << std::endl;
-        // Get specific parameter from the name
+  if (this->bool_inputs.find("web")->second) {
+    logger::debug("Web");
+    if (apiNameUser == "") {
+      for (string api : apis) {
+        std::cout << "Web request parameter for : " << api << "\n" << std::endl;
         vector<shared_ptr<api_parameter_request>> db_parameters =
-            mr.get_api_web_parameters(apiNameUser);
+            mr.get_api_web_parameters(api);
         for (shared_ptr<api_parameter_request> parameter : db_parameters) {
           std::cout << parameter.get()->to_string() << std::endl;
         }
         std::cout << "\n" << std::endl;
       }
-    }
-
-    if (!this->bool_inputs.find("db")->second &&
-        !this->bool_inputs.find("web")->second) {
-      std::cout << "Apis availables :" << std::endl;
-      for (string api : apis) {
-        std::cout << api << std::endl;
+    } else {
+      std::cout << "Web request for : " << apiNameUser << "\n" << std::endl;
+      // Get specific parameter from the name
+      vector<shared_ptr<api_parameter_request>> db_parameters =
+          mr.get_api_web_parameters(apiNameUser);
+      for (shared_ptr<api_parameter_request> parameter : db_parameters) {
+        std::cout << parameter.get()->to_string() << std::endl;
       }
+      std::cout << "\n" << std::endl;
     }
   }
+
+  if (!this->bool_inputs.find("db")->second &&
+      !this->bool_inputs.find("web")->second) {
+    cout << "Please precise the action you want to have :" << endl;
+    cout << "--db : See the database parameter of the api." << endl;
+    cout << "--web : See the web parameter of the api." << endl;
+  }
+
+  exit(0);
+}
+
+void CommandLineInterface::api_manager() {
+  logger::debug("Apis method.");
+  if (std::find(this->commands.begin(), this->commands.end(), "list") !=
+      this->commands.end()) {
+    this->api_list();
+  }
+
+  // Check if we have a name
+  map<string, string>::iterator itSubCommand = this->string_inputs.find("name");
+  if (itSubCommand != this->string_inputs.end()) {
+    this->detail_api();
+  }
+
+  exit(0);
 }
 
 void CommandLineInterface::run() {

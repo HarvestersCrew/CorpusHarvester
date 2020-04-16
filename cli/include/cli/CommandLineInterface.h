@@ -66,6 +66,16 @@ private:
   //
 
   /**
+   * List of all apis
+   */
+  void api_list();
+
+  /**
+   * Detail of a specific api
+   */
+  void detail_api();
+
+  /**
    * Manage the api request.
    */
   void api_manager();

@@ -25,10 +25,11 @@ files: Files function.
 ```
 
 ## APIs
-- `apis` : list available API names
+- `apis` :
     - `--name NAME` : display API information based on its name
         - `--db` : list the API DB parameters
         - `--web` : list the API web parameters
+    - `list` : list available API names
 
 ## Corpuses
 - `corpus` : list all corpuses in default order (most recent to older)
