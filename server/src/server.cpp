@@ -1,4 +1,4 @@
-#include "database/harvester_database.h"
+#include "database/pool_db.h"
 #include "server/websocket_server.h"
 #include "utils/cli_parser.h"
 #include <chrono>
@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
   bool db_ready = false;
   do {
     try {
-      HarvesterDatabase::init();
+      PoolDB::init(10);
       db_ready = true;
     } catch (const sql::SQLException &e) {
       cout << "Failure connecting to DB, will retry in 10 seconds" << endl;
