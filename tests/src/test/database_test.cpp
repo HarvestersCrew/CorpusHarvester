@@ -1,41 +1,5 @@
 #include "test/database_test.h"
 
-void test_close() {
-  HarvesterDatabase::close();
-  Assertion::assert_nullptr(__FUNCTION__, HarvesterDatabase::get());
-}
-
-void test_open() {
-  HarvesterDatabase::open();
-  Assertion::assert_not_nullptr(__FUNCTION__, HarvesterDatabase::get());
-}
-
-void test_drop_create_empty() {
-  HarvesterDatabase::drop();
-  Assertion::assert_true(__FUNCTION__, HarvesterDatabase::empty());
-  HarvesterDatabase::create();
-  Assertion::assert_false(__FUNCTION__, HarvesterDatabase::empty());
-}
-
-void test_closed_db_exceptions() {
-  HarvesterDatabase::close();
-  try {
-    HarvesterDatabase::drop();
-    Assertion::assert_throw(__FUNCTION__, "ClosedDatabaseException");
-  } catch (ClosedDatabaseException &e) {
-  }
-  try {
-    HarvesterDatabase::create();
-    Assertion::assert_throw(__FUNCTION__, "ClosedDatabaseException");
-  } catch (ClosedDatabaseException &e) {
-  }
-  try {
-    HarvesterDatabase::empty();
-    Assertion::assert_throw(__FUNCTION__, "ClosedDatabaseException");
-  } catch (ClosedDatabaseException &e) {
-  }
-}
-
 void test_open_pool() {
   PoolDB::open_pool(5);
   Assertion::assert_equals(__FUNCTION__, 5, PoolDB::_available_pool.size());
@@ -91,10 +55,11 @@ void test_drop_create_empty_pool() {
 
 void database_test() {
   std::cout << std::endl << "Database tests : " << std::endl;
-  Assertion::test(test_close, "test_close");
-  Assertion::test(test_open, "test_open");
-  Assertion::test(test_drop_create_empty, "test_drop_create_empty");
-  Assertion::test(test_closed_db_exceptions, "test_closed_db_exceptions");
+
+  PoolDB::open_pool(1);
+  PoolDB::drop();
+  PoolDB::close_pool();
+
   Assertion::test(test_open_pool, "test_open_pool");
   Assertion::test(test_close_pool, "test_close_pool");
   Assertion::test(test_borrow_from_pool, "test_borrow_from_pool");

@@ -32,6 +32,7 @@ class PoolDB {
   friend void test_close_pool();
   friend void test_reassign_free_borrowed_pool();
   friend void test_drop_create_empty_pool();
+  friend void database_test();
 
 private:
   static queue<shared_ptr<Connection>> _available_pool;
