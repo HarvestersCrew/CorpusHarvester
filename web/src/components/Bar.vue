@@ -106,6 +106,10 @@ export default {
         type: "get_logger_infos",
         data: {}
       });
+      this.$store.dispatch("send_request", {
+        type: "get_storage_path",
+        data: {}
+      });
       this.$store.commit("set_first_init_done", true);
     }
   },
