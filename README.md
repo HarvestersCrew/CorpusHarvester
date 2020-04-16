@@ -26,7 +26,7 @@ Both those methods resolve in making an executable in `bin/cli` (or `bin/tests` 
 ## MySQL
 Using Docker, a web interface is running to play with the MySQL server from outside the Docker network, it is available [here](http://localhost:8080).
 
-## How to use the client line interface
+## How to use the command line interface
 Please refer to the documentation in 'doc/cli.md'.
 
 ## Web client
