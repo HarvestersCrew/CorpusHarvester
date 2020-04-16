@@ -88,7 +88,7 @@ public:
   /**
    * Checks if the api Id of this file exists
    */
-  bool api_id_exists(sql::Connection *db);
+  bool api_id_exists();
 
   bool insert();
 

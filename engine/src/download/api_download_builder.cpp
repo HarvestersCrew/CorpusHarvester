@@ -56,7 +56,7 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
       // Only choose the files not present in the DB
       list<shared_ptr<File>> partial_res;
       for (const auto &el : downloaded) {
-        if (!el->api_id_exists(HarvesterDatabase::init())) {
+        if (!el->api_id_exists()) {
           partial_res.push_back(el);
         }
       }

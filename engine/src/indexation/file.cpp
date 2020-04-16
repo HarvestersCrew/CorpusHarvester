@@ -21,7 +21,7 @@ std::string File::to_string() const {
   return out.str();
 }
 
-bool File::api_id_exists(sql::Connection *db) {
+bool File::api_id_exists() {
   sql::Statement *stmt;
   sql::ResultSet *res;
   std::string api_id = get_tag_value("_api_id");
@@ -29,8 +29,11 @@ bool File::api_id_exists(sql::Connection *db) {
   if (api_id == "") {
     return api_id_exists;
   }
-  stmt = db->createStatement();
+
+  auto con = PoolDB::borrow_from_pool();
+  stmt = con->createStatement();
   res = stmt->executeQuery(GET_FILE_API_ID);
+  PoolDB::unborrow_from_pool(con);
 
   std::string curr_api_id = "";
   std::string curr_source = "";
@@ -47,10 +50,10 @@ bool File::api_id_exists(sql::Connection *db) {
 }
 
 bool File::insert() {
-  auto con = PoolDB::borrow_from_pool();
-  bool aie = api_id_exists(con.get());
+  bool aie = api_id_exists();
   if (!aie) {
     sql::PreparedStatement *prep_stmt;
+    auto con = PoolDB::borrow_from_pool();
 
     prep_stmt = con->prepareStatement(INSERT_FILE_STATEMENT);
     prep_stmt->setString(1, _path);
