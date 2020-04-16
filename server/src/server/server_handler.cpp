@@ -6,6 +6,7 @@ void server_handler::fill_available_functions(
 
   functions_no_data.emplace("get_apis_infos", &get_apis_infos);
   functions_no_data.emplace("get_logger_infos", &get_logger_infos);
+  functions_no_data.emplace("get_storage_path", &get_storage_path);
 
   functions_data.emplace("update_logger", &update_logger);
 }
@@ -50,6 +51,13 @@ pair<string, json> server_handler::get_logger_infos(ConnectionData &con) {
   j["output"] = get<1>(loggers);
   j["output_path"] = get<2>(loggers);
   return make_pair("get_logger_infos", j);
+}
+
+pair<string, json> server_handler::get_storage_path(ConnectionData &con) {
+  const string path = con._mr.get_storage_path();
+  json j;
+  j["storage_path"] = path;
+  return make_pair("get_storage_path", j);
 }
 
 /**

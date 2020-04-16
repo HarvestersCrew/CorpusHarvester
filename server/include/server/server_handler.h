@@ -50,6 +50,11 @@ pair<string, json> get_apis_infos(ConnectionData &con);
 pair<string, json> get_logger_infos(ConnectionData &con);
 
 /**
+ * Gets the current storage path
+ */
+pair<string, json> get_storage_path(ConnectionData &con);
+
+/**
  * ---------------------
  * METHODS WITH DATA
  * ---------------------
