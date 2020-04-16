@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+
+    web:
+        build: web/
+        image: harvester_web
+        container_name: harvester_web
+        ports:
+            - 8081:8080
+
+    harvester:
+        build:
+            context: .
+            target: gcc_build
+        image: harvester_build
+        container_name: harvester
+        ports:
+            - 9002:9002
+        tty: true
+        depends_on:
+            - db

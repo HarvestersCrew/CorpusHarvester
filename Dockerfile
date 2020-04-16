@@ -13,3 +13,5 @@ RUN make clean && make bin/server && make bin/cli
 RUN mv bin/cli /usr/local/bin/harvester_cli
 RUN mv bin/server /usr/local/bin/harvester_server
 RUN rm -rf *
+ADD data /tmp/stored
+CMD harvester_server

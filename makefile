@@ -62,7 +62,7 @@ docker: $(DOCKERS)
 docker/up:
 	@mkdir -p $(BINDIR)
 	@chmod -R a+w $(BINDIR)
-	docker-compose up -d
+	docker-compose up -d --remove-orphans
 
 docker/down:
 	docker-compose down
