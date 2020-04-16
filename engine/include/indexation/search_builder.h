@@ -74,10 +74,9 @@ private:
 public:
   /**
    * Creates a SearchBuilder object
-   * @param db the database
    * otherwise
    */
-  SearchBuilder(sql::Connection *db);
+  SearchBuilder();
 
   /**
    * Adds a condition to the request being built

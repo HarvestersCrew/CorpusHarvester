@@ -43,6 +43,6 @@ std::list<shared_ptr<File>> Indexer::fetch_from_attribute(std::string attribute,
 }
 
 SearchBuilder Indexer::get_search_builder() {
-  SearchBuilder sb(_db);
+  SearchBuilder sb;
   return sb;
 }

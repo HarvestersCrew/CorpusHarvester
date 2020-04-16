@@ -1,6 +1,6 @@
 #include "indexation/search_builder.h"
 
-SearchBuilder::SearchBuilder(sql::Connection *db)
+SearchBuilder::SearchBuilder()
     : RequestBuilder(), _first_prepared_values(0), _prepared_values(0),
       _current_prepared_values(0), _current_clause_only_on_file(true) {}
 
