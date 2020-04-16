@@ -2,13 +2,14 @@
 
 /* STATIC VARIABLES */
 
+string Setting::STORAGE_NAME = "stored/";
 string Setting::STORAGE_ROOT = "storage_root";
 string Setting::LOGGER_LEVEL = "logger_level";
 string Setting::LOGGER_OUTPUT = "logger_output";
 string Setting::LOGGER_OUTPUT_PATH = "logger_output_path";
 
 std::map<string, string> Setting::_default_settings = {
-    {Setting::STORAGE_ROOT, "/tmp/stored/"},
+    {Setting::STORAGE_ROOT, "/tmp/" + Setting::STORAGE_NAME},
     {Setting::LOGGER_LEVEL, "0"},
     {Setting::LOGGER_OUTPUT, "0"},
     {Setting::LOGGER_OUTPUT_PATH, "/tmp/harvester_logs"}};
@@ -18,9 +19,10 @@ std::map<string, string> Setting::_default_settings = {
 Setting::Setting(string name, string value)
     : DatabaseItem(-1), _name(name), _value(value) {}
 
-Setting::Setting(string name, sql::Connection *db) : DatabaseItem(-1) {
+Setting::Setting(string name) : DatabaseItem(-1) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
+  sql::Connection *db = HarvesterDatabase::init();
   prep_stmt = db->prepareStatement(GET_SETTING_FROM_KEY);
   prep_stmt->setString(1, name);
   res = prep_stmt->executeQuery();

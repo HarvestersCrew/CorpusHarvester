@@ -5,7 +5,7 @@ optional<unordered_map<string, shared_ptr<api_loader>>> ApiFactory::_apis =
 
 string ApiFactory::get_apis_folder_path() {
   stringstream ss;
-  ss << Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init()).get_value();
+  ss << Setting(Setting::STORAGE_ROOT).get_value();
   ss << API_FACTORY_APIS_SUBFOLDER;
   return ss.str();
 }

@@ -3,7 +3,7 @@
 Storage::Storage() { init_root(); }
 
 void Storage::init_root() {
-  _root_folder_name = Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init());
+  _root_folder_name = Setting(Setting::STORAGE_ROOT);
   if (!folder_exists_in_root(CORPUS_FOLDER)) {
     create_folders_in_root(CORPUS_FOLDER);
   }
@@ -63,4 +63,17 @@ void Storage::store_files(std::list<shared_ptr<File>> files) const {
   }
 }
 
-void Storage::migrate(std::string new_path) {}
+void Storage::migrate(std::string new_path) {
+  if (!std::filesystem::exists(new_path)) {
+    string message = "Given folder path for storage migration does not exist";
+    throw StorageMigrationException(message);
+  }
+  string new_storage_path = new_path + "/" + Setting::STORAGE_NAME;
+  if (std::filesystem::exists(new_storage_path)) {
+    string message = "There is already a storage in the given folder";
+    throw StorageMigrationException(message);
+  }
+  // std::filesystem::rename(_root_folder_name.get_value(), new_storage_path);
+  // _root_folder_name.set_value(new_storage_path);
+  // _root_folder_name.update(HarvesterDatabase::init());
+}

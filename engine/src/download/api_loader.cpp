@@ -78,8 +78,7 @@ void api_loader::init(const json &j) {
 
 string api_loader::get_api_schema_full_path() const {
   stringstream ss;
-  ss << Setting(Setting::STORAGE_ROOT, HarvesterDatabase::init()).get_value()
-     << API_LOADER_SCHEMA_NAME;
+  ss << Setting(Setting::STORAGE_ROOT).get_value() << API_LOADER_SCHEMA_NAME;
   return ss.str();
 }
 

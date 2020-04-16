@@ -38,6 +38,7 @@ class Setting : public DatabaseItem {
   string _value;
 
 public:
+  static string STORAGE_NAME;
   /* Settings name */
   static string STORAGE_ROOT;
 
@@ -61,7 +62,7 @@ public:
    * Creates a Setting object from name fetching value in database
    * @param name the name of the setting
    */
-  Setting(string name, sql::Connection *db);
+  Setting(string name);
 
   string to_string() const;
 
@@ -72,8 +73,8 @@ public:
   bool insert(sql::Connection *db);
 
   /**
-   * Updates the Setting object in the database
-   * @param db the database
+   * Updates the value and the link in the database
+   * @param the new value
    */
   void update(sql::Connection *db);
 

@@ -59,6 +59,13 @@ public:
       : ExceptionWrapper(error_message, "CommandException") {}
 };
 
+class StorageMigrationException : public ExceptionWrapper {
+
+public:
+  StorageMigrationException(std::string &error_message)
+      : ExceptionWrapper(error_message, "StorageMigrationException") {}
+};
+
 class ClosedDatabaseException : public ExceptionWrapper {
 
 public:

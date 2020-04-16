@@ -81,6 +81,7 @@ nlohmann::json json_from_file(const std::string &path) {
     throw std::runtime_error("Can't open file: " + path);
   nlohmann::json res;
   in >> res;
+  in.close();
   return res;
 }
 

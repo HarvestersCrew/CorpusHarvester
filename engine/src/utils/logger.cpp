@@ -119,25 +119,26 @@ void logger::print_log(logger::level level, const string &msg) {
   }
 }
 
-void logger::start(sql::Connection *db) {
+void logger::start() {
   if (logger::_initialized) {
     return;
   }
-  logger::_setting_level = Setting(Setting::LOGGER_LEVEL, db);
-  logger::_setting_output = Setting(Setting::LOGGER_OUTPUT, db);
-  logger::_setting_output_path = Setting(Setting::LOGGER_OUTPUT_PATH, db);
+  logger::_initialized = true;
+  logger::_setting_level = Setting(Setting::LOGGER_LEVEL);
+  logger::_setting_output = Setting(Setting::LOGGER_OUTPUT);
+  logger::_setting_output_path = Setting(Setting::LOGGER_OUTPUT_PATH);
   try {
     logger::set_level(logger::_setting_level.get_value());
     logger::set_output(logger::_setting_output.get_value());
     logger::set_output_path(logger::_setting_output_path.get_value());
   } catch (const logger_exception &e) {
+    logger::_initialized = false;
     logger::error("Invalid logger settings from DB, recreating it");
     logger::set_level(Setting::get_default_value(Setting::LOGGER_LEVEL));
     logger::set_output(Setting::get_default_value(Setting::LOGGER_OUTPUT));
     logger::set_output_path(
         Setting::get_default_value(Setting::LOGGER_OUTPUT_PATH));
   }
-  logger::_initialized = true;
   for (const auto &el : logger::_backlog) {
     logger::print_log(el.first, el.second);
   }

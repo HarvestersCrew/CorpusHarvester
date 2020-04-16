@@ -92,6 +92,37 @@ void test_export_corpus_zip() {
                            res->getString("extraction_path"));
 }
 
+void test_migration_not_exists() {
+  try {
+    storage.migrate("/tmp/je/suis/non/existant");
+    Assertion::assert_throw(__FUNCTION__, "StorageMigrationException");
+  } catch (StorageMigrationException &e) {
+    return;
+  }
+}
+
+void test_migration_already_exists() {
+  try {
+    storage.migrate("/tmp");
+    Assertion::assert_throw(__FUNCTION__, "StorageMigrationException");
+  } catch (StorageMigrationException &e) {
+    return;
+  }
+}
+
+void test_migration() {
+  string last_storage_path = storage.get_root_folder_name();
+  std::filesystem::create_directory("/tmp/harvester");
+  storage.migrate("/tmp/harvester");
+  Assertion::assert_false(__FUNCTION__,
+                          std::filesystem::exists(last_storage_path));
+  Assertion::assert_equals(__FUNCTION__,
+                           "/tmp/harvester/" + Setting::STORAGE_NAME,
+                           storage.get_root_folder_name());
+  Assertion::assert_true(
+      __FUNCTION__, std::filesystem::exists(storage.get_root_folder_name()));
+}
+
 void storage_test() {
   std::cout << std::endl << "Storage tests : " << std::endl;
   Assertion::test(test_file_destination, "test_file_destination");
@@ -99,5 +130,9 @@ void storage_test() {
   Assertion::test(test_store_one_file, "test_store_one_file");
   Assertion::test(test_export_methods, "test_export_methods");
   Assertion::test(test_export_corpus_zip, "test_export_corpus_zip");
+  Assertion::test(test_migration_not_exists, "test_migration_not_exists");
+  Assertion::test(test_migration_already_exists,
+                  "test_migration_already_exists");
+  // Assertion::test(test_migration, "test_migration");
   HarvesterDatabase::close();
 }

@@ -65,7 +65,7 @@ bool HarvesterDatabase::empty() {
 sql::Connection *HarvesterDatabase::init() {
   HarvesterDatabase::open();
   HarvesterDatabase::create();
-  logger::start(_db);
+  logger::start();
   return _db;
 }
 

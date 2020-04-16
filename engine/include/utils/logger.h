@@ -78,7 +78,7 @@ public:
    * starts outputting previously saved and future logs
    * @param db DB to use to load the settings
    */
-  static void start(sql::Connection *db);
+  static void start();
 
   /**
    * Stops the logging and starts saving logs in the backlog

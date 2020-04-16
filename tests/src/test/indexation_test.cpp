@@ -104,8 +104,7 @@ void test_create_database2() {
 
 void test_get_setting() {
   std::string name = "storage_root";
-  Setting setting =
-      Setting(name, Indexer(HarvesterDatabase::init()).get_database());
+  Setting setting = Setting(name);
   Assertion::assert_equals(__FUNCTION__, name, setting.get_name());
   Assertion::assert_equals(__FUNCTION__,
                            Setting::get_default_value(Setting::STORAGE_ROOT),
@@ -115,8 +114,7 @@ void test_get_setting() {
 void test_get_wrong_setting() {
   try {
     std::string name = "wrong_setting";
-    Setting setting =
-        Setting(name, Indexer(HarvesterDatabase::init()).get_database());
+    Setting setting = Setting(name);
     Assertion::assert_throw(__FUNCTION__, "SettingNotFoundException");
   } catch (SettingNotFoundException &e) {
     return;
@@ -331,9 +329,8 @@ void test_update_setting() {
   std::string name = "storage_root";
   std::string new_value = "/new/path";
   Setting setting = Setting(name, new_value);
-  setting.update(Indexer(HarvesterDatabase::init()).get_database());
-  Setting updated_setting(name,
-                          Indexer(HarvesterDatabase::init()).get_database());
+  setting.update(HarvesterDatabase::init());
+  Setting updated_setting(name);
   Assertion::assert_equals(__FUNCTION__, new_value,
                            updated_setting.get_value());
 }
@@ -342,10 +339,8 @@ void test_insert_setting() {
   std::string name = "new_setting";
   std::string value = "value";
   Setting setting = Setting(name, value);
-  bool inserted =
-      setting.insert(Indexer(HarvesterDatabase::init()).get_database());
-  Setting inserted_setting(name,
-                           Indexer(HarvesterDatabase::init()).get_database());
+  bool inserted = setting.insert(HarvesterDatabase::init());
+  Setting inserted_setting(name);
   Assertion::assert_true(__FUNCTION__, inserted);
   Assertion::assert_equals(__FUNCTION__, name, inserted_setting.get_name());
   Assertion::assert_equals(__FUNCTION__, value, inserted_setting.get_value());
@@ -353,12 +348,10 @@ void test_insert_setting() {
 
 void test_insert_existing_setting() {
   std::string name = "storage_root";
-  Setting existing_setting(name,
-                           Indexer(HarvesterDatabase::init()).get_database());
+  Setting existing_setting(name);
   std::string value = "value";
   Setting setting = Setting(name, value);
-  bool inserted =
-      setting.insert(Indexer(HarvesterDatabase::init()).get_database());
+  bool inserted = setting.insert(HarvesterDatabase::init());
   Assertion::assert_false(__FUNCTION__, inserted);
   Assertion::assert_not_equals(__FUNCTION__, value,
                                existing_setting.get_value());

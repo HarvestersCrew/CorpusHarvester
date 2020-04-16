@@ -230,16 +230,12 @@ void test_logger_save_to_db() {
   logger::set_output_path("/tmp/harvester_logs");
   logger::save_to_db();
 
-  Assertion::assert_equals(
-      __FUNCTION__, "2",
-      Setting(Setting::LOGGER_LEVEL, HarvesterDatabase::init()).get_value());
-  Assertion::assert_equals(
-      __FUNCTION__, "1",
-      Setting(Setting::LOGGER_OUTPUT, HarvesterDatabase::init()).get_value());
-  Assertion::assert_equals(
-      __FUNCTION__, "/tmp/harvester_logs",
-      Setting(Setting::LOGGER_OUTPUT_PATH, HarvesterDatabase::init())
-          .get_value());
+  Assertion::assert_equals(__FUNCTION__, "2",
+                           Setting(Setting::LOGGER_LEVEL).get_value());
+  Assertion::assert_equals(__FUNCTION__, "1",
+                           Setting(Setting::LOGGER_OUTPUT).get_value());
+  Assertion::assert_equals(__FUNCTION__, "/tmp/harvester_logs",
+                           Setting(Setting::LOGGER_OUTPUT_PATH).get_value());
 }
 
 void logger_test() {
