@@ -29,7 +29,7 @@ Setting::Setting(string name) : DatabaseItem(-1) {
   if (!res->next()) {
     throw SettingNotFoundException(name);
   }
-  fill_from_statement(db, res);
+  fill_from_statement(res);
   delete prep_stmt;
   delete res;
 }
@@ -86,7 +86,7 @@ void Setting::update(sql::Connection *db) {
   logger::debug("Setting '" + _name + "' updated in DB");
 }
 
-void Setting::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
+void Setting::fill_from_statement(sql::ResultSet *res) {
   _id = res->getInt("id");
   _name = res->getString("name");
   _value = res->getString("value");

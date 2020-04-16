@@ -87,7 +87,7 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   while (sql_res->next()) {
     shared_ptr<File> file = std::make_shared<File>();
-    file->fill_from_statement(HarvesterDatabase::init(), sql_res);
+    file->fill_from_statement(sql_res);
     res.push_back(file);
   }
 

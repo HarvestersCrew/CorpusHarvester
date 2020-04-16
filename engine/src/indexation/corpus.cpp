@@ -68,7 +68,7 @@ void Corpus::fetch_files() {
 
   while (res->next()) {
     shared_ptr<File> file = std::make_shared<File>();
-    file->fill_from_statement(con.get(), res);
+    file->fill_from_statement(res);
     _files.push_back(file);
   }
   PoolDB::unborrow_from_pool(con);
@@ -87,7 +87,7 @@ void Corpus::fill_attribute_from_statement(sql::ResultSet *res) {
   }
 }
 
-void Corpus::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
+void Corpus::fill_from_statement(sql::ResultSet *res) {
   fill_attribute_from_statement(res);
   fetch_files();
 }

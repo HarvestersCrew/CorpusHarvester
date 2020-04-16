@@ -80,10 +80,9 @@ public:
 
   /**
    * Fills this setting from a DB resultset
-   * @param db DB pointer
    * @param res result from the DB for a setting
    */
-  void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
+  void fill_from_statement(sql::ResultSet *res);
 
   string get_name() const { return _name; }
   string get_value() const { return _value; }

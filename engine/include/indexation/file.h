@@ -92,7 +92,7 @@ public:
 
   bool insert();
 
-  void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
+  void fill_from_statement(sql::ResultSet *res);
 
   /**
    * Fills the _tags attribute fetching the tags linked to this file in the

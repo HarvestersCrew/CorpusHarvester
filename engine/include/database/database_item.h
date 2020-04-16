@@ -47,11 +47,9 @@ public:
 
   /**
    * Fills the object reading the result of an SQL statement
-   * @param db the database
    * @param the result of an SQL statement
    */
-  virtual void fill_from_statement(sql::Connection *db,
-                                   sql::ResultSet *res) = 0;
+  virtual void fill_from_statement(sql::ResultSet *res) = 0;
 
   /**
    * Gets the id of the last inserted object in the database

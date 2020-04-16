@@ -33,10 +33,9 @@ bool Tag::insert() {
   return true;
 }
 
-void Tag::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
+void Tag::fill_from_statement(sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_file_id = res->getInt("file_id");
   this->_name = res->getString("name");
   this->_value = res->getString("value");
-  db->isClosed();
 }

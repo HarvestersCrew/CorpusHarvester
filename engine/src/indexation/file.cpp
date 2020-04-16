@@ -83,14 +83,14 @@ void File::fetch_tags() {
 
   while (res->next()) {
     Tag tag = Tag();
-    tag.fill_from_statement(con.get(), res);
+    tag.fill_from_statement(res);
     _tags.push_back(std::make_unique<Tag>(tag));
   }
   delete res;
   PoolDB::unborrow_from_pool(con);
 }
 
-void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
+void File::fill_from_statement(sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_path = res->getString("path");
   this->_name = res->getString("name");
@@ -167,7 +167,7 @@ std::optional<shared_ptr<File>> File::get_file_from_id(sql::Connection *db,
   // If we have got a value, we put it in the variable
   while (res->next()) {
     file.emplace(new File());
-    file.value()->fill_from_statement(db, res);
+    file.value()->fill_from_statement(res);
   }
   delete res;
 

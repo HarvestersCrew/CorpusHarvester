@@ -94,7 +94,7 @@ std::list<shared_ptr<File>> SearchBuilder::build() {
 
   while (res->next()) {
     shared_ptr<File> file = std::make_shared<File>();
-    file->fill_from_statement(con.get(), res);
+    file->fill_from_statement(res);
     files.push_back(file);
   }
   delete prep_stmt;

@@ -60,7 +60,7 @@ public:
 
   bool insert();
 
-  void fill_from_statement(sql::Connection *db, sql::ResultSet *res);
+  void fill_from_statement(sql::ResultSet *res);
 
   int get_file_id() const { return _file_id; }
   std::string get_name() const { return _name; }
