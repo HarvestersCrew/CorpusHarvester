@@ -33,6 +33,11 @@ bool WebsocketServer::init(unsigned int port) {
 
 void WebsocketServer::run() {
   logger::info("Starting server on port " + to_string(_port));
+  std::cout << "Starting server on port " + to_string(_port) << std::endl;
+  if (logger::get_output() == logger::output::FILE) {
+    std::cout << "Logger is now outputting to " << logger::get_output_path()
+              << std::endl;
+  }
   _server.run();
 }
 

@@ -36,4 +36,4 @@ The web client is made with Node in Vue.js. If you wish to run it, you have the 
 Go into the web folder, type `npm install` and `npx vue-cli-service build`. You then have a `dist/` folder you can distribute via a HTTP server. For the convenience, a dev package is also given with the packages. Run it with `npx dist/ -p 8080 --proxy "http://localhost:8080?"` (by adapting the two ports if necessary). You'll need to have the server running, either via Docker or natively.
 
 ### Full docker package
-If you have Docker installed, just run `docker-compose -f docker-compose.yml -f docker-compose.demo.yml up` to have the full suite started. The web client is on the port `8081`.
+If you have Docker installed, just run `docker-compose -f docker-compose.yml -f docker-compose.demo.yml up` to have the full suite started. The web client is on the port `8081`. Afterhand, do not forget to run `docker-compose -f docker-compose.yml -f docker-compose.demo.yml down` to free the resources.
