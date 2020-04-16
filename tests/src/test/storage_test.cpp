@@ -70,10 +70,10 @@ void test_export_corpus_zip() {
   logger::set_level(logger::DEBUG);
   auto con = PoolDB::borrow_from_pool();
   for (auto &file : files) {
-    file->insert(con.get());
+    file->insert();
   }
   Corpus corpus = Corpus("corpus_test", files, "something");
-  corpus.insert(con.get());
+  corpus.insert();
   corpus.export_(ExportMethod::methods::ZIP);
   std::string new_extraction_path =
       storage.get_corpus_path() + std::to_string(corpus.get_id()) + ".zip";
@@ -85,7 +85,7 @@ void test_export_corpus_zip() {
 
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
-  prep_stmt = con.get()->prepareStatement(GET_CORPUS_FROM_ID);
+  prep_stmt = con->prepareStatement(GET_CORPUS_FROM_ID);
   prep_stmt->setInt(1, corpus.get_id());
   res = prep_stmt->executeQuery();
   res->next();

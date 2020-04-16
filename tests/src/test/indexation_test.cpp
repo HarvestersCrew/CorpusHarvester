@@ -270,11 +270,11 @@ void test_fetch_corpuses() {
   Corpus c1("Jurassic Park");
   Corpus c2("Zootopia");
   Corpus c3("Avengers");
-  c1.insert(con.get());
+  c1.insert();
   std::this_thread::sleep_for(std::chrono::seconds(1));
-  c2.insert(con.get());
+  c2.insert();
   std::this_thread::sleep_for(std::chrono::seconds(1));
-  c3.insert(con.get());
+  c3.insert();
 
   Corpus::get_corpus_from_id(con.get(), c1.get_id());
 
@@ -365,7 +365,7 @@ void test_insert_setting() {
   std::string name = "new_setting";
   std::string value = "value";
   Setting setting = Setting(name, value);
-  bool inserted = setting.insert(PoolDB::borrow_from_pool().get());
+  bool inserted = setting.insert();
   Setting inserted_setting(name);
   Assertion::assert_true(__FUNCTION__, inserted);
   Assertion::assert_equals(__FUNCTION__, name, inserted_setting.get_name());
@@ -377,7 +377,7 @@ void test_insert_existing_setting() {
   Setting existing_setting(name);
   std::string value = "value";
   Setting setting = Setting(name, value);
-  bool inserted = setting.insert(PoolDB::borrow_from_pool().get());
+  bool inserted = setting.insert();
   Assertion::assert_false(__FUNCTION__, inserted);
   Assertion::assert_not_equals(__FUNCTION__, value,
                                existing_setting.get_value());

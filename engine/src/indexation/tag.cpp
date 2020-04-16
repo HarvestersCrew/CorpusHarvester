@@ -17,7 +17,7 @@ std::string Tag::to_string() const {
   return out.str();
 }
 
-bool Tag::insert(sql::Connection *db) {
+bool Tag::insert() {
   sql::PreparedStatement *prep_stmt;
   auto con = PoolDB::borrow_from_pool();
 

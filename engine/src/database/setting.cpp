@@ -43,7 +43,7 @@ string Setting::to_string() const {
   return out.str();
 }
 
-bool Setting::insert(sql::Connection *db) {
+bool Setting::insert() {
 
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
@@ -102,6 +102,6 @@ void Setting::init_settings(sql::Connection *db) {
   for (auto &pair : _default_settings) {
     setting.set_name(pair.first);
     setting.set_value(pair.second);
-    setting.insert(db);
+    setting.insert();
   }
 }

@@ -123,7 +123,7 @@ public:
    */
   std::string header_string() const;
 
-  bool insert(sql::Connection *db);
+  bool insert();
 
   void fill_attribute_from_statement(sql::ResultSet *res);
 

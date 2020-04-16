@@ -46,7 +46,7 @@ bool File::api_id_exists(sql::Connection *db) {
   return api_id_exists;
 }
 
-bool File::insert(sql::Connection *db) {
+bool File::insert() {
   auto con = PoolDB::borrow_from_pool();
   bool aie = api_id_exists(con.get());
   if (!aie) {
@@ -62,12 +62,12 @@ bool File::insert(sql::Connection *db) {
     delete prep_stmt;
 
     this->_id = DatabaseItem::get_last_inserted_id(con.get());
+    PoolDB::unborrow_from_pool(con);
     for (const auto &tag : _tags) {
       tag->set_file_id(this->_id);
-      tag->insert(con.get());
+      tag->insert();
     }
   }
-  PoolDB::unborrow_from_pool(con);
   return !aie;
 }
 

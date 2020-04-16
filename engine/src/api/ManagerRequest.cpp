@@ -87,7 +87,7 @@ int ManagerRequest::create_corpus(const string &name,
   } else {
     corpus = Corpus(name, files, "");
   }
-  corpus.insert(HarvesterDatabase::init());
+  corpus.insert();
   return corpus.get_id();
 }
 

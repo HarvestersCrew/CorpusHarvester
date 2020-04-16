@@ -69,9 +69,8 @@ public:
 
   /**
    * Inserts the current setting in the DB
-   * @param db the DB pointer
    */
-  bool insert(sql::Connection *db);
+  bool insert();
 
   /**
    * Updates the value and the link in the database
