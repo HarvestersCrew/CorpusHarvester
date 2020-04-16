@@ -1,12 +1,14 @@
 #include "test/storage_test.h"
 
-Storage storage;
-std::string STORED_PATH = storage.get_root_folder_name();
-std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
 shared_ptr<File> file =
     std::make_shared<File>(File("null", "storage", 100, "twitter", ".txt"));
 
 void test_file_destination() {
+
+  Storage storage;
+  std::string STORED_PATH = storage.get_root_folder_name();
+  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
+
   std::string fileDest = storage.file_destination(file);
   Assertion::assert_equals(
       __FUNCTION__,
@@ -24,12 +26,22 @@ void test_file_destination() {
 }
 
 void test_empty_file_name() {
+
+  Storage storage;
+  std::string STORED_PATH = storage.get_root_folder_name();
+  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
+
   file->set_name("");
   std::string fileDest = storage.file_destination(file);
   Assertion::assert_not_equals(__FUNCTION__, "", fileDest);
 }
 
 void test_store_one_file() {
+
+  Storage storage;
+  std::string STORED_PATH = storage.get_root_folder_name();
+  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
+
   file->set_source("tmdb");
   file->set_name("test");
   file->set_format(".png");
@@ -61,6 +73,11 @@ void test_export_methods() {
 }
 
 void test_export_corpus_zip() {
+
+  Storage storage;
+  std::string STORED_PATH = storage.get_root_folder_name();
+  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
+
   std::list<shared_ptr<File>> files;
   files.push_back(file);
   shared_ptr<File> file2 =
@@ -95,6 +112,11 @@ void test_export_corpus_zip() {
 }
 
 void test_migration_not_exists() {
+
+  Storage storage;
+  std::string STORED_PATH = storage.get_root_folder_name();
+  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
+
   try {
     storage.migrate("/tmp/je/suis/non/existant");
     Assertion::assert_throw(__FUNCTION__, "StorageMigrationException");
@@ -104,6 +126,11 @@ void test_migration_not_exists() {
 }
 
 void test_migration_already_exists() {
+
+  Storage storage;
+  std::string STORED_PATH = storage.get_root_folder_name();
+  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
+
   try {
     storage.migrate("/tmp");
     Assertion::assert_throw(__FUNCTION__, "StorageMigrationException");
@@ -113,6 +140,11 @@ void test_migration_already_exists() {
 }
 
 void test_migration() {
+
+  Storage storage;
+  std::string STORED_PATH = storage.get_root_folder_name();
+  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
+
   string last_storage_path = storage.get_root_folder_name();
   std::filesystem::create_directory("/tmp/harvester");
   storage.migrate("/tmp/harvester");

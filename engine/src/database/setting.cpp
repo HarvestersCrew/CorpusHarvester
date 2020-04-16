@@ -22,10 +22,11 @@ Setting::Setting(string name, string value)
 Setting::Setting(string name) : DatabaseItem(-1) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
-  sql::Connection *db = HarvesterDatabase::init();
-  prep_stmt = db->prepareStatement(GET_SETTING_FROM_KEY);
+  auto con = PoolDB::borrow_from_pool();
+  prep_stmt = con->prepareStatement(GET_SETTING_FROM_KEY);
   prep_stmt->setString(1, name);
   res = prep_stmt->executeQuery();
+  PoolDB::unborrow_from_pool(con);
   if (!res->next()) {
     throw SettingNotFoundException(name);
   }
