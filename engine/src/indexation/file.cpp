@@ -153,16 +153,17 @@ std::string File::get_tag_value(std::string name) {
   return value;
 }
 
-std::optional<shared_ptr<File>> File::get_file_from_id(sql::Connection *db,
-                                                       const int id) {
+std::optional<shared_ptr<File>> File::get_file_from_id(const int id) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
+  auto con = PoolDB::borrow_from_pool();
 
   // Get the file based on the id
-  prep_stmt = db->prepareStatement(GET_FILE_FROM_ID);
+  prep_stmt = con->prepareStatement(GET_FILE_FROM_ID);
   prep_stmt->setInt(1, id);
   res = prep_stmt->executeQuery();
   delete prep_stmt;
+  PoolDB::unborrow_from_pool(con);
 
   // Define by default an empty optional for the corpus
   std::optional<shared_ptr<File>> file;

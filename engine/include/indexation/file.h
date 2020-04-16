@@ -139,13 +139,11 @@ public:
   /**
    * Get a file based on his id
    *
-   * @param db Database
    * @param id Id of the file.
    *
    * @return The desired file.
    */
-  static std::optional<shared_ptr<File>> get_file_from_id(sql::Connection *db,
-                                                          const int id);
+  static std::optional<shared_ptr<File>> get_file_from_id(const int id);
 };
 
 #endif

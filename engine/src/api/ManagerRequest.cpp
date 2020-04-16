@@ -118,7 +118,7 @@ string ManagerRequest::export_corpus(const int id, const string &method) const {
 
 std::optional<shared_ptr<File>>
 ManagerRequest::get_file_from_id(const int id) const {
-  return File::get_file_from_id(HarvesterDatabase::init(), id);
+  return File::get_file_from_id(id);
 }
 
 /*
