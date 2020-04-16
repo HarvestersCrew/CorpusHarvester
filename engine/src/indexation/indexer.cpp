@@ -3,7 +3,9 @@
 Indexer::Indexer(sql::Connection *db) : _db(db) {}
 
 bool Indexer::insert_file(shared_ptr<File> file) const {
-  bool inserted = file->insert(_db);
+  auto con = PoolDB::borrow_from_pool();
+  bool inserted = file->insert(con.get());
+  PoolDB::unborrow_from_pool(con);
   if (inserted) {
     logger::debug("Insertion of " + file->to_string() + " : OK");
   } else {
@@ -18,7 +20,11 @@ void Indexer::indexation(std::list<shared_ptr<File>> files) {
   }
 }
 
-void Indexer::save_corpus(Corpus &corpus) { corpus.insert(_db); }
+void Indexer::save_corpus(Corpus &corpus) {
+  auto con = PoolDB::borrow_from_pool();
+  corpus.insert(con.get());
+  PoolDB::unborrow_from_pool(con);
+}
 
 std::list<shared_ptr<File>> Indexer::fetch_from_tag(std::string tag_name,
                                                     std::string tag_value) {

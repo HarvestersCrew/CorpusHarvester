@@ -2,11 +2,11 @@
 #define INDEXER_H
 
 #include "database/harvester_database.h"
+#include "database/pool_db.h"
 #include "indexation/corpus.h"
 #include "indexation/file.h"
 #include "indexation/search_builder.h"
 #include "utils/logger.h"
-
 #include <cppconn/driver.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
