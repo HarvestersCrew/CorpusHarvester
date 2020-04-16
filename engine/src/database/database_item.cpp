@@ -3,7 +3,7 @@
 // in the header file
 #include "database/pool_db.h"
 
-int DatabaseItem::get_last_inserted_id(sql::Connection *db) {
+int DatabaseItem::get_last_inserted_id(shared_ptr<sql::Connection> db) {
   sql::Statement *stmt = db->createStatement();
   sql::ResultSet *res = stmt->executeQuery("SELECT LAST_INSERT_ID() AS id");
   res->next();

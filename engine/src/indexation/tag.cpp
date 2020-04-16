@@ -28,7 +28,7 @@ bool Tag::insert() {
   prep_stmt->execute();
   delete prep_stmt;
 
-  this->_id = DatabaseItem::get_last_inserted_id(con.get());
+  this->_id = DatabaseItem::get_last_inserted_id(con);
   PoolDB::unborrow_from_pool(con);
   return true;
 }

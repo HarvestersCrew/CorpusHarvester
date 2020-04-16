@@ -62,7 +62,7 @@ bool Setting::insert() {
     prep_stmt->setString(1, _name);
     prep_stmt->setString(2, _value);
     prep_stmt->execute();
-    _id = DatabaseItem::get_last_inserted_id(con.get());
+    _id = DatabaseItem::get_last_inserted_id(con);
     logger::debug("Setting inserted '" + _name + "' to DB");
   } catch (sql::SQLException &e) {
     log_sql_exception(e);

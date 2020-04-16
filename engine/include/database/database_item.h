@@ -4,6 +4,9 @@
 #include <cppconn/connection.h>
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
+#include <memory>
+
+using std::shared_ptr;
 
 /**
  * DatabaseItem class describes an object stored in the database
@@ -53,10 +56,10 @@ public:
 
   /**
    * Gets the id of the last inserted object in the database
-   * @param db please pass nullptr
+   * @param db shared ptr of a connection given by the PoolDB
    * @return the id of the last inserted object in the database
    */
-  static int get_last_inserted_id(sql::Connection *db);
+  static int get_last_inserted_id(shared_ptr<sql::Connection> db);
 
   virtual int get_id() const { return _id; };
   void set_id(int id) { _id = id; };

@@ -44,7 +44,7 @@ bool Corpus::insert() {
   prep_stmt->setString(2, _used_filters);
   prep_stmt->execute();
 
-  this->_id = DatabaseItem::get_last_inserted_id(con.get());
+  this->_id = DatabaseItem::get_last_inserted_id(con);
   for (const auto &file : _files) {
     prep_stmt = con->prepareStatement(INSERT_CORPUS_FILES_STATEMENT);
     prep_stmt->setInt(1, _id);

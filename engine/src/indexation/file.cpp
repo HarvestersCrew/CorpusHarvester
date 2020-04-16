@@ -61,7 +61,7 @@ bool File::insert() {
     prep_stmt->execute();
     delete prep_stmt;
 
-    this->_id = DatabaseItem::get_last_inserted_id(con.get());
+    this->_id = DatabaseItem::get_last_inserted_id(con);
     PoolDB::unborrow_from_pool(con);
     for (const auto &tag : _tags) {
       tag->set_file_id(this->_id);
