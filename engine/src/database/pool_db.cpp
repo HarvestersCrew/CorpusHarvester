@@ -8,9 +8,9 @@ Connection *PoolDB::get_connection() {
   sql::Driver *driver = get_driver_instance();
   Connection *con = driver->connect("db", "root", "1234");
   sql::Statement *stmt = con->createStatement();
-  stmt->execute("CREATE DATABASE IF NOT EXISTS " HARVESTER_DATABASE_NAME ";");
+  stmt->execute("CREATE DATABASE IF NOT EXISTS " POOL_DB_NAME ";");
   delete stmt;
-  con->setSchema(HARVESTER_DATABASE_NAME);
+  con->setSchema(POOL_DB_NAME);
   return con;
 }
 

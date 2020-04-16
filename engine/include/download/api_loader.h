@@ -1,7 +1,6 @@
 #ifndef API_LOADER_H
 #define API_LOADER_H
 
-#include "database/harvester_database.h"
 #include "database/setting.h"
 #include "download/api_parameter.h"
 #include "download/download_item.h"

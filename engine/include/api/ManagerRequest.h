@@ -1,7 +1,6 @@
 #ifndef CORPUSHARVESTER_CLENT_REQUEST_H
 #define CORPUSHARVESTER_CLENT_REQUEST_H
 
-#include "database/harvester_database.h"
 #include "database/setting.h"
 #include "download/api_download_builder.h"
 #include "download/api_loader.h"

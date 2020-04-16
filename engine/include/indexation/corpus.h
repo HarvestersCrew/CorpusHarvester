@@ -1,7 +1,6 @@
 #ifndef CORPUSHARVESTER_CORPUS_H
 #define CORPUSHARVESTER_CORPUS_H
 
-#include "database/harvester_database.h"
 #include "database/pool_db.h"
 #include "file.h"
 #include "indexation/file.h"

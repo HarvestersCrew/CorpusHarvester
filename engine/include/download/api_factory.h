@@ -1,7 +1,6 @@
 #ifndef API_FACTORY_H
 #define API_FACTORY_H
 
-#include "database/harvester_database.h"
 #include "database/setting.h"
 #include "download/api_loader.h"
 #include "utils/exceptions.h"

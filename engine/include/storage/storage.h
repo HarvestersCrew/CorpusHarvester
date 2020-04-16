@@ -1,7 +1,6 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
-#include "database/harvester_database.h"
 #include "database/setting.h"
 #include "indexation/file.h"
 #include "utils/exceptions.h"

@@ -1,7 +1,6 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include "database/harvester_database.h"
 #include "database/setting.h"
 #include "utils/exceptions.h"
 #include "utils/utils.h"
