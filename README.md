@@ -13,7 +13,7 @@ CS Engineering School Project
 - `make docker`: starts a set of Docker containers and builds the executables in Docker.
 - `make docker/(FOLDER_NAME)` to specify a build.
 
-Both those methods resolve in making an executable in `bin/cli` (or `bin/tests` for the tests). The first one is native to the machine, the second one is running through Docker. You may have to apply `sudo` to both Docker methods, depending on how you usually run it. Finally, the Docker executable passes through all parameters and should behave the same way as the native one.
+Both those methods resolve in making an executable in `bin/cli` (or `bin/tests` for the tests or `bin/server` for the server). The first one is native to the machine, the second one is running through Docker. You may have to apply `sudo` to both Docker methods, depending on how you usually run it. Finally, the Docker executable passes through all parameters and should behave the same way as the native one.
 
 ### Phony methods
 - `make clean`: cleans `bin` and `obj` folders.
@@ -28,3 +28,12 @@ Using Docker, a web interface is running to play with the MySQL server from outs
 
 ## How to use the client line interface
 Please refer to the documentation in 'doc/cli.md'.
+
+## Web client
+The web client is made with Node in Vue.js. If you wish to run it, you have the possibility to build it yourself (or fire up the dev server) if you have Node installed, or through Docker.
+
+### Node installed
+Go into the web folder, type `npm install` and `npx vue-cli-service build`. You then have a `dist/` folder you can distribute via a HTTP server. For the convenience, a dev package is also given with the packages. Run it with `npx dist/ -p 8080 --proxy "http://localhost:8080?"` (by adapting the two ports if necessary). You'll need to have the server running, either via Docker or natively.
+
+### Full docker package
+If you have Docker installed, just run `docker-compose -f docker-compose.yml -f docker-compose.demo.yml up` to have the full suite started. The web client is on the port `8081`.
