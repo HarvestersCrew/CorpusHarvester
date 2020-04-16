@@ -242,4 +242,11 @@ public:
                          "manager_request_invalid_parameter") {}
 };
 
+class db_no_free_connection : public ExceptionWrapper {
+public:
+  db_no_free_connection()
+      : ExceptionWrapper("Can't get a free connection to the DB",
+                         "db_no_free_connection") {}
+};
+
 #endif
