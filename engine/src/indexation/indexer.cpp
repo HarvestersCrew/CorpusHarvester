@@ -41,3 +41,8 @@ std::list<shared_ptr<File>> Indexer::fetch_from_attribute(std::string attribute,
       sb.add_condition(attribute, value, "=")->build();
   return files;
 }
+
+SearchBuilder Indexer::get_search_builder() {
+  SearchBuilder sb(_db);
+  return sb;
+}

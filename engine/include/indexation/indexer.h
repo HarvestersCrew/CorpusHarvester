@@ -77,12 +77,7 @@ public:
    * indexer
    * @return a search builder
    */
-  SearchBuilder get_search_builder() {
-    SearchBuilder sb(_db);
-    return sb;
-  }
-
-  sql::Connection *get_database() { return _db; }
+  SearchBuilder get_search_builder();
 };
 
 #endif
