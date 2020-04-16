@@ -113,10 +113,8 @@ public:
 
   /**
    * Initializes the default settings in the database
-   * @param db the database
    */
-  static void init_settings(sql::Connection *db);
-  static void init_settings(shared_ptr<sql::Connection> db);
+  static void init_settings();
 };
 
 #endif

@@ -25,11 +25,11 @@ void PoolDB::create() {
       stmt->execute(create_statement);
     }
     logger::debug("Create tables : OK");
-
-    Setting::init_settings(con);
-    logger::debug("Init Setting tables : OK");
     delete stmt;
     PoolDB::unborrow_from_pool(con);
+
+    Setting::init_settings();
+    logger::debug("Init Setting tables : OK");
   }
 }
 

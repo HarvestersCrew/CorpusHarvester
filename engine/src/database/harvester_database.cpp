@@ -46,7 +46,7 @@ void HarvesterDatabase::create() {
     }
     logger::debug("Create tables : OK");
 
-    Setting::init_settings(_db);
+    Setting::init_settings();
     logger::debug("Init Setting tables : OK");
     delete stmt;
   }

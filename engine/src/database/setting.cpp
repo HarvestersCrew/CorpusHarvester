@@ -97,16 +97,7 @@ void Setting::set_default_value(const string &name, const string &value) {
   Setting::_default_settings.at(name) = value;
 }
 
-void Setting::init_settings(sql::Connection *db) {
-  Setting setting = Setting();
-  for (auto &pair : _default_settings) {
-    setting.set_name(pair.first);
-    setting.set_value(pair.second);
-    setting.insert();
-  }
-}
-
-void Setting::init_settings(shared_ptr<sql::Connection> db) {
+void Setting::init_settings() {
   Setting setting = Setting();
   for (auto &pair : _default_settings) {
     setting.set_name(pair.first);
