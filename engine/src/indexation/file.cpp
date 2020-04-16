@@ -1,4 +1,6 @@
 #include "indexation/file.h"
+// Put here to avoid circuling inclusion, do not put in header
+#include "database/pool_db.h"
 
 File::File(std::string path, std::string name, int size, std::string source,
            std::string format, int id)
@@ -45,11 +47,12 @@ bool File::api_id_exists(sql::Connection *db) {
 }
 
 bool File::insert(sql::Connection *db) {
-  bool aie = api_id_exists(db);
+  auto con = PoolDB::borrow_from_pool();
+  bool aie = api_id_exists(con.get());
   if (!aie) {
     sql::PreparedStatement *prep_stmt;
 
-    prep_stmt = db->prepareStatement(INSERT_FILE_STATEMENT);
+    prep_stmt = con->prepareStatement(INSERT_FILE_STATEMENT);
     prep_stmt->setString(1, _path);
     prep_stmt->setString(2, _name);
     prep_stmt->setInt(3, _size);
@@ -58,12 +61,13 @@ bool File::insert(sql::Connection *db) {
     prep_stmt->execute();
     delete prep_stmt;
 
-    this->_id = DatabaseItem::get_last_inserted_id(db);
+    this->_id = DatabaseItem::get_last_inserted_id(con.get());
     for (const auto &tag : _tags) {
       tag->set_file_id(this->_id);
-      tag->insert(db);
+      tag->insert(con.get());
     }
   }
+  PoolDB::unborrow_from_pool(con);
   return !aie;
 }
 

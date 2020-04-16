@@ -37,20 +37,22 @@ std::string Corpus::to_string() const {
 
 bool Corpus::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
+  auto con = PoolDB::borrow_from_pool();
 
-  prep_stmt = db->prepareStatement(INSERT_CORPUS_STATEMENT);
+  prep_stmt = con->prepareStatement(INSERT_CORPUS_STATEMENT);
   prep_stmt->setString(1, _title);
   prep_stmt->setString(2, _used_filters);
   prep_stmt->execute();
 
-  this->_id = DatabaseItem::get_last_inserted_id(db);
+  this->_id = DatabaseItem::get_last_inserted_id(con.get());
   for (const auto &file : _files) {
-    prep_stmt = db->prepareStatement(INSERT_CORPUS_FILES_STATEMENT);
+    prep_stmt = con->prepareStatement(INSERT_CORPUS_FILES_STATEMENT);
     prep_stmt->setInt(1, _id);
     prep_stmt->setInt(2, file->get_id());
     prep_stmt->execute();
   }
   delete prep_stmt;
+  PoolDB::unborrow_from_pool(con);
   return true;
 }
 

@@ -1,4 +1,6 @@
 #include "indexation/tag.h"
+// Put here to avoid circular inclusion, do not put in header
+#include "database/pool_db.h"
 #include "indexation/file.h"
 
 Tag::Tag() {}
@@ -17,15 +19,17 @@ std::string Tag::to_string() const {
 
 bool Tag::insert(sql::Connection *db) {
   sql::PreparedStatement *prep_stmt;
+  auto con = PoolDB::borrow_from_pool();
 
-  prep_stmt = db->prepareStatement(INSERT_TAG_STATEMENT);
+  prep_stmt = con->prepareStatement(INSERT_TAG_STATEMENT);
   prep_stmt->setInt(1, _file_id);
   prep_stmt->setString(2, _name);
   prep_stmt->setString(3, _value);
   prep_stmt->execute();
   delete prep_stmt;
 
-  this->_id = DatabaseItem::get_last_inserted_id(db);
+  this->_id = DatabaseItem::get_last_inserted_id(con.get());
+  PoolDB::unborrow_from_pool(con);
   return true;
 }
 

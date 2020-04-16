@@ -2,6 +2,7 @@
 #define SETTING_H
 
 #include "database/database_item.h"
+#include "database/pool_db.h"
 #include "utils/exceptions.h"
 #include "utils/utils.h"
 #include <cppconn/connection.h>

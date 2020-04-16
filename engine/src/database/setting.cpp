@@ -47,9 +47,10 @@ bool Setting::insert(sql::Connection *db) {
 
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
+  auto con = PoolDB::borrow_from_pool();
 
   try {
-    prep_stmt = db->prepareStatement(GET_SETTING_FROM_KEY);
+    prep_stmt = con->prepareStatement(GET_SETTING_FROM_KEY);
     prep_stmt->setString(1, _name);
     res = prep_stmt->executeQuery();
     if (res->next()) {
@@ -57,11 +58,11 @@ bool Setting::insert(sql::Connection *db) {
       return false;
     }
 
-    prep_stmt = db->prepareStatement(INSERT_SETTING_STATEMENT);
+    prep_stmt = con->prepareStatement(INSERT_SETTING_STATEMENT);
     prep_stmt->setString(1, _name);
     prep_stmt->setString(2, _value);
     prep_stmt->execute();
-    _id = DatabaseItem::get_last_inserted_id(db);
+    _id = DatabaseItem::get_last_inserted_id(con.get());
     logger::debug("Setting inserted '" + _name + "' to DB");
   } catch (sql::SQLException &e) {
     log_sql_exception(e);
@@ -70,7 +71,7 @@ bool Setting::insert(sql::Connection *db) {
 
   delete res;
   delete prep_stmt;
-
+  PoolDB::unborrow_from_pool(con);
   return true;
 }
 
