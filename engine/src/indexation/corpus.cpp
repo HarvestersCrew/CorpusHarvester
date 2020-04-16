@@ -173,8 +173,8 @@ void Corpus::export_(ExportMethod::methods method) {
 
 void Corpus::update_extraction_path() {
   sql::PreparedStatement *prep_stmt;
-  prep_stmt = HarvesterDatabase::init()->prepareStatement(
-      UPDATE_CORPUS_EXTRACTION_PATH);
+  auto con = PoolDB::borrow_from_pool();
+  prep_stmt = con->prepareStatement(UPDATE_CORPUS_EXTRACTION_PATH);
   if (_extraction_path) {
     prep_stmt->setString(1, _extraction_path.value());
   } else {
@@ -183,4 +183,5 @@ void Corpus::update_extraction_path() {
   prep_stmt->setInt(2, _id);
   prep_stmt->executeQuery();
   delete prep_stmt;
+  PoolDB::unborrow_from_pool(con);
 }
