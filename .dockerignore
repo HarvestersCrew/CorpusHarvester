@@ -5,3 +5,4 @@ obj
 Dockerfile
 LICENSE
 README.md
+web/node_modules
