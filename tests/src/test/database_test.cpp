@@ -18,11 +18,14 @@ void test_borrow_from_pool() {
   auto ptr2 = PoolDB::borrow_from_pool();
   Assertion::assert_equals(__FUNCTION__, 2, ptr1.use_count());
   Assertion::assert_equals(__FUNCTION__, 2, ptr2.use_count());
-  try {
-    PoolDB::borrow_from_pool();
-    Assertion::assert_throw(__FUNCTION__, "db_no_free_connection");
-  } catch (const db_no_free_connection &e) {
-  }
+
+  Assertion::assert_equals(__FUNCTION__, 0, PoolDB::_available_pool.size());
+  Assertion::assert_equals(__FUNCTION__, 2, PoolDB::_borrowed_pool.size());
+
+  auto ptr4 = PoolDB::borrow_from_pool();
+  Assertion::assert_equals(__FUNCTION__, 0, PoolDB::_available_pool.size());
+  Assertion::assert_equals(__FUNCTION__, 3, PoolDB::_borrowed_pool.size());
+
   PoolDB::unborrow_from_pool(ptr1);
   auto ptr3 = PoolDB::borrow_from_pool();
   Assertion::assert_equals(__FUNCTION__, 2, ptr3.use_count());

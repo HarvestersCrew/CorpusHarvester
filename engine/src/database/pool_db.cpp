@@ -89,14 +89,15 @@ shared_ptr<Connection> PoolDB::borrow_from_pool() {
     }
   }
 
-  if (_available_pool.size() > 0) {
-    auto ptr = _available_pool.front();
-    _available_pool.pop();
-    _borrowed_pool.insert(ptr);
-    return ptr;
-  } else {
-    throw db_no_free_connection(_borrowed_pool.size());
+  if (_available_pool.size() == 0) {
+    _available_pool.emplace(PoolDB::get_connection());
+    logger::warning("Added new DB connection to the available pool");
   }
+
+  auto ptr = _available_pool.front();
+  _available_pool.pop();
+  _borrowed_pool.insert(ptr);
+  return ptr;
 }
 
 void PoolDB::unborrow_from_pool(shared_ptr<Connection> &ptr) {
