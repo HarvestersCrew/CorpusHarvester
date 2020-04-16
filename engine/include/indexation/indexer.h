@@ -22,17 +22,11 @@ using std::shared_ptr;
  */
 class Indexer {
 
-  /**
-   * The database (as a connection)
-   */
-  sql::Connection *_db;
-
 public:
   /**
    * Creates an Indexer object that uses the given database
-   * @param the database the idexer should use
    */
-  Indexer(sql::Connection *db);
+  Indexer();
 
   /**
    * Inserts the given file in the database

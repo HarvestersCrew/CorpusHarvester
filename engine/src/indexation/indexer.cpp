@@ -1,6 +1,6 @@
 #include "indexation/indexer.h"
 
-Indexer::Indexer(sql::Connection *db) : _db(db) {}
+Indexer::Indexer() {}
 
 bool Indexer::insert_file(shared_ptr<File> file) const {
   auto con = PoolDB::borrow_from_pool();

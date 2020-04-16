@@ -5,7 +5,7 @@ ApiDownloadBuilder::ApiDownloadBuilder() : ApiRequestBuilder() {}
 list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
 
   list<shared_ptr<File>> res;
-  Indexer indexer(HarvesterDatabase::init());
+  Indexer indexer;
   Storage storage;
 
   // Convert the requests without operators

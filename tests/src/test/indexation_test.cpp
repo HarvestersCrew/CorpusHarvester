@@ -55,7 +55,7 @@ void test_indexation() {
     files.push_back(up_file);
   }
   auto con = PoolDB::borrow_from_pool();
-  Indexer(con.get()).indexation(files);
+  Indexer().indexation(files);
 
   sql::Statement *stmt = con->createStatement();
   sql::ResultSet *res_files = stmt->executeQuery("SELECT * FROM File");
@@ -76,7 +76,7 @@ void test_api_id_exists() {
       File("api_id_exists", "api_id_exists", 100, "Tweeter", ".txt"));
   file->add_tag("_api_id", "0");
   auto con = PoolDB::borrow_from_pool();
-  bool inserted = Indexer(con.get()).insert_file(file);
+  bool inserted = Indexer().insert_file(file);
   Assertion::assert_false(__FUNCTION__, inserted);
   PoolDB::unborrow_from_pool(con);
 }
@@ -86,7 +86,7 @@ void test_same_api_id_different_source() {
       std::make_shared<File>(File("path", "name", 150, "Tmdb", ".txt"));
   file->add_tag("_api_id", "0");
   auto con = PoolDB::borrow_from_pool();
-  bool inserted = Indexer(con.get()).insert_file(file);
+  bool inserted = Indexer().insert_file(file);
   Assertion::assert_true(__FUNCTION__, inserted);
   PoolDB::unborrow_from_pool(con);
 }
@@ -133,15 +133,14 @@ void test_get_wrong_setting() {
 void test_fetch_tweets() {
   auto con = PoolDB::borrow_from_pool();
   std::list<shared_ptr<File>> tweets =
-      Indexer(con.get()).fetch_from_tag("type", "tweet");
+      Indexer().fetch_from_tag("type", "tweet");
   PoolDB::unborrow_from_pool(con);
   Assertion::assert_equals(__FUNCTION__, TWEET_COUNT, tweets.size());
 }
 
 void test_fetch_even_files() {
   auto con = PoolDB::borrow_from_pool();
-  std::list<shared_ptr<File>> tweets =
-      Indexer(con.get()).fetch_from_tag("is_even", "1");
+  std::list<shared_ptr<File>> tweets = Indexer().fetch_from_tag("is_even", "1");
   PoolDB::unborrow_from_pool(con);
   Assertion::assert_equals(__FUNCTION__, EVEN_FILES, tweets.size());
 }
@@ -149,7 +148,7 @@ void test_fetch_even_files() {
 void test_fetch_by_name() {
   auto con = PoolDB::borrow_from_pool();
   std::list<shared_ptr<File>> tweets =
-      Indexer(con.get()).fetch_from_attribute("name", "file12");
+      Indexer().fetch_from_attribute("name", "file12");
   PoolDB::unborrow_from_pool(con);
   Assertion::assert_equals(__FUNCTION__, 1, tweets.size());
   shared_ptr<File> &tweet = *(tweets.begin());
@@ -158,7 +157,7 @@ void test_fetch_by_name() {
 
 void test_fetch_by_size() {
   auto con = PoolDB::borrow_from_pool();
-  SearchBuilder sb = Indexer(con.get()).get_search_builder();
+  SearchBuilder sb = Indexer().get_search_builder();
   std::list<shared_ptr<File>> tweets =
       sb.add_condition("size", "110", "<=")->build();
   Assertion::assert_equals(__FUNCTION__, "size <= 110", sb.get_filters());
@@ -167,7 +166,7 @@ void test_fetch_by_size() {
 
 void test_fetch_by_tag_lt() {
   auto con = PoolDB::borrow_from_pool();
-  SearchBuilder sb = Indexer(con.get()).get_search_builder();
+  SearchBuilder sb = Indexer().get_search_builder();
   std::list<shared_ptr<File>> tweets =
       sb.add_tag_condition("retweet", "65", "<")->build();
   Assertion::assert_equals(__FUNCTION__, 15, tweets.size());
@@ -175,7 +174,7 @@ void test_fetch_by_tag_lt() {
 
 void test_fetch_specific_files() {
   auto con = PoolDB::borrow_from_pool();
-  SearchBuilder sb = Indexer(con.get()).get_search_builder();
+  SearchBuilder sb = Indexer().get_search_builder();
   std::list<shared_ptr<File>> files =
       sb.add_tag_condition("is_even", "1", "=")
           ->logical_and()
@@ -194,7 +193,7 @@ void test_fetch_specific_files() {
 
 void test_fetch_specific_files2() {
   auto con = PoolDB::borrow_from_pool();
-  SearchBuilder sb = Indexer(con.get()).get_search_builder();
+  SearchBuilder sb = Indexer().get_search_builder();
   std::list<shared_ptr<File>> files =
       sb.add_tag_condition("is_even", "1", "=")
           ->logical_and()
@@ -209,7 +208,7 @@ void test_fetch_specific_files2() {
 
 void test_fetch_specific_files3() {
   auto con = PoolDB::borrow_from_pool();
-  SearchBuilder sb = Indexer(con.get()).get_search_builder();
+  SearchBuilder sb = Indexer().get_search_builder();
   std::list<shared_ptr<File>> files =
       sb.add_condition("name", "file6", "!=")
           ->logical_and()
@@ -224,7 +223,7 @@ void test_fetch_specific_files3() {
 
 void test_create_corpus() {
   auto con = PoolDB::borrow_from_pool();
-  SearchBuilder sb = Indexer(con.get()).get_search_builder();
+  SearchBuilder sb = Indexer().get_search_builder();
   std::list<shared_ptr<File>> files = sb.add_condition("name", "file6", "=")
                                           ->logical_or()
                                           ->add_condition("name", "file8", "=")
@@ -233,8 +232,8 @@ void test_create_corpus() {
                                           ->build();
   Corpus corpus("file_6-8-3", files, sb.get_filters());
   Corpus corpus2("empty");
-  Indexer(con.get()).save_corpus(corpus);
-  Indexer(con.get()).save_corpus(corpus2);
+  Indexer().save_corpus(corpus);
+  Indexer().save_corpus(corpus2);
   sql::ResultSet *res_files;
   sql::Statement *stmt = con.get()->createStatement();
   std::list<shared_ptr<Corpus>> corpuses =
@@ -329,7 +328,7 @@ void test_fetch_corpuses() {
 void test_wrong_search() {
   try {
     auto con = PoolDB::borrow_from_pool();
-    SearchBuilder sb = Indexer(con.get()).get_search_builder();
+    SearchBuilder sb = Indexer().get_search_builder();
     sb.add_condition("name", "file6", "=")->logical_or()->logical_or()->build();
     Assertion::assert_throw(__FUNCTION__, "SQLException");
   } catch (sql::SQLException &e) {
@@ -340,7 +339,7 @@ void test_wrong_search() {
 void test_wrong_search2() {
   try {
     auto con = PoolDB::borrow_from_pool();
-    SearchBuilder sb = Indexer(con.get()).get_search_builder();
+    SearchBuilder sb = Indexer().get_search_builder();
     sb.add_condition("name", "file6", "=")
         ->add_condition("name", "file3", "=")
         ->logical_or()
