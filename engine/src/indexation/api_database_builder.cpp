@@ -77,7 +77,8 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *sql_res;
-  prep_stmt = HarvesterDatabase::init()->prepareStatement(query.str());
+  auto con = PoolDB::borrow_from_pool();
+  prep_stmt = con->prepareStatement(query.str());
 
   for (long unsigned int i = 1; i <= prepared_values.size(); ++i) {
     prep_stmt->setString(i, prepared_values.at(i - 1));
@@ -93,6 +94,7 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   delete prep_stmt;
   delete sql_res;
+  PoolDB::unborrow_from_pool(con);
 
   logger::info("Retrieved " + std::to_string(res.size()) + " from DB");
 

@@ -235,7 +235,7 @@ void test_create_corpus() {
   Indexer().save_corpus(corpus);
   Indexer().save_corpus(corpus2);
   sql::ResultSet *res_files;
-  sql::Statement *stmt = con.get()->createStatement();
+  sql::Statement *stmt = con->createStatement();
   std::list<shared_ptr<Corpus>> corpuses =
       Corpus::get_all_corpuses(Corpus::ordering_method::NONE);
   Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());

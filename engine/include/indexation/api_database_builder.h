@@ -2,6 +2,7 @@
 #define API_DATABASE_BUILDER_H
 
 #include "database/harvester_database.h"
+#include "database/pool_db.h"
 #include "download/api_loader.h"
 #include "indexation/indexer.h"
 #include "utils/api_request_builder.h"
