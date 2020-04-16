@@ -145,68 +145,56 @@ void CommandLineInterface::corpus_list() {
   map<string, string>::iterator itOrderCommand;
   ManagerRequest mr;
 
+  std::map<std::string, std::string> filters;
+
+  // Check if the user wants a specific order
+  itOrderCommand = this->string_inputs.find("order");
+  if (itOrderCommand != this->string_inputs.end() &&
+      itOrderCommand->second != "") {
+
+    string order = itOrderCommand->second;
+
+    if (order == "date_asc") {
+      orderingMethod = Corpus::ordering_method::DATE_ASC;
+    } else if (order == "date_desc") {
+      orderingMethod = Corpus::ordering_method::DATE_DESC;
+    } else if (order == "name_asc") {
+      orderingMethod = Corpus::ordering_method::NAME_ASC;
+    } else if (order == "name_desc") {
+      orderingMethod = Corpus::ordering_method::NAME_DESC;
+    } else {
+      logger::error("The value " + order +
+                    " for the order attribute is not valid. Please check "
+                    "with the different values present : \n" +
+                    "- date_asc \n" + +"- date_desc \n" + +"- name_asc \n" +
+                    +"- name_desc \n");
+      exit(-1);
+    }
+  }
+
   // Check if we have a value for the name
   itSubCommand = this->string_inputs.find("name");
-
   if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
 
     // Get the name of the corpus
     string corpusName = itSubCommand->second;
 
-    // Search for the corpus with the given name
-    std::list<shared_ptr<Corpus>> corpuses =
-        mr.get_corpus_from_name(corpusName);
-
-    // Check if we have a corpus
-    if (corpuses.size() > 0) {
-      for (const auto &corpus : corpuses) {
-        logger::info(corpus->header_string());
-      }
-    } else {
-      logger::info("No corpus have been found for the name : " + corpusName);
-    }
-
-  } else {
-    logger::info("List of all the corpus.");
-
-    std::map<std::string, std::string> filters;
-
-    // Check if the user wants a specific order
-    itOrderCommand = this->string_inputs.find("order");
-    if (itOrderCommand != this->string_inputs.end() &&
-        itOrderCommand->second != "") {
-
-      string order = itOrderCommand->second;
-
-      if (order == "date_asc") {
-        orderingMethod = Corpus::ordering_method::DATE_ASC;
-      } else if (order == "date_desc") {
-        orderingMethod = Corpus::ordering_method::DATE_DESC;
-      } else if (order == "name_asc") {
-        orderingMethod = Corpus::ordering_method::NAME_ASC;
-      } else if (order == "name_desc") {
-        orderingMethod = Corpus::ordering_method::NAME_DESC;
-      } else {
-        logger::error("The value " + order +
-                      " for the order attribute is not valid. Please check "
-                      "with the different values present : \n" +
-                      "- date_asc \n" + +"- date_desc \n" + +"- name_asc \n" +
-                      +"- name_desc \n");
-        exit(-1);
-      }
-    }
-
-    // Get the corpus from the database
-    std::list<shared_ptr<Corpus>> corpusList =
-        mr.get_corpuses(filters, orderingMethod);
-
-    logger::info("Number of available corpus : " +
-                 std::to_string(corpusList.size()));
-
-    for (const auto corpus : corpusList) {
-      logger::info(corpus->header_string());
-    }
+    // Add a filter for the title
+    filters.insert(std::pair<std::string, std::string>("title", corpusName));
   }
+
+  // We want the list of all the corpus in the database
+  std::list<shared_ptr<Corpus>> corpusList =
+      mr.get_corpuses(filters, orderingMethod);
+
+  logger::info("Number of available corpus : " +
+               std::to_string(corpusList.size()));
+
+  for (const auto corpus : corpusList) {
+    logger::info(corpus->header_string());
+  }
+
+  exit(0);
 }
 
 void CommandLineInterface::corpus_create() {

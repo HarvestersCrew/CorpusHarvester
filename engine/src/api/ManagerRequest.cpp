@@ -66,6 +66,9 @@ list<shared_ptr<Corpus>> ManagerRequest::get_corpuses() const {
 list<shared_ptr<Corpus>>
 ManagerRequest::get_corpus_from_name(string name) const {
   logger::debug("Search corpus : " + name);
+  logger::warning("Use the get_corpuses(std::map<string, string> &filters, "
+                  "Corpus::ordering_method order). Add the possibility to "
+                  "order the corpus and avoid future maintenance.");
   std::map<string, string> search{{"title", name}};
   return this->get_corpuses(search, Corpus::ordering_method::NONE);
 }

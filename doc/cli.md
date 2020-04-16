@@ -34,10 +34,11 @@ files: Files function.
 ## Corpuses
 - `corpus` : list all corpuses in default order (most recent to older)
     - `--id ID` : displays informations about the corpus with the given ID
-    - `search`
-        - `--name TITLE` : search all corpuses matching at least partially with this title
+    - `list`
+        - `--name "TITLE"` : search all corpuses matching at least partially with this title
         - `--order ORDER` : display in the specified order (name asc/desc or date asc/desc), values to pass to be defined
     - `create` : to be defined
+        - `--name "NAME"` : specify the name of the new corpus.
 
 ## Files
 - `files`
