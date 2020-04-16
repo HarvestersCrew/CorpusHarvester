@@ -1,7 +1,7 @@
 <template>
   <Bar>
     <v-container>
-      <v-card>
+      <v-card class="my-4">
         <v-card-title>Logger settings</v-card-title>
         <v-card-text>
           <v-form @submit.prevent="on_output_path_send">
@@ -84,6 +84,26 @@
               </v-col>
             </v-row>
           </v-form>
+        </v-card-text>
+      </v-card>
+
+      <v-card class="my-4">
+        <v-card-title>Storage settings</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="10" md="5" class="mx-auto mx-md-10">
+              <p class="subtitle-2 text-left">
+                Current storage path
+              </p>
+              <v-text-field
+                dense
+                disabled
+                outlined
+                hint="Where the harvester stores its data"
+                persistent-hint
+              ></v-text-field>
+            </v-col>
+          </v-row>
         </v-card-text>
       </v-card>
     </v-container>
