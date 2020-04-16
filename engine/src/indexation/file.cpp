@@ -71,21 +71,23 @@ bool File::insert() {
   return !aie;
 }
 
-void File::fetch_tags(sql::Connection *db) {
+void File::fetch_tags() {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
+  auto con = PoolDB::borrow_from_pool();
 
-  prep_stmt = db->prepareStatement("SELECT * FROM Tag WHERE file_id = ?;");
+  prep_stmt = con->prepareStatement("SELECT * FROM Tag WHERE file_id = ?;");
   prep_stmt->setInt(1, _id);
   res = prep_stmt->executeQuery();
   delete prep_stmt;
 
   while (res->next()) {
     Tag tag = Tag();
-    tag.fill_from_statement(db, res);
+    tag.fill_from_statement(con.get(), res);
     _tags.push_back(std::make_unique<Tag>(tag));
   }
   delete res;
+  PoolDB::unborrow_from_pool(con);
 }
 
 void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
@@ -95,7 +97,7 @@ void File::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   this->_size = res->getInt("size");
   this->_source = res->getString("source");
   this->_format = res->getString("format");
-  fetch_tags(db);
+  fetch_tags();
 }
 
 std::string File::get_extraction_metadata() {

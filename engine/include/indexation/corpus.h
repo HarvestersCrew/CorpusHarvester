@@ -112,7 +112,6 @@ public:
   /**
    * Fills the _files attribute fetching the files linked to this corpus in the
    * database
-   * @param db the database
    */
   void fetch_files();
 

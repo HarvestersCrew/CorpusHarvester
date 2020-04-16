@@ -90,7 +90,6 @@ void Setting::fill_from_statement(sql::Connection *db, sql::ResultSet *res) {
   _id = res->getInt("id");
   _name = res->getString("name");
   _value = res->getString("value");
-  db->isClosed();
 }
 
 void Setting::set_default_value(const string &name, const string &value) {

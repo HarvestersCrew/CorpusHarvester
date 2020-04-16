@@ -97,9 +97,8 @@ public:
   /**
    * Fills the _tags attribute fetching the tags linked to this file in the
    * database
-   * @param db the database
    */
-  void fetch_tags(sql::Connection *db);
+  void fetch_tags();
 
   /**
    * Gets the metadata with the corresponding format for extraction
