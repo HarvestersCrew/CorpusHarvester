@@ -101,6 +101,7 @@
                 outlined
                 hint="Where the harvester stores its data"
                 persistent-hint
+                :value="vuex_storage_path"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -119,7 +120,8 @@ export default {
   computed: mapState({
     vuex_logger_level: state => state.logger_settings.level,
     vuex_logger_output: state => state.logger_settings.output,
-    vuex_logger_output_path: state => state.logger_settings.output_path
+    vuex_logger_output_path: state => state.logger_settings.output_path,
+    vuex_storage_path: state => state.storage.path
   }),
   data() {
     return {
