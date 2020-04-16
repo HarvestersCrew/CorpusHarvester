@@ -2,8 +2,7 @@
 
 SearchBuilder::SearchBuilder(sql::Connection *db)
     : RequestBuilder(), _first_prepared_values(0), _prepared_values(0),
-      _current_prepared_values(0), _current_clause_only_on_file(true), _db(db) {
-}
+      _current_prepared_values(0), _current_clause_only_on_file(true) {}
 
 void SearchBuilder::valid_current_clause() {
   std::string distinct = "";
@@ -78,9 +77,10 @@ std::list<shared_ptr<File>> SearchBuilder::build() {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   std::list<shared_ptr<File>> files;
+  auto con = PoolDB::borrow_from_pool();
 
   logger::debug(request);
-  prep_stmt = _db->prepareStatement(request);
+  prep_stmt = con->prepareStatement(request);
   int i = 1;
   for (auto &preparedValue : _first_prepared_values) {
     prep_stmt->setString(i, preparedValue);
@@ -94,11 +94,12 @@ std::list<shared_ptr<File>> SearchBuilder::build() {
 
   while (res->next()) {
     shared_ptr<File> file = std::make_shared<File>();
-    file->fill_from_statement(_db, res);
+    file->fill_from_statement(con.get(), res);
     files.push_back(file);
   }
   delete prep_stmt;
   delete res;
+  PoolDB::unborrow_from_pool(con);
   return files;
 }
 

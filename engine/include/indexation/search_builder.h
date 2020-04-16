@@ -1,6 +1,7 @@
 #ifndef SEARCH_BUILDER_H
 #define SEARCH_BUILDER_H
 
+#include "database/pool_db.h"
 #include "indexation/file.h"
 #include "utils/logger.h"
 #include "utils/request_builder.h"
@@ -63,11 +64,6 @@ class SearchBuilder : public RequestBuilder {
    * A description of the filters applied in the search request
    */
   std::string _filters;
-
-  /**
-   * The database (as a connection)
-   */
-  sql::Connection *_db;
 
 private:
   /**
