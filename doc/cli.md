@@ -26,9 +26,9 @@ files: Files function.
     - `list` : list available API names
 
 ## Corpuses
-- `corpus` : list all corpuses in default order (most recent to older)
+- `corpus` : 
     - `--id ID` : displays informations about the corpus with the given ID
-    - `list`
+    - `list` : list all corpuses in default order (most recent to older)
         - `--name "TITLE"` : search all corpuses matching at least partially with this title
         - `--order ORDER` : display in the specified order (name asc/desc or date asc/desc), values to pass to be defined
     - `create` : to be defined
