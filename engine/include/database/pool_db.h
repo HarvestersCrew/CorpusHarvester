@@ -31,13 +31,29 @@ class PoolDB {
   friend void test_open_pool();
   friend void test_close_pool();
   friend void test_reassign_free_borrowed_pool();
+  friend void test_drop_create_empty_pool();
 
 private:
   static queue<shared_ptr<Connection>> _available_pool;
   static set<shared_ptr<Connection>> _borrowed_pool;
   static mutex _pool_mut;
 
-public:
+  /**
+   * Gets a fresh connection
+   */
+  static Connection *get_connection();
+
+  /**
+   * Creates the DB
+   */
+  static void create();
+
+  /**
+   * Checks if the database is empty
+   * @return true if the datatbase is empty, false otherwise
+   */
+  static bool empty();
+
   /**
    * Opens the pool of connection
    */
@@ -47,6 +63,9 @@ public:
    * Closes the DB pool
    */
   static void close_pool();
+
+public:
+  static void init(unsigned int nbr);
 
   /**
    * Borrows a connection from the pool
@@ -59,6 +78,11 @@ public:
    * program quicker
    */
   static void unborrow_from_pool(shared_ptr<Connection> &ptr);
+
+  /**
+   * Drops the database to make it empty
+   */
+  static void drop();
 };
 
 #endif

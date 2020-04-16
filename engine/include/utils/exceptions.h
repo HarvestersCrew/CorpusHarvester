@@ -244,8 +244,9 @@ public:
 
 class db_no_free_connection : public ExceptionWrapper {
 public:
-  db_no_free_connection()
-      : ExceptionWrapper("Can't get a free connection to the DB",
+  db_no_free_connection(long unsigned int borrowed_size)
+      : ExceptionWrapper("Can't get a free connection to the DB, " +
+                             to_string(borrowed_size) + " borrowed",
                          "db_no_free_connection") {}
 };
 
