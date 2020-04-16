@@ -1,7 +1,7 @@
 #ifndef INDEXATION_TEST_H
 #define INDEXATION_TEST_H
 
-#include "database/harvester_database.h"
+#include "database/pool_db.h"
 #include "indexation/indexer.h"
 #include "indexation/search_builder.h"
 #include "test/assertion.h"

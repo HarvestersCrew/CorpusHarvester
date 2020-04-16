@@ -1,4 +1,4 @@
-#include "database/harvester_database.h"
+#include "database/pool_db.h"
 #include "database/setting.h"
 #include "test/api_parameter_test.h"
 #include "test/api_request_builder_test.h"
@@ -13,16 +13,14 @@
 int main() {
   std::cout << std::endl << "Tests : " << std::endl;
 
-  try {
-    HarvesterDatabase::drop();
-  } catch (const ClosedDatabaseException &e) {
-  }
-
   Setting::set_default_value(Setting::LOGGER_LEVEL,
                              std::to_string(logger::level::NONE));
 
-  logger_test();
   database_test();
+
+  PoolDB::init(1);
+
+  logger_test();
   storage_test();
   apis_test();
   api_parameter_test();
@@ -30,8 +28,7 @@ int main() {
   cli_parser_test();
   indexation_test();
 
-  HarvesterDatabase::open();
-  HarvesterDatabase::drop();
+  PoolDB::drop();
 
   std::cout << std::endl
             << "Runs : "
