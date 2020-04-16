@@ -75,14 +75,15 @@ bool Setting::insert() {
   return true;
 }
 
-void Setting::update(sql::Connection *db) {
+void Setting::update() {
   sql::PreparedStatement *prep_stmt;
-
-  prep_stmt = db->prepareStatement(UPDATE_SETTING_STATEMENT);
+  auto con = PoolDB::borrow_from_pool();
+  prep_stmt = con->prepareStatement(UPDATE_SETTING_STATEMENT);
   prep_stmt->setString(1, _value);
   prep_stmt->setString(2, _name);
   prep_stmt->execute();
   delete prep_stmt;
+  PoolDB::unborrow_from_pool(con);
   logger::debug("Setting '" + _name + "' updated in DB");
 }
 

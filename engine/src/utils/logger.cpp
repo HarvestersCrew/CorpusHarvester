@@ -46,20 +46,20 @@ void logger::save_to_db() {
   if ((logger::level)stoi(logger::_setting_level.get_value()) !=
       logger::get_level()) {
     logger::_setting_level.set_value(to_string(logger::get_level()));
-    logger::_setting_level.update(HarvesterDatabase::init());
+    logger::_setting_level.update();
     logger::info("New logger level saved: " +
                  _level_strings.at(logger::get_level()));
   }
   if ((logger::output)stoi(logger::_setting_output.get_value()) !=
       logger::get_output()) {
     logger::_setting_output.set_value(to_string(logger::get_output()));
-    logger::_setting_output.update(HarvesterDatabase::init());
+    logger::_setting_output.update();
     logger::info("New logger output saved: " +
                  _output_strings.at(logger::get_output()));
   }
   if (logger::_setting_output_path.get_value() != logger::get_output_path()) {
     logger::_setting_output_path.set_value(logger::get_output_path());
-    logger::_setting_output_path.update(HarvesterDatabase::init());
+    logger::_setting_output_path.update();
     logger::info("New logger output path saved: " + logger::get_output_path());
   }
 }

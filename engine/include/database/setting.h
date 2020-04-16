@@ -76,9 +76,8 @@ public:
 
   /**
    * Updates the value and the link in the database
-   * @param the new value
    */
-  void update(sql::Connection *db);
+  void update();
 
   /**
    * Fills this setting from a DB resultset

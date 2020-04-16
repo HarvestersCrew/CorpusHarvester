@@ -355,7 +355,7 @@ void test_update_setting() {
   std::string name = "storage_root";
   std::string new_value = "/new/path";
   Setting setting = Setting(name, new_value);
-  setting.update(PoolDB::borrow_from_pool().get());
+  setting.update();
   Setting updated_setting(name);
   Assertion::assert_equals(__FUNCTION__, new_value,
                            updated_setting.get_value());
