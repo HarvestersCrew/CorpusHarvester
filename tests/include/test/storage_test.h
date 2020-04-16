@@ -1,6 +1,7 @@
 #ifndef STORAGE_TEST_H
 #define STORAGE_TEST_H
 
+#include "database/pool_db.h"
 #include "indexation/file.h"
 #include "indexation/indexer.h"
 #include "storage/export_method.h"

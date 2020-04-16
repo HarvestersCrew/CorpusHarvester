@@ -68,11 +68,12 @@ void test_export_corpus_zip() {
   storage.store_file(file2);
   files.push_back(file2);
   logger::set_level(logger::DEBUG);
+  auto con = PoolDB::borrow_from_pool();
   for (auto &file : files) {
-    file->insert(HarvesterDatabase::init());
+    file->insert(con.get());
   }
   Corpus corpus = Corpus("corpus_test", files, "something");
-  corpus.insert(HarvesterDatabase::init());
+  corpus.insert(con.get());
   corpus.export_(ExportMethod::methods::ZIP);
   std::string new_extraction_path =
       storage.get_corpus_path() + std::to_string(corpus.get_id()) + ".zip";
@@ -84,12 +85,13 @@ void test_export_corpus_zip() {
 
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
-  prep_stmt = HarvesterDatabase::init()->prepareStatement(GET_CORPUS_FROM_ID);
+  prep_stmt = con.get()->prepareStatement(GET_CORPUS_FROM_ID);
   prep_stmt->setInt(1, corpus.get_id());
   res = prep_stmt->executeQuery();
   res->next();
   Assertion::assert_equals(__FUNCTION__, new_extraction_path,
                            res->getString("extraction_path"));
+  PoolDB::unborrow_from_pool(con);
 }
 
 void test_migration_not_exists() {
@@ -134,5 +136,4 @@ void storage_test() {
   Assertion::test(test_migration_already_exists,
                   "test_migration_already_exists");
   // Assertion::test(test_migration, "test_migration");
-  HarvesterDatabase::close();
 }
