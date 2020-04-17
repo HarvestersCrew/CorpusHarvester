@@ -32,12 +32,6 @@ services:
         - type: bind
           source: ./
           target: /project
-        - type: bind
-          source: ./data/apis
-          target: /tmp/stored/apis
-        - type: bind
-          source: ./data/api_schema.json
-          target: /tmp/stored/api_schema.json
         - harvester_bin:/project/bin/
     depends_on:
         - db

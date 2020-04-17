@@ -25,6 +25,8 @@ PWD := $(shell pwd)
 
 THREADS := $(shell nproc --all)
 
+APPDIR := /tmp/stored/
+
 .PHONY: docker, docker/%
 
 all: $(EXESPATH)
@@ -70,7 +72,7 @@ docker/down:
 docker/clean: docker/up clean
 	docker-compose exec harvester $(MAKE) clean
 
-docker/%: docker/up
+docker/%: docker/up docker/movejson
 	docker-compose exec harvester $(MAKE) ${BINDIR}/$*
 	@echo "#!/bin/bash" > ${BINDIR}/$*
 	@echo "docker-compose exec harvester ${BINDIR}/$* \"\$${@:1}\"" >> ${BINDIR}/$*
@@ -78,3 +80,8 @@ docker/%: docker/up
 
 docker/bash: docker/up
 	docker exec -it harvester bash
+
+docker/movejson: docker/up
+	@docker-compose exec harvester mkdir -p $(APPDIR)
+	@docker-compose exec harvester cp -r /project/data/apis $(APPDIR)/
+	@docker-compose exec harvester cp /project/data/api_schema.json $(APPDIR)/
