@@ -8,7 +8,7 @@ string Setting::LOGGER_OUTPUT = "logger_output";
 string Setting::LOGGER_OUTPUT_PATH = "logger_output_path";
 
 std::map<string, string> Setting::_default_settings = {
-    {Setting::STORAGE_ROOT, "/tmp/stored"},
+    {Setting::STORAGE_ROOT, "/tmp/stored/"},
     {Setting::LOGGER_LEVEL, "0"},
     {Setting::LOGGER_OUTPUT, "0"},
     {Setting::LOGGER_OUTPUT_PATH, "/tmp/harvester_logs"}};
