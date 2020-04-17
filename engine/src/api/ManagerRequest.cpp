@@ -128,8 +128,7 @@ vector<string> ManagerRequest::get_apis() {
   return ApiFactory::get_api_names();
 }
 
-const vector<shared_ptr<const api_loader>>
-ManagerRequest::get_api_loaders() const {
+const vector<shared_ptr<api_loader>> ManagerRequest::get_api_loaders() const {
   return ApiFactory::get_api_loaders();
 }
 

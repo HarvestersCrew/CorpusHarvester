@@ -68,15 +68,15 @@ public:
   static const unordered_map<string, shared_ptr<api_loader>> &get_apis();
 
   /**
-   * Returns an immuable list of API loaders
+   * Returns a list of API loaders
    */
-  static const vector<shared_ptr<const api_loader>> get_api_loaders();
+  static const vector<shared_ptr<api_loader>> get_api_loaders();
 
   /**
-   * Returns an immuable list of API following a given type
+   * Returns a list of API following a given type
    * @param t type of APIs to retrieve
    */
-  static const vector<shared_ptr<const api_loader>>
+  static const vector<shared_ptr<api_loader>>
   get_api_loaders_typed(api_loader::api_type t);
 
   /**

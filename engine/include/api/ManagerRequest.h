@@ -152,9 +152,9 @@ public:
   vector<string> get_apis();
 
   /**
-   * Gets an immuable list of the API loaders loaded in memory
+   * Gets a list of the API loaders loaded in memory
    */
-  const vector<shared_ptr<const api_loader>> get_api_loaders() const;
+  const vector<shared_ptr<api_loader>> get_api_loaders() const;
 
   /**
    * Retrieves the list of parameters usable in a web request
