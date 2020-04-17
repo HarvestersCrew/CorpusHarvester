@@ -14,7 +14,7 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
   Storage storage;
 
   // Convert the requests without operators
-  auto requests = this->get_no_op_requests(this->get_requests());
+  auto requests = this->get_no_op_requests(this->get_usable_requests());
 
   unsigned int page = 0;
 

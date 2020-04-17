@@ -5,6 +5,7 @@ ApiDatabaseBuilder::ApiDatabaseBuilder() : ApiRequestBuilder() {}
 list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   list<shared_ptr<File>> res;
+  auto requests = this->get_usable_requests();
 
   // Used to store the prepared SQL values to send to the SQL engine
   vector<string> prepared_values;
@@ -20,8 +21,8 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
   // For each request we use an iterator, used to easily know if it is the first
   // request to add commas and other caracters
-  for (auto request_it = this->get_requests().begin();
-       request_it != this->get_requests().end(); ++request_it) {
+  for (auto request_it = requests.begin(); request_it != requests.end();
+       ++request_it) {
 
     const shared_ptr<api_loader> &api = request_it->first;
     const unordered_map<string, pair<string, string>> &params =
@@ -29,7 +30,7 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
     // If it isn't the first separate request, add the UNION keyword to get new
     // results appended
-    if (request_it != this->get_requests().begin()) {
+    if (request_it != requests.begin()) {
       query << " UNION ";
     }
 
