@@ -8,6 +8,24 @@
   >
     <v-icon>{{ current_data.icon }}</v-icon>
     <span>{{ current_data.title }}</span>
+    <v-spacer></v-spacer>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-icon
+          :color="$store.state.socket.is_connected ? 'white' : 'red'"
+          v-on="on"
+          >{{
+            $store.state.socket.is_connected
+              ? "mdi-lan-connect"
+              : "mdi-lan-disconnect"
+          }}</v-icon
+        >
+      </template>
+      <span>{{
+        $store.state.socket.is_connected ? "Connected" : "Not connected"
+      }}</span>
+    </v-tooltip>
   </v-system-bar>
 </template>
 <script>

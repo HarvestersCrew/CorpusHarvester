@@ -58,21 +58,11 @@
             <v-list-item-icon>
               <v-tooltip right>
                 <template v-slot:activator="{ on }">
-                  <v-icon
-                    :color="$store.state.socket.is_connected ? 'white' : 'red'"
-                    v-on="on"
-                    >{{
-                      $store.state.socket.is_connected
-                        ? "mdi-lan-connect"
-                        : "mdi-lan-disconnect"
-                    }}</v-icon
+                  <v-icon color="red" v-on="on" @click="logout"
+                    >mdi-power</v-icon
                   >
                 </template>
-                <span>{{
-                  $store.state.socket.is_connected
-                    ? "Connected"
-                    : "Not connected"
-                }}</span>
+                <span>Quit</span>
               </v-tooltip>
             </v-list-item-icon>
           </v-list-item>
@@ -134,6 +124,9 @@ export default {
     own_getter(type) {
       if (type === "unread") return this.$store.state.logs.unread;
       else return undefined;
+    },
+    logout() {
+      this.$store.dispatch("disconnect_server");
     }
   }
 };

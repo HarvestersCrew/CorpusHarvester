@@ -56,7 +56,6 @@ export default new Vuex.Store({
     SOCKET_ONCLOSE(state) {
       state.socket.is_connected = false;
       state.socket.connecting = false;
-      state.socket.error = true;
       state.socket.url = undefined;
     },
     SOCKET_ONERROR(state, event) {
@@ -116,6 +115,25 @@ export default new Vuex.Store({
 
     add_tokenized_request(state, { callback, token }) {
       state.tokenized_request[token] = callback;
+    },
+
+    clear_state(state) {
+      state.redirect_page = undefined;
+      state.tokenized_request = {};
+      state.logs = {
+        unread: 0,
+        messages: []
+      };
+      state.logger_settings = {
+        level: undefined,
+        output: undefined,
+        output_path: undefined
+      };
+      state.storage = {
+        path: undefined
+      };
+      state.apis = undefined;
+      localStorage.harvester_socket = undefined;
     }
   },
 
@@ -147,6 +165,14 @@ export default new Vuex.Store({
     connect_server: (context, val) => {
       context.commit("set_socket_connecting", true);
       Vue.prototype.$connect("ws://" + val);
+    },
+
+    disconnect_server(context) {
+      context.commit("clear_state");
+      Vue.prototype.$disconnect();
+      router.push({
+        name: "Login"
+      });
     }
   },
 
