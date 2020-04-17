@@ -1,6 +1,23 @@
 #include "indexation/api_database_builder.h"
 
-ApiDatabaseBuilder::ApiDatabaseBuilder() : ApiRequestBuilder() {}
+ApiDatabaseBuilder::ApiDatabaseBuilder()
+    : _order(ordering_method::NONE), ApiRequestBuilder() {
+  _order_queries = {{ordering_method::NONE, DB_BUILDER_ORDER_NONE},
+                    {ordering_method::API_ASC, DB_BUILDER_ORDER_API_ASC},
+                    {ordering_method::API_DESC, DB_BUILDER_ORDER_API_DESC},
+                    {ordering_method::SIZE_ASC, DB_BUILDER_ORDER_SIZE_ASC},
+                    {ordering_method::SIZE_DESC, DB_BUILDER_ORDER_SIZE_DESC}};
+}
+
+json ApiDatabaseBuilder::serialize() const {
+  json j = ApiRequestBuilder::serialize();
+  j["order"] = _order;
+  return j;
+}
+void ApiDatabaseBuilder::deserialize(const json &j) {
+  ApiRequestBuilder::deserialize(j);
+  _order = (ordering_method)j.at("order").get<int>();
+}
 
 list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
 
@@ -72,7 +89,7 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
   }
 
   query << ") as result_table";
-  query << " ORDER BY id";
+  query << _order_queries.at(_order);
 
   logger::debug(query.str());
 
@@ -119,4 +136,9 @@ void ApiDatabaseBuilder::add_request_parameter(long unsigned int request_id,
   }
   ApiRequestBuilder::add_request_parameter(request_id, param_name, param_value,
                                            op);
+}
+
+void ApiDatabaseBuilder::set_order(ordering_method order) { _order = order; }
+ApiDatabaseBuilder::ordering_method ApiDatabaseBuilder::get_order() const {
+  return _order;
 }

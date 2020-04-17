@@ -41,7 +41,7 @@ files: Files function.
         - `--number` : number of results per page (default: 100)
         - `--api API` : files only from this API
         - `--type TYPE` : type of files to find
-        - `--order ORDER` : display in the specified order (name asc/desc or date asc/desc), values to pass to be defined
+        - `--order ORDER` : display in the specified order (API asc/desc or size asc/desc), values to pass to be defined
     - `--id ID` : displays informations about the file with the given ID
 
 ## Settings

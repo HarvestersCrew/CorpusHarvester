@@ -14,6 +14,12 @@
 #include <unordered_map>
 #include <vector>
 
+#define DB_BUILDER_ORDER_NONE " ORDER BY id"
+#define DB_BUILDER_ORDER_API_ASC " ORDER BY source"
+#define DB_BUILDER_ORDER_API_DESC " ORDER BY source DESC"
+#define DB_BUILDER_ORDER_SIZE_ASC " ORDER BY size"
+#define DB_BUILDER_ORDER_SIZE_DESC " ORDER BY size DESC"
+
 using std::list;
 using std::shared_ptr;
 using std::string;
@@ -30,7 +36,17 @@ using std::vector;
  */
 class ApiDatabaseBuilder : public ApiRequestBuilder {
 public:
+  enum ordering_method { NONE, API_ASC, API_DESC, SIZE_ASC, SIZE_DESC };
+
+private:
+  ordering_method _order;
+  unordered_map<ordering_method, string> _order_queries;
+
+public:
   ApiDatabaseBuilder();
+
+  virtual json serialize() const;
+  virtual void deserialize(const json &j);
 
   virtual list<shared_ptr<File>> build(unsigned int number) const;
 
@@ -38,6 +54,9 @@ public:
                                      const string &param_name,
                                      const string &param_value,
                                      const string &op);
+
+  virtual void set_order(ordering_method order);
+  virtual ordering_method get_order() const;
 };
 
 #endif
