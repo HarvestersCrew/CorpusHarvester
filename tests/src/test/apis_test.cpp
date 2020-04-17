@@ -34,9 +34,23 @@ void test_apis_get_api() {
   Assertion::assert_equals(__FUNCTION__, "Twitter", api->get_name());
 }
 
+void test_apis_get_type() {
+  auto images = ApiFactory::get_api_loaders_typed(api_loader::api_type::IMAGE);
+  auto texts = ApiFactory::get_api_loaders_typed(api_loader::api_type::TEXT);
+  for (const auto api : images) {
+    Assertion::assert_equals(__FUNCTION__, api_loader::api_type::IMAGE,
+                             api->get_api_type());
+  }
+  for (const auto api : texts) {
+    Assertion::assert_equals(__FUNCTION__, api_loader::api_type::TEXT,
+                             api->get_api_type());
+  }
+}
+
 void apis_test() {
   std::cout << std::endl << "APIs tests : " << std::endl;
   Assertion::test(test_apis_get_apis, "test_apis_get_apis");
   Assertion::test(test_apis_get_names, "test_apis_get_names");
   Assertion::test(test_apis_get_api, "test_apis_get_api");
+  Assertion::test(test_apis_get_type, "test_apis_get_type");
 }

@@ -73,6 +73,13 @@ public:
   static const vector<shared_ptr<const api_loader>> get_api_loaders();
 
   /**
+   * Returns an immuable list of API following a given type
+   * @param t type of APIs to retrieve
+   */
+  static const vector<shared_ptr<const api_loader>>
+  get_api_loaders_typed(api_loader::api_type t);
+
+  /**
    * Returns a list of the API names
    */
   static vector<string> get_api_names();

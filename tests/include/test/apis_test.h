@@ -22,6 +22,7 @@ using std::unordered_map;
 void test_apis_get_apis();
 void test_apis_get_names();
 void test_apis_get_api();
+void test_apis_get_type();
 void apis_test();
 
 #endif

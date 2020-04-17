@@ -138,6 +138,16 @@ const vector<shared_ptr<const api_loader>> ApiFactory::get_api_loaders() {
   return res;
 }
 
+const vector<shared_ptr<const api_loader>>
+ApiFactory::get_api_loaders_typed(api_loader::api_type t) {
+  vector<shared_ptr<const api_loader>> res;
+  for (const auto &el : ApiFactory::get_apis()) {
+    if (el.second->get_api_type() == t)
+      res.push_back(const_pointer_cast<const api_loader>(el.second));
+  }
+  return res;
+}
+
 vector<string> ApiFactory::get_api_names() {
   vector<string> names;
   for (const auto &el : ApiFactory::get_apis()) {
