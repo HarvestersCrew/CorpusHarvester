@@ -69,6 +69,14 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   // List of files
   cli_command &listFiles =
       filesCommand.add_command("list", "List of all the files.");
+  listFiles.add_option("page", "Page to use, starts at 0.", false);
+  listFiles.add_option("number", "Number of results per page.", false);
+  listFiles.add_option("api", "Files only from this API.", false);
+  listFiles.add_option("type", "Type of files to find.", false);
+  listFiles.add_option("order",
+                       "Display in the specified order (name asc/desc or date "
+                       "asc/desc), values to pass to be defined.",
+                       false);
 
   // Get a corpus based on his id
   filesCommand.add_option("id", "Search a file based on his id.", false);
@@ -283,7 +291,119 @@ void CommandLineInterface::corpus_manager() {
 }
 
 void CommandLineInterface::files_list() {
-  // TODO ::
+  ManagerRequest mr;
+  vector<string> apis = mr.get_apis();
+
+  std::vector<string> fileType{"image", "video", "text"};
+
+  map<string, string>::iterator itSubCommand;
+
+  int page = 0;
+  int number = 100;
+  string api = "";
+  string type = "";
+  Corpus::ordering_method orderingMethod = Corpus::ordering_method::NONE;
+
+  // Check if we have the parameter page
+  itSubCommand = this->string_inputs.find("page");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    // Get the value of the page parameter
+    string pageString = itSubCommand->second;
+    string::size_type sz;
+
+    try {
+      page = std::stoi(pageString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input page is not an integer ! Please check your input.");
+      exit(-1);
+    }
+  } else {
+    logger::warning("The parameter `page` don't have a value. The default "
+                    "value will be apply (page = 0).");
+    page = 0;
+  }
+
+  // Check if we have the parameter number
+  itSubCommand = this->string_inputs.find("number");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    // Get the value of the page parameter
+    string numberString = itSubCommand->second;
+    string::size_type sz;
+
+    try {
+      number = std::stoi(numberString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input number is not an integer ! Please check your input.");
+      exit(-1);
+    }
+  } else {
+    logger::warning("The parameter `number` don't have a value. The default "
+                    "value will be apply (number = 100).");
+    number = 100;
+  }
+
+  // Check if we have the parameter api
+  itSubCommand = this->string_inputs.find("api");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    // Get the value of the page parameter
+    api = itSubCommand->second;
+
+    // Check if the api name exists in our list of apis
+    if (find(apis.begin(), apis.end(), api) == apis.end()) {
+      logger::error("The name of the api is not valid !");
+      logger::info("Apis available :");
+      for (string api : apis) {
+        logger::info(api);
+      }
+      exit(-1);
+    }
+  }
+
+  // Check if we have the parameter type
+  itSubCommand = this->string_inputs.find("type");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    // Get the value of the page parameter
+    type = itSubCommand->second;
+
+    // Check if the api name exists in our list of type
+    if (find(fileType.begin(), fileType.end(), type) == fileType.end()) {
+      logger::error("The type name is not valid !");
+      logger::info("Types available :");
+      for (string fileT : fileType) {
+        logger::info(fileT);
+      }
+      exit(-1);
+    }
+  }
+
+  // Check if the user wants a specific order
+  itSubCommand = this->string_inputs.find("order");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    string order = itSubCommand->second;
+
+    if (order == "date_asc") {
+      orderingMethod = Corpus::ordering_method::DATE_ASC;
+    } else if (order == "date_desc") {
+      orderingMethod = Corpus::ordering_method::DATE_DESC;
+    } else if (order == "name_asc") {
+      orderingMethod = Corpus::ordering_method::NAME_ASC;
+    } else if (order == "name_desc") {
+      orderingMethod = Corpus::ordering_method::NAME_DESC;
+    } else {
+      logger::error("The value " + order +
+                    " for the order attribute is not valid. Please check "
+                    "with the different values present : \n" +
+                    "- date_asc \n" + +"- date_desc \n" + +"- name_asc \n" +
+                    +"- name_desc \n");
+      exit(-1);
+    }
+  }
+
+  // TODO :: Call the file list method
+
   exit(0);
 }
 
