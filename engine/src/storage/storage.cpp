@@ -79,4 +79,5 @@ void Storage::migrate(std::string new_path) {
   std::filesystem::rename(_root_folder_name.get_value(), new_storage_path);
   _root_folder_name.set_value(new_storage_path);
   _root_folder_name.update();
+  logger::info("Storage root migrated to " + new_storage_path);
 }
