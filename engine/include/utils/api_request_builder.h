@@ -109,6 +109,8 @@ public:
                                      const string &param_value,
                                      const string &op);
 
+  virtual void clear_all();
+
   /**
    * Clears filled types
    */

@@ -19,6 +19,7 @@ using std::unordered_map;
 
 void test_types();
 void test_requests();
+void test_builder_clear();
 void test_api_dl_remove_ops();
 void api_request_builder_test();
 

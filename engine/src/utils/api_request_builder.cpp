@@ -48,6 +48,11 @@ void ApiRequestBuilder::deserialize(const json &j) {
   }
 }
 
+void ApiRequestBuilder::clear_all() {
+  this->clear_types();
+  this->clear_requests();
+}
+
 void ApiRequestBuilder::clear_types() { this->_types.clear(); }
 
 void ApiRequestBuilder::add_type(const api_loader::api_type t) {

@@ -66,6 +66,17 @@ void test_requests() {
   Assertion::assert_equals(__FUNCTION__, 0, a.get_requests().size());
 }
 
+void test_builder_clear() {
+  ApiDownloadBuilder a;
+  a.add_type(api_loader::api_type::IMAGE);
+  a.add_request("Twitter");
+  Assertion::assert_equals(__FUNCTION__, 1, a.get_requests().size());
+  Assertion::assert_equals(__FUNCTION__, 1, a.get_types().size());
+  a.clear_all();
+  Assertion::assert_equals(__FUNCTION__, 0, a.get_requests().size());
+  Assertion::assert_equals(__FUNCTION__, 0, a.get_types().size());
+}
+
 void test_api_dl_remove_ops() {
   ApiDownloadBuilder a;
   long unsigned int idx = a.add_request("Twitter");
@@ -85,5 +96,6 @@ void api_request_builder_test() {
   std::cout << std::endl << "APIs request builder tests : " << std::endl;
   Assertion::test(test_types, "test_types");
   Assertion::test(test_requests, "test_requests");
+  Assertion::test(test_builder_clear, "test_builder_clear");
   Assertion::test(test_api_dl_remove_ops, "test_api_dl_remove_ops");
 }
