@@ -69,6 +69,10 @@ void WebsocketServer::broadcast_json(const string &type, const json &j) {
   }
 }
 
+void WebsocketServer::broadcast_json(const pair<string, json> broadcast) {
+  WebsocketServer::broadcast_json(broadcast.first, broadcast.second);
+}
+
 bool WebsocketServer::send_msg(const connection_hdl &hdl, const string &msg) {
   websocketpp::lib::error_code ec;
   _server.send(hdl, msg, websocketpp::frame::opcode::text,

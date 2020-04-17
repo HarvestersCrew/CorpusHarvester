@@ -62,6 +62,7 @@ public:
   static bool send_json(const connection_hdl &hdl, const string &type,
                         const json &j, const optional<string> token);
   static void broadcast_json(const string &type, const json &j);
+  static void broadcast_json(const pair<string, json> broadcast);
 
   static bool send_msg(const connection_hdl &hdl, const string &msg);
 
