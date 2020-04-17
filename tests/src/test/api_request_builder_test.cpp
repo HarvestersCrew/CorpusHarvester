@@ -26,6 +26,11 @@ void test_types() {
   }
   Assertion::assert_equals(__FUNCTION__, 2, a.get_types().size());
 
+  a.remove_type(api_loader::api_type::IMAGE);
+  Assertion::assert_equals(__FUNCTION__, 1, a.get_types().size());
+  Assertion::assert_equals(__FUNCTION__, api_loader::api_type::TEXT,
+                           *a.get_types().find(api_loader::api_type::TEXT));
+
   a.clear_types();
   Assertion::assert_equals(__FUNCTION__, 0, a.get_types().size());
 }

@@ -55,6 +55,10 @@ void ApiRequestBuilder::clear_all() {
 
 void ApiRequestBuilder::clear_types() { this->_types.clear(); }
 
+void ApiRequestBuilder::remove_type(const api_loader::api_type t) {
+  _types.erase(t);
+}
+
 void ApiRequestBuilder::add_type(const api_loader::api_type t) {
   if (t >= api_loader::api_type::TEXT && t <= api_loader::api_type::IMAGE) {
     this->_types.insert(t);

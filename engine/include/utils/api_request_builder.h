@@ -116,6 +116,11 @@ public:
    */
   virtual void clear_types();
   /**
+   * Removes a type from the list
+   * @param t type to remove
+   */
+  virtual void remove_type(const api_loader::api_type t);
+  /**
    * Add the given type
    * @param t Type of API to load from
    * @throw api_request_builder_invalid_type the given type is invalid
