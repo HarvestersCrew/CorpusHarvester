@@ -3,7 +3,7 @@
     <v-card flat tile>
       <v-toolbar color="blue lighten-2">
         <v-row>
-          <v-col cols="4">
+          <v-col cols="6">
             <v-select
               v-model="filters.selectedTypes"
               :items="capitalized_types"
@@ -17,7 +17,7 @@
             </v-select>
           </v-col>
           <!-- TODO : allow to select one API multiple times -->
-          <v-col cols="4">
+          <v-col cols="6">
             <v-select
               v-model="filters.selectedSources"
               :items="$store.state.apis"
@@ -32,7 +32,7 @@
             >
             </v-select>
           </v-col>
-          <v-col cols="4">
+          <!-- <v-col cols="4">
             <v-menu :close-on-content-click="false">
               <template v-slot:activator="{ on }">
                 <v-text-field
@@ -48,7 +48,7 @@
               </template>
               <v-date-picker v-model="filters.date"></v-date-picker>
             </v-menu>
-          </v-col>
+          </v-col> -->
         </v-row>
       </v-toolbar>
       <v-card-text class="ma-0 pa-0">
