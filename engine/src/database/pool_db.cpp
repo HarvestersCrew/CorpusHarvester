@@ -59,20 +59,22 @@ void PoolDB::open_pool(unsigned int nbr) {
 void PoolDB::close_pool() {
   lock_guard<mutex> lock(_pool_mut);
   logger::stop();
-  while (_available_pool.size() != 0) {
-    auto ptr = _available_pool.front();
-    _available_pool.pop();
-    if (ptr != nullptr) {
-      ptr->close();
+  if (_borrowed_pool.size() + _available_pool.size() != 0) {
+    while (_available_pool.size() != 0) {
+      auto ptr = _available_pool.front();
+      _available_pool.pop();
+      if (ptr != nullptr) {
+        ptr->close();
+      }
     }
-  }
-  for (auto ptr : _borrowed_pool) {
-    if (ptr != nullptr) {
-      ptr->close();
+    for (auto ptr : _borrowed_pool) {
+      if (ptr != nullptr) {
+        ptr->close();
+      }
     }
+    _borrowed_pool.clear();
+    logger::debug("DB pool closed");
   }
-  _borrowed_pool.clear();
-  logger::debug("DB pool closed");
 }
 
 shared_ptr<Connection> PoolDB::borrow_from_pool() {
@@ -91,7 +93,9 @@ shared_ptr<Connection> PoolDB::borrow_from_pool() {
 
   if (_available_pool.size() == 0) {
     _available_pool.emplace(PoolDB::get_connection());
-    logger::warning("Added new DB connection to the available pool");
+    logger::warning(
+        "Added new DB connection to the available pool, new count: " +
+        std::to_string(_available_pool.size() + _borrowed_pool.size()));
   }
 
   auto ptr = _available_pool.front();
@@ -122,4 +126,9 @@ void PoolDB::drop() {
   delete stmt;
   PoolDB::unborrow_from_pool(con);
   logger::debug("Drop tables : OK");
+}
+
+long unsigned int PoolDB::get_total_poolsize() {
+  lock_guard<mutex> lock(_pool_mut);
+  return _borrowed_pool.size() + _available_pool.size();
 }

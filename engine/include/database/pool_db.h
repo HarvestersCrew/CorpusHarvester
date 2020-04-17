@@ -85,6 +85,8 @@ public:
    * Drops the database to make it empty
    */
   static void drop();
+
+  static long unsigned int get_total_poolsize();
 };
 
 #endif
