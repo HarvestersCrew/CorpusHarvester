@@ -287,6 +287,13 @@ public:
    * Gets the storage path
    */
   string get_storage_path() const;
+
+  /**
+   * Migrates the storage to a new path and returns the new path
+   * @param new_path
+   * @throw StorageMigrationException if the new path can't be used
+   */
+  string migrate_storage(const string &new_path) const;
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H

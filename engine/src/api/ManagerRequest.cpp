@@ -238,3 +238,9 @@ ManagerRequest::set_logger_output_path(const string &output_path) {
 string ManagerRequest::get_storage_path() const {
   return Storage().get_root_folder_name();
 }
+
+string ManagerRequest::migrate_storage(const string &new_path) const {
+  Storage storage;
+  storage.migrate(new_path);
+  return storage.get_root_folder_name();
+}

@@ -83,6 +83,7 @@ public:
   /**
    * Moves the root folder of the storage in another folder
    * @param new_path the new folder of the storage
+   * @throw StorageMigrationException if new path can't be used
    */
   void migrate(std::string new_path);
 
