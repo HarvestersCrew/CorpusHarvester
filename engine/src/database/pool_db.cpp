@@ -3,10 +3,14 @@
 queue<shared_ptr<Connection>> PoolDB::_available_pool;
 set<shared_ptr<Connection>> PoolDB::_borrowed_pool;
 mutex PoolDB::_pool_mut;
+sql::ConnectOptionsMap PoolDB::_connection_props = {{"hostName", "db"},
+                                                    {"userName", "root"},
+                                                    {"password", "1234"},
+                                                    {"OPT_RECONNECT", true}};
 
 Connection *PoolDB::get_connection() {
   sql::Driver *driver = get_driver_instance();
-  Connection *con = driver->connect("db", "root", "1234");
+  Connection *con = driver->connect(_connection_props);
   sql::Statement *stmt = con->createStatement();
   stmt->execute("CREATE DATABASE IF NOT EXISTS " POOL_DB_NAME ";");
   delete stmt;

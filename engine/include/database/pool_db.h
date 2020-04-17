@@ -40,6 +40,8 @@ private:
   static set<shared_ptr<Connection>> _borrowed_pool;
   static mutex _pool_mut;
 
+  static sql::ConnectOptionsMap _connection_props;
+
   /**
    * Gets a fresh connection
    */
