@@ -6,7 +6,7 @@
           <v-col cols="4">
             <v-select
               v-model="filters.selectedTypes"
-              :items="types"
+              :items="capitalized_types"
               label="Types"
               dark
               outlined
@@ -226,6 +226,19 @@ export default {
         selectedTypes: []
       }
     };
+  },
+  methods: {
+    capitalize_first_letter: string =>
+      string.charAt(0).toUpperCase() + string.slice(1)
+  },
+  computed: {
+    capitalized_types: function() {
+      if (this.$store.state.apis !== undefined)
+        return this.$store.getters.api_types.map(type =>
+          this.capitalize_first_letter(type)
+        );
+      else return [];
+    }
   }
 };
 </script>

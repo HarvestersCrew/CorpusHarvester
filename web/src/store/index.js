@@ -38,6 +38,11 @@ export default new Vuex.Store({
 
     apis: undefined
   },
+
+  getters: {
+    api_types: state => [...new Set(state.apis.map(api => api.api_type))]
+  },
+
   mutations: {
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;
