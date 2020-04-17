@@ -41,7 +41,6 @@ class Setting : public DatabaseItem {
   string _value;
 
 public:
-  static string STORAGE_NAME;
   /* Settings name */
   static string STORAGE_ROOT;
 

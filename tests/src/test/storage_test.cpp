@@ -114,8 +114,6 @@ void test_export_corpus_zip() {
 void test_migration_not_exists() {
 
   Storage storage;
-  std::string STORED_PATH = storage.get_root_folder_name();
-  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
 
   try {
     storage.migrate("/tmp/je/suis/non/existant");
@@ -128,8 +126,6 @@ void test_migration_not_exists() {
 void test_migration_already_exists() {
 
   Storage storage;
-  std::string STORED_PATH = storage.get_root_folder_name();
-  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
 
   try {
     storage.migrate("/tmp");
@@ -142,19 +138,18 @@ void test_migration_already_exists() {
 void test_migration() {
 
   Storage storage;
-  std::string STORED_PATH = storage.get_root_folder_name();
-  std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
-
   string last_storage_path = storage.get_root_folder_name();
-  std::filesystem::create_directory("/tmp/harvester");
+
+  std::filesystem::remove_all("/tmp/harvester");
   storage.migrate("/tmp/harvester");
   Assertion::assert_false(__FUNCTION__,
                           std::filesystem::exists(last_storage_path));
-  Assertion::assert_equals(__FUNCTION__,
-                           "/tmp/harvester/" + Setting::STORAGE_NAME,
+  Assertion::assert_equals(__FUNCTION__, "/tmp/harvester/",
                            storage.get_root_folder_name());
   Assertion::assert_true(
       __FUNCTION__, std::filesystem::exists(storage.get_root_folder_name()));
+
+  // storage.migrate(STORED_PATH);
 }
 
 void storage_test() {
@@ -167,5 +162,5 @@ void storage_test() {
   Assertion::test(test_migration_not_exists, "test_migration_not_exists");
   Assertion::test(test_migration_already_exists,
                   "test_migration_already_exists");
-  // Assertion::test(test_migration, "test_migration");
+  Assertion::test(test_migration, "test_migration");
 }

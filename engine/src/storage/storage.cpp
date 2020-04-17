@@ -64,16 +64,19 @@ void Storage::store_files(std::list<shared_ptr<File>> files) const {
 }
 
 void Storage::migrate(std::string new_path) {
-  if (!std::filesystem::exists(new_path)) {
-    string message = "Given folder path for storage migration does not exist";
-    throw StorageMigrationException(message);
+  auto path_parsed = std::filesystem::path(new_path);
+  if (path_parsed.is_relative()) {
+    throw StorageMigrationException("Can't move to a relative path");
   }
-  string new_storage_path = new_path + "/" + Setting::STORAGE_NAME;
-  if (std::filesystem::exists(new_storage_path)) {
-    string message = "There is already a storage in the given folder";
-    throw StorageMigrationException(message);
+  if (!std::filesystem::exists(path_parsed.parent_path())) {
+    throw StorageMigrationException(
+        "Given parent folder path for storage migration does not exist ");
   }
-  // std::filesystem::rename(_root_folder_name.get_value(), new_storage_path);
-  // _root_folder_name.set_value(new_storage_path);
-  // _root_folder_name.update();
+  if (std::filesystem::exists(path_parsed)) {
+    throw StorageMigrationException("Destination folder must not exist");
+  }
+  string new_storage_path = new_path + "/";
+  std::filesystem::rename(_root_folder_name.get_value(), new_storage_path);
+  _root_folder_name.set_value(new_storage_path);
+  _root_folder_name.update();
 }

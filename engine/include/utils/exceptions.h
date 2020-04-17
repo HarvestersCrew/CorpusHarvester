@@ -62,7 +62,7 @@ public:
 class StorageMigrationException : public ExceptionWrapper {
 
 public:
-  StorageMigrationException(std::string &error_message)
+  StorageMigrationException(const std::string &error_message)
       : ExceptionWrapper(error_message, "StorageMigrationException") {}
 };
 
