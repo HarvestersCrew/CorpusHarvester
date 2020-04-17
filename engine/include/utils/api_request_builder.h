@@ -28,6 +28,10 @@ using std::unordered_map;
 using std::unordered_set;
 using std::vector;
 
+typedef pair<shared_ptr<api_loader>,
+             unordered_map<string, pair<string, string>>>
+    api_builder_request;
+
 /**
  * Interface to make requests against APIs
  */
@@ -42,9 +46,7 @@ protected:
    * 1st map: API name, map of parameters to use
    * 2nd map: parameter name, value and operator to use
    */
-  vector<
-      pair<shared_ptr<api_loader>, unordered_map<string, pair<string, string>>>>
-      _requests;
+  vector<api_builder_request> _requests;
 
   /**
    * Search for these types if no requests are precised or if specified
@@ -136,9 +138,7 @@ public:
   /**
    * Get requests
    */
-  virtual const vector<
-      pair<shared_ptr<api_loader>, unordered_map<string, pair<string, string>>>>
-      &get_requests() const;
+  virtual const vector<api_builder_request> &get_requests() const;
 
   virtual string to_string() const;
 };

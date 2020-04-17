@@ -107,9 +107,7 @@ ApiRequestBuilder::get_no_op_requests() const {
   return requests;
 }
 
-const vector<
-    pair<shared_ptr<api_loader>, unordered_map<string, pair<string, string>>>> &
-ApiRequestBuilder::get_requests() const {
+const vector<api_builder_request> &ApiRequestBuilder::get_requests() const {
   return this->_requests;
 }
 
