@@ -125,3 +125,31 @@ string ApiRequestBuilder::to_string() const {
 
   return res.str();
 }
+
+vector<api_builder_request> ApiRequestBuilder::get_usable_requests() const {
+
+  vector<api_builder_request> res;
+
+  if (this->get_requests().size() != 0) {
+    res = vector<api_builder_request>(this->get_requests());
+  } else {
+    for (auto api : ApiFactory::get_api_loaders()) {
+      res.push_back(
+          make_pair(api, unordered_map<string, pair<string, string>>()));
+    }
+  }
+
+  if (this->get_types().size() != 0) {
+    auto types = this->get_types();
+    for (auto it = res.begin(); it != res.end();) {
+      auto api = it->first;
+      if (types.find(api->get_api_type()) == types.end()) {
+        it = res.erase(it);
+      } else {
+        ++it;
+      }
+    }
+  }
+
+  return res;
+}

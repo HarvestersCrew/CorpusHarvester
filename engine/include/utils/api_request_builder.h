@@ -141,6 +141,12 @@ public:
   virtual const vector<api_builder_request> &get_requests() const;
 
   virtual string to_string() const;
+
+  /**
+   * Generates a list of requests prepared to be used by the builders based on
+   * the interface parameters
+   */
+  virtual vector<api_builder_request> get_usable_requests() const;
 };
 
 #endif
