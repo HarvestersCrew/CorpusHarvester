@@ -1,5 +1,5 @@
 FROM gcc:latest AS gcc_debug
-RUN apt update && apt install gdb clang-format libmysqlcppconn-dev libasio-dev libwebsocketpp-dev libzip-dev -y
+RUN apt update && apt install gdb valgrind clang-format libmysqlcppconn-dev libasio-dev libwebsocketpp-dev libzip-dev -y
 WORKDIR /project
 RUN mkdir /tmp/stored
 
