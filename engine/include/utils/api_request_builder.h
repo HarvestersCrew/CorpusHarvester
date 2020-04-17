@@ -133,7 +133,7 @@ public:
    * Retrieves the requests without the operators as only the = is supported
    */
   virtual vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>>
-  get_no_op_requests() const;
+  get_no_op_requests(const vector<api_builder_request> &requests) const;
 
   /**
    * Get requests

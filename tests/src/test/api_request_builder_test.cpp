@@ -70,7 +70,7 @@ void test_api_dl_remove_ops() {
   ApiDownloadBuilder a;
   long unsigned int idx = a.add_request("Twitter");
   a.add_request_parameter(idx, "query", "cats", "=");
-  auto res = a.get_no_op_requests();
+  auto res = a.get_no_op_requests(a.get_requests());
   Assertion::assert_equals(__FUNCTION__, 1, res.size());
   Assertion::assert_equals(__FUNCTION__, "Twitter",
                            res.at(0).first->get_name());

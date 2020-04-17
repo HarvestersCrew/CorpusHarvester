@@ -91,20 +91,21 @@ void ApiRequestBuilder::add_request_parameter(long unsigned int request_id,
 }
 
 vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>>
-ApiRequestBuilder::get_no_op_requests() const {
+ApiRequestBuilder::get_no_op_requests(
+    const vector<api_builder_request> &requests) const {
 
-  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> requests;
-  for (const auto &request : this->get_requests()) {
+  vector<pair<shared_ptr<api_loader>, unordered_map<string, string>>> res;
+  for (const auto &request : requests) {
 
     unordered_map<string, string> params;
     for (const auto &param : request.second) {
       params.emplace(param.first, param.second.first);
     }
 
-    requests.push_back(make_pair(request.first, params));
+    res.push_back(make_pair(request.first, params));
   }
 
-  return requests;
+  return res;
 }
 
 const vector<api_builder_request> &ApiRequestBuilder::get_requests() const {
