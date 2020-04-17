@@ -9,6 +9,7 @@ void server_handler::fill_available_functions(
   functions_no_data.emplace("get_storage_path", &get_storage_path);
 
   functions_data.emplace("update_logger", &update_logger);
+  functions_data.emplace("storage_migration", &storage_migration);
 }
 
 pair<string, json> server_handler::dispatch_request(ConnectionData &con,
@@ -81,4 +82,13 @@ pair<string, json> server_handler::update_logger(ConnectionData &con,
     con._mr.set_logger_output_path(value);
   }
   return get_logger_infos(con);
+}
+
+pair<string, json> server_handler::storage_migration(ConnectionData &con,
+                                                     const json &j) {
+  if (!j.contains("new_path")) {
+    throw wss_invalid_request();
+  }
+  con._mr.migrate_storage(j.at("new_path").get<string>());
+  return get_storage_path(con);
 }

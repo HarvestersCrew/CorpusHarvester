@@ -70,6 +70,14 @@ pair<string, json> get_storage_path(ConnectionData &con);
  */
 pair<string, json> update_logger(ConnectionData &con, const json &j);
 
+/**
+ * Storage migration
+ * @param new_path new path to migrate to
+ * @return get_storage_path
+ * @throw StorageMigrationException if the new path can't be used
+ */
+pair<string, json> storage_migration(ConnectionData &con, const json &j);
+
 } // namespace server_handler
 
 #endif
