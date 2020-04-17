@@ -1,6 +1,7 @@
 #ifndef SERVER_HANDLER_H
 #define SERVER_HANDLER_H
 
+#include "download/api_factory.h"
 #include "server/websocket_server.h"
 #include "utils/exceptions.h"
 #include "utils/nlohmann/json.hpp"

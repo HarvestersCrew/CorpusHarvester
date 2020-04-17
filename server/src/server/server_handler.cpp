@@ -39,7 +39,7 @@ pair<string, json> server_handler::dispatch_request(ConnectionData &con,
 
 pair<string, json> server_handler::get_apis_infos(ConnectionData &con) {
   json res = json::array();
-  for (const auto &api : con._mr.get_api_loaders()) {
+  for (const auto &api : ApiFactory::get_api_loaders()) {
     res.push_back(api->serialize());
   }
   return make_pair("get_apis", res);
