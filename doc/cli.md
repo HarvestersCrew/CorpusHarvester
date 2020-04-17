@@ -26,7 +26,7 @@ files: Files function.
     - `list` : list available API names
 
 ## Corpuses
-- `corpus` : 
+- `corpus` :
     - `--id ID` : displays informations about the corpus with the given ID
     - `list` : list all corpuses in default order (most recent to older)
         - `--name "TITLE"` : search all corpuses matching at least partially with this title
@@ -45,5 +45,9 @@ files: Files function.
     - `--id ID` : displays informations about the file with the given ID
 
 ## Settings
-- `list` : displays all settings and their value
-- `--setting_name VALUE` : update the setting `seting_name` with the given value
+- `logger` : displays the (2 or 3, output path is not displayed if the output is stdout) logger settings
+    `--setting level --value VALUE` : sets the logger level to one of these: debug, info, warning, error, none
+    `--setting output --value VALUE` : sets the logger output to one of these: stdout, file
+    `--setting output_path --value VALUE` : sets the logger output path to the given value
+- `storage` : displays the storage root
+    `--migrate ABSOLUTE_PATH` : migrates the storage to this absolute path
