@@ -4,6 +4,11 @@ ApiDownloadBuilder::ApiDownloadBuilder() : ApiRequestBuilder() {}
 
 list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
 
+  if (this->get_requests().size() == 0) {
+    throw api_builder_feature_not_supported(
+        "DL builder can't download without specified requests");
+  }
+
   list<shared_ptr<File>> res;
   Indexer indexer;
   Storage storage;

@@ -21,6 +21,13 @@ using std::stringstream;
 using std::unordered_map;
 using std::vector;
 
+/**
+ * Class to handle database searches
+ *
+ * Requests only: will only retrieve what is specified by the request
+ * Type only: will only retrive files belonging to API of these types
+ * Both: will only query requests of given types
+ */
 class ApiDatabaseBuilder : public ApiRequestBuilder {
 public:
   ApiDatabaseBuilder();

@@ -25,7 +25,9 @@ using std::vector;
  * interface
  * Then retrieves the file by calling the build() method
  *
- * For now, only specified requests are supported, no request by type
+ * Only requests specified: only those will be done
+ * Only types specified: not supported
+ * Both specified: will keep only requests of specified type
  */
 class ApiDownloadBuilder : public ApiRequestBuilder {
 

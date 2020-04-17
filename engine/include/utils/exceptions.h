@@ -203,6 +203,13 @@ public:
                          "api_builder_request_not_found") {}
 };
 
+class api_builder_feature_not_supported : public ExceptionWrapper {
+public:
+  api_builder_feature_not_supported(const string &msg)
+      : ExceptionWrapper("Feature of API builder not supported: " + msg,
+                         "api_builder_feature_not_supported") {}
+};
+
 class wss_cant_find_handler : public ExceptionWrapper {
 public:
   wss_cant_find_handler()
