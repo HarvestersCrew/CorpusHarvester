@@ -81,7 +81,9 @@ pair<string, json> server_handler::update_logger(ConnectionData &con,
   } else if (setting == "output_path") {
     con._mr.set_logger_output_path(value);
   }
-  return get_logger_infos(con);
+  auto to_return = get_logger_infos(con);
+  WebsocketServer::broadcast_json(to_return);
+  return make_pair("update_logger", json::object());
 }
 
 pair<string, json> server_handler::storage_migration(ConnectionData &con,
@@ -90,5 +92,7 @@ pair<string, json> server_handler::storage_migration(ConnectionData &con,
     throw wss_invalid_request();
   }
   con._mr.migrate_storage(j.at("new_path").get<string>());
-  return get_storage_path(con);
+  auto to_return = get_storage_path(con);
+  WebsocketServer::broadcast_json(to_return);
+  return make_pair("storage_migration", json::object());
 }
