@@ -304,6 +304,8 @@ void CommandLineInterface::files_list() {
   string type = "";
   Corpus::ordering_method orderingMethod = Corpus::ordering_method::NONE;
 
+  std::map<string, string> filters;
+
   // Check if we have the parameter page
   itSubCommand = this->string_inputs.find("page");
   if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
@@ -313,6 +315,10 @@ void CommandLineInterface::files_list() {
 
     try {
       page = std::stoi(pageString, &sz);
+      if (page < 0) {
+        logger::error("The input page is invalid. The value need to be >= 0.");
+        exit(-1);
+      }
     } catch (const std::invalid_argument &ia) {
       logger::error(
           "The input page is not an integer ! Please check your input.");
@@ -323,6 +329,7 @@ void CommandLineInterface::files_list() {
                     "value will be apply (page = 0).");
     page = 0;
   }
+  filters.insert(std::pair<std::string, std::string>("page", to_string(page)));
 
   // Check if we have the parameter number
   itSubCommand = this->string_inputs.find("number");
@@ -333,6 +340,10 @@ void CommandLineInterface::files_list() {
 
     try {
       number = std::stoi(numberString, &sz);
+      if (number <= 0) {
+        logger::error("The input number is invalid. The value need to be > 0.");
+        exit(-1);
+      }
     } catch (const std::invalid_argument &ia) {
       logger::error(
           "The input number is not an integer ! Please check your input.");
@@ -343,6 +354,8 @@ void CommandLineInterface::files_list() {
                     "value will be apply (number = 100).");
     number = 100;
   }
+  filters.insert(
+      std::pair<std::string, std::string>("number", to_string(number)));
 
   // Check if we have the parameter api
   itSubCommand = this->string_inputs.find("api");
@@ -358,6 +371,9 @@ void CommandLineInterface::files_list() {
         logger::info(api);
       }
       exit(-1);
+    } else {
+      // We add the api in the filter
+      filters.insert(std::pair<std::string, std::string>("api", api));
     }
   }
 
@@ -375,6 +391,8 @@ void CommandLineInterface::files_list() {
         logger::info(fileT);
       }
       exit(-1);
+    } else {
+      filters.insert(std::pair<std::string, std::string>("type", type));
     }
   }
 
@@ -402,7 +420,12 @@ void CommandLineInterface::files_list() {
     }
   }
 
-  // TODO :: Call the file list method
+  list<shared_ptr<File>> files = mr.get_files(filters, orderingMethod);
+  logger::info("Number of files available : " + std::to_string(files.size()));
+
+  for (const auto file : files) {
+    cout << file->to_string() << endl;
+  }
 
   exit(0);
 }
@@ -433,7 +456,8 @@ void CommandLineInterface::files_by_id() {
 
       // Search the corpus in our database
       ManagerRequest managerRequest;
-      std::optional<shared_ptr<File>> file = File::get_file_from_id(id);
+      std::optional<shared_ptr<File>> file =
+          managerRequest.get_file_from_id(id);
 
       // Check the answer
       if (file.has_value()) {

@@ -128,6 +128,37 @@ public:
 
   /*
    * ------------------------------------------
+   * METHODS RELATING TO FILES MANAGEMENT
+   * ------------------------------------------
+   */
+
+  /**
+   * Get files present in our databases.
+   * Allow the user to add specific filters in order to search in the database.
+   * Different kind of filters are available :
+   *        - 'page' : page to use (default: 0)
+   *        - 'number' : number of results per page (default: 100)
+   *        - 'api' : files only from this API
+   *        - 'type' : type of files to find.
+   *
+   * @param filters Filters for the files research. The possible values are
+   * above.
+   * @param order Indicate how to order our files.
+   *
+   * @return List of files
+   */
+  list<shared_ptr<File>> get_files(std::map<string, string> &filters,
+                                   Corpus::ordering_method order) const;
+
+  /**
+   * Get a file from his id.
+   * @param id id of the file in the database.
+   * @return The desired file.
+   */
+  std::optional<shared_ptr<File>> get_file_from_id(const int id) const;
+
+  /*
+   * ------------------------------------------
    * METHODS RELATING TO API BUILDERS
    * ------------------------------------------
    */

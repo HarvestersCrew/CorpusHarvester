@@ -109,6 +109,27 @@ string ManagerRequest::export_corpus(const int id, const string &method) const {
 
 /*
  * ------------------------------------------
+ * METHODS RELATING TO FILES MANAGEMENT
+ * ------------------------------------------
+ */
+
+list<shared_ptr<File>>
+ManagerRequest::get_files(std::map<string, string> &filters,
+                          Corpus::ordering_method order) const {
+  list<shared_ptr<File>> files;
+
+  // TODO :: Ask to the database
+
+  return files;
+}
+
+std::optional<shared_ptr<File>>
+ManagerRequest::get_file_from_id(const int id) const {
+  return File::get_file_from_id(id);
+}
+
+/*
+ * ------------------------------------------
  * METHODS RELATING TO API BUILDERS
  * ------------------------------------------
  */
