@@ -25,7 +25,26 @@
         </v-container>
       </v-toolbar>
     </v-card>
-    <BuilderRequests :requests="requests"></BuilderRequests>
+
+    <v-form v-model="builder_validity">
+      <BuilderRequests
+        @remove_request="remove_request"
+        :requests="requests"
+      ></BuilderRequests>
+    </v-form>
+
+    <v-btn
+      :disabled="!builder_validity || requests.length === 0"
+      fab
+      large
+      fixed
+      bottom
+      right
+      color="blue"
+      dark
+    >
+      <v-icon>mdi-download</v-icon>
+    </v-btn>
   </Bar>
 </template>
 
@@ -38,7 +57,8 @@ export default {
   data() {
     return {
       api_list_selection: undefined,
-      requests: this.$store.state.api_db_builder
+      requests: this.$store.state.api_db_builder,
+      builder_validity: true
     };
   },
   beforeDestroy() {
@@ -59,6 +79,9 @@ export default {
         values
       });
       this.api_list_selection = undefined;
+    },
+    remove_request(idx) {
+      this.requests.splice(idx, 1);
     }
   }
 };
