@@ -100,6 +100,27 @@
       </v-card>
 
       <v-card class="my-4">
+        <v-card-title>API settings</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="10" md="5" class="mx-auto mx-md-10">
+              <p class="subtitle-2 text-left">
+                Refresh the APIs in memory from the disk
+              </p>
+              <p class="text-left">
+                <v-btn
+                  @click="on_refresh_apis"
+                  :disabled="refresh_apis_disabled"
+                  color="warning"
+                  >Refresh</v-btn
+                >
+              </p>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+
+      <v-card class="my-4">
         <v-card-title>Storage settings</v-card-title>
         <v-card-text>
           <v-row>
@@ -186,6 +207,7 @@ export default {
       output_disabled: false,
       output_path_disabled: false,
       storage_path_disabled: false,
+      refresh_apis_disabled: false,
       output_path_error: undefined,
       storage_path_error: undefined,
       clear_logfile_disabled: false,
@@ -290,6 +312,17 @@ export default {
       } else {
         this.$store.commit("add_success_notification", "Logfile cleared");
       }
+    },
+    on_refresh_apis() {
+      this.refresh_apis_disabled = true;
+      this.$store.dispatch("send_tokenized_request", {
+        type: "refresh_apis",
+        data: {},
+        callback: this.on_refreshed_apis
+      });
+    },
+    on_refreshed_apis() {
+      this.refresh_apis_disabled = false;
     }
   }
 };
