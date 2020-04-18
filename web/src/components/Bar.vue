@@ -119,7 +119,7 @@ export default {
         }
       ],
       items2: [
-        { title: "Settings", icon: "mdi-settings" },
+        { title: "Settings", icon: "mdi-cog" },
         { title: "Info", icon: "mdi-information-outline" }
       ]
     };

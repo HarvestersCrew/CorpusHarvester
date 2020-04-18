@@ -43,7 +43,7 @@ export default {
       Files: { icon: "mdi-pencil", title: "Files" },
       Download: { icon: "mdi-file-download", title: "Download" },
       Corpus: { icon: "mdi-folder", title: "Corpus" },
-      Settings: { icon: "mdi-settings", title: "Settings" },
+      Settings: { icon: "mdi-cog", title: "Settings" },
       Info: { icon: "mdi-information-outline", title: "Informations" }
     };
   },
