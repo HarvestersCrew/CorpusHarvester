@@ -213,6 +213,7 @@ export default {
     },
     on_level_changed() {
       this.level_disabled = false;
+      this.$store.commit("add_success_notification", "Logger level changed");
     },
     on_output_change(new_val) {
       this.output_disabled = true;
@@ -224,6 +225,7 @@ export default {
     },
     on_output_changed() {
       this.output_disabled = false;
+      this.$store.commit("add_success_notification", "Logger output changed");
     },
     on_output_path_send() {
       this.output_path_disabled = true;
@@ -241,6 +243,10 @@ export default {
           "Invalid path. It must be an already created absolute path with the filename";
       } else {
         this.specified_output_path = "";
+        this.$store.commit(
+          "add_success_notification",
+          "Logger output path changed"
+        );
       }
     },
     on_storage_path_change() {
@@ -260,6 +266,10 @@ export default {
           "Invalid path. There must not be a trailing slash, the path must be absolute and parent path must exist but destination directory must not";
       } else {
         this.specified_storage_path = "";
+        this.$store.commit(
+          "add_success_notification",
+          "Storage migration done"
+        );
       }
     },
     on_clear_logfile() {
@@ -270,8 +280,16 @@ export default {
         callback: this.on_cleared_logfile
       });
     },
-    on_cleared_logfile() {
+    on_cleared_logfile(data) {
       this.clear_logfile_disabled = false;
+      if (data.type !== undefined && data.type === "error") {
+        this.$store.commit(
+          "add_error_notification",
+          "An error occurred clearing the logs, check the logs tab to see more details"
+        );
+      } else {
+        this.$store.commit("add_success_notification", "Logfile cleared");
+      }
     }
   }
 };
