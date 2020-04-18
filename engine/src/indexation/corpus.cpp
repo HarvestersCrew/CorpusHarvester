@@ -88,6 +88,19 @@ void Corpus::fill_from_statement(sql::ResultSet *res) {
   fetch_files();
 }
 
+void Corpus::set_title(const std::string title) {
+  _title = title;
+  if (_id != -1) {
+    auto con = PoolDB::borrow_from_pool();
+    sql::PreparedStatement *prep_stmt =
+        con->prepareStatement("UPDATE Corpus SET title = ? WHERE id = ?;");
+    prep_stmt->setString(1, title);
+    prep_stmt->execute();
+    delete prep_stmt;
+    PoolDB::unborrow_from_pool(con);
+  }
+}
+
 std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(ordering_method order) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
@@ -163,24 +176,27 @@ Corpus::get_corpus_from_name(const std::string str, ordering_method order) {
 }
 
 void Corpus::export_(ExportMethod::methods method) {
-  if (!_extraction_path) {
-    _extraction_path =
+  if (!_extraction_path || !std::filesystem::exists(_extraction_path.value())) {
+    string new_path =
         ExportMethod::compressed_export(_files, std::to_string(_id), method);
-    update_extraction_path();
+    set_extraction_path(new_path);
   }
 }
 
-void Corpus::update_extraction_path() {
-  sql::PreparedStatement *prep_stmt;
-  auto con = PoolDB::borrow_from_pool();
-  prep_stmt = con->prepareStatement(UPDATE_CORPUS_EXTRACTION_PATH);
-  if (_extraction_path) {
-    prep_stmt->setString(1, _extraction_path.value());
-  } else {
-    prep_stmt->setNull(1, 0);
+void Corpus::set_extraction_path(optional<string> path) {
+  _extraction_path = path;
+  if (_id != -1) {
+    sql::PreparedStatement *prep_stmt;
+    auto con = PoolDB::borrow_from_pool();
+    prep_stmt = con->prepareStatement(UPDATE_CORPUS_EXTRACTION_PATH);
+    if (_extraction_path) {
+      prep_stmt->setString(1, _extraction_path.value());
+    } else {
+      prep_stmt->setNull(1, 0);
+    }
+    prep_stmt->setInt(2, _id);
+    prep_stmt->executeQuery();
+    delete prep_stmt;
+    PoolDB::unborrow_from_pool(con);
   }
-  prep_stmt->setInt(2, _id);
-  prep_stmt->executeQuery();
-  delete prep_stmt;
-  PoolDB::unborrow_from_pool(con);
 }

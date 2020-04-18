@@ -7,6 +7,7 @@
 #include "storage/export_method.h"
 #include "utils/exceptions.h"
 #include <cppconn/prepared_statement.h>
+#include <filesystem>
 #include <list>
 #include <memory>
 #include <mysql_connection.h>
@@ -127,12 +128,11 @@ public:
 
   void export_(ExportMethod::methods method);
 
-  void update_extraction_path();
+  void set_extraction_path(optional<string> path);
+  optional<std::string> get_extraction_path() const { return _extraction_path; }
 
   std::string get_title() const { return _title; }
-  optional<std::string> get_extraction_path() const { return _extraction_path; }
-  void set_title(const std::string title) { _title = title; }
-  bool has_file() { return !_files.empty(); }
+  void set_title(const std::string title);
   virtual int get_id() const { return this->_id; };
 
   /**

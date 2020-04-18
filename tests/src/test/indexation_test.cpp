@@ -245,7 +245,6 @@ void test_create_corpus() {
   shared_ptr<Corpus> first_element = *corpuses.begin();
   Assertion::assert_equals(__FUNCTION__, "file_6-8-3",
                            first_element->get_title());
-  Assertion::assert_true(__FUNCTION__, first_element->has_file());
   res_files = stmt->executeQuery(GET_ALL_CORPUS_FILES);
   Assertion::assert_equals(__FUNCTION__, 3, res_files->rowsCount());
 
