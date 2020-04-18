@@ -35,19 +35,35 @@
 
     <FilesListing></FilesListing>
 
-    <v-btn
-      :disabled="!builder_validity || requests.length === 0"
-      fab
-      large
-      fixed
-      bottom
-      right
-      color="blue"
-      dark
-      @click="send_query"
-    >
-      <v-icon>mdi-download</v-icon>
-    </v-btn>
+    <v-speed-dial open-on-hover fixed bottom right>
+      <template v-slot:activator>
+        <v-btn color="blue" dark fab>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </template>
+
+      <v-btn
+        fab
+        color="green"
+        :dark="builder_validity && requests.length !== 0"
+        :disabled="!builder_validity || requests.length === 0"
+        small
+        @click="send_query"
+      >
+        <v-icon>mdi-download</v-icon>
+      </v-btn>
+
+      <v-btn
+        fab
+        color="red"
+        :disabled="this.$store.state.downloaded_files.length === 0"
+        :dark="this.$store.state.downloaded_files.length !== 0"
+        small
+        @click="clear_response"
+      >
+        <v-icon>mdi-notification-clear-all</v-icon>
+      </v-btn>
+    </v-speed-dial>
   </Bar>
 </template>
 
@@ -129,6 +145,9 @@ export default {
           "Download ready, check it in the download tab"
         );
       }
+    },
+    clear_response() {
+      this.$store.commit("clear_downloaded_files");
     }
   }
 };

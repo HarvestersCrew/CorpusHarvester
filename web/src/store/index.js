@@ -173,6 +173,10 @@ export default new Vuex.Store({
 
     set_api_db_builder(state, val) {
       state.api_db_builder = val;
+    },
+
+    clear_downloaded_files(state) {
+      state.downloaded_files = [];
     }
   },
 
