@@ -110,7 +110,8 @@ export default {
     return {
       items: [
         { title: "Files", icon: "mdi-pencil" },
-        { title: "Corpus", icon: "mdi-file" },
+        { title: "Download", icon: "mdi-file-download" },
+        { title: "Corpus", icon: "mdi-folder" },
         {
           title: "Logs",
           icon: "mdi-clipboard-alert",

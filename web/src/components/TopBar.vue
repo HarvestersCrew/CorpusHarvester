@@ -39,16 +39,10 @@ export default {
         title: "Corpus Harvester",
         icon: ""
       },
-      Logs: {
-        color: "black",
-        icon: "mdi-clipboard-alert",
-        title: "Logs"
-      },
-      Files: {
-        icon: "mdi-pencil",
-        title: "Files"
-      },
-      Corpus: { icon: "mdi-file", title: "Corpus" },
+      Logs: { color: "black", icon: "mdi-clipboard-alert", title: "Logs" },
+      Files: { icon: "mdi-pencil", title: "Files" },
+      Download: { icon: "mdi-file-download", title: "Download" },
+      Corpus: { icon: "mdi-folder", title: "Corpus" },
       Settings: { icon: "mdi-settings", title: "Settings" },
       Info: { icon: "mdi-information-outline", title: "Informations" }
     };

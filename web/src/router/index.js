@@ -23,6 +23,11 @@ const routes = [
     component: () => import("../views/Files.vue")
   },
   {
+    path: "/download",
+    name: "Download",
+    component: () => import("../views/Download.vue")
+  },
+  {
     path: "/corpus",
     name: "Corpus",
     component: () => import("../views/Corpus.vue")
