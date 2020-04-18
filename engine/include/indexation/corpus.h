@@ -46,6 +46,7 @@
 #define CORPUS_ORDER_BY_DATE_ASC " ORDER BY creation_date ASC"
 #define CORPUS_ORDER_BY_DATE_DESC " ORDER BY creation_date DESC"
 
+using std::list;
 using std::optional;
 using std::shared_ptr;
 using std::string;
@@ -127,6 +128,8 @@ public:
   void fill_from_statement(sql::ResultSet *res);
 
   void export_(ExportMethod::methods method);
+
+  void add_files(const list<shared_ptr<File>> &files);
 
   void set_extraction_path(optional<string> path);
   optional<std::string> get_extraction_path() const { return _extraction_path; }

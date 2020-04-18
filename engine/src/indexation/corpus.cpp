@@ -56,6 +56,22 @@ bool Corpus::insert() {
   return true;
 }
 
+void Corpus::add_files(const list<shared_ptr<File>> &files) {
+  if (_id != 1) {
+    auto con = PoolDB::borrow_from_pool();
+    sql::PreparedStatement *prep_stmt;
+    for (const auto &file : files) {
+      prep_stmt = con->prepareStatement(INSERT_CORPUS_FILES_STATEMENT);
+      prep_stmt->setInt(1, _id);
+      prep_stmt->setInt(2, file->get_id());
+      prep_stmt->execute();
+    }
+    delete prep_stmt;
+    PoolDB::unborrow_from_pool(con);
+  }
+  _files.insert(_files.end(), files.begin(), files.end());
+}
+
 void Corpus::fetch_files() {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;

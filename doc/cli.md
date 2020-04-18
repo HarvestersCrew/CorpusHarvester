@@ -32,7 +32,14 @@ files: Files function.
         - `--name "TITLE"` : search all corpuses matching at least partially with this title
         - `--order ORDER` : display in the specified order (name asc/desc or date asc/desc), values to pass to be defined
     - `create` : to be defined
-        - `--name "NAME"` : specify the name of the new corpus.
+        - `--name "NAME"` : specify the name of the new corpus (**required**)
+        - `--page NBR` : needs to be at the front of the query, start at 0 (**required**)
+        - `--number NBR` : needs to be after the page, number of results per page (default: 100)
+        - `--order ORDER` : specifies the return order (API asc/desc or size asc/desc)
+        - `--type TYPE` : needs to be after the page, number and order (if specified), can appear multiple times (text, image)
+        - `--source NAME` : specifies a request on this source name, can also appear many times
+        - `--PARAM_NAME VALUE` : specifies a parameter on the nearest source on the left, can also appear many times
+        - `--op OP` : specifies the comparison operator (=, !=, <, >, <=, >=) on a previous parameter. If none is used, = will be used
 
 ## Files
 - `files`
