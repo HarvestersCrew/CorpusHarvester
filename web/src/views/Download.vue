@@ -106,8 +106,11 @@ export default {
       this.requests.splice(idx, 1);
     },
     send_query() {
-      console.log("sending query");
-      console.log(this.server_query);
+      this.$store.dispatch("send_tokenized_request", {
+        type: "download_query",
+        data: { builder: this.server_query },
+        callback: undefined
+      });
     }
   }
 };
