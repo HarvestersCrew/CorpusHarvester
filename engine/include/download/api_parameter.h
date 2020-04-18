@@ -2,6 +2,7 @@
 #define API_PARAMETER_H
 
 #include "utils/exceptions.h"
+#include "utils/logger.h"
 #include "utils/nlohmann/json.hpp"
 #include <iostream>
 #include <optional>

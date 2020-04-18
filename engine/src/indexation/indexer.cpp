@@ -4,11 +4,6 @@ Indexer::Indexer() {}
 
 bool Indexer::insert_file(shared_ptr<File> file) const {
   bool inserted = file->insert();
-  if (inserted) {
-    logger::debug("Insertion of " + file->to_string() + " : OK");
-  } else {
-    logger::debug("The file wasn't inserted");
-  }
   return inserted;
 }
 

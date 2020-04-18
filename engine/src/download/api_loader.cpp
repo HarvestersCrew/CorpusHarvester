@@ -189,7 +189,13 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
     }
   }
 
-  json result = json::parse(dl.download(dl_item));
+  json result;
+  try {
+    result = json::parse(dl.download(dl_item));
+  } catch (const json::exception &e) {
+    logger::debug(
+        "Exception thrown when parsing download result in api_loader");
+  }
 
   results_array = result.get<json>();
   for (const string &el : this->_path_to_results) {

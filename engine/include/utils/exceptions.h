@@ -111,8 +111,8 @@ public:
   download_no_200_exception()
       : ExceptionWrapper("HTTP call didn't succeed",
                          "download_no_200_exception") {}
-  download_no_200_exception(int http_code)
-      : ExceptionWrapper("HTTP call didn't succeed: " + to_string(http_code),
+  download_no_200_exception(int http_code, const string &url)
+      : ExceptionWrapper(url + " HTTP code " + to_string(http_code),
                          "download_no_200_exception") {}
 };
 

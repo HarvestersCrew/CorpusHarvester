@@ -43,7 +43,7 @@ std::vector<char> download_manager::download(const download_item &dli) const {
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
   if (response_code != 200) {
-    throw download_no_200_exception(response_code);
+    throw download_no_200_exception(response_code, url);
   }
 
   if (dli.get_truncate_before() > 0) {

@@ -64,12 +64,18 @@ api_parameter_base::value_type api_parameter_base::get_value_type() const {
 std::string
 api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
   std::string result;
-  if (this->_value_type == value_type::INT) {
-    result = std::to_string(val.get<int>());
-  } else if (this->_value_type == value_type::STRING) {
-    result = val.get<std::string>();
-  } else if (this->_value_type == value_type::IMAGE_LINK) {
-    result = val.get<std::string>();
+  try {
+    if (this->_value_type == value_type::INT) {
+      result = std::to_string(val.get<int>());
+    } else if (this->_value_type == value_type::STRING) {
+      result = val.get<std::string>();
+    } else if (this->_value_type == value_type::IMAGE_LINK) {
+      result = val.get<std::string>();
+    }
+  } catch (const nlohmann::json::exception &e) {
+    logger::error("Error parsing a JSON value to a string");
+    logger::debug(this->_name + ":" + val.dump());
+    throw e;
   }
   return result;
 }
