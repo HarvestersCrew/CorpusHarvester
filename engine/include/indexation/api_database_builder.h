@@ -42,6 +42,8 @@ private:
   ordering_method _order;
   unordered_map<ordering_method, string> _order_queries;
 
+  unsigned int _page;
+
 public:
   ApiDatabaseBuilder();
 
@@ -60,6 +62,9 @@ public:
    */
   virtual void set_order(ordering_method order);
   virtual ordering_method get_order() const;
+
+  virtual void set_page(unsigned int page);
+  virtual unsigned int get_page() const;
 
   virtual void clear_all();
 };

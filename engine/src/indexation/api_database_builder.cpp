@@ -1,7 +1,7 @@
 #include "indexation/api_database_builder.h"
 
 ApiDatabaseBuilder::ApiDatabaseBuilder()
-    : _order(ordering_method::NONE), ApiRequestBuilder() {
+    : _order(ordering_method::NONE), _page(0), ApiRequestBuilder() {
   _order_queries = {{ordering_method::NONE, DB_BUILDER_ORDER_NONE},
                     {ordering_method::API_ASC, DB_BUILDER_ORDER_API_ASC},
                     {ordering_method::API_DESC, DB_BUILDER_ORDER_API_DESC},
@@ -12,11 +12,13 @@ ApiDatabaseBuilder::ApiDatabaseBuilder()
 json ApiDatabaseBuilder::serialize() const {
   json j = ApiRequestBuilder::serialize();
   j["order"] = _order;
+  j["page"] = _page;
   return j;
 }
 void ApiDatabaseBuilder::deserialize(const json &j) {
   ApiRequestBuilder::deserialize(j);
   _order = (ordering_method)j.at("order").get<int>();
+  _page = j.at("page").get<unsigned int>();
 }
 
 list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
@@ -91,6 +93,11 @@ list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
   query << ") as result_table";
   query << _order_queries.at(_order);
 
+  if (number != 0) {
+    unsigned int start = _page * number;
+    query << " LIMIT " << start << "," << number;
+  }
+
   logger::debug(query.str());
 
   sql::PreparedStatement *prep_stmt;
@@ -148,6 +155,10 @@ void ApiDatabaseBuilder::set_order(ordering_method order) {
 ApiDatabaseBuilder::ordering_method ApiDatabaseBuilder::get_order() const {
   return _order;
 }
+
+void ApiDatabaseBuilder::set_page(unsigned int page) { _page = page; }
+
+unsigned int ApiDatabaseBuilder::get_page() const { return _page; }
 
 void ApiDatabaseBuilder::clear_all() {
   _order = ordering_method::NONE;

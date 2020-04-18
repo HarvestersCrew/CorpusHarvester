@@ -31,10 +31,11 @@ files: Files function.
     - `list` : list all corpuses in default order (most recent to older)
         - `--name "TITLE"` : search all corpuses matching at least partially with this title
         - `--order ORDER` : display in the specified order (name asc/desc or date asc/desc), values to pass to be defined
-    - `create` : to be defined
-        - `--name "NAME"` : specify the name of the new corpus (**required**)
-        - `--page NBR` : needs to be at the front of the query, start at 0 (**required**)
-        - `--number NBR` : needs to be after the page, number of results per page (default: 100)
+    - `create` : used to create or add files to a corpus
+        - `--create NAME` : create a named corpus with the result of the query
+        - `--append ID` : append the result to the corpus specified by the ID
+        - `--number NBR` : needs to be at the front, number of results per page (default: 0 = unlimited)
+        - `--page NBR` : works in conjuction with number, to paginate the result
         - `--order ORDER` : specifies the return order (API asc/desc or size asc/desc)
         - `--type TYPE` : needs to be after the page, number and order (if specified), can appear multiple times (text, image)
         - `--source NAME` : specifies a request on this source name, can also appear many times
@@ -45,21 +46,24 @@ files: Files function.
 - `files`
     - `--id ID` : displays informations about the file with the given ID
     - `list` : used to build a complex query
-        - `--page NBR` : needs to be at the front of the query, start at 0 (**required**)
-        - `--number NBR` : needs to be after the page, number of results per page (default: 100)
+        - `--number NBR` : needs to be at the front, number of results per page (default: 0 = unlimited)
+        - `--page NBR` : works in conjuction with number, to paginate the result (default: 0 = the first page)
         - `--order ORDER` : specifies the return order (API asc/desc or size asc/desc)
         - `--type TYPE` : needs to be after the page, number and order (if specified), can appear multiple times (text, image)
         - `--source NAME` : specifies a request on this source name, can also appear many times
         - `--PARAM_NAME VALUE` : specifies a parameter on the nearest source on the left, can also appear many times
         - `--op OP` : specifies the comparison operator (=, !=, <, >, <=, >=) on a previous parameter. If none is used, = will be used
 
-### Build command example:
+## Build commands example:
 
-- `harvester list --page 2 --number 150 --type image` : will get all files from image APIs in the DB starting from the 301st to the 450th
-- `harvester list --number 50 --order size_desc` : will get the 50 heaviest files in the DB
-- `harvester list --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : retrieves all tweets with more than 50 retweets and all posters from TMDB in default order, and only the 0th page with default number per page (100). So beware, all requests won't necessarly appear in the result
-- `harvester list --type image --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : same as above, but will only retrieve the posters
-- `harvester list --number 1000 --source Twitter` : retrieves the 1000 first tweets in the DB
+### DB
+These commands work with both the `files list` and `corpus create`.
+
+- `harvester files list --number 150 --page 2 --type image` : will get all files from image APIs in the DB starting from the 301st to the 450th
+- `harvester files list --number 50 --order size_desc` : will get the 50 heaviest files in the DB
+- `harvester files list --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : retrieves all tweets with more than 50 retweets and all posters from TMDB in default order
+- `harvester files list --type image --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : same as above, but will only retrieve the posters
+- `harvester files list --number 1000 --source Twitter` : retrieves the 1000 first tweets in the DB
 
 ## Settings
 - `logger` : displays the (2 or 3, output path is not displayed if the output is stdout) logger settings

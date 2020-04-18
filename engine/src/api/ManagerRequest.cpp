@@ -225,6 +225,10 @@ void ManagerRequest::api_db_builder_set_order(const string &order) {
   _db_builder.set_order(method);
 }
 
+void ManagerRequest::api_db_builder_set_page(unsigned int page) {
+  _db_builder.set_page(page);
+}
+
 /*
  * ------------------------------------------
  * METHODS RELATING TO HARVESTER SETTINGS

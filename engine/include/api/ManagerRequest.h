@@ -276,6 +276,13 @@ public:
    */
   void api_db_builder_set_order(const string &order);
 
+  /**
+   * Sets the page to retrieve with the DB builder
+   * Only work in conjunction with the number being set to non 0
+   * @param page starts at 0
+   */
+  void api_db_builder_set_page(unsigned int page);
+
   /*
    * ------------------------------------------
    * METHODS RELATING TO HARVESTER SETTINGS
