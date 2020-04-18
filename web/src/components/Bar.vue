@@ -75,13 +75,16 @@
     <v-content style="height:100vh">
       <slot></slot>
     </v-content>
+
+    <Notifications></Notifications>
   </div>
 </template>
 
 <script>
 import TopBar from "@/components/TopBar.vue";
+import Notifications from "@/components/Notifications.vue";
 export default {
-  components: { TopBar },
+  components: { TopBar, Notifications },
   beforeCreate() {
     // Will check presence in local storage of a server
     if (this.$store.state.socket.url === undefined) {

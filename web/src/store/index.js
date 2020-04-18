@@ -21,6 +21,8 @@ export default new Vuex.Store({
 
     first_init_done: false,
 
+    notifications: [],
+
     logs: {
       unread: 0,
       messages: []
@@ -139,6 +141,26 @@ export default new Vuex.Store({
       };
       state.apis = undefined;
       localStorage.harvester_socket = undefined;
+    },
+
+    add_notification(state, msg) {
+      state.notifications.push(msg);
+    },
+
+    add_custom_notification(state, { msg, color, dark }) {
+      state.notifications.push({ msg, color, dark });
+    },
+
+    add_success_notification(state, msg) {
+      state.notifications.push({ msg, color: "green", dark: true });
+    },
+
+    add_error_notification(state, msg) {
+      state.notifications.push({ msg, color: "red", dark: true });
+    },
+
+    pop_notification(state) {
+      state.notifications.shift();
     }
   },
 
