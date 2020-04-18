@@ -207,12 +207,6 @@ public:
   ApiRequestBuilder &api_builder_get_based_on_bool(bool is_web);
 
   /**
-   * Resets one of the builders
-   * @param is_web true if it is the web builder, false if it is the DB builder
-   */
-  void api_builder_clear(bool is_web);
-
-  /**
    * Builder is capable of doing multiple OR requests based on the API name
    * ex.: (Twitter AND retweet < 10) OR (Twitter AND retweet > 100)
    * Adding a request is initialising a part of a multiple OR statement

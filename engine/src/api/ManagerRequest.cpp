@@ -166,12 +166,6 @@ ApiRequestBuilder &ManagerRequest::api_builder_get_based_on_bool(bool is_web) {
   }
 }
 
-void ManagerRequest::api_builder_clear(bool is_web) {
-  ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
-  builder.clear_requests();
-  builder.clear_types();
-}
-
 long unsigned int
 ManagerRequest::api_builder_add_request(bool is_web, const string &api_name) {
   ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
