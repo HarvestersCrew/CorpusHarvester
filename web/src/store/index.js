@@ -42,7 +42,8 @@ export default new Vuex.Store({
   },
 
   getters: {
-    api_types: state => [...new Set(state.apis.map(api => api.api_type))]
+    api_types: state => [...new Set(state.apis.map(api => api.api_type))],
+    api_by_name: state => name => state.apis.find(el => el.name === name)
   },
 
   mutations: {
