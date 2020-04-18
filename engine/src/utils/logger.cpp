@@ -179,6 +179,7 @@ void logger::clear_logfile() {
   if (fs::exists(get_output_path())) {
     fs::remove(get_output_path());
   }
+  logger::info("Logfile cleared at " + get_output_path());
 }
 
 bool logger::_initialized = false;

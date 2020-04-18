@@ -80,6 +80,18 @@
                       >
                     </template>
                   </v-text-field>
+                  <v-row justify="end">
+                    <v-col cols="auto">
+                      <v-btn
+                        color="red"
+                        dark
+                        small
+                        :loading="clear_logfile_disabled"
+                        @click="on_clear_logfile"
+                        >Clear logfile</v-btn
+                      >
+                    </v-col>
+                  </v-row>
                 </template>
               </v-col>
             </v-row>
@@ -176,6 +188,7 @@ export default {
       storage_path_disabled: false,
       output_path_error: undefined,
       storage_path_error: undefined,
+      clear_logfile_disabled: false,
       logger_levels: [
         { name: "Debug", val: "debug" },
         { name: "Info", val: "info" },
@@ -248,6 +261,17 @@ export default {
       } else {
         this.specified_storage_path = "";
       }
+    },
+    on_clear_logfile() {
+      this.clear_logfile_disabled = true;
+      this.$store.dispatch("send_tokenized_request", {
+        type: "clear_logfile",
+        data: {},
+        callback: this.on_cleared_logfile
+      });
+    },
+    on_cleared_logfile() {
+      this.clear_logfile_disabled = false;
     }
   }
 };

@@ -7,6 +7,7 @@ void server_handler::fill_available_functions(
   functions_no_data.emplace("get_apis_infos", &get_apis_infos);
   functions_no_data.emplace("get_logger_infos", &get_logger_infos);
   functions_no_data.emplace("get_storage_path", &get_storage_path);
+  functions_no_data.emplace("clear_logfile", &clear_logfile);
 
   functions_data.emplace("update_logger", &update_logger);
   functions_data.emplace("storage_migration", &storage_migration);
