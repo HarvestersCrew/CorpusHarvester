@@ -26,6 +26,7 @@ void logger::set_output(const string &output) {
 
 string logger::get_output_path() { return logger::_output_path; }
 void logger::set_output_path(string path) {
+  const auto old_path = get_output_path();
   const auto given_path = fs::path(path);
   if (given_path.is_relative()) {
     throw logger_exception("Output path must be absolute");
@@ -36,7 +37,10 @@ void logger::set_output_path(string path) {
   if (!fs::exists(given_path.parent_path())) {
     throw logger_exception("Output path folder structure must already exist");
   }
-  logger::_output_path = path;
+  _output_path = path;
+  if (fs::exists(old_path)) {
+    fs::rename(old_path, given_path);
+  }
 }
 
 void logger::save_to_db() {
