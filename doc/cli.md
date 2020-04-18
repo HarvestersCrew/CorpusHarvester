@@ -56,7 +56,7 @@ files: Files function.
 
 - `harvester build --page 2 --number 150 --type image` : will get all files from image APIs in the DB starting from the 301st to the 450th
 - `harvester build --number 50 --order size_desc` : will get the 50 heaviest files in the DB
-- `harvester build --source Twitter --retweets 50 --op ">" --source TMDB_Synopsis` :
+- `harvester build --source Twitter --retweets 50 --op ">" --source TMDB_Synopsis` : retrieves all tweets with more than 50 retweets and all synopsis from TMDB in default order, and only the 0th page with default number per page (100). So beware, all requests won't necessarly appear in the result
 
 ## Settings
 - `logger` : displays the (2 or 3, output path is not displayed if the output is stdout) logger settings
