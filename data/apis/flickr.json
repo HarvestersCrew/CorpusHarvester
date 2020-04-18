@@ -68,7 +68,7 @@
             "relevant": true
         },
         {
-            "type": "int",
+            "type": "string",
             "api_name": "id",
             "name": "_api_id",
             "relevant": true
@@ -117,7 +117,7 @@
                 },
                 {
                     "is_parameter_name": true,
-                    "value": "id"
+                    "value": "_api_id"
                 },
                 {
                     "is_parameter_name": false,
