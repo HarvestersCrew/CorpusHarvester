@@ -11,6 +11,7 @@ void server_handler::fill_available_functions(
 
   functions_data.emplace("update_logger", &update_logger);
   functions_data.emplace("storage_migration", &storage_migration);
+  functions_data.emplace("download_query", &download_query);
 }
 
 pair<string, json> server_handler::dispatch_request(ConnectionData &con,
@@ -101,4 +102,32 @@ pair<string, json> server_handler::storage_migration(ConnectionData &con,
   auto to_return = get_storage_path(con);
   WebsocketServer::broadcast_json(to_return);
   return make_pair("storage_migration", json::object());
+}
+
+pair<string, json> server_handler::download_query(ConnectionData &con,
+                                                  const json &j) {
+  if (!j.contains("builder") || !j.at("builder").is_array())
+    throw wss_invalid_request();
+
+  con._mr.api_builder_clear_all(true);
+
+  for (const auto &request : j.at("builder")) {
+    if (!request.contains("name") || !request.at("name").is_string())
+      throw wss_invalid_request();
+
+    unsigned long idx =
+        con._mr.api_builder_add_request(true, request.at("name").get<string>());
+
+    if (!request.contains("values") || !request.at("values").is_object())
+      throw wss_invalid_request();
+
+    for (auto &[key, value] : request.at("values").items()) {
+      con._mr.api_builder_add_request_parameter(true, idx, key,
+                                                value.get<string>(), "=");
+    }
+  }
+
+  auto files = con._mr.api_builder_build(true, 0);
+
+  return make_pair("download_query", json::object());
 }
