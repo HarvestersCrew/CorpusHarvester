@@ -144,7 +144,7 @@ export default new Vuex.Store({
     },
 
     add_notification(state, msg) {
-      state.notifications.push(msg);
+      state.notifications.push({ msg, color: undefined, dark: true });
     },
 
     add_custom_notification(state, { msg, color, dark }) {

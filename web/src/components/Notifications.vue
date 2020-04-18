@@ -35,15 +35,9 @@ export default {
         this.displayed === false
       ) {
         let entry = this.$store.state.notifications[0];
-        if (typeof entry === "object") {
-          this.msg = entry.msg;
-          this.dark = entry.dark;
-          this.color = entry.color;
-        } else {
-          this.msg = entry;
-          this.dark = true;
-          this.color = undefined;
-        }
+        this.msg = entry.msg;
+        this.dark = entry.dark;
+        this.color = entry.color;
         this.displayed = true;
       }
     }
