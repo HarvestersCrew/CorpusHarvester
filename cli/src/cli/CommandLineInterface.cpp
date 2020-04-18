@@ -292,7 +292,7 @@ void CommandLineInterface::corpus_manager() {
 
 void CommandLineInterface::files_list() {
   ManagerRequest mr;
-  vector<string> apis = ApiFactory::get_api_names();
+  vector<string> apis = mr.get_apis();
 
   std::vector<string> fileType{"image", "video", "text"};
 
@@ -500,7 +500,7 @@ void CommandLineInterface::api_list() {
   logger::debug("List request.");
 
   ManagerRequest mr;
-  vector<string> apis = ApiFactory::get_api_names();
+  vector<string> apis = mr.get_apis();
 
   std::cout << "Apis availables :" << std::endl;
   for (string api : apis) {
@@ -514,7 +514,7 @@ void CommandLineInterface::detail_api() {
 
   ManagerRequest mr;
 
-  vector<string> apis = ApiFactory::get_api_names();
+  vector<string> apis = mr.get_apis();
   string apiNameUser = "";
 
   // Check if we have a value for the name
@@ -548,7 +548,7 @@ void CommandLineInterface::detail_api() {
       for (string api : apis) {
         std::cout << "Database parameter for : " << api << "\n" << std::endl;
         vector<shared_ptr<api_parameter_response>> db_parameters =
-            ApiFactory::get_api(api)->get_response_parameters();
+            mr.get_api_db_parameters(api);
         for (shared_ptr<api_parameter_response> parameter : db_parameters) {
           std::cout << parameter.get()->to_string() << std::endl;
         }
@@ -559,7 +559,7 @@ void CommandLineInterface::detail_api() {
                 << std::endl;
       // Get specific parameter from the name
       vector<shared_ptr<api_parameter_response>> db_parameters =
-          ApiFactory::get_api(apiNameUser)->get_response_parameters();
+          mr.get_api_db_parameters(apiNameUser);
       for (shared_ptr<api_parameter_response> parameter : db_parameters) {
         std::cout << parameter.get()->to_string() << std::endl;
       }
@@ -573,7 +573,7 @@ void CommandLineInterface::detail_api() {
       for (string api : apis) {
         std::cout << "Web request parameter for : " << api << "\n" << std::endl;
         vector<shared_ptr<api_parameter_request>> db_parameters =
-            ApiFactory::get_api(api)->get_request_parameters();
+            mr.get_api_web_parameters(api);
         for (shared_ptr<api_parameter_request> parameter : db_parameters) {
           std::cout << parameter.get()->to_string() << std::endl;
         }
@@ -583,7 +583,7 @@ void CommandLineInterface::detail_api() {
       std::cout << "Web request for : " << apiNameUser << "\n" << std::endl;
       // Get specific parameter from the name
       vector<shared_ptr<api_parameter_request>> db_parameters =
-          ApiFactory::get_api(apiNameUser)->get_request_parameters();
+          mr.get_api_web_parameters(apiNameUser);
       for (shared_ptr<api_parameter_request> parameter : db_parameters) {
         std::cout << parameter.get()->to_string() << std::endl;
       }

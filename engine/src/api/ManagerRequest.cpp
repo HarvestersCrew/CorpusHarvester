@@ -130,6 +130,30 @@ ManagerRequest::get_file_from_id(const int id) const {
 
 /*
  * ------------------------------------------
+ * METHODS RELATING TO WEB APIS INFORMATIONS
+ * ------------------------------------------
+ */
+
+vector<string> ManagerRequest::get_apis() {
+  return ApiFactory::get_api_names();
+}
+
+const vector<shared_ptr<api_loader>> ManagerRequest::get_api_loaders() const {
+  return ApiFactory::get_api_loaders();
+}
+
+const vector<shared_ptr<api_parameter_request>> &
+ManagerRequest::get_api_web_parameters(const string &api_name) {
+  return ApiFactory::get_api(api_name)->get_request_parameters();
+}
+
+const vector<shared_ptr<api_parameter_response>> &
+ManagerRequest::get_api_db_parameters(const string &api_name) {
+  return ApiFactory::get_api(api_name)->get_response_parameters();
+}
+
+/*
+ * ------------------------------------------
  * METHODS RELATING TO API BUILDERS
  * ------------------------------------------
  */
@@ -140,6 +164,31 @@ ApiRequestBuilder &ManagerRequest::api_builder_get_based_on_bool(bool is_web) {
   } else {
     return this->_db_builder;
   }
+}
+
+void ManagerRequest::api_builder_clear(bool is_web) {
+  ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
+  builder.clear_requests();
+  builder.clear_types();
+}
+
+long unsigned int
+ManagerRequest::api_builder_add_request(bool is_web, const string &api_name) {
+  ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
+  return builder.add_request(api_name);
+}
+
+void ManagerRequest::api_builder_add_request_parameter(
+    bool is_web, long unsigned int request_id, const string &param_name,
+    const string &param_value, const string &op) {
+  ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
+  builder.add_request_parameter(request_id, param_name, param_value, op);
+}
+
+list<shared_ptr<File>> ManagerRequest::api_builder_build(bool is_web,
+                                                         unsigned int number) {
+  ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
+  return builder.build(number);
 }
 
 /*
