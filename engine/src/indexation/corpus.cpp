@@ -75,7 +75,7 @@ void Corpus::fetch_files() {
   delete res;
 }
 
-void Corpus::fill_attribute_from_statement(sql::ResultSet *res) {
+void Corpus::fill_from_statement(sql::ResultSet *res) {
   this->_id = res->getInt("id");
   this->_title = res->getString("title");
   this->_creation_date = res->getString("creation_date");
@@ -85,10 +85,6 @@ void Corpus::fill_attribute_from_statement(sql::ResultSet *res) {
   } else {
     this->_extraction_path = res->getString("extraction_path");
   }
-}
-
-void Corpus::fill_from_statement(sql::ResultSet *res) {
-  fill_attribute_from_statement(res);
   fetch_files();
 }
 
@@ -106,7 +102,7 @@ std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(ordering_method order) {
 
   while (res->next()) {
     shared_ptr<Corpus> corpus(new Corpus());
-    corpus->fill_attribute_from_statement(res);
+    corpus->fill_from_statement(res);
     corpuses.push_back(corpus);
   }
   delete res;
@@ -131,7 +127,7 @@ shared_ptr<Corpus> Corpus::get_corpus_from_id(const int id) {
   // If we have got a value, we put it in the variable
   while (res->next()) {
     corpus = std::make_shared<Corpus>();
-    corpus->fill_attribute_from_statement(res);
+    corpus->fill_from_statement(res);
   }
   delete res;
 
@@ -159,7 +155,7 @@ Corpus::get_corpus_from_name(const std::string str, ordering_method order) {
 
   while (res->next()) {
     shared_ptr<Corpus> corpus(new Corpus());
-    corpus->fill_attribute_from_statement(res);
+    corpus->fill_from_statement(res);
     corpuses.push_back(corpus);
   }
   delete res;

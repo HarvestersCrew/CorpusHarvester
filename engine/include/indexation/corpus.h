@@ -123,8 +123,6 @@ public:
 
   bool insert();
 
-  void fill_attribute_from_statement(sql::ResultSet *res);
-
   void fill_from_statement(sql::ResultSet *res);
 
   void export_(ExportMethod::methods method);
