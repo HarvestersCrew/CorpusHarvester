@@ -33,6 +33,8 @@
       ></BuilderRequests>
     </v-form>
 
+    <FilesListing></FilesListing>
+
     <v-btn
       :disabled="!builder_validity || requests.length === 0"
       fab
@@ -52,9 +54,10 @@
 <script>
 import Bar from "@/components/Bar.vue";
 import BuilderRequests from "@/components/BuilderRequests.vue";
+import FilesListing from "@/components/FilesListing.vue";
 export default {
   name: "Download",
-  components: { Bar, BuilderRequests },
+  components: { Bar, BuilderRequests, FilesListing },
   data() {
     return {
       api_list_selection: undefined,
