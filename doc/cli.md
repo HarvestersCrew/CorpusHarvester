@@ -54,22 +54,38 @@ files: Files function.
         - `--PARAM_NAME VALUE` : specifies a parameter on the nearest source on the left, can also appear many times
         - `--op OP` : specifies the comparison operator (=, !=, <, >, <=, >=) on a previous parameter. If none is used, = will be used
 
+## Settings
+- `settings` : manage the harvester settings
+    - `logger` : displays the (2 or 3, output path is not displayed if the output is stdout) logger settings
+        - `--setting level --value VALUE` : sets the logger level to one of these: debug, info, warning, error, none
+        - `--setting output --value VALUE` : sets the logger output to one of these: stdout, file
+        - `--setting output_path --value VALUE` : sets the logger output path to the given value
+        - `--clear` : deletes the logfile if existing
+    - `storage` : displays the storage root
+        - `--migrate ABSOLUTE_PATH` : migrates the storage to this absolute path
+
+## Web
+- `web` : all commands related to web queries
+    - `download` : retrieve new files from the web
+        - `--number NBR` : will download up to this number (not precise, around it) or stop before if specified queries start returning nothing. If it isn't specified, will only do a single query on each request
+        - `--type TYPE` : will intersect the specified requests with the specified types, can appear multiple times (text, image)
+        - `--source NAME` : specifies a request on this source name, can also appear many times
+        - `--PARAM_NAME VALUE` : specifies a parameter on the nearest source on the left, can also appear many times
+
+
 ## Build commands example:
+The options specified by the builders must be written in the same order as described by the doc.
 
 ### DB
 These commands work with both the `files list` and `corpus create`.
 
 - `harvester files list --number 150 --page 2 --type image` : will get all files from image APIs in the DB starting from the 301st to the 450th
 - `harvester files list --number 50 --order size_desc` : will get the 50 heaviest files in the DB
-- `harvester files list --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : retrieves all tweets with more than 50 retweets and all posters from TMDB in default order
+- `harvester files list --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : will retrieve all tweets with more than 50 retweets and all posters from TMDB in default order
 - `harvester files list --type image --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : same as above, but will only retrieve the posters
 - `harvester files list --number 1000 --source Twitter` : retrieves the 1000 first tweets in the DB
 
-## Settings
-- `logger` : displays the (2 or 3, output path is not displayed if the output is stdout) logger settings
-    - `--setting level --value VALUE` : sets the logger level to one of these: debug, info, warning, error, none
-    - `--setting output --value VALUE` : sets the logger output to one of these: stdout, file
-    - `--setting output_path --value VALUE` : sets the logger output path to the given value
-    - `--clear` : deletes the logfile if existing
-- `storage` : displays the storage root
-    - `--migrate ABSOLUTE_PATH` : migrates the storage to this absolute path
+### Web
+It works the same as the commands above, but the page is omitted from the global query and passed as parameters to API supporting it as a starting page. Requests must also be specified, it can't search only based on type. Also, comparison operators aren't supported as the only one is "=".
+
+- `harvester web download --source Twitter --query "cats" --source TMDB_Poster --query "cats"` : retrieves cat tweets and movie posters on cat movies, on a single query for each.
