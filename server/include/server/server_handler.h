@@ -60,6 +60,11 @@ pair<string, json> get_storage_path(ConnectionData &con);
 pair<string, json> clear_logfile(ConnectionData &con);
 
 /**
+ * Refresh the loaded APIs and broadcasts them to everyone
+ */
+pair<string, json> refresh_apis(ConnectionData &con);
+
+/**
  * ---------------------
  * METHODS WITH DATA
  * ---------------------

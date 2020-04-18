@@ -134,6 +134,8 @@ ManagerRequest::get_file_from_id(const int id) const {
  * ------------------------------------------
  */
 
+void ManagerRequest::refresh_apis() const { ApiFactory::refresh_apis(); }
+
 vector<string> ManagerRequest::get_apis() {
   return ApiFactory::get_api_names();
 }

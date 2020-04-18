@@ -56,6 +56,11 @@ private:
 
 public:
   /**
+   * Refresh APIs from the disk
+   */
+  static void refresh_apis();
+
+  /**
    * Returns the path to the app APIs folder
    * @return string Path to the folder
    */

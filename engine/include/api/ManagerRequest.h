@@ -164,6 +164,11 @@ public:
    */
 
   /**
+   * Refresh the APIs loaded in memory from the disk
+   */
+  void refresh_apis() const;
+
+  /**
    * Returns a list of API names that are usable in the Harvester
    * @return vector of strings which are the API names
    */

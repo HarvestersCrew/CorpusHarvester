@@ -123,9 +123,13 @@ void ApiFactory::discover_from_path(const string &path) {
   logger::info("API discover: " + to_string(apis.size()) + " APIs were loaded");
 }
 
+void ApiFactory::refresh_apis() {
+  ApiFactory::discover_from_path(ApiFactory::get_apis_folder_path());
+}
+
 const unordered_map<string, shared_ptr<api_loader>> &ApiFactory::get_apis() {
   if (!ApiFactory::_apis.has_value()) {
-    ApiFactory::discover_from_path(ApiFactory::get_apis_folder_path());
+    ApiFactory::refresh_apis();
   }
   return ApiFactory::_apis.value();
 }
