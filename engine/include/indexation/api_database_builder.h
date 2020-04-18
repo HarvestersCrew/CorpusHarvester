@@ -55,6 +55,9 @@ public:
                                      const string &param_value,
                                      const string &op);
 
+  /**
+   * @throw api_builder_feature_not_supported if order not supported
+   */
   virtual void set_order(ordering_method order);
   virtual ordering_method get_order() const;
 

@@ -245,6 +245,14 @@ public:
                                          const string &op);
 
   /**
+   * Adds a type to the builder
+   * @param is_web true if it is the web builder, false if it is the DB builder
+   * @param type Type to add ("image", "text")
+   * @throw manager_request_invalid_parameter if type isn't recognized
+   */
+  void api_builder_add_type(bool is_web, const string &type);
+
+  /**
    * Clears all parameters of the API builder
    * @param is_web true if it is the web builder, false if it is the DB builder
    */

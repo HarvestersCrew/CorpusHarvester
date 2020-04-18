@@ -185,6 +185,18 @@ void ManagerRequest::api_builder_add_request_parameter(
   builder.add_request_parameter(request_id, param_name, param_value, op);
 }
 
+void ManagerRequest::api_builder_add_type(bool is_web, const string &type) {
+  api_loader::api_type t;
+  if (type == "image") {
+    t = api_loader::api_type::IMAGE;
+  } else if (type == "text") {
+    t = api_loader::api_type::TEXT;
+  } else {
+    throw manager_request_invalid_parameter();
+  }
+  this->api_builder_get_based_on_bool(is_web).add_type(t);
+}
+
 void ManagerRequest::api_builder_clear_all(bool is_web) {
   this->api_builder_get_based_on_bool(is_web).clear_all();
 }

@@ -138,7 +138,13 @@ void ApiDatabaseBuilder::add_request_parameter(long unsigned int request_id,
                                            op);
 }
 
-void ApiDatabaseBuilder::set_order(ordering_method order) { _order = order; }
+void ApiDatabaseBuilder::set_order(ordering_method order) {
+  if (order >= ordering_method::NONE && order <= ordering_method::SIZE_DESC) {
+    _order = order;
+  } else {
+    throw api_builder_feature_not_supported("Given DB order not supported");
+  }
+}
 ApiDatabaseBuilder::ordering_method ApiDatabaseBuilder::get_order() const {
   return _order;
 }
