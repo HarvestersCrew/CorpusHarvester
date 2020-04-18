@@ -36,14 +36,8 @@ files: Files function.
 
 ## Files
 - `files`
-    - `list` : list all files in DB, following some criteria
-        - `--page NBR` : page to use, starts at 0 (**required**)
-        - `--number NBR` : number of results per page (default: 100)
-        - `--api API` : files only from this API
-        - `--type TYPE` : type of files to find
-        - `--order ORDER` : display in the specified order (API asc/desc or size asc/desc), values to pass to be defined
     - `--id ID` : displays informations about the file with the given ID
-    - `build` : used to build a complex query
+    - `list` : used to build a complex query
         - `--page NBR` : needs to be at the front of the query, start at 0 (**required**)
         - `--number NBR` : needs to be after the page, number of results per page (default: 100)
         - `--order ORDER` : specifies the return order (API asc/desc or size asc/desc)
@@ -54,9 +48,11 @@ files: Files function.
 
 ### Build command example:
 
-- `harvester build --page 2 --number 150 --type image` : will get all files from image APIs in the DB starting from the 301st to the 450th
-- `harvester build --number 50 --order size_desc` : will get the 50 heaviest files in the DB
-- `harvester build --source Twitter --retweets 50 --op ">" --source TMDB_Synopsis` : retrieves all tweets with more than 50 retweets and all synopsis from TMDB in default order, and only the 0th page with default number per page (100). So beware, all requests won't necessarly appear in the result
+- `harvester list --page 2 --number 150 --type image` : will get all files from image APIs in the DB starting from the 301st to the 450th
+- `harvester list --number 50 --order size_desc` : will get the 50 heaviest files in the DB
+- `harvester list --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : retrieves all tweets with more than 50 retweets and all posters from TMDB in default order, and only the 0th page with default number per page (100). So beware, all requests won't necessarly appear in the result
+- `harvester list --type image --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : same as above, but will only retrieve the posters
+- `harvester list --number 1000 --source Twitter` : retrieves the 1000 first tweets in the DB
 
 ## Settings
 - `logger` : displays the (2 or 3, output path is not displayed if the output is stdout) logger settings
