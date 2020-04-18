@@ -37,12 +37,26 @@ files: Files function.
 ## Files
 - `files`
     - `list` : list all files in DB, following some criteria
-        - `--page` : page to use, starts at 0 (**required**)
-        - `--number` : number of results per page (default: 100)
+        - `--page NBR` : page to use, starts at 0 (**required**)
+        - `--number NBR` : number of results per page (default: 100)
         - `--api API` : files only from this API
         - `--type TYPE` : type of files to find
         - `--order ORDER` : display in the specified order (API asc/desc or size asc/desc), values to pass to be defined
     - `--id ID` : displays informations about the file with the given ID
+    - `build` : used to build a complex query
+        - `--page NBR` : needs to be at the front of the query, start at 0 (**required**)
+        - `--number NBR` : needs to be after the page, number of results per page (default: 100)
+        - `--order ORDER` : specifies the return order (API asc/desc or size asc/desc)
+        - `--type TYPE` : needs to be after the page, number and order (if specified), can appear multiple times (text, image)
+        - `--source NAME` : specifies a request on this source name, can also appear many times
+        - `--PARAM_NAME VALUE` : specifies a parameter on the nearest source on the left, can also appear many times
+        - `--op OP` : specifies the comparison operator (=, !=, <, >, <=, >=) on a previous parameter. If none is used, = will be used
+
+### Build command example:
+
+- `harvester build --page 2 --number 150 --type image` : will get all files from image APIs in the DB starting from the 301st to the 450th
+- `harvester build --number 50 --order size_desc` : will get the 50 heaviest files in the DB
+- `harvester build --source Twitter --retweets 50 --op ">" --source TMDB_Synopsis` :
 
 ## Settings
 - `logger` : displays the (2 or 3, output path is not displayed if the output is stdout) logger settings
