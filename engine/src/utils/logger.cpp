@@ -175,6 +175,12 @@ void logger::error(const string &msg) {
   logger::print_log(logger::level::ERROR, msg);
 }
 
+void logger::clear_logfile() {
+  if (fs::exists(get_output_path())) {
+    fs::remove(get_output_path());
+  }
+}
+
 bool logger::_initialized = false;
 logger::level logger::_level;
 logger::output logger::_output;

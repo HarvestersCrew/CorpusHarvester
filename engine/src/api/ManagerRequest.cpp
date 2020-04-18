@@ -244,6 +244,8 @@ ManagerRequest::set_logger_output_path(const string &output_path) {
   return this->get_logger_settings();
 }
 
+void ManagerRequest::clear_logfile() const { logger::clear_logfile(); }
+
 string ManagerRequest::get_storage_path() const {
   return Storage().get_root_folder_name();
 }

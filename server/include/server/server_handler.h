@@ -55,6 +55,11 @@ pair<string, json> get_logger_infos(ConnectionData &con);
 pair<string, json> get_storage_path(ConnectionData &con);
 
 /**
+ * Clears logfile
+ */
+pair<string, json> clear_logfile(ConnectionData &con);
+
+/**
  * ---------------------
  * METHODS WITH DATA
  * ---------------------

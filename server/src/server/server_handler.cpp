@@ -61,6 +61,11 @@ pair<string, json> server_handler::get_storage_path(ConnectionData &con) {
   return make_pair("get_storage_path", j);
 }
 
+pair<string, json> server_handler::clear_logfile(ConnectionData &con) {
+  con._mr.clear_logfile();
+  return make_pair("clear_logfile", json::object());
+}
+
 /**
  * ---------------------
  * METHODS WITH DATA

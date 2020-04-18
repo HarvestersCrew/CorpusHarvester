@@ -302,6 +302,11 @@ public:
   set_logger_output_path(const string &output_path);
 
   /**
+   * Clears the logfile
+   */
+  void clear_logfile() const;
+
+  /**
    * Gets the storage path
    */
   string get_storage_path() const;

@@ -121,6 +121,11 @@ public:
    */
   static void save_to_db();
 
+  /**
+   * Removes the log file
+   */
+  static void clear_logfile();
+
 private:
   /** Minimal level to output */
   static level _level;
