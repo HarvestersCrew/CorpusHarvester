@@ -178,3 +178,18 @@ std::optional<shared_ptr<File>> File::get_file_from_id(const int id) {
   // Based on the result, we return an optional
   return file;
 }
+
+json File::serialize() const {
+  json j = json::object();
+  j["id"] = this->_id;
+  j["path"] = this->_path;
+  j["name"] = this->_name;
+  j["size"] = this->_size;
+  j["source"] = this->_source;
+  j["format"] = this->_format;
+  j["tags"] = json::object();
+  for (const auto &tag : _tags) {
+    j.at("tags")[tag->get_name()] = tag->get_value();
+  }
+  return j;
+}

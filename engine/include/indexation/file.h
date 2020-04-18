@@ -3,6 +3,7 @@
 
 #include "database/database_item.h"
 #include "indexation/tag.h"
+#include "utils/nlohmann/json.hpp"
 #include <cppconn/connection.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
@@ -30,6 +31,7 @@
 #define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
 #define GET_FILE_FROM_ID "SELECT * FROM File WHERE id = ?"
 
+using nlohmann::json;
 using std::shared_ptr;
 using std::unique_ptr;
 
@@ -144,6 +146,11 @@ public:
    * @return The desired file.
    */
   static std::optional<shared_ptr<File>> get_file_from_id(const int id);
+
+  /**
+   * Serialize a file to a JSON string
+   */
+  virtual json serialize() const;
 };
 
 #endif
