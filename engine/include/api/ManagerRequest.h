@@ -268,6 +268,14 @@ public:
    */
   list<shared_ptr<File>> api_builder_build(bool is_web, unsigned int number);
 
+  /**
+   * Sets the ordering method on the DB builder
+   * @param order string representing the order ("none", "api_asc", "api_desc",
+   * "size_asc", "size_desc")
+   * @throw manager_request_invalid_parameter if order method isn't recognized
+   */
+  void api_db_builder_set_order(const string &order);
+
   /*
    * ------------------------------------------
    * METHODS RELATING TO HARVESTER SETTINGS

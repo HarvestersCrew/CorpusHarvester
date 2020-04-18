@@ -207,6 +207,24 @@ list<shared_ptr<File>> ManagerRequest::api_builder_build(bool is_web,
   return builder.build(number);
 }
 
+void ManagerRequest::api_db_builder_set_order(const string &order) {
+  ApiDatabaseBuilder::ordering_method method;
+  if (order == "none") {
+    method = ApiDatabaseBuilder::ordering_method::NONE;
+  } else if (order == "api_asc") {
+    method = ApiDatabaseBuilder::ordering_method::API_ASC;
+  } else if (order == "api_desc") {
+    method = ApiDatabaseBuilder::ordering_method::API_DESC;
+  } else if (order == "size_asc") {
+    method = ApiDatabaseBuilder::ordering_method::SIZE_ASC;
+  } else if (order == "size_desc") {
+    method = ApiDatabaseBuilder::ordering_method::SIZE_DESC;
+  } else {
+    throw manager_request_invalid_parameter();
+  }
+  _db_builder.set_order(method);
+}
+
 /*
  * ------------------------------------------
  * METHODS RELATING TO HARVESTER SETTINGS
