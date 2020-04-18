@@ -13,6 +13,7 @@
       :value="value"
       @input="$emit('input', $event)"
       :rules="[validation]"
+      :disabled="disabled"
     ></v-text-field>
 
     <v-select
@@ -26,6 +27,7 @@
       :items="param.values"
       :value="value"
       @input="$emit('input', $event)"
+      :disabled="disabled"
     ></v-select>
   </div>
 </template>
@@ -33,8 +35,9 @@
 <script>
 export default {
   props: {
-    param: Object,
-    value: [String, Number]
+    param: { type: Object, required: true },
+    value: [String, Number],
+    disabled: { type: Boolean, required: true }
   },
   name: "ApiParamInput",
   computed: {

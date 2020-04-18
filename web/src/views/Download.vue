@@ -18,6 +18,7 @@
                 prepend-icon="mdi-api"
                 append-outer-icon="mdi-plus"
                 @click:append-outer="add_source_to_requests"
+                :disabled="global_disable"
               >
               </v-autocomplete>
             </v-col>
@@ -30,6 +31,7 @@
       <BuilderRequests
         @remove_request="remove_request"
         :requests="requests"
+        :disabled="global_disable"
       ></BuilderRequests>
     </v-form>
 
@@ -38,15 +40,16 @@
     <v-speed-dial open-on-hover fixed bottom right>
       <template v-slot:activator>
         <v-btn color="blue" dark fab>
-          <v-icon>mdi-dots-vertical</v-icon>
+          <v-icon v-if="!global_disable">mdi-dots-vertical</v-icon>
+          <v-progress-circular v-else indeterminate></v-progress-circular>
         </v-btn>
       </template>
 
       <v-btn
         fab
         color="green"
-        :dark="builder_validity && requests.length !== 0"
-        :disabled="!builder_validity || requests.length === 0"
+        :dark="builder_validity && requests.length !== 0 && !global_disable"
+        :disabled="!builder_validity || requests.length === 0 || global_disable"
         small
         @click="send_query"
       >
@@ -56,8 +59,12 @@
       <v-btn
         fab
         color="red"
-        :disabled="this.$store.state.downloaded_files.length === 0"
-        :dark="this.$store.state.downloaded_files.length !== 0"
+        :disabled="
+          this.$store.state.downloaded_files.length === 0 || global_disable
+        "
+        :dark="
+          this.$store.state.downloaded_files.length !== 0 && !global_disable
+        "
         small
         @click="clear_response"
       >
@@ -78,7 +85,8 @@ export default {
     return {
       api_list_selection: undefined,
       requests: this.$store.state.api_db_builder,
-      builder_validity: true
+      builder_validity: true,
+      global_disable: false
     };
   },
   beforeDestroy() {
@@ -125,6 +133,7 @@ export default {
       this.requests.splice(idx, 1);
     },
     send_query() {
+      this.global_disable = true;
       this.$store.commit("add_notification", "Download request sent");
       this.$store.dispatch("send_tokenized_request", {
         type: "download_query",
@@ -133,6 +142,7 @@ export default {
       });
     },
     query_response(data) {
+      this.global_disable = false;
       if (data.type !== undefined && data.type === "error") {
         this.$store.commit(
           "add_error_notification",

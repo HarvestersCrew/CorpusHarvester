@@ -8,6 +8,7 @@
             <v-col cols="3" v-for="(param, name) in request.params" :key="name">
               <ApiParamInput
                 :param="param"
+                :disabled="disabled"
                 v-model="request.values[name]"
               ></ApiParamInput>
             </v-col>
@@ -31,6 +32,10 @@ export default {
   props: {
     requests: {
       type: Array,
+      required: true
+    },
+    disabled: {
+      type: Boolean,
       required: true
     }
   }
