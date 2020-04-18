@@ -43,15 +43,17 @@ export default {
   },
   methods: {
     add_source_to_requests() {
-      let params = {};
       let api = this.$store.getters.api_by_name(this.api_list_selection);
+      let params = {};
+      let values = {};
       api.requests.forEach(req => {
-        params[req.name] = undefined;
+        params[req.name] = req;
+        values[req.name] = undefined;
       });
       this.requests.unshift({
         api: this.api_list_selection,
         params,
-        type: "web"
+        values
       });
       this.api_list_selection = undefined;
     }
