@@ -42,6 +42,7 @@
       right
       color="blue"
       dark
+      @click="send_query"
     >
       <v-icon>mdi-download</v-icon>
     </v-btn>
@@ -64,6 +65,27 @@ export default {
   beforeDestroy() {
     this.$store.commit("set_api_db_builder", this.requests);
   },
+  computed: {
+    server_query() {
+      let query = [];
+      this.requests.forEach(req => {
+        let req_parsed = {
+          name: req.api,
+          values: {}
+        };
+        Object.keys(req.values).forEach(key => {
+          if (
+            req.values[key] !== null &&
+            req.values[key] !== undefined &&
+            req.values[key] !== ""
+          )
+            req_parsed.values[key] = req.values[key];
+        });
+        query.push(req_parsed);
+      });
+      return query;
+    }
+  },
   methods: {
     add_source_to_requests() {
       let api = this.$store.getters.api_by_name(this.api_list_selection);
@@ -82,6 +104,10 @@ export default {
     },
     remove_request(idx) {
       this.requests.splice(idx, 1);
+    },
+    send_query() {
+      console.log("sending query");
+      console.log(this.server_query);
     }
   }
 };

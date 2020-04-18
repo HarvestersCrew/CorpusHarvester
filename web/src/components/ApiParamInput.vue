@@ -41,7 +41,7 @@ export default {
     placeholder() {
       return this.param.default_value !== null
         ? this.param.default_value
-        : undefined;
+        : "No default value";
     },
     hint_text() {
       return this.param.required ? "Required" : undefined;
