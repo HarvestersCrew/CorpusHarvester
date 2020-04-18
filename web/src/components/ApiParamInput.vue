@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <div>
     <p class="subtitle-2 text-left">{{ param.name }}</p>
 
     <v-text-field
@@ -10,9 +10,9 @@
       :placeholder="placeholder"
       :hint="hint_text"
       persistent-hint
-      :type="type"
       :value="value"
       @input="$emit('input', $event)"
+      :rules="[validation]"
     ></v-text-field>
 
     <v-select
@@ -27,7 +27,7 @@
       :value="value"
       @input="$emit('input', $event)"
     ></v-select>
-  </v-form>
+  </div>
 </template>
 
 <script>
@@ -52,8 +52,17 @@ export default {
     }
   },
   methods: {
-    test(data) {
-      console.log(data);
+    validation(data) {
+      if (!data) {
+        if (this.param.required && this.param.default_value === null)
+          return "Parameter must not be empty";
+        else return true;
+      }
+      if (this.param.value_type === "int") {
+        if (!data.match(/^\d+$/)) return "Parameter must be an int";
+        else return true;
+      }
+      return true;
     }
   }
 };
