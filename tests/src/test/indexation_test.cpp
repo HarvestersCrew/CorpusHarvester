@@ -223,6 +223,10 @@ void test_fetch_specific_files3() {
 
 void test_create_corpus() {
   auto con = PoolDB::borrow_from_pool();
+  sql::Statement *stmt = con->createStatement();
+  stmt->execute("DELETE FROM CorpusFiles");
+  stmt->execute("DELETE FROM Corpus");
+
   SearchBuilder sb = Indexer().get_search_builder();
   std::list<shared_ptr<File>> files = sb.add_condition("name", "file6", "=")
                                           ->logical_or()
@@ -235,7 +239,6 @@ void test_create_corpus() {
   Indexer().save_corpus(corpus);
   Indexer().save_corpus(corpus2);
   sql::ResultSet *res_files;
-  sql::Statement *stmt = con->createStatement();
   std::list<shared_ptr<Corpus>> corpuses =
       Corpus::get_all_corpuses(Corpus::ordering_method::NONE);
   Assertion::assert_equals(__FUNCTION__, 2, corpuses.size());
@@ -246,15 +249,20 @@ void test_create_corpus() {
   res_files = stmt->executeQuery(GET_ALL_CORPUS_FILES);
   Assertion::assert_equals(__FUNCTION__, 3, res_files->rowsCount());
 
-  stmt->execute("DELETE FROM CorpusFiles");
-  stmt->execute("DELETE FROM Corpus");
-
   delete stmt;
   delete res_files;
   PoolDB::unborrow_from_pool(con);
 }
 
 void test_fetch_corpuses() {
+
+  auto con = PoolDB::borrow_from_pool();
+  sql::Statement *stmt = con->createStatement();
+  stmt->execute("DELETE FROM CorpusFiles");
+  stmt->execute("DELETE FROM Corpus");
+  delete stmt;
+  PoolDB::unborrow_from_pool(con);
+
   std::list<shared_ptr<Corpus>> corpuses;
   std::vector<shared_ptr<Corpus>> corpuses_vec;
 
