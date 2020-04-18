@@ -38,8 +38,11 @@ export default {
   data() {
     return {
       api_list_selection: undefined,
-      requests: []
+      requests: this.$store.state.api_db_builder
     };
+  },
+  beforeDestroy() {
+    this.$store.commit("set_api_db_builder", this.requests);
   },
   methods: {
     add_source_to_requests() {

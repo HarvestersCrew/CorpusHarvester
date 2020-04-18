@@ -23,6 +23,8 @@ export default new Vuex.Store({
 
     notifications: [],
 
+    api_db_builder: [],
+
     logs: {
       unread: 0,
       messages: []
@@ -162,6 +164,10 @@ export default new Vuex.Store({
 
     pop_notification(state) {
       state.notifications.shift();
+    },
+
+    set_api_db_builder(state, val) {
+      state.api_db_builder = val;
     }
   },
 
