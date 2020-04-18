@@ -106,11 +106,26 @@ export default {
       this.requests.splice(idx, 1);
     },
     send_query() {
+      this.$store.commit("add_notification", "Download request sent");
       this.$store.dispatch("send_tokenized_request", {
         type: "download_query",
         data: { builder: this.server_query },
-        callback: undefined
+        callback: this.query_response
       });
+    },
+    query_response(data) {
+      if (data.type !== undefined && data.type === "error") {
+        this.$store.commit(
+          "add_error_notification",
+          "An error occurred during the download, check the logs for further informations"
+        );
+      } else {
+        this.specified_output_path = "";
+        this.$store.commit(
+          "add_success_notification",
+          "Download ready, check it in the download tab"
+        );
+      }
     }
   }
 };

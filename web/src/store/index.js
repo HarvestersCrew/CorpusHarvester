@@ -24,6 +24,7 @@ export default new Vuex.Store({
     notifications: [],
 
     api_db_builder: [],
+    downloaded_files: [],
 
     logs: {
       unread: 0,
@@ -92,6 +93,10 @@ export default new Vuex.Store({
 
           case "get_storage_path":
             state.storage.path = obj.data.storage_path;
+            break;
+
+          case "download_query":
+            state.downloaded_files = obj.data.files;
             break;
 
           default:

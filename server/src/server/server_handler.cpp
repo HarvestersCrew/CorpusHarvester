@@ -129,5 +129,12 @@ pair<string, json> server_handler::download_query(ConnectionData &con,
 
   auto files = con._mr.api_builder_build(true, 0);
 
-  return make_pair("download_query", json::object());
+  json result = json::object();
+  result["files"] = json::array();
+
+  for (const auto &file : files) {
+    result.at("files").push_back(file->serialize());
+  }
+
+  return make_pair("download_query", result);
 }
