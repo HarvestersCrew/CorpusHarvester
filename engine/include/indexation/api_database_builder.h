@@ -57,6 +57,8 @@ public:
 
   virtual void set_order(ordering_method order);
   virtual ordering_method get_order() const;
+
+  virtual void clear_all();
 };
 
 #endif

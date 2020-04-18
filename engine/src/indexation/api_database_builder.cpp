@@ -142,3 +142,8 @@ void ApiDatabaseBuilder::set_order(ordering_method order) { _order = order; }
 ApiDatabaseBuilder::ordering_method ApiDatabaseBuilder::get_order() const {
   return _order;
 }
+
+void ApiDatabaseBuilder::clear_all() {
+  _order = ordering_method::NONE;
+  ApiRequestBuilder::clear_all();
+}

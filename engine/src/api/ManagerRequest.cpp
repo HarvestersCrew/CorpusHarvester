@@ -185,6 +185,10 @@ void ManagerRequest::api_builder_add_request_parameter(
   builder.add_request_parameter(request_id, param_name, param_value, op);
 }
 
+void ManagerRequest::api_builder_clear_all(bool is_web) {
+  this->api_builder_get_based_on_bool(is_web).clear_all();
+}
+
 list<shared_ptr<File>> ManagerRequest::api_builder_build(bool is_web,
                                                          unsigned int number) {
   ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);

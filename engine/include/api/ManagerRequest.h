@@ -245,6 +245,12 @@ public:
                                          const string &op);
 
   /**
+   * Clears all parameters of the API builder
+   * @param is_web true if it is the web builder, false if it is the DB builder
+   */
+  void api_builder_clear_all(bool is_web);
+
+  /**
    * Fetches the list of files from whatever source we want
    * @param is_web true if it is the web builder, false if it is the DB builder
    * @param number number of elements to retrieve, 0 means value not set and
