@@ -73,6 +73,29 @@
         <span>Start download</span>
       </v-tooltip>
 
+      <v-tooltip left color="indigo" dark>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            fab
+            color="indigo"
+            :disabled="
+              $store.state.builders.files[builder_type].length === 0 ||
+                global_disable
+            "
+            :dark="
+              $store.state.builders.files[builder_type].length !== 0 &&
+                !global_disable
+            "
+            small
+            @click="export_start"
+            v-on="on"
+          >
+            <v-icon>mdi-folder-move</v-icon>
+          </v-btn>
+        </template>
+        <span>Export to corpus</span>
+      </v-tooltip>
+
       <v-tooltip left color="red" dark>
         <template v-slot:activator="{ on }">
           <v-btn
@@ -220,6 +243,10 @@ export default {
       if (!input) return true;
       if (parseInt(input) < 0) return false;
       return true;
+    },
+
+    export_start() {
+      console.log("export");
     }
   }
 };
