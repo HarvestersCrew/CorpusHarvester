@@ -10,7 +10,6 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
   }
 
   list<shared_ptr<File>> res;
-  Indexer indexer;
   Storage storage;
 
   long unsigned int all_dl_size = 0;
@@ -74,7 +73,16 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
       storage.store_files(partial_res);
 
       // Index the downloaded data
-      indexer.indexation(partial_res);
+      for (auto it = partial_res.begin(); it != partial_res.end();) {
+        try {
+          (*it)->insert();
+          ++it;
+        } catch (const std::exception &e) {
+          logger::error("Error while parsing a file");
+          logger::debug(e.what());
+          it = partial_res.erase(it);
+        }
+      }
 
       // Add freshly downloaded data to the return list
       res.splice(res.end(), partial_res);
