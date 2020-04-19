@@ -14,6 +14,7 @@ void server_handler::fill_available_functions(
   functions_data.emplace("storage_migration", &storage_migration);
   functions_data.emplace("download_query", &download_query);
   functions_data.emplace("get_corpuses", &get_corpuses);
+  functions_data.emplace("add_build_to_corpus", &add_build_to_corpus);
 }
 
 pair<string, json> server_handler::dispatch_request(ConnectionData &con,
@@ -173,4 +174,29 @@ pair<string, json> server_handler::get_corpuses(ConnectionData &con,
     res.at("corpuses").push_back(corpus->serialize());
   }
   return make_pair("get_corpuses", res);
+}
+
+pair<string, json> server_handler::add_build_to_corpus(ConnectionData &con,
+                                                       const json &j) {
+  if (!j.contains("create") && !j.contains("type"))
+    throw wss_invalid_request();
+
+  bool create = j.at("create").get<bool>();
+  string type = j.at("type").get<string>();
+  bool is_web = type == "web";
+
+  ApiRequestBuilder &builder = con._mr.api_builder_get_based_on_bool(is_web);
+
+  if (create) {
+    if (!j.contains("title"))
+      throw wss_invalid_request();
+    con._mr.create_corpus(j.at("title").get<string>(),
+                          builder.get_latest_build(), std::nullopt);
+  } else {
+    if (!j.contains("id"))
+      throw wss_invalid_request();
+    con._mr.add_to_corpus(j.at("id").get<int>(), builder.get_latest_build());
+  }
+
+  return make_pair("add_build_to_corpus", json::object());
 }
