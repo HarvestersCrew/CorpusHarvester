@@ -187,16 +187,21 @@ pair<string, json> server_handler::add_build_to_corpus(ConnectionData &con,
 
   ApiRequestBuilder &builder = con._mr.api_builder_get_based_on_bool(is_web);
 
+  int id;
+
   if (create) {
     if (!j.contains("title"))
       throw wss_invalid_request();
-    con._mr.create_corpus(j.at("title").get<string>(),
-                          builder.get_latest_build(), std::nullopt);
+    id = con._mr.create_corpus(j.at("title").get<string>(),
+                               builder.get_latest_build(), std::nullopt);
   } else {
     if (!j.contains("id"))
       throw wss_invalid_request();
-    con._mr.add_to_corpus(j.at("id").get<int>(), builder.get_latest_build());
+    id = j.at("id").get<int>();
+    con._mr.add_to_corpus(id, builder.get_latest_build());
   }
 
-  return make_pair("add_build_to_corpus", json::object());
+  json res = {{"id", id}};
+
+  return make_pair("add_build_to_corpus", res);
 }

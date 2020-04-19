@@ -120,6 +120,7 @@ pair<string, json> get_corpuses(ConnectionData &con, const json &j);
  * @param title name if creating a corpus
  * @param type "web" or "db"
  * @throw db_id_not_found if corpus wasn't found
+ * @return "id" ID affected or created
  */
 pair<string, json> add_build_to_corpus(ConnectionData &con, const json &j);
 

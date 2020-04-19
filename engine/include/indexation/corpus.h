@@ -31,9 +31,10 @@
 #define CORPUS_FILES_CREATE_STATEMENT                                          \
   "CREATE TABLE IF NOT EXISTS CorpusFiles(corpus_id INTEGER NOT NULL, "        \
   "file_id INTEGER NOT NULL, FOREIGN KEY (corpus_id) "                         \
-  "REFERENCES Corpus(id), FOREIGN KEY (file_id) REFERENCES File(id));"
+  "REFERENCES Corpus(id), FOREIGN KEY (file_id) REFERENCES File(id), UNIQUE "  \
+  "KEY(file_id, corpus_id));"
 #define INSERT_CORPUS_FILES_STATEMENT                                          \
-  "INSERT INTO CorpusFiles (corpus_id, file_id) VALUES(?, ?)"
+  "INSERT IGNORE INTO CorpusFiles (corpus_id, file_id) VALUES(?, ?)"
 #define DROP_CORPUS_FILES_STATEMENT "DROP TABLE IF EXISTS CorpusFiles;"
 #define GET_ALL_CORPUS "SELECT * FROM Corpus"
 #define GET_CORPUS_FROM_NAME "SELECT * FROM Corpus WHERE title LIKE ?"
