@@ -76,6 +76,16 @@ export default new Vuex.Store({
     SOCKET_ONMESSAGE(state, obj) {
       if (obj.type !== undefined) {
         switch (obj.type) {
+          case "refresh_apis":
+            state.notifications.push({
+              msg:
+                "APIs have been refreshed, beware of incompatibilities with your current selections",
+              color: undefined,
+              dark: true
+            });
+            state.apis = obj.data;
+            break;
+
           case "get_apis":
             state.apis = obj.data;
             break;
