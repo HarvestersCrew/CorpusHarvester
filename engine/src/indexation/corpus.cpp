@@ -72,7 +72,7 @@ bool Corpus::insert() {
 }
 
 void Corpus::add_files(const list<shared_ptr<File>> &files) {
-  if (_id != 1) {
+  if (_id != -1) {
     auto con = PoolDB::borrow_from_pool();
     sql::PreparedStatement *prep_stmt;
     for (const auto &file : files) {
