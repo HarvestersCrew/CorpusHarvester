@@ -165,6 +165,8 @@ private:
   std::optional<std::string> _default_value;
   /** Enum of values valid to use */
   std::vector<std::string> _values;
+  /** Whether the parameter should be exposed to user, true by default */
+  bool _is_public;
 };
 
 /**

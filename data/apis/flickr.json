@@ -24,7 +24,8 @@
             "required": true,
             "position": "body",
             "relevant": false,
-            "default_value": "flickr.photos.search"
+            "default_value": "flickr.photos.search",
+            "is_public": false
         },
         {
             "type": "string",
@@ -32,7 +33,8 @@
             "required": true,
             "position": "body",
             "relevant": false,
-            "default_value": "json"
+            "default_value": "json",
+            "is_public": false
         },
         {
             "type": "string",

@@ -41,7 +41,8 @@ If you wish, the JSON schema which validates and describes the structure to writ
             "api_name": "login_key",
             "required": true,
             "position": "header",
-            "relevant": false
+            "relevant": false,
+            "is_public": false
         }
 
 
@@ -220,6 +221,12 @@ Place to put the parameter in the HTTP query.
 **required**
 
 Boolean to save the parameter value as a metadata.
+
+*ex.:* `false`
+
+### is_public
+
+Boolean to tell if the parameter needs to be displayed to the user. Default to true
 
 *ex.:* `false`
 

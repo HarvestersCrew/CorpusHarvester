@@ -103,6 +103,11 @@ api_parameter_request::api_parameter_request(const nlohmann::json &json)
   this->_position = json.at("position").get<std::string>();
   this->_required = json.at("required").get<bool>();
 
+  this->_is_public = true;
+  if (json.contains("is_public")) {
+    this->_is_public = json.at("is_public").get<bool>();
+  }
+
   if (json.contains("values")) {
     for (const auto &el : json.at("values")) {
       string val = el.get<string>();
@@ -128,6 +133,7 @@ std::string api_parameter_request::to_string() const {
   out << base << std::endl;
   out << "position: " << this->_position << std::endl;
   out << "required: " << this->_required << std::endl;
+  out << "public: " << this->_is_public << std::endl;
   out << "default_value: " << this->_default_value.value_or("no default value")
       << std::endl;
 
@@ -141,6 +147,7 @@ nlohmann::json api_parameter_request::serialize() const {
   nlohmann::json j = api_parameter_base::serialize();
   j["position"] = this->_position;
   j["required"] = this->_required;
+  j["is_public"] = this->_is_public;
   j["default_value"] = nullptr;
   if (this->_default_value.has_value())
     j["default_value"] = this->_default_value.value();
