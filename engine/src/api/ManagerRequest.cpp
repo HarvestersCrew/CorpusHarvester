@@ -207,8 +207,8 @@ void ManagerRequest::api_builder_clear_all(bool is_web) {
   this->api_builder_get_based_on_bool(is_web).clear_all();
 }
 
-list<shared_ptr<File>> ManagerRequest::api_builder_build(bool is_web,
-                                                         unsigned int number) {
+list<shared_ptr<File>> &ManagerRequest::api_builder_build(bool is_web,
+                                                          unsigned int number) {
   ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
   return builder.build(number);
 }

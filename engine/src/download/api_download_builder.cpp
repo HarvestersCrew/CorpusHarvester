@@ -2,14 +2,15 @@
 
 ApiDownloadBuilder::ApiDownloadBuilder() : ApiRequestBuilder() {}
 
-list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
+list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
 
   if (this->get_requests().size() == 0) {
     throw api_builder_feature_not_supported(
         "DL builder can't download without specified requests");
   }
 
-  list<shared_ptr<File>> res;
+  _latest_build.clear();
+  list<shared_ptr<File>> &res = _latest_build;
   Storage storage;
 
   long unsigned int all_dl_size = 0;

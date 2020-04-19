@@ -21,9 +21,10 @@ void ApiDatabaseBuilder::deserialize(const json &j) {
   _page = j.at("page").get<unsigned int>();
 }
 
-list<shared_ptr<File>> ApiDatabaseBuilder::build(unsigned int number) const {
+list<shared_ptr<File>> &ApiDatabaseBuilder::build(unsigned int number) {
 
-  list<shared_ptr<File>> res;
+  _latest_build.clear();
+  list<shared_ptr<File>> &res = _latest_build;
   auto requests = this->get_usable_requests();
 
   // Used to store the prepared SQL values to send to the SQL engine

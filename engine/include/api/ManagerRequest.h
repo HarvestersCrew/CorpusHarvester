@@ -273,7 +273,7 @@ public:
    * DatabaseBuilder -> 0 = everything that matches
    * DownloadBuilder -> 0 = single pass over the sources
    */
-  list<shared_ptr<File>> api_builder_build(bool is_web, unsigned int number);
+  list<shared_ptr<File>> &api_builder_build(bool is_web, unsigned int number);
 
   /**
    * Sets the ordering method on the DB builder
