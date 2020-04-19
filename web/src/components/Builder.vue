@@ -137,7 +137,7 @@
                 !global_disable
             "
             small
-            @click="to_corpus"
+            @click="corpus_export = true"
             v-on="on"
           >
             <v-icon>mdi-folder-move</v-icon>
@@ -300,12 +300,41 @@ export default {
       return true;
     },
 
-    to_corpus() {
-      this.corpus_export = true;
-    },
-
     export_to_corpus() {
       this.corpus_disable = true;
+      let obj = { type: this.builder_type };
+
+      if (this.corpus_id !== null && this.corpus_id !== "") {
+        obj.create = false;
+        obj.id = parseInt(this.corpus_id);
+      } else if (this.corpus_name !== null && this.corpus_name !== "") {
+        obj.create = true;
+        obj.title = this.corpus_name;
+      } else {
+        return;
+      }
+
+      this.$store.dispatch("send_tokenized_request", {
+        type: "add_build_to_corpus",
+        data: obj,
+        callback: this.exported_to_corpus
+      });
+    },
+
+    exported_to_corpus(data) {
+      this.corpus_disable = false;
+      if (data.type !== undefined && data.type === "error") {
+        let msg;
+        if (data.data === "db_id_not_found") msg = "Corpus ID not found";
+        else msg = "An unexpected error occurred";
+        this.$store.commit("add_error_notification", msg);
+      } else {
+        this.$store.commit(
+          "add_success_notification",
+          "Successfully added files to corpus"
+        );
+        this.corpus_export = false;
+      }
     }
   }
 };
