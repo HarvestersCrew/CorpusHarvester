@@ -1,46 +1,40 @@
 <template>
   <div>
-    <v-card flat tile>
-      <v-toolbar color="blue lighten-2">
-        <v-container fluid>
-          <v-row>
-            <v-col cols="auto">
-              <v-autocomplete
-                :items="$store.state.apis"
-                v-model="api_list_selection"
-                item-text="name"
-                item-value="name"
-                outlined
-                dark
-                hide-details
-                dense
-                label="Add a source..."
-                prepend-icon="mdi-api"
-                append-outer-icon="mdi-plus"
-                @click:append-outer="add_source_to_requests"
-                :disabled="global_disable"
-              >
-              </v-autocomplete>
-            </v-col>
-            <v-divider vertical dark></v-divider>
-            <v-col cols="auto">
-              <v-text-field
-                v-model="specified_number"
-                outlined
-                dark
-                hide-details
-                dense
-                label="Approximate number to retrieve"
-                :disabled="global_disable"
-                type="number"
-                prepend-icon="mdi-numeric"
-                :rules="[validate_number]"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-toolbar>
-    </v-card>
+    <SelectCard>
+      <v-col cols="auto">
+        <v-autocomplete
+          :items="$store.state.apis"
+          v-model="api_list_selection"
+          item-text="name"
+          item-value="name"
+          outlined
+          dark
+          hide-details
+          dense
+          label="Add a source..."
+          prepend-icon="mdi-api"
+          append-outer-icon="mdi-plus"
+          @click:append-outer="add_source_to_requests"
+          :disabled="global_disable"
+        >
+        </v-autocomplete>
+      </v-col>
+      <v-divider vertical dark></v-divider>
+      <v-col cols="auto">
+        <v-text-field
+          v-model="specified_number"
+          outlined
+          dark
+          hide-details
+          dense
+          label="Approximate number to retrieve"
+          :disabled="global_disable"
+          type="number"
+          prepend-icon="mdi-numeric"
+          :rules="[validate_number]"
+        ></v-text-field>
+      </v-col>
+    </SelectCard>
 
     <v-form v-model="builder_validity">
       <BuilderRequests
@@ -94,10 +88,11 @@
 <script>
 import BuilderRequests from "@/components/BuilderRequests.vue";
 import FilesListing from "@/components/FilesListing.vue";
+import SelectCard from "@/components/SelectCard.vue";
 export default {
   name: "Builder",
   props: { builder_type: { required: true, type: String } },
-  components: { BuilderRequests, FilesListing },
+  components: { BuilderRequests, FilesListing, SelectCard },
   data() {
     return {
       api_list_selection: undefined,
