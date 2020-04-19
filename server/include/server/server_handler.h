@@ -4,6 +4,7 @@
 #include "server/websocket_server.h"
 #include "utils/exceptions.h"
 #include "utils/nlohmann/json.hpp"
+#include <map>
 #include <string>
 #include <tuple>
 #include <unordered_map>
@@ -13,6 +14,7 @@
 using nlohmann::json;
 using std::get;
 using std::make_pair;
+using std::map;
 using std::pair;
 using std::string;
 using std::unordered_map;
@@ -95,6 +97,14 @@ pair<string, json> storage_migration(ConnectionData &con, const json &j);
  * @param number optional, specifies the number of files wanted
  */
 pair<string, json> download_query(ConnectionData &con, const json &j);
+
+/**
+ * Retrieve corpuses
+ * @param title not required, to filter by name
+ * @param order not required, to order (none, date_asc, date_desc, name_asc,
+ * name_desc)
+ */
+pair<string, json> get_corpuses(ConnectionData &con, const json &j);
 
 } // namespace server_handler
 

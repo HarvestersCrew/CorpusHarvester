@@ -13,6 +13,7 @@ void server_handler::fill_available_functions(
   functions_data.emplace("update_logger", &update_logger);
   functions_data.emplace("storage_migration", &storage_migration);
   functions_data.emplace("download_query", &download_query);
+  functions_data.emplace("get_corpuses", &get_corpuses);
 }
 
 pair<string, json> server_handler::dispatch_request(ConnectionData &con,
@@ -151,4 +152,25 @@ pair<string, json> server_handler::download_query(ConnectionData &con,
   }
 
   return make_pair("download_query", result);
+}
+
+pair<string, json> server_handler::get_corpuses(ConnectionData &con,
+                                                const json &j) {
+  map<string, string> filters;
+  string order;
+  if (j.contains("title")) {
+    filters.emplace("title", j.at("title").get<string>());
+  }
+
+  if (j.contains("order")) {
+    order = j.at("order").get<string>();
+  }
+
+  auto corpuses = con._mr.get_corpuses(filters, order);
+  json res = json::object();
+  res["corpuses"] = json::array();
+  for (const auto &corpus : corpuses) {
+    res.at("corpuses").push_back(corpus->serialize());
+  }
+  return make_pair("get_corpuses", res);
 }
