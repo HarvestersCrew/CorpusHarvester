@@ -46,6 +46,56 @@
 
     <FilesListing :builder_type="builder_type"></FilesListing>
 
+    <v-dialog v-model="corpus_export" max-width="600px" persistent>
+      <v-card>
+        <v-card-title>Export to corpus</v-card-title>
+        <v-card-text>
+          <v-form>
+            <p class="subtitle-2 text-left">Add to existing corpus</p>
+            <v-text-field
+              type="number"
+              outlined
+              hide-details
+              dense
+              label="Corpus ID"
+              clearable
+              v-model="corpus_id"
+              :disabled="
+                (corpus_name !== '' && corpus_name !== null) || corpus_disable
+              "
+            ></v-text-field>
+          </v-form>
+          <v-divider class="my-6"></v-divider>
+          <p class="subtitle-2 text-left">Add to new corpus</p>
+          <v-text-field
+            outlined
+            hide-details
+            dense
+            label="New corpus name"
+            clearable
+            v-model="corpus_name"
+            :disabled="
+              (corpus_id !== '' && corpus_id !== null) || corpus_disable
+            "
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="corpus_export = false" :disabled="corpus_disable"
+            >Cancel</v-btn
+          >
+          <v-btn
+            text
+            color="blue"
+            :disabled="!corpus_name && !corpus_id"
+            :loading="corpus_disable"
+            @click="export_to_corpus"
+            >Export</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-speed-dial open-on-hover fixed bottom right>
       <template v-slot:activator>
         <v-btn color="blue" dark fab x-large>
@@ -87,7 +137,7 @@
                 !global_disable
             "
             small
-            @click="export_start"
+            @click="to_corpus"
             v-on="on"
           >
             <v-icon>mdi-folder-move</v-icon>
@@ -136,7 +186,12 @@ export default {
       requests: this.$store.state.builders.requests[this.builder_type],
       builder_validity: true,
       global_disable: this.$store.state.builders.disabled[this.builder_type],
-      specified_number: this.$store.state.builders.number[this.builder_type]
+      specified_number: this.$store.state.builders.number[this.builder_type],
+
+      corpus_export: false,
+      corpus_id: null,
+      corpus_name: null,
+      corpus_disable: false
     };
   },
   beforeDestroy() {
@@ -245,8 +300,12 @@ export default {
       return true;
     },
 
-    export_start() {
-      console.log("export");
+    to_corpus() {
+      this.corpus_export = true;
+    },
+
+    export_to_corpus() {
+      this.corpus_disable = true;
     }
   }
 };
