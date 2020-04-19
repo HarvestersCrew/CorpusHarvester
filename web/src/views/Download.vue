@@ -155,9 +155,15 @@ export default {
     send_query() {
       this.global_disable = true;
       this.$store.commit("add_notification", "Download request sent");
+      let data = { builder: this.server_query };
+
+      if (this.specified_number !== "" && this.specified_number !== undefined) {
+        data.number = parseInt(this.specified_number);
+      }
+
       this.$store.dispatch("send_tokenized_request", {
         type: "download_query",
-        data: { builder: this.server_query },
+        data,
         callback: this.query_response
       });
     },
