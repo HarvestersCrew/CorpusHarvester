@@ -1,7 +1,10 @@
 <template>
   <div>
-    <v-list v-if="$store.state.downloaded_files.length > 0">
-      <div v-for="(item, index) in $store.state.downloaded_files" :key="index">
+    <v-list v-if="$store.state.builders.files[builder_type].length > 0">
+      <div
+        v-for="(item, index) in $store.state.builders.files[builder_type]"
+        :key="index"
+      >
         <v-list-item>
           <v-row dense>
             <v-col>{{ item.name }}.{{ item.format }}</v-col>
@@ -10,7 +13,7 @@
           </v-row>
         </v-list-item>
         <v-divider
-          v-if="index + 1 < $store.state.downloaded_files.length"
+          v-if="index + 1 < $store.state.builders.files[builder_type].length"
         ></v-divider>
       </div>
     </v-list>
@@ -33,6 +36,7 @@
 <script>
 export default {
   name: "FilesListing",
+  props: { builder_type: { required: true, type: String } },
   methods: {
     api_type(api_name) {
       return this.$store.getters.api_by_name(api_name).api_type;

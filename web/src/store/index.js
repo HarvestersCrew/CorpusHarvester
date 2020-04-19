@@ -23,9 +23,26 @@ export default new Vuex.Store({
 
     notifications: [],
 
-    api_db_builder: [],
-    api_db_builder_number: undefined,
-    api_db_builder_disabled: false,
+    builders: {
+      requests: {
+        web: [],
+        db: []
+      },
+      number: {
+        web: undefined,
+        db: undefined
+      },
+      disabled: {
+        web: false,
+        db: false
+      },
+      files: {
+        web: [],
+        db: []
+      }
+    },
+
+    downloaded_files: [],
 
     logs: {
       unread: 0,
@@ -107,7 +124,7 @@ export default new Vuex.Store({
             break;
 
           case "download_query":
-            state.downloaded_files = obj.data.files;
+            state.builders.files.web = obj.data.files;
             break;
 
           default:
@@ -180,10 +197,6 @@ export default new Vuex.Store({
 
     pop_notification(state) {
       state.notifications.shift();
-    },
-
-    clear_downloaded_files(state) {
-      state.downloaded_files = [];
     }
   },
 
