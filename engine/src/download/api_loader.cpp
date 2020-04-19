@@ -195,6 +195,7 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
   } catch (const json::exception &e) {
     logger::debug(
         "Exception thrown when parsing download result in api_loader");
+    throw e;
   }
 
   results_array = result.get<json>();
@@ -204,7 +205,12 @@ api_loader::query_and_parse(const unordered_map<string, string> &params,
 
   vector<response_item> parsed_responses;
   for (const auto &el : results_array) {
-    parsed_responses.emplace_back(el, this->_responses);
+    try {
+      parsed_responses.emplace_back(el, this->_responses);
+    } catch (const json::exception &e) {
+      logger::error("Aborting parsing an item");
+      logger::error(e.what());
+    }
   }
 
   this->manage_parsed_responses(parsed_responses, files, relevant_parameters,
