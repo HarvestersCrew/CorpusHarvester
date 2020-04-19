@@ -46,7 +46,9 @@
               <v-card-text> {{ corpus.files.length }} file(s) </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn icon><v-icon>mdi-chevron-double-right</v-icon></v-btn>
+                <v-btn icon @click="open_corpus(idx)"
+                  ><v-icon>mdi-chevron-double-right</v-icon></v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-col>
@@ -106,10 +108,14 @@ export default {
       ],
       order: this.$store.state.corpuses.order,
       search_text: this.$store.state.corpuses.search_text,
-      disabled: this.$store.state.corpuses.disabled
+      disabled: this.$store.state.corpuses.disabled,
+      selected_corpus: undefined
     };
   },
   methods: {
+    open_corpus(idx) {
+      this.selected_corpus = idx;
+    },
     search() {
       this.disabled = true;
       let data = { order: this.order };
