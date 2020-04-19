@@ -35,6 +35,20 @@ std::string Corpus::to_string() const {
   return out.str();
 }
 
+json Corpus::serialize() const {
+  json j = json::object();
+  j["title"] = _title;
+  j["creation_date"] = _creation_date;
+  j["extraction_path"] = nullptr;
+  if (_extraction_path)
+    j["extraction_path"] = _extraction_path.value();
+  j["files"] = json::array();
+  for (const auto &file : _files) {
+    j.at("files").push_back(file->serialize());
+  }
+  return j;
+}
+
 bool Corpus::insert() {
   sql::PreparedStatement *prep_stmt;
   auto con = PoolDB::borrow_from_pool();

@@ -6,6 +6,7 @@
 #include "indexation/file.h"
 #include "storage/export_method.h"
 #include "utils/exceptions.h"
+#include "utils/nlohmann/json.hpp"
 #include <cppconn/prepared_statement.h>
 #include <filesystem>
 #include <list>
@@ -46,6 +47,7 @@
 #define CORPUS_ORDER_BY_DATE_ASC " ORDER BY creation_date ASC"
 #define CORPUS_ORDER_BY_DATE_DESC " ORDER BY creation_date DESC"
 
+using nlohmann::json;
 using std::list;
 using std::optional;
 using std::shared_ptr;
@@ -117,6 +119,8 @@ public:
   void fetch_files();
 
   std::string to_string() const;
+
+  json serialize() const;
 
   /**
    * Gets some information about a corpus
