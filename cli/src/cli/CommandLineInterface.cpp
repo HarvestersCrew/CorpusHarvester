@@ -34,20 +34,34 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   // Name of the corpus
   createCorpus.add_option("name", "Name of the new corpus.", false);
   createCorpus.add_option(
-      "n_element", "Number of element you wanted in your corpus.", false);
-  createCorpus.add_option("image", "Set if you want image in your corpus.",
-                          true);
-  createCorpus.add_option("video", "Set if you want video in your corpus.",
-                          true);
-  createCorpus.add_option("text", "Set if you want text in your corpus.", true);
+      "append", "Append the result to the corpus specified by the id.", false);
+  createCorpus.add_option(
+      "number", "Number of results per page (default 0 = unlimited).", false);
+  createCorpus.add_option(
+      "page", "Works in conjuction with number, to paginate the result.",
+      false);
+  createCorpus.add_option(
+      "order",
+      "Specifies the return order (api_asc, api_desc, size_asc, size_desc).",
+      false);
+  createCorpus.add_option(
+      "type", "Specifies the type of data (image, text, video).", false);
 
   // Get all the api names
   vector<string> apiNames = ApiFactory::get_api_names();
-  string sourceHelp = "Name of the source we want. Available : \n";
-  for (string apiName : apiNames) {
-    sourceHelp += " - " + apiName + "\n";
+  string sourceHelp = "Name of the source we want. (";
+  stringstream res;
+
+  if (!apiNames.empty()) {
+    // Convert all but the last element to avoid a trailing ","
+    copy(apiNames.begin(), apiNames.end(),
+         std::ostream_iterator<string>(res, ", "));
+
+    // Now add the last element with no delimiter
+    res << apiNames.back();
   }
 
+  sourceHelp += res.str() + ").";
   createCorpus.add_option("source", sourceHelp, false);
 
   // List of corpus
@@ -207,63 +221,179 @@ void CommandLineInterface::corpus_list() {
 
 void CommandLineInterface::corpus_create() {
 
-  string source = "";
-  vector<string> sources;
+  string corpusName;
   map<string, string> params;
   map<string, string>::iterator itSubCommand;
   ManagerRequest mr;
+  string::size_type sz;
 
   // Check if we have a value for the name
   itSubCommand = this->string_inputs.find("name");
-
   if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
-
-    if (this->bool_inputs.find("image")->second) {
-      // TODO :: We got the "image" label
-      logger::debug("We have the image label");
-    }
-
-    if (this->bool_inputs.find("video")->second) {
-      // TODO :: We got the "video" label
-      logger::debug("We have the video label");
-    }
-
-    if (this->bool_inputs.find("text")->second) {
-      // TODO :: We got the "text" label
-      logger::debug("We have the text label");
-    }
-
-    // Check if we have a value for the source
-    map<string, string>::iterator itSource = this->string_inputs.find("source");
-
-    if (itSource != this->string_inputs.end() && itSource->second != "") {
-      // Get the source
-      source = this->string_inputs.find("source")->second;
-
-      // Check the source
-      vector<string> apiNames = ApiFactory::get_api_names();
-      if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
-        logger::error("Le nom de la source n'est pas valide ! ");
-        // TODO :: End the program ? Add user confirmation.
-        source = "";
-        sources.push_back(source);
-      } else {
-        logger::debug("Source: " + source);
-        sources.push_back(source);
-      }
-    }
-
     // Get the name of the corpus
-    string corpusName = itSubCommand->second;
-
-    //     Create the corpus and show it
-    int corpusID = mr.create_corpus(corpusName, params);
-    logger::info(to_string(corpusID));
-
+    corpusName = itSubCommand->second;
   } else {
     logger::error("We have no name !");
     exit(-1);
   }
+
+  // Check if we have a value for the id
+  itSubCommand = this->string_inputs.find("id");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    // Get the value of the id
+    string idString = itSubCommand->second;
+    int id = 0;
+    // Check if the id is valid
+    try {
+      id = std::stoi(idString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input id is not an integer ! Please check your input.");
+      exit(-1);
+    }
+    // Check if the input and the transform have the same size
+    if (sz != idString.length()) {
+      logger::error("The input id contains a non valid character. Please, "
+                    "check your input.");
+      exit(-1);
+    } else if (id < 0) {
+      logger::error("The value of the id is invalid.");
+      exit(-1);
+    } else {
+      // Add the id in the parameter
+      params.insert({"id", to_string(id)});
+    }
+  }
+
+  // Check if we have a value for the number parameter
+  itSubCommand = this->string_inputs.find("number");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    // Get the value of the number
+    string numberString = itSubCommand->second;
+    int number = 0;
+    // Check if the number is valid
+    try {
+      number = std::stoi(numberString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input number is not an integer ! Please check your input.");
+      exit(-1);
+    }
+    // Check if the input and the transform have the same size
+    if (sz != numberString.length()) {
+      logger::error("The input number contains a non valid character. Please, "
+                    "check your input.");
+      exit(-1);
+    } else if (number < 0) {
+      logger::error("The value of the number is invalid.");
+      exit(-1);
+    } else {
+      // Add the number in the parameter
+      params.insert({"number", to_string(number)});
+    }
+  } else {
+    // Add default value for the number
+    params.insert({"number", "0"});
+  }
+
+  // Check if we have a value for the page parameter
+  itSubCommand = this->string_inputs.find("page");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    // Get the value of the page
+    string pageString = itSubCommand->second;
+    int page = 0;
+    // Check if the page is valid
+    try {
+      page = std::stoi(pageString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input page is not an integer ! Please check your input.");
+      exit(-1);
+    }
+    // Check if the input and the transform have the same size
+    if (sz != pageString.length()) {
+      logger::error("The input page contains a non valid character. Please, "
+                    "check your input.");
+      exit(-1);
+    } else if (page < 0) {
+      logger::error("The value of the page is invalid.");
+      exit(-1);
+    } else {
+      // Add the page in the parameter
+      params.insert({"page", to_string(page)});
+    }
+  } else {
+    // Add default value for the page
+    params.insert({"page", "0"});
+  }
+
+  // Check if the user wants a specific order
+  itSubCommand = this->string_inputs.find("order");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    string order = itSubCommand->second;
+
+    if (order == "api_asc") {
+      params.insert({"order", "api_asc"});
+    } else if (order == "api_desc") {
+      params.insert({"order", "api_desc"});
+    } else if (order == "size_asc") {
+      params.insert({"order", "size_asc"});
+    } else if (order == "size_desc") {
+      params.insert({"order", "size_desc"});
+    } else {
+      logger::error("The value " + order +
+                    " for the order attribute is not valid. Please check "
+                    "with the different values present : \n" +
+                    "- api_asc \n" + +"- api_desc \n" + +"- size_asc \n" +
+                    +"- size_desc \n");
+      exit(-1);
+    }
+  }
+
+  // Check if we have a value for the type
+  itSubCommand = this->string_inputs.find("type");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    string type = itSubCommand->second;
+
+    if (type == "image" || type == "video" || type == "text") {
+      params.insert({"type", type});
+    } else {
+      logger::error("The value " + type +
+                    " for the type attribute is not valid. Please check "
+                    "with the different values present : \n" +
+                    "- image \n" + +"- text \n" + +"- video \n");
+      exit(-1);
+    }
+  }
+
+  // Check if we have a value for the source
+  itSubCommand = this->string_inputs.find("source");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    // Get the source
+    string source = itSubCommand->second;
+
+    // Check the source
+    vector<string> apiNames = ApiFactory::get_api_names();
+    if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
+      logger::error("Le nom de la source n'est pas valide ! ");
+      exit(-1);
+    } else {
+      params.insert({"source", source});
+    }
+  }
+
+  // TODO :: Manage param name parameter
+
+  // TODO :: Op parameter
+
+  // TODO :: Manage multiple type and souce parameter
+
+  // Create the corpus and show it
+  int corpusID = mr.create_corpus(corpusName, params);
+  logger::info(to_string(corpusID));
 }
 
 void CommandLineInterface::corpus_manager() {
