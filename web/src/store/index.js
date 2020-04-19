@@ -42,7 +42,12 @@ export default new Vuex.Store({
       }
     },
 
-    downloaded_files: [],
+    corpuses: {
+      results: [],
+      search_text: "",
+      order: "date_desc",
+      disabled: false
+    },
 
     logs: {
       unread: 0,
@@ -125,6 +130,10 @@ export default new Vuex.Store({
 
           case "download_query":
             state.builders.files.web = obj.data.files;
+            break;
+
+          case "get_corpuses":
+            state.corpuses.results = obj.data.corpuses;
             break;
 
           default:

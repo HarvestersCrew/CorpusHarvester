@@ -48,7 +48,7 @@
 
     <v-speed-dial open-on-hover fixed bottom right>
       <template v-slot:activator>
-        <v-btn color="blue" dark fab>
+        <v-btn color="blue" dark fab x-large>
           <v-icon v-if="!global_disable">mdi-dots-vertical</v-icon>
           <v-progress-circular v-else indeterminate></v-progress-circular>
         </v-btn>
