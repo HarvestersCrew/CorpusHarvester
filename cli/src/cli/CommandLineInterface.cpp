@@ -256,10 +256,9 @@ void CommandLineInterface::corpus_create() {
     // Get the name of the corpus
     string corpusName = itSubCommand->second;
 
-    // Create the corpus and show it
-    // Corpus corpus =
-    //     ManagerRequest::create_corpus(corpusName, sources, params);
-    // logger::info(corpus.to_string());
+    //     Create the corpus and show it
+    int corpusID = mr.create_corpus(corpusName, params);
+    logger::info(to_string(corpusID));
 
   } else {
     logger::error("We have no name !");

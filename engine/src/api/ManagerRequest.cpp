@@ -88,6 +88,16 @@ int ManagerRequest::create_corpus(const string &name,
   return corpus.get_id();
 }
 
+int ManagerRequest::create_corpus(const string &name,
+                                  const map<string, string> params) {
+  list<shared_ptr<File>> files;
+  optional<ApiDatabaseBuilder> builder = nullopt;
+
+  logger::debug("ok in the creation of a corpus.");
+
+  return this->create_corpus(name, files, builder);
+}
+
 string ManagerRequest::export_corpus(const int id,
                                      ExportMethod::methods method) const {
   const auto corpus = this->get_corpus_from_id(id);

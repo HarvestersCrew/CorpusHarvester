@@ -105,6 +105,14 @@ public:
                     const optional<ApiDatabaseBuilder> &builder);
 
   /**
+   * Create a corpus with a given name and parameters for the files.
+   * @param name Name of the corpus.
+   * @param params Parameters for the selection of files.
+   * @return ID in the DB of the corpus.
+   */
+  int create_corpus(const string &name, const map<string, string> params);
+
+  /**
    * Exports a given corpus ID with a certain format
    * @param id ID of the corpus
    * @param method Export method
