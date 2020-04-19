@@ -54,33 +54,47 @@
         </v-btn>
       </template>
 
-      <v-btn
-        fab
-        color="green"
-        :dark="builder_validity && requests.length !== 0 && !global_disable"
-        :disabled="!builder_validity || requests.length === 0 || global_disable"
-        small
-        @click="send_query"
-      >
-        <v-icon>mdi-download</v-icon>
-      </v-btn>
+      <v-tooltip left color="green" dark>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            fab
+            color="green"
+            :dark="builder_validity && requests.length !== 0 && !global_disable"
+            :disabled="
+              !builder_validity || requests.length === 0 || global_disable
+            "
+            small
+            @click="send_query"
+            v-on="on"
+          >
+            <v-icon>mdi-download</v-icon>
+          </v-btn>
+        </template>
+        <span>Start download</span>
+      </v-tooltip>
 
-      <v-btn
-        fab
-        color="red"
-        :disabled="
-          $store.state.builders.files[builder_type].length === 0 ||
-            global_disable
-        "
-        :dark="
-          $store.state.builders.files[builder_type].length !== 0 &&
-            !global_disable
-        "
-        small
-        @click="clear_response"
-      >
-        <v-icon>mdi-notification-clear-all</v-icon>
-      </v-btn>
+      <v-tooltip left color="red" dark>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            fab
+            color="red"
+            :disabled="
+              $store.state.builders.files[builder_type].length === 0 ||
+                global_disable
+            "
+            :dark="
+              $store.state.builders.files[builder_type].length !== 0 &&
+                !global_disable
+            "
+            small
+            @click="clear_response"
+            v-on="on"
+          >
+            <v-icon>mdi-notification-clear-all</v-icon>
+          </v-btn>
+        </template>
+        <span>Clear display</span>
+      </v-tooltip>
     </v-speed-dial>
   </div>
 </template>
