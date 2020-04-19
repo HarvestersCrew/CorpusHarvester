@@ -13,7 +13,12 @@
               ></ApiParamInput>
             </v-col>
             <v-col cols="3">
-              <v-btn color="red" text dark @click="$emit('remove_request', idx)"
+              <v-btn
+                :disabled="disabled"
+                color="red"
+                text
+                :dark="!disabled"
+                @click="$emit('remove_request', idx)"
                 >Remove</v-btn
               >
             </v-col>

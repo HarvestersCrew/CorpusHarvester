@@ -86,11 +86,12 @@ export default {
       api_list_selection: undefined,
       requests: this.$store.state.api_db_builder,
       builder_validity: true,
-      global_disable: false
+      global_disable: this.$store.state.api_db_builder_disabled
     };
   },
   beforeDestroy() {
     this.$store.commit("set_api_db_builder", this.requests);
+    this.$store.commit("set_api_db_builder_disabled", this.global_disable);
   },
   computed: {
     server_query() {
@@ -142,6 +143,7 @@ export default {
       });
     },
     query_response(data) {
+      this.$store.commit("set_api_db_builder_disabled", false);
       this.global_disable = false;
       if (data.type !== undefined && data.type === "error") {
         this.$store.commit(
@@ -149,10 +151,11 @@ export default {
           "An error occurred during the download, check the logs for further informations"
         );
       } else {
-        this.specified_output_path = "";
         this.$store.commit(
           "add_success_notification",
-          "Download ready, check it in the download tab"
+          "Downloaded " +
+            data.data.files.length +
+            " items, check them in the download tab"
         );
       }
     },

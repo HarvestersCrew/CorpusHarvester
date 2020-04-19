@@ -41,7 +41,7 @@ export default new Vuex.Store({
       path: undefined
     },
 
-    apis: undefined
+    apis: []
   },
 
   getters: {
@@ -187,6 +187,10 @@ export default new Vuex.Store({
 
     clear_downloaded_files(state) {
       state.downloaded_files = [];
+    },
+
+    set_api_db_builder_disabled(state, boolval) {
+      state.api_db_builder_disabled = boolval;
     }
   },
 
