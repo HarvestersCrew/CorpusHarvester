@@ -41,8 +41,14 @@
             :key="idx"
           >
             <v-card>
-              <v-card-title>{{ corpus.title }}</v-card-title>
-              <v-card-subtitle>{{ corpus.creation_date }}</v-card-subtitle>
+              <v-card-title>
+                {{ corpus.title }}
+              </v-card-title>
+              <v-card-subtitle>
+                #{{ corpus.id }}
+                <br />
+                {{ corpus.creation_date }}
+              </v-card-subtitle>
               <v-card-text> {{ corpus.files.length }} file(s) </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>

@@ -37,6 +37,7 @@ std::string Corpus::to_string() const {
 
 json Corpus::serialize() const {
   json j = json::object();
+  j["id"] = _id;
   j["title"] = _title;
   j["creation_date"] = _creation_date;
   j["extraction_path"] = nullptr;
