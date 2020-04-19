@@ -113,6 +113,14 @@ public:
   int create_corpus(const string &name, const map<string, string> params);
 
   /**
+   * Appends a list of files to a corpus
+   * @param id ID of the corpus
+   * @param files list to add
+   * @throw db_id_not_found if corpus wasn't found
+   */
+  void add_to_corpus(const int id, const list<shared_ptr<File>> &files);
+
+  /**
    * Exports a given corpus ID with a certain format
    * @param id ID of the corpus
    * @param method Export method

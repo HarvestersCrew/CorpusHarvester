@@ -98,6 +98,12 @@ int ManagerRequest::create_corpus(const string &name,
   return this->create_corpus(name, files, builder);
 }
 
+void ManagerRequest::add_to_corpus(const int id,
+                                   const list<shared_ptr<File>> &files) {
+  auto corpus = Corpus::get_corpus_from_id(id);
+  corpus->add_files(files);
+}
+
 string ManagerRequest::export_corpus(const int id,
                                      ExportMethod::methods method) const {
   const auto corpus = this->get_corpus_from_id(id);
