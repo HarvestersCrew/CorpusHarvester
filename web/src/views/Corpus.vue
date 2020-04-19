@@ -3,17 +3,19 @@
     <div>
       <SelectCard>
         <v-col cols="auto">
-          <v-text-field
-            dark
-            outlined
-            hide-details
-            dense
-            label="Search for..."
-            prepend-icon="mdi-magnify"
-            v-model="search_text"
-            clearable
-            :disabled="disabled"
-          ></v-text-field>
+          <v-form @submit.prevent="search">
+            <v-text-field
+              dark
+              outlined
+              hide-details
+              dense
+              label="Search for..."
+              prepend-icon="mdi-magnify"
+              v-model="search_text"
+              clearable
+              :disabled="disabled"
+            ></v-text-field>
+          </v-form>
         </v-col>
         <v-divider vertical dark></v-divider>
         <v-col cols="auto">
@@ -31,9 +33,25 @@
         </v-col>
       </SelectCard>
 
-      <v-container
-        v-if="$store.state.corpuses.results.length > 0"
-      ></v-container>
+      <v-container v-if="$store.state.corpuses.results.length > 0">
+        <v-row>
+          <v-col
+            cols="3"
+            v-for="(corpus, idx) in $store.state.corpuses.results"
+            :key="idx"
+          >
+            <v-card>
+              <v-card-title>{{ corpus.title }}</v-card-title>
+              <v-card-subtitle>{{ corpus.creation_date }}</v-card-subtitle>
+              <v-card-text> {{ corpus.files.length }} file(s) </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn icon><v-icon>mdi-chevron-double-right</v-icon></v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
 
       <v-container v-else>
         <v-row justify="center">
