@@ -331,7 +331,7 @@ export default {
       } else {
         this.$store.commit(
           "add_success_notification",
-          "Successfully added files to corpus"
+          "Successfully added files to corpus #" + data.data.id
         );
         this.corpus_export = false;
       }
