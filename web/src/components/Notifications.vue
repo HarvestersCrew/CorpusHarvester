@@ -12,10 +12,12 @@ export default {
   name: "Notifications",
   data() {
     return {
+      local_queue: [],
       displayed: false,
       dark: true,
       color: undefined,
-      msg: undefined
+      msg: undefined,
+      snack_available: true
     };
   },
   computed: mapState({
@@ -25,24 +27,34 @@ export default {
     displayed: function(new_val) {
       if (new_val === false) {
         window.setTimeout(() => {
-          this.$store.commit("pop_notification");
+          this.local_queue.shift();
+          this.snack_available = true;
         }, 200);
       }
     },
+    snack_available: function(new_val) {
+      if (new_val && this.local_queue.length > 0) {
+        this.display();
+      }
+    },
     notifications: function() {
-      if (
-        this.$store.state.notifications.length > 0 &&
-        this.displayed === false
-      ) {
-        let entry = this.$store.state.notifications[0];
-        this.msg = entry.msg;
-        this.dark = entry.dark;
-        this.color = entry.color;
-        this.displayed = true;
+      if (this.notifications.length > 0) {
+        if (this.local_queue.length > 0) this.clear();
+        this.local_queue.push(this.notifications.shift());
+      }
+      if (this.snack_available === true) {
+        this.display();
       }
     }
   },
   methods: {
+    display() {
+      this.snack_available = false;
+      this.msg = this.local_queue[0].msg;
+      this.dark = this.local_queue[0].dark;
+      this.color = this.local_queue[0].color;
+      this.displayed = true;
+    },
     clear() {
       this.displayed = false;
     }
