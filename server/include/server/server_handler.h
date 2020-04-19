@@ -1,10 +1,14 @@
 #ifndef SERVER_HANDLER_H
 #define SERVER_HANDLER_H
 
+#include "indexation/file.h"
 #include "server/websocket_server.h"
 #include "utils/exceptions.h"
 #include "utils/nlohmann/json.hpp"
+#include <list>
 #include <map>
+#include <memory>
+#include <optional>
 #include <string>
 #include <tuple>
 #include <unordered_map>
@@ -13,9 +17,12 @@
 
 using nlohmann::json;
 using std::get;
+using std::list;
 using std::make_pair;
 using std::map;
+using std::optional;
 using std::pair;
+using std::shared_ptr;
 using std::string;
 using std::unordered_map;
 using websocketpp::connection_hdl;
@@ -105,6 +112,16 @@ pair<string, json> download_query(ConnectionData &con, const json &j);
  * name_desc)
  */
 pair<string, json> get_corpuses(ConnectionData &con, const json &j);
+
+/**
+ * Add the result of a build to a corpus
+ * @param create bool to create or not a corpus
+ * @param id int if appending to a corpus
+ * @param title name if creating a corpus
+ * @param type "web" or "db"
+ * @throw db_id_not_found if corpus wasn't found
+ */
+pair<string, json> add_build_to_corpus(ConnectionData &con, const json &j);
 
 } // namespace server_handler
 

@@ -54,6 +54,11 @@ protected:
   unordered_set<api_loader::api_type> _types;
 
   /**
+   * Latest build is stored here
+   */
+  list<shared_ptr<File>> _latest_build;
+
+  /**
    * Protected constructor to avoid building this abstract class
    */
   ApiRequestBuilder();
@@ -83,7 +88,7 @@ public:
    * DatabaseBuilder -> 0 = everything that matches
    * DownloadBuilder -> 0 = single pass over the sources
    */
-  virtual list<shared_ptr<File>> build(unsigned int number) const = 0;
+  virtual list<shared_ptr<File>> &build(unsigned int number) = 0;
 
   /**
    * Adds a new request with only the API name
@@ -154,6 +159,8 @@ public:
    * the interface parameters
    */
   virtual vector<api_builder_request> get_usable_requests() const;
+
+  virtual const list<shared_ptr<File>> &get_latest_build() const;
 };
 
 #endif

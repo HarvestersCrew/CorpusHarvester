@@ -50,7 +50,7 @@ public:
   virtual json serialize() const;
   virtual void deserialize(const json &j);
 
-  virtual list<shared_ptr<File>> build(unsigned int number) const;
+  virtual list<shared_ptr<File>> &build(unsigned int number);
 
   virtual void add_request_parameter(long unsigned int request_id,
                                      const string &param_name,

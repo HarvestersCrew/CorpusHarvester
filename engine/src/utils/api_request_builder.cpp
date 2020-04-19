@@ -163,3 +163,7 @@ vector<api_builder_request> ApiRequestBuilder::get_usable_requests() const {
 
   return res;
 }
+
+const list<shared_ptr<File>> &ApiRequestBuilder::get_latest_build() const {
+  return _latest_build;
+}

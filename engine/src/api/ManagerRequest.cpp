@@ -98,6 +98,12 @@ int ManagerRequest::create_corpus(const string &name,
   return this->create_corpus(name, files, builder);
 }
 
+void ManagerRequest::add_to_corpus(const int id,
+                                   const list<shared_ptr<File>> &files) {
+  auto corpus = Corpus::get_corpus_from_id(id);
+  corpus->add_files(files);
+}
+
 string ManagerRequest::export_corpus(const int id,
                                      ExportMethod::methods method) const {
   const auto corpus = this->get_corpus_from_id(id);
@@ -207,8 +213,8 @@ void ManagerRequest::api_builder_clear_all(bool is_web) {
   this->api_builder_get_based_on_bool(is_web).clear_all();
 }
 
-list<shared_ptr<File>> ManagerRequest::api_builder_build(bool is_web,
-                                                         unsigned int number) {
+list<shared_ptr<File>> &ManagerRequest::api_builder_build(bool is_web,
+                                                          unsigned int number) {
   ApiRequestBuilder &builder = this->api_builder_get_based_on_bool(is_web);
   return builder.build(number);
 }
