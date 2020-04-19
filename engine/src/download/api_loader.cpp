@@ -253,11 +253,6 @@ void api_loader::manage_parsed_responses(
       logger::error(ss.str());
     }
   }
-
-  logger::info("'" + this->get_name() + "' downloaded " +
-               std::to_string(parsed_responses.size()) + " and " +
-               std::to_string(parsed_responses.size() - files.size()) +
-               " were already present");
 }
 
 void api_loader::manage_main_value(const response_item &result_to_manage,

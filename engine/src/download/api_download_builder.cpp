@@ -13,6 +13,8 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
   Indexer indexer;
   Storage storage;
 
+  long unsigned int all_dl_size = 0;
+
   // Convert the requests without operators
   auto requests = this->get_no_op_requests(this->get_usable_requests());
 
@@ -58,6 +60,8 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
         it = requests.erase(it);
       }
 
+      all_dl_size += downloaded.size();
+
       // Only choose the files not present in the DB
       list<shared_ptr<File>> partial_res;
       for (const auto &el : downloaded) {
@@ -80,8 +84,8 @@ list<shared_ptr<File>> ApiDownloadBuilder::build(unsigned int number) const {
 
   } while (number > 0 && res.size() < number && requests.size() > 0);
 
-  logger::info("Downloaded " + std::to_string(res.size()) +
-               " new files with user request");
+  logger::info("Downloaded " + std::to_string(all_dl_size) + " and inserted " +
+               std::to_string(res.size()) + " new files with user request");
 
   return res;
 }
