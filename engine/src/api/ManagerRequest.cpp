@@ -91,11 +91,50 @@ int ManagerRequest::create_corpus(const string &name,
 int ManagerRequest::create_corpus(const string &name,
                                   const map<string, string> params) {
   list<shared_ptr<File>> files;
-  optional<ApiDatabaseBuilder> builder = nullopt;
+  ApiDatabaseBuilder builder;
 
-  logger::debug("ok in the creation of a corpus.");
+  string::size_type sz;
+  ApiDatabaseBuilder::ordering_method method =
+      ApiDatabaseBuilder::ordering_method::NONE;
 
-  return this->create_corpus(name, files, builder);
+  // Get the source
+  if (params.find("source") != params.end()) {
+    // Found
+    builder.add_request(params.find("source")->second);
+
+    // TODO :: For a given source, what are the step to do ?
+
+  } else {
+    // TODO :: Iterate on all apis ???
+  }
+
+  // Set the order
+  if (params.find("source") != params.end()) {
+    string order = params.find("source")->second;
+    if (order == "none") {
+      method = ApiDatabaseBuilder::ordering_method::NONE;
+    } else if (order == "api_asc") {
+      method = ApiDatabaseBuilder::ordering_method::API_ASC;
+    } else if (order == "api_desc") {
+      method = ApiDatabaseBuilder::ordering_method::API_DESC;
+    } else if (order == "size_asc") {
+      method = ApiDatabaseBuilder::ordering_method::SIZE_ASC;
+    } else if (order == "size_desc") {
+      method = ApiDatabaseBuilder::ordering_method::SIZE_DESC;
+    }
+  }
+  builder.set_order(method);
+
+  // Set the page
+  int page = std::stoi(params.find("page")->second, &sz);
+  builder.set_page(page);
+
+  // Set the number and build
+  int number = std::stoi(params.find("number")->second, &sz);
+  files = builder.build(number);
+
+  return this->create_corpus(name, files,
+                             optional<ApiDatabaseBuilder>{builder});
 }
 
 void ManagerRequest::add_to_corpus(const int id,
