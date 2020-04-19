@@ -136,7 +136,12 @@ pair<string, json> server_handler::download_query(ConnectionData &con,
     }
   }
 
-  auto files = con._mr.api_builder_build(true, 0);
+  unsigned int nbr = 0;
+  if (j.contains("number")) {
+    nbr = j.at("number").get<unsigned int>();
+  }
+
+  auto files = con._mr.api_builder_build(true, nbr);
 
   json result = json::object();
   result["files"] = json::array();

@@ -92,6 +92,7 @@ pair<string, json> storage_migration(ConnectionData &con, const json &j);
  * Queries a download with the DL builder
  * @param builder array of object requests following this pattern:
  * {name:"API_NAME", values:{PARAM1:"VAL1",PARAM2:"VAL2"...}}
+ * @param number optional, specifies the number of files wanted
  */
 pair<string, json> download_query(ConnectionData &con, const json &j);
 
