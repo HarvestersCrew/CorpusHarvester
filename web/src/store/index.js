@@ -24,7 +24,8 @@ export default new Vuex.Store({
     notifications: [],
 
     api_db_builder: [],
-    downloaded_files: [],
+    api_db_builder_number: undefined,
+    api_db_builder_disabled: false,
 
     logs: {
       unread: 0,
@@ -181,16 +182,8 @@ export default new Vuex.Store({
       state.notifications.shift();
     },
 
-    set_api_db_builder(state, val) {
-      state.api_db_builder = val;
-    },
-
     clear_downloaded_files(state) {
       state.downloaded_files = [];
-    },
-
-    set_api_db_builder_disabled(state, boolval) {
-      state.api_db_builder_disabled = boolval;
     }
   },
 

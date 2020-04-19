@@ -22,6 +22,21 @@
               >
               </v-autocomplete>
             </v-col>
+            <v-divider vertical dark></v-divider>
+            <v-col cols="auto">
+              <v-text-field
+                v-model="specified_number"
+                outlined
+                dark
+                hide-details
+                dense
+                label="Approximate number to retrieve"
+                :disabled="global_disable"
+                type="number"
+                prepend-icon="mdi-numeric"
+                :rules="[validate_number]"
+              ></v-text-field>
+            </v-col>
           </v-row>
         </v-container>
       </v-toolbar>
@@ -86,12 +101,14 @@ export default {
       api_list_selection: undefined,
       requests: this.$store.state.api_db_builder,
       builder_validity: true,
-      global_disable: this.$store.state.api_db_builder_disabled
+      global_disable: this.$store.state.api_db_builder_disabled,
+      specified_number: this.$store.state.api_db_builder_number
     };
   },
   beforeDestroy() {
-    this.$store.commit("set_api_db_builder", this.requests);
-    this.$store.commit("set_api_db_builder_disabled", this.global_disable);
+    this.$store.state.api_db_builder = this.requests;
+    this.$store.state.api_db_builder_disabled = this.global_disable;
+    this.$store.state.api_db_builder_number = this.specified_number;
   },
   computed: {
     server_query() {
@@ -130,9 +147,11 @@ export default {
       });
       this.api_list_selection = undefined;
     },
+
     remove_request(idx) {
       this.requests.splice(idx, 1);
     },
+
     send_query() {
       this.global_disable = true;
       this.$store.commit("add_notification", "Download request sent");
@@ -142,8 +161,9 @@ export default {
         callback: this.query_response
       });
     },
+
     query_response(data) {
-      this.$store.commit("set_api_db_builder_disabled", false);
+      this.$store.state.api_db_builder_disabled = false;
       this.global_disable = false;
       if (data.type !== undefined && data.type === "error") {
         this.$store.commit(
@@ -159,8 +179,15 @@ export default {
         );
       }
     },
+
     clear_response() {
       this.$store.commit("clear_downloaded_files");
+    },
+
+    validate_number(input) {
+      if (!input) return true;
+      if (parseInt(input) < 0) return false;
+      return true;
     }
   }
 };
