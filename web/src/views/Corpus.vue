@@ -44,18 +44,52 @@
               <v-card-title>
                 {{ corpus.title }}
               </v-card-title>
-              <v-card-subtitle>
+              <v-card-subtitle class="pb-0">
                 #{{ corpus.id }}
                 <br />
                 {{ corpus.creation_date }}
+                <br />
+                {{ corpus.files.length }} file(s)
               </v-card-subtitle>
-              <v-card-text> {{ corpus.files.length }} file(s) </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn icon @click="open_corpus(idx)"
-                  ><v-icon>mdi-chevron-double-right</v-icon></v-btn
+                <v-btn icon @click="open_corpus(corpus.id)"
+                  ><v-icon v-if="selected_corpus === corpus.id" color="blue">
+                    mdi-chevron-double-down</v-icon
+                  >
+                  <v-icon v-else> mdi-chevron-double-right</v-icon></v-btn
                 >
               </v-card-actions>
+              <v-card-text v-show="selected_corpus === corpus.id" class="pt-0">
+                <v-row style="text-align: center">
+                  <template v-for="(file, index) in corpus.files">
+                    <v-col cols="3" :key="index" v-show="index < 11">
+                      <v-tooltip right>
+                        <template v-slot:activator="{ on }">
+                          <v-icon v-if="file.format === 'txt'" v-on="on"
+                            >mdi-file-document</v-icon
+                          >
+                          <v-icon v-if="file.format === 'img'" v-on="on"
+                            >mdi-file-image</v-icon
+                          >
+                          <v-icon v-if="file.format === 'vid'" v-on="on"
+                            >mdi-file-video</v-icon
+                          >
+                        </template>
+                        <span> {{ file.name }} </span>
+                      </v-tooltip>
+                    </v-col>
+                  </template>
+                  <v-tooltip right v-if="corpus.files.length > 11">
+                    <template v-slot:activator="{ on }">
+                      <v-col cols="3"
+                        ><v-icon v-on="on">mdi-dots-horizontal</v-icon></v-col
+                      >
+                    </template>
+                    <span>+ {{ corpus.files.length - 11 }} files</span>
+                  </v-tooltip>
+                </v-row>
+              </v-card-text>
             </v-card>
           </v-col>
         </v-row>
@@ -120,7 +154,9 @@ export default {
   },
   methods: {
     open_corpus(idx) {
-      this.selected_corpus = idx;
+      this.selected_corpus === idx
+        ? (this.selected_corpus = undefined)
+        : (this.selected_corpus = idx);
     },
     search() {
       this.disabled = true;
