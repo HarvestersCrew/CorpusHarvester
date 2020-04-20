@@ -1,13 +1,12 @@
 <template>
   <div>
-    <p class="subtitle-2 text-left">{{ param.name }}</p>
-
     <v-text-field
+      :label="param.name"
       outlined
       dense
       clearable
-      v-if="param.values.length === 0"
-      :placeholder="placeholder"
+      v-if="param.values === undefined || param.values.length === 0"
+      :placeholder="param.default_value"
       :hint="hint_text"
       persistent-hint
       :value="value"
@@ -17,11 +16,12 @@
     ></v-text-field>
 
     <v-select
+      :label="param.name"
       outlined
       dense
       clearable
       v-else
-      :placeholder="placeholder"
+      :placeholder="param.default_value"
       :hint="hint_text"
       persistent-hint
       :items="param.values"
@@ -41,13 +41,9 @@ export default {
   },
   name: "ApiParamInput",
   computed: {
-    placeholder() {
-      return this.param.default_value !== null
-        ? this.param.default_value
-        : "No default value";
-    },
     hint_text() {
-      return this.param.required ? "Required" : undefined;
+      let hint = this.param.description ? this.param.description : undefined;
+      return hint;
     },
     type() {
       if (this.param.value_type === "int") return "number";
