@@ -11,6 +11,11 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
 
   this->_relevant = json.at("relevant").get<bool>();
 
+  this->_description = std::nullopt;
+  if (json.contains("description")) {
+    this->_description = json.at("description");
+  }
+
   if (json.at("type").get<std::string>() == API_PARAMETER_STRING) {
     this->_value_type = value_type::STRING;
   } else if (json.at("type").get<std::string>() == API_PARAMETER_INT) {
@@ -26,6 +31,7 @@ std::string api_parameter_base::to_string() const {
   std::stringstream out;
   out << "------- api_name: " << this->_api_name << " -------" << std::endl;
   out << "name: " << this->_name << std::endl;
+  out << "desc: " << this->_description.value_or("none") << std::endl;
   out << "value_type: " << this->get_value_type_string() << std::endl;
   out << "relevant: " << this->_relevant;
   return out.str();
@@ -37,6 +43,9 @@ nlohmann::json api_parameter_base::serialize() const {
   j["name"] = this->_name;
   j["value_type"] = this->get_value_type_string();
   j["relevant"] = this->_relevant;
+  j["description"] = nullptr;
+  if (_description)
+    j["description"] = _description.value();
   return j;
 }
 

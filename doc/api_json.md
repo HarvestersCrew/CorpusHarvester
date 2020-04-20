@@ -34,7 +34,8 @@ If you wish, the JSON schema which validates and describes the structure to writ
             "required": false,
             "position": "body",
             "relevant": true,
-            "values": ["possible_value_1", "possible_value_2"]
+            "values": ["possible_value_1", "possible_value_2"],
+            "description": "Paramter nbr 2"
         },
         {
             "type": "string",
@@ -55,6 +56,7 @@ If you wish, the JSON schema which validates and describes the structure to writ
             "api_name": "api_response_1",
             "name": "api_response_in_db_1",
             "relevant": true,
+            "description": "API response 1"
         },
         {
             "type": "string",
@@ -242,6 +244,12 @@ Array of possible values for this parameter. If a value is given by the user or 
 
 *ex.:* `["recent", "popular", "mixed"]`
 
+### description
+
+Description of the parameter. Only useful on public parameters or to describe what they are for.
+
+*ex.:* `"This parameter is used to do something"`
+
 ## Response parameters
 
 The `response` object in the JSON is a list of different response objects, as described here.
@@ -297,6 +305,12 @@ If the response parameter value is `/image.jpg` and the value of `api_farm_url` 
 ### string_appends
 
 Same as `string_prepends` but to append value at the end of the response. First in array will be the first value appended, and so on.
+
+### description
+
+Description of the parameter. Only useful on relevant parameters or to describe what they are for.
+
+*ex.:* `"This parameter is used to do something"`
 
 ## Typical and magic names to use
 

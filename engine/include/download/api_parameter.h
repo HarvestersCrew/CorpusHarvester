@@ -89,6 +89,8 @@ protected:
   value_type _value_type;
   /** Whether the parameter is relevant to keep in the database */
   bool _relevant;
+  /** Description of the parameter, optional */
+  optional<string> _description;
 };
 
 /**
