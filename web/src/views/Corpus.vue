@@ -161,82 +161,82 @@
                             file_icon(file.format)
                           }}</v-icon>
                         </template>
-                      <span> {{ file.name }}.{{ file.format }} </span>
-                    </v-tooltip>
-                  </v-col>
-                  <v-dialog
-                    v-if="corpus.files.length > 11"
-                    v-model="dialog"
-                    fullscreen
-                    hide-overlay
-                    persistent
-                    transition="dialog-bottom-transition"
-                  >
-                    <template v-slot:activator="{ on }">
-                      <v-col cols="3" class="">
-                        <v-btn icon v-on="on">
-                          <v-icon>mdi-dots-horizontal</v-icon>
-                        </v-btn>
-                      </v-col>
-                    </template>
-                    <v-card>
-                      <v-toolbar dark color="blue">
-                        <v-btn icon dark @click="dialog = false">
-                          <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                        <v-toolbar-title
-                          >Corpus {{ corpus.title }}</v-toolbar-title
-                        >
-                      </v-toolbar>
-                      <v-list>
-                        <v-subheader>Criteria</v-subheader>
-                        <v-list-item>
-                          <v-list-item-content>
-                            <v-list-item-title
-                              >ID : #{{ corpus.id }}</v-list-item-title
-                            >
-                          </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                          <v-list-item-content>
-                            <v-list-item-title>Types(s) :</v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                          <v-list-item-content>
-                            <v-list-item-title>Source(s) :</v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                          <v-list-item-content>
-                            <v-list-item-title
-                              >Creation date :
-                              {{ corpus.creation_date }}</v-list-item-title
-                            >
-                          </v-list-item-content>
-                        </v-list-item>
-                      </v-list>
-                      <v-divider></v-divider>
-                      <v-subheader>Corpus files</v-subheader>
-                      <v-row class="mx-3" style="text-align: center">
-                        <v-col
-                          cols="1"
-                          v-for="(file, index) in corpus.files"
-                          :key="index"
-                        >
-                          <div>
-                            <v-icon x-large>{{
-                              file_icon(file.format)
-                            }}</v-icon>
-                          </div>
-                          <span> {{ file.name }}.{{ file.format }} </span>
+                        <span> {{ file.name }} </span>
+                      </v-tooltip>
+                    </v-col>
+                    <v-dialog
+                      v-if="corpus.files.length > 11"
+                      v-model="dialog"
+                      fullscreen
+                      hide-overlay
+                      persistent
+                      transition="dialog-bottom-transition"
+                    >
+                      <template v-slot:activator="{ on }">
+                        <v-col cols="3" class="">
+                          <v-btn icon v-on="on">
+                            <v-icon>mdi-dots-horizontal</v-icon>
+                          </v-btn>
                         </v-col>
-                      </v-row>
-                    </v-card>
-                  </v-dialog>
-                </v-row>
-              </v-card-text>
->>>>>>> Created fullscreen dialog to display corpus files
+                      </template>
+                      <v-card>
+                        <v-toolbar dark color="blue">
+                          <v-btn icon dark @click="dialog = false">
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
+                          <v-toolbar-title
+                            >Corpus {{ corpus.title }}</v-toolbar-title
+                          >
+                        </v-toolbar>
+                        <v-list>
+                          <v-subheader>Criteria</v-subheader>
+                          <v-list-item>
+                            <v-list-item-content>
+                              <v-list-item-title
+                                >ID : #{{ corpus.id }}</v-list-item-title
+                              >
+                            </v-list-item-content>
+                          </v-list-item>
+                          <v-list-item>
+                            <v-list-item-content>
+                              <v-list-item-title>Types(s) :</v-list-item-title>
+                            </v-list-item-content>
+                          </v-list-item>
+                          <v-list-item>
+                            <v-list-item-content>
+                              <v-list-item-title>Source(s) :</v-list-item-title>
+                            </v-list-item-content>
+                          </v-list-item>
+                          <v-list-item>
+                            <v-list-item-content>
+                              <v-list-item-title
+                                >Creation date :
+                                {{ corpus.creation_date }}</v-list-item-title
+                              >
+                            </v-list-item-content>
+                          </v-list-item>
+                        </v-list>
+                        <v-divider></v-divider>
+                        <v-subheader>Corpus files</v-subheader>
+                        <v-row class="mx-3" style="text-align: center">
+                          <v-col
+                            cols="1"
+                            v-for="(file, index) in corpus.files"
+                            :key="index"
+                          >
+                            <div>
+                              <v-icon x-large>{{
+                                file_icon(file.format)
+                              }}</v-icon>
+                            </div>
+                            <span> {{ file.name }}.{{ file.format }} </span>
+                          </v-col>
+                        </v-row>
+                      </v-card>
+                    </v-dialog>
+                  </v-row>
+                </v-card-text>
+              </v-expand-transition>
             </v-card>
           </v-col>
         </v-row>
