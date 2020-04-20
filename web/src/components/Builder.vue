@@ -120,7 +120,7 @@
             <v-icon>mdi-download</v-icon>
           </v-btn>
         </template>
-        <span>Start download</span>
+        <span>{{ tooltip_retrieve }}</span>
       </v-tooltip>
 
       <v-tooltip left color="indigo" dark>
@@ -204,10 +204,18 @@ export default {
     ] = this.specified_number;
   },
   computed: {
+    tooltip_retrieve() {
+      return this.builder_type === "web" ? "Start download" : "Fetch from DB";
+    },
     notif_sent_message() {
       return this.builder_type === "web"
         ? "Download request sent"
         : "Database request sent";
+    },
+    notif_error_message() {
+      return this.builder_type === "web"
+        ? "An error occurred during the download, check the logs for further informations"
+        : "An error occurred during the fetching, check the logs for further informations";
     },
     server_method() {
       return this.builder_type === "web" ? "download_query" : "";
@@ -233,6 +241,11 @@ export default {
     }
   },
   methods: {
+    notif_success_message(number) {
+      return this.builder_type === "web"
+        ? "Downloaded " + number + " items, check them in the download tab"
+        : "Loaded " + number + " items, check them in the files tab";
+    },
     add_source_to_requests() {
       let api = this.$store.getters.api_by_name(this.api_list_selection);
       let params = {};
@@ -279,16 +292,11 @@ export default {
       this.$store.state.builders.disabled[this.builder_type] = false;
       this.global_disable = false;
       if (data.type !== undefined && data.type === "error") {
-        this.$store.commit(
-          "add_error_notification",
-          "An error occurred during the download, check the logs for further informations"
-        );
+        this.$store.commit("add_error_notification", this.notif_error_message);
       } else {
         this.$store.commit(
           "add_success_notification",
-          "Downloaded " +
-            data.data.files.length +
-            " items, check them in the download tab"
+          this.notif_success_message(data.data.files.length)
         );
       }
     },
