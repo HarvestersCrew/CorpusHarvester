@@ -239,7 +239,10 @@ export default {
       let values = {};
       let param_type = this.builder_type === "web" ? "requests" : "responses";
       api[param_type].forEach(req => {
-        if (req.is_public !== undefined && req.is_public === true) {
+        if (
+          this.builder_type === "db" ||
+          (req.is_public !== undefined && req.is_public === true)
+        ) {
           params[req.name] = req;
           values[req.name] = undefined;
         }
