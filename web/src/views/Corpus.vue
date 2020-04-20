@@ -66,15 +66,9 @@
                     <v-col cols="3" :key="index" v-show="index < 11">
                       <v-tooltip right>
                         <template v-slot:activator="{ on }">
-                          <v-icon v-if="file.format === 'txt'" v-on="on"
-                            >mdi-file-document</v-icon
-                          >
-                          <v-icon v-if="file.format === 'img'" v-on="on"
-                            >mdi-file-image</v-icon
-                          >
-                          <v-icon v-if="file.format === 'vid'" v-on="on"
-                            >mdi-file-video</v-icon
-                          >
+                          <v-icon v-on="on">{{
+                            file_icon(file.format)
+                          }}</v-icon>
                         </template>
                         <span> {{ file.name }} </span>
                       </v-tooltip>
@@ -177,6 +171,17 @@ export default {
         "add_success_notification",
         "Corpuses loaded, go check the corpus tab"
       );
+    },
+    file_icon(file_format) {
+      switch (file_format) {
+        case "txt":
+          return "mdi-file-document";
+        case "jpg":
+        case "png":
+          return "mdi-file-image";
+        default:
+          return "mdi-file";
+      }
     }
   }
 };
