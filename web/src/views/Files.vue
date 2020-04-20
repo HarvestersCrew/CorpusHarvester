@@ -1,138 +1,15 @@
 <template>
   <Bar>
-    <v-card flat tile>
-      <v-toolbar color="blue lighten-2">
-        <v-row>
-          <v-col cols="6">
-            <v-select
-              v-model="filters.selectedTypes"
-              :items="capitalized_types"
-              label="Types"
-              dark
-              outlined
-              multiple
-              hide-details
-              dense
-            >
-            </v-select>
-          </v-col>
-          <!-- TODO : allow to select one API multiple times -->
-          <v-col cols="6">
-            <v-select
-              v-model="filters.selectedSources"
-              :items="$store.state.apis"
-              item-text="name"
-              return-object
-              label="Sources"
-              dark
-              outlined
-              multiple
-              hide-details
-              dense
-            >
-            </v-select>
-          </v-col>
-          <!-- <v-col cols="4">
-            <v-menu :close-on-content-click="false">
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="filters.date"
-                  label="Date"
-                  v-on="on"
-                  dark
-                  outlined
-                  dense
-                  hide-details
-                >
-                </v-text-field>
-              </template>
-              <v-date-picker v-model="filters.date"></v-date-picker>
-            </v-menu>
-          </v-col> -->
-        </v-row>
-      </v-toolbar>
-      <v-card-text class="ma-0 pa-0">
-        <v-expansion-panels tile accordion>
-          <v-expansion-panel
-            v-for="(item, i) in filters.selectedSources"
-            :key="i"
-          >
-            <v-expansion-panel-header>{{ item.name }}</v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-row>
-                <template v-for="(parameter, j) in item.responses">
-                  <v-col
-                    :key="j"
-                    cols="4"
-                    v-if="
-                      parameter.value_type === 'int' ||
-                        parameter.value_type === 'string'
-                    "
-                  >
-                    <v-text-field
-                      v-if="parameter.value_type === 'int'"
-                      :label="parameter.name"
-                      outlined
-                      dense
-                      hide-details
-                      @keypress="isNumber($event)"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                      v-if="parameter.value_type === 'string'"
-                      :label="parameter.name"
-                      outlined
-                      dense
-                      hide-details
-                    >
-                    </v-text-field>
-                  </v-col>
-                </template>
-              </v-row>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-card-text>
-    </v-card>
-    <div v-for="(item, index) in files" :key="index">
-      <v-list-item>
-        <v-checkbox></v-checkbox>
-        <v-list-item-content>
-          <v-row dense>
-            <v-col>{{ item.file_name }}</v-col>
-            <v-col>{{ item.file_type }}</v-col>
-            <v-col>{{ item.file_source }}</v-col>
-            <v-col>{{ item.file_date }}</v-col>
-          </v-row>
-        </v-list-item-content>
-        <v-list-item-icon>
-          <v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
-        </v-list-item-icon>
-      </v-list-item>
-      <v-divider v-if="index + 1 < files.length"></v-divider>
-    </div>
-
-    <v-tooltip left>
-      <template v-slot:activator="{ on }">
-        <v-fab-transition>
-          <v-btn fab large fixed bottom right color="blue" dark v-on="on">
-            <v-icon>mdi-check</v-icon>
-          </v-btn>
-        </v-fab-transition>
-      </template>
-      <span
-        >Create corpus <br />
-        with selected files</span
-      >
-    </v-tooltip>
+    <Builder builder_type="db"></Builder>
   </Bar>
 </template>
 
 <script>
 import Bar from "@/components/Bar.vue";
+import Builder from "@/components/Builder.vue";
 export default {
   name: "Files",
-  components: { Bar },
+  components: { Bar, Builder },
   data() {
     return {
       files: [

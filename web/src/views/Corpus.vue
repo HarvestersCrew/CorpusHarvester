@@ -43,6 +43,10 @@
             <v-card>
               <v-card-title>
                 {{ corpus.title }}
+                <v-spacer></v-spacer>
+                <v-btn icon
+                  ><v-icon color="grey lighten-1">mdi-pencil</v-icon></v-btn
+                >
               </v-card-title>
               <v-card-subtitle class="pb-0">
                 #{{ corpus.id }}
@@ -52,32 +56,54 @@
                 {{ corpus.files.length }} file(s)
               </v-card-subtitle>
               <v-card-actions>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon v-on="on"
+                      ><v-icon color="grey lighten-1">mdi-delete</v-icon></v-btn
+                    >
+                  </template>
+                  <span>Delete corpus</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon v-on="on"
+                      ><v-icon color="grey lighten-1"
+                        >mdi-folder-move</v-icon
+                      ></v-btn
+                    >
+                  </template>
+                  <span>Export corpus</span>
+                </v-tooltip>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="open_corpus(corpus.id)"
                   ><v-icon v-if="selected_corpus === corpus.id" color="blue">
                     mdi-chevron-double-down</v-icon
                   >
-                  <v-icon v-else> mdi-chevron-double-right</v-icon></v-btn
+                  <v-icon color="grey lighten-1" v-else>
+                    mdi-chevron-double-right</v-icon
+                  ></v-btn
                 >
               </v-card-actions>
               <v-card-text v-show="selected_corpus === corpus.id" class="pt-0">
                 <v-row style="text-align: center">
-                  <template v-for="(file, index) in corpus.files">
-                    <v-col cols="3" :key="index" v-show="index < 11">
-                      <v-tooltip right>
-                        <template v-slot:activator="{ on }">
-                          <v-icon v-on="on">{{
-                            file_icon(file.format)
-                          }}</v-icon>
-                        </template>
-                        <span> {{ file.name }} </span>
-                      </v-tooltip>
-                    </v-col>
-                  </template>
+                  <v-col
+                    cols="3"
+                    v-for="(file, index) in corpus.files.slice(0, 11)"
+                    :key="index"
+                  >
+                    <v-tooltip right>
+                      <template v-slot:activator="{ on }">
+                        <v-icon v-on="on">{{ file_icon(file.format) }}</v-icon>
+                      </template>
+                      <span> {{ file.name }} </span>
+                    </v-tooltip>
+                  </v-col>
                   <v-tooltip right v-if="corpus.files.length > 11">
                     <template v-slot:activator="{ on }">
-                      <v-col cols="3"
-                        ><v-icon v-on="on">mdi-dots-horizontal</v-icon></v-col
+                      <v-col cols="3" class="">
+                        <v-btn icon>
+                          <v-icon v-on="on">mdi-dots-horizontal</v-icon></v-btn
+                        ></v-col
                       >
                     </template>
                     <span>+ {{ corpus.files.length - 11 }} files</span>
