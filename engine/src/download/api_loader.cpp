@@ -251,6 +251,7 @@ void api_loader::manage_parsed_responses(
       stringstream ss;
       ss << "Unexpected exception while parsing a result: " << typeid(e).name();
       logger::error(ss.str());
+      logger::debug(e.what());
     }
   }
 }
