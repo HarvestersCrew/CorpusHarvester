@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-text-field
-      :label="param.name"
+      :label="label"
       outlined
       dense
       clearable
@@ -16,7 +16,7 @@
     ></v-text-field>
 
     <v-select
-      :label="param.name"
+      :label="label"
       outlined
       dense
       clearable
@@ -48,6 +48,9 @@ export default {
     type() {
       if (this.param.value_type === "int") return "number";
       else return "text";
+    },
+    label() {
+      return this.param.required ? this.param.name + "*" : this.param.name;
     }
   },
   methods: {
