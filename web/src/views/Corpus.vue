@@ -84,32 +84,41 @@
                   ></v-btn
                 >
               </v-card-actions>
-              <v-card-text v-show="selected_corpus === corpus.id" class="pt-0">
-                <v-row style="text-align: center">
-                  <v-col
-                    cols="3"
-                    v-for="(file, index) in corpus.files.slice(0, 11)"
-                    :key="index"
-                  >
-                    <v-tooltip right>
+              <v-expand-transition>
+                <v-card-text
+                  v-show="selected_corpus === corpus.id"
+                  class="pt-0"
+                >
+                  <v-row class="text-center">
+                    <v-col
+                      cols="3"
+                      v-for="(file, index) in corpus.files.slice(0, 11)"
+                      :key="index"
+                    >
+                      <v-tooltip right>
+                        <template v-slot:activator="{ on }">
+                          <v-icon v-on="on">{{
+                            file_icon(file.format)
+                          }}</v-icon>
+                        </template>
+                        <span> {{ file.name }} </span>
+                      </v-tooltip>
+                    </v-col>
+                    <v-tooltip right v-if="corpus.files.length > 11">
                       <template v-slot:activator="{ on }">
-                        <v-icon v-on="on">{{ file_icon(file.format) }}</v-icon>
+                        <v-col cols="3" class="">
+                          <v-btn icon>
+                            <v-icon v-on="on"
+                              >mdi-dots-horizontal</v-icon
+                            ></v-btn
+                          ></v-col
+                        >
                       </template>
-                      <span> {{ file.name }} </span>
+                      <span>+ {{ corpus.files.length - 11 }} files</span>
                     </v-tooltip>
-                  </v-col>
-                  <v-tooltip right v-if="corpus.files.length > 11">
-                    <template v-slot:activator="{ on }">
-                      <v-col cols="3" class="">
-                        <v-btn icon>
-                          <v-icon v-on="on">mdi-dots-horizontal</v-icon></v-btn
-                        ></v-col
-                      >
-                    </template>
-                    <span>+ {{ corpus.files.length - 11 }} files</span>
-                  </v-tooltip>
-                </v-row>
-              </v-card-text>
+                  </v-row>
+                </v-card-text>
+              </v-expand-transition>
             </v-card>
           </v-col>
         </v-row>
