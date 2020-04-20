@@ -22,11 +22,8 @@
       <v-row justify="center">
         <v-col cols="10" md="6">
           <v-card>
-            <v-card-title>How to download</v-card-title>
-            <v-card-text class="text-left">
-              Start by adding requests and filling needed parameters. Once you
-              validate it, the download will start and you'll just have to wait.
-            </v-card-text>
+            <v-card-title>{{ empty_title }}</v-card-title>
+            <v-card-text class="text-left">{{ empty_text }}</v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -37,6 +34,18 @@
 export default {
   name: "FilesListing",
   props: { builder_type: { required: true, type: String } },
+  computed: {
+    empty_title() {
+      return this.builder_type === "web"
+        ? "How to download"
+        : "How to search in the database";
+    },
+    empty_text() {
+      return this.builder_type === "web"
+        ? "Start by adding requests and filling needed parameters. Once you validate it, the download will start and you'll just have to wait."
+        : "Start by adding requests and filling parameters. Once you validate it, they will be executed against the database.";
+    }
+  },
   methods: {
     api_type(api_name) {
       return this.$store.getters.api_by_name(api_name).api_type;
