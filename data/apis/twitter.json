@@ -14,7 +14,8 @@
             "position": "body",
             "relevant": false,
             "api_name": "q",
-            "name": "query"
+            "name": "query",
+            "description": "Search query"
         },
         {
             "type": "string",
@@ -22,7 +23,8 @@
             "default_value": "en",
             "position": "body",
             "relevant": false,
-            "api_name": "lang"
+            "api_name": "lang",
+            "description": "Language of tweet"
         },
         {
             "type": "string",
@@ -35,7 +37,8 @@
             "default_value": "recent",
             "position": "body",
             "relevant": false,
-            "api_name": "result_type"
+            "api_name": "result_type",
+            "description": "Type of tweets to retrieve"
         },
         {
             "type": "int",
@@ -44,14 +47,16 @@
             "position": "body",
             "relevant": false,
             "api_name": "count",
-            "name": "_page_count"
+            "name": "_page_count",
+            "description": "Number of elements per query page"
         },
         {
             "type": "string",
             "required": true,
             "position": "header",
             "relevant": false,
-            "api_name": "Authorization"
+            "api_name": "Authorization",
+            "description": "API token"
         }
     ],
     "response": [
@@ -59,37 +64,43 @@
             "type": "int",
             "api_name": "id",
             "name": "_api_id",
-            "relevant": true
+            "relevant": true,
+            "description": "ID of the tweet"
         },
         {
             "type": "string",
             "name": "date",
             "api_name": "created_at",
-            "relevant": true
+            "relevant": true,
+            "description": "Tweet creation date"
         },
         {
             "type": "string",
             "name": "text",
             "api_name": "text",
-            "relevant": true
+            "relevant": true,
+            "description": "Tweet content"
         },
         {
             "type": "int",
             "name": "retweet",
             "api_name": "retweet_count",
-            "relevant": true
+            "relevant": true,
+            "description": "Retweets count"
         },
         {
             "type": "int",
             "name": "favorite",
             "api_name": "favorite_count",
-            "relevant": true
+            "relevant": true,
+            "description": "Favorite count"
         },
         {
             "type": "string",
             "name": "language",
             "api_name": "lang",
-            "relevant": true
+            "relevant": true,
+            "description": "Language of the tweet"
         }
     ]
 }
