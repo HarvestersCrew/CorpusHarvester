@@ -777,18 +777,29 @@ void CommandLineInterface::setting_logger() {
 }
 
 void CommandLineInterface::setting_storage() {
-  // TODO
-  logger::debug("Settings storage.");
+  ManagerRequest mr;
+
+  // Check if we have the migrate parameter
+  map<string, string>::iterator itSubCommand =
+      this->string_inputs.find("migrate");
+  if (itSubCommand != this->string_inputs.end()) {
+    logger::debug("Migration of the storage path.");
+    mr.migrate_storage(itSubCommand->second);
+  }
+
+  // Display the storage path
+  cout << "Storage path : " << mr.get_storage_path() << endl;
+  exit(0);
 }
 
 void CommandLineInterface::setting_manager() {
   logger::debug("Settings method.");
   if (std::find(this->commands.begin(), this->commands.end(), "logger") !=
       this->commands.end()) {
-    // Logger
+    this->setting_logger();
   } else if (std::find(this->commands.begin(), this->commands.end(),
                        "storage") != this->commands.end()) {
-    // Storage
+    this->setting_storage();
   }
 
   exit(0);
