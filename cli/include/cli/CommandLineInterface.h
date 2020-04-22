@@ -133,6 +133,25 @@ private:
    */
   void files_by_id();
 
+  //
+  // SETTINGS MANAGER
+  //
+
+  /**
+   * Manage settings requests.
+   */
+  void setting_manager();
+
+  /**
+   * TODO ::
+   */
+  void setting_logger();
+
+  /**
+   * TODO ::
+   */
+  void setting_storage();
+
 public:
   /**
    * ClientLineInterface Constructor.

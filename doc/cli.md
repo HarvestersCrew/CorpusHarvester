@@ -57,9 +57,9 @@ files: Files function.
 ## Settings
 - `settings` : manage the harvester settings
     - `logger` : displays the (2 or 3, output path is not displayed if the output is stdout) logger settings
-        - `--setting level --value VALUE` : sets the logger level to one of these: debug, info, warning, error, none
-        - `--setting output --value VALUE` : sets the logger output to one of these: stdout, file
-        - `--setting output_path --value VALUE` : sets the logger output path to the given value
+        - `--level VALUE` : sets the logger level to one of these: debug, info, warning, error, none
+        - `--output VALUE` : sets the logger output to one of these: stdout, file
+        - `--output_path VALUE` : sets the logger output path to the given value
         - `--clear` : deletes the logfile if existing
     - `storage` : displays the storage root
         - `--migrate ABSOLUTE_PATH` : migrates the storage to this absolute path

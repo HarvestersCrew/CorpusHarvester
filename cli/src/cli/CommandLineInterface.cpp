@@ -95,6 +95,31 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   // Get a corpus based on his id
   filesCommand.add_option("id", "Search a file based on his id.", false);
 
+  //
+  // Settings
+  //
+  cli_command &settingsCommand =
+      this->parser.add_command("settings", "Settings function.");
+
+  // Logger
+  cli_command &loggerSetting =
+      settingsCommand.add_command("logger", "Display the logger settings.");
+  loggerSetting.add_option("level",
+                           "Sets the logger level to one of these : debug, "
+                           "info, warning, error, none.",
+                           false);
+  loggerSetting.add_option(
+      "output", "Sets the logger output to one of these: stdout, file.", false);
+  loggerSetting.add_option(
+      "output_path", "Sets the logger output path to the given one.", false);
+  loggerSetting.add_option("clear", "Deletes the logfile if existing.", true);
+
+  // Storage
+  cli_command &storageSetting =
+      settingsCommand.add_command("storage", "Display the storage root.");
+  storageSetting.add_option(
+      "migrate", "Migrate the storage to this absolute path.", false);
+
   // Transform our array to a vector of string
   std::vector<string> allArgs(argv + 1, argv + argc);
 
@@ -746,6 +771,29 @@ void CommandLineInterface::api_manager() {
   exit(0);
 }
 
+void CommandLineInterface::setting_logger() {
+  // TODO
+  logger::debug("Settings logger.");
+}
+
+void CommandLineInterface::setting_storage() {
+  // TODO
+  logger::debug("Settings storage.");
+}
+
+void CommandLineInterface::setting_manager() {
+  logger::debug("Settings method.");
+  if (std::find(this->commands.begin(), this->commands.end(), "logger") !=
+      this->commands.end()) {
+    // Logger
+  } else if (std::find(this->commands.begin(), this->commands.end(),
+                       "storage") != this->commands.end()) {
+    // Storage
+  }
+
+  exit(0);
+}
+
 void CommandLineInterface::run() {
 
   // Check if we have the corpus command
@@ -758,5 +806,8 @@ void CommandLineInterface::run() {
   } else if (std::find(this->commands.begin(), this->commands.end(), "apis") !=
              this->commands.end()) {
     this->api_manager();
+  } else if (std::find(this->commands.begin(), this->commands.end(),
+                       "settings") != this->commands.end()) {
+    this->setting_manager();
   }
 }
