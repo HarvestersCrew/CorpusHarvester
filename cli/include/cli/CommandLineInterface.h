@@ -143,14 +143,28 @@ private:
   void setting_manager();
 
   /**
-   * TODO ::
+   * Modify the logger parameter.
    */
   void setting_logger();
 
   /**
-   * TODO ::
+   * Modify storage parameter.
    */
   void setting_storage();
+
+  //
+  // SETTINGS MANAGER
+  //
+
+  /**
+   * Manage web requests.
+   */
+  void web_manager();
+
+  /**
+   * Retrieve new files from the web.
+   */
+  void web_download();
 
 public:
   /**

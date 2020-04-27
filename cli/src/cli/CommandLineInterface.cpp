@@ -120,6 +120,34 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   storageSetting.add_option(
       "migrate", "Migrate the storage to this absolute path.", false);
 
+  //
+  // Web search
+  //
+  cli_command &webCommand =
+      this->parser.add_command("web", "All commands related to web queries.");
+
+  cli_command &downloadWeb =
+      webCommand.add_command("download", "Retrieve new files from the web.");
+  downloadWeb.add_option(
+      "number",
+      "Will download up to this number (not precise, around it) or stop before "
+      "if specified queries start returning nothing. If it isn't specified, "
+      "will only do a single query on each request.",
+      false);
+  downloadWeb.add_option(
+      "type",
+      "Will intersect the specified requests with the specified types, can "
+      "appear multiple times (text, image).",
+      false);
+  downloadWeb.add_option(
+      "source",
+      "Specifies a request on this source name, can also appear many times.",
+      false);
+  downloadWeb.add_option("param_name",
+                         "Specifies a parameter on the nearest source on the "
+                         "left, can also appear many times.",
+                         false);
+
   // Transform our array to a vector of string
   std::vector<string> allArgs(argv + 1, argv + argc);
 
@@ -840,6 +868,84 @@ void CommandLineInterface::setting_manager() {
   exit(0);
 }
 
+void CommandLineInterface::web_download() {
+  ManagerRequest mr;
+  map<string, string>::iterator itSubCommand;
+
+  logger::debug("Download web.");
+  int number = 0;
+  string type = "";
+  string source;
+  //  map<string, string> params;
+
+  // Number parameter
+  itSubCommand = this->string_inputs.find("number");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+
+    // Get the value of number
+    string numberString = itSubCommand->second;
+    string::size_type sz;
+
+    try {
+      number = std::stoi(numberString, &sz);
+    } catch (const std::invalid_argument &ia) {
+      logger::error(
+          "The input number is not an integer ! Please check your input.");
+      exit(-1);
+    }
+
+    // Check if the input and the transform have the same size
+    if (sz != numberString.length()) {
+      logger::error("The input number contains a non valid character. Please, "
+                    "check your input.");
+      exit(-1);
+    }
+  }
+
+  // Check if we have a value for the type
+  itSubCommand = this->string_inputs.find("type");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    string typeRaw = itSubCommand->second;
+
+    if (typeRaw == "image" || typeRaw == "text") {
+      type = "type";
+    } else {
+      logger::error("The value " + typeRaw +
+                    " for the type attribute is not valid. Please check "
+                    "with the different values present : \n" +
+                    "- image \n" + +"- text \n");
+      exit(-1);
+    }
+  }
+
+  // Check if we have a value for the source
+  itSubCommand = this->string_inputs.find("source");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    // Get the source
+    source = itSubCommand->second;
+
+    // Check the source
+    vector<string> apiNames = ApiFactory::get_api_names();
+    if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
+      logger::error("Le nom de la source n'est pas valide ! ");
+      exit(-1);
+    }
+  }
+
+  // TODO :: Manage the param value
+
+  // TODO :: Call with all that the api manager request
+  // TODO :: Need to check which function
+}
+
+void CommandLineInterface::web_manager() {
+  logger::debug("Web method.");
+  if (std::find(this->commands.begin(), this->commands.end(), "download") !=
+      this->commands.end()) {
+    this->web_download();
+  }
+}
+
 void CommandLineInterface::run() {
 
   // Check if we have the corpus command
@@ -855,5 +961,8 @@ void CommandLineInterface::run() {
   } else if (std::find(this->commands.begin(), this->commands.end(),
                        "settings") != this->commands.end()) {
     this->setting_manager();
+  } else if (std::find(this->commands.begin(), this->commands.end(), "web") !=
+             this->commands.end()) {
+    this->web_manager();
   }
 }
