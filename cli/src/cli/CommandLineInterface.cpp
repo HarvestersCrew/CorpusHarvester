@@ -772,8 +772,43 @@ void CommandLineInterface::api_manager() {
 }
 
 void CommandLineInterface::setting_logger() {
-  // TODO
+  ManagerRequest mr;
+
+  map<string, string>::iterator itSubCommand;
+  string level = "";
+  string output = "";
+  string output_path = "";
+
   logger::debug("Settings logger.");
+
+  // Check if we have a value for level parameter
+  itSubCommand = this->string_inputs.find("level");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    logger::debug("We got a level");
+    level = itSubCommand->second;
+    mr.set_logger_level(level);
+  }
+  // Check if we have a value for output parameter
+  itSubCommand = this->string_inputs.find("output");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    logger::debug("We got an output");
+    output = itSubCommand->second;
+    mr.set_logger_output(output);
+  }
+  // Check if we have a value for output_path parameter
+  itSubCommand = this->string_inputs.find("output_path");
+  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
+    logger::debug("We got an output_path");
+    output_path = itSubCommand->second;
+    mr.set_logger_output_path(output_path);
+  }
+  // Clear the logger if parameter
+  if (this->bool_inputs.find("clear")->second) {
+    logger::debug("Clear the logger.");
+    mr.clear_logfile();
+  }
+
+  exit(0);
 }
 
 void CommandLineInterface::setting_storage() {
