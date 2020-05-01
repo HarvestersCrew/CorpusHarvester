@@ -29,13 +29,12 @@ std::string Storage::file_destination(shared_ptr<File> file) const {
     current_file_name = random_str(25);
   }
   std::string md5_file_name = md5(current_file_name);
-  std::string file_name =
-      md5_file_name.substr(md5_file_name.length() - MD5_SPLIT, MD5_SPLIT);
-  std::string file_name_for_folder =
-      md5_file_name.substr(0, md5_file_name.length() - MD5_SPLIT);
-  std::string file_folder = get_folder_path(file_name_for_folder);
+  std::string file_name_for_folders =
+      md5_file_name.substr(0, MD5_SPLIT * FOLDER_TREE_HEIGHT);
+  std::string file_folders = get_folder_path(file_name_for_folders);
   std::string dest_folder_path =
-      DOWNLOAD_FOLDER + file->get_source() + "/" + file_folder;
+      DOWNLOAD_FOLDER + file->get_source() + "/" + file_folders;
+  std::string file_name = md5_file_name.substr(MD5_SPLIT * FOLDER_TREE_HEIGHT);
   file->set_name(file_name);
   file->set_path(dest_folder_path);
 

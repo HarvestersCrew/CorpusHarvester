@@ -15,7 +15,10 @@ using std::shared_ptr;
 
 #define DOWNLOAD_FOLDER "download/"
 #define CORPUS_FOLDER "corpus/"
-#define MD5_SPLIT 8
+#define FOLDER_TREE_HEIGHT 2
+#define MD5_SPLIT 2
+// #define MD5_SPLIT 8
+// #define MD5_SPLIT 3
 
 /**
  * Storage class provides methods to store the files in the file system

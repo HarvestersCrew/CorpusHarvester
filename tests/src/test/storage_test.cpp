@@ -12,7 +12,7 @@ void test_file_destination() {
   std::string fileDest = storage.file_destination(file);
   Assertion::assert_equals(
       __FUNCTION__,
-      STORED_PATH + "download/twitter/ddecebde/a58b5f26/4d27f1f7/909bab74.txt",
+      STORED_PATH + "download/twitter/dd/ec/ebdea58b5f264d27f1f7909bab74.txt",
       fileDest);
   file->set_source("wikicommons");
   file->set_name("harvester");
@@ -21,7 +21,7 @@ void test_file_destination() {
   Assertion::assert_equals(
       __FUNCTION__,
       STORED_PATH +
-          "download/wikicommons/9f8f961b/5607b100/3cf830f4/4c67efc9.jpg",
+          "download/wikicommons/9f/8f/961b5607b1003cf830f44c67efc9.jpg",
       fileDest);
 }
 
@@ -48,10 +48,10 @@ void test_store_one_file() {
   std::string content = "Bien le bonjour je suis un fichier de test";
   file->set_content(content);
   std::string file_dest = storage.store_file(file);
+  std::string expected_path = "download/tmdb/09/8f/";
+  std::string expected_name = "6bcd4621d373cade4e832627b4f6";
   std::string expected_destination =
-      STORED_PATH + "download/tmdb/098f6bcd/4621d373/cade4e83/2627b4f6.png";
-  std::string expected_path = "download/tmdb/098f6bcd/4621d373/cade4e83/";
-  std::string expected_name = "2627b4f6";
+      STORED_PATH + expected_path + expected_name + ".png";
   Assertion::assert_equals(__FUNCTION__, expected_destination, file_dest);
   Assertion::assert_equals(__FUNCTION__, expected_path, file->get_path());
   Assertion::assert_equals(__FUNCTION__, expected_name, file->get_name());
