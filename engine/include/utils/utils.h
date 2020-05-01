@@ -34,4 +34,6 @@ std::string add_string_every_n_chars(std::string input, std::string to_add,
 
 std::list<string> split(const string &str, char delimiter);
 
+std::string was_or_were(int count);
+
 #endif
