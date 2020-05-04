@@ -132,6 +132,7 @@ public:
   std::vector<char> get_content_bin() const { return _bin_content; }
   string get_content_str() const { return _content; }
   int get_size() const { return _size; }
+  string get_type() const { return _type; }
 
   void set_format(string format) { _format = format; }
   void set_path(string path) { _path = path; }
@@ -141,6 +142,7 @@ public:
   void set_content(string content);
   void set_bin_content(std::vector<char> content);
   void set_size(int size) { _size = size; }
+  void set_type(const string &type) { _type = type; }
 
   void store(const string &path) const;
 

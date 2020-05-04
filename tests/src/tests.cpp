@@ -28,7 +28,7 @@ int main() {
   cli_parser_test();
   indexation_test();
 
-  // PoolDB::drop();
+  PoolDB::drop();
 
   std::cout << std::endl
             << "Runs : "

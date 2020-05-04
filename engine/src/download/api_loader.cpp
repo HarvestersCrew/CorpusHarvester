@@ -231,6 +231,7 @@ void api_loader::manage_parsed_responses(
 
       shared_ptr<File> sp_file = make_shared<File>();
       sp_file->set_source(this->_name);
+      sp_file->set_type(this->get_api_type_string());
 
       for (const auto &response : el.get_parameters()) {
         if (response.first->_name == this->_response_main_item) {
