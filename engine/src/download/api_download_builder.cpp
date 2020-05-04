@@ -39,7 +39,7 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
   }
 
   int inserted_count;
-      list<shared_ptr<File>> partial_res;
+  list<shared_ptr<File>> partial_res;
   do {
     // For each specified request
     for (auto it = requests.begin(); it != requests.end();) {
@@ -89,7 +89,7 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
           it = partial_res.erase(it);
         }
       }
-      
+
       // Add freshly downloaded data to the return list
       res.splice(res.end(), partial_res);
     }
@@ -99,11 +99,10 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
   } while (number > 0 && res.size() < number && requests.size() > 0);
 
   logger::info(std::to_string(partial_res.size()) + " file" +
-                was_or_were(partial_res.size()) +
-                " stored in the file system");
+               was_or_were(partial_res.size()) + " stored in the file system");
 
   logger::info(inserted_count + " file" + was_or_were(inserted_count) +
-                   " inserted in the database");
+               " inserted in the database");
 
   logger::info(std::to_string(all_dl_size) + " file" +
                was_or_were(all_dl_size) + " downloaded");
