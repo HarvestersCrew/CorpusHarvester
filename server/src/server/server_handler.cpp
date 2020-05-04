@@ -26,12 +26,14 @@ pair<string, json> server_handler::dispatch_request(ConnectionData &con,
 
   string request = j.at("request").get<string>();
 
+  logger::debug("Dispatching client request to " + request);
   if (functions_data.find(request) != functions_data.end() &&
       j.contains("data")) {
     return (*functions_data.at(request))(con, j.at("data"));
   } else if (functions_no_data.find(request) != functions_no_data.end()) {
     return (*functions_no_data.at(request))(con);
   } else {
+    logger::error("Request not supported: " + request);
     throw wss_invalid_request();
   }
 }
@@ -152,6 +154,7 @@ pair<string, json> server_handler::api_builder_query(ConnectionData &con,
 
   json result = json::object();
   result["files"] = json::array();
+  result["is_web"] = is_web;
 
   for (const auto &file : files) {
     result.at("files").push_back(file->serialize());

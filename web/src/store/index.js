@@ -128,8 +128,9 @@ export default new Vuex.Store({
             state.storage.path = obj.data.storage_path;
             break;
 
-          case "download_query":
-            state.builders.files.web = obj.data.files;
+          case "api_builder_query":
+            if (obj.data.is_web) state.builders.files.web = obj.data.files;
+            else state.builders.files.db = obj.data.files;
             break;
 
           case "get_corpuses":
