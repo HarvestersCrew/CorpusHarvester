@@ -93,8 +93,9 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
 
   } while (number > 0 && res.size() < number && requests.size() > 0);
 
-  logger::info("Downloaded " + std::to_string(all_dl_size) + " and inserted " +
-               std::to_string(res.size()) + " new files with user request");
+  logger::info("Downloaded " + std::to_string(all_dl_size) +
+               " from the web and inserted " + std::to_string(res.size()) +
+               " new files in local database with user request");
 
   return res;
 }
