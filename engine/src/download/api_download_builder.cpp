@@ -38,8 +38,6 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
     }
   }
 
-  int inserted_count;
-      list<shared_ptr<File>> partial_res;
   do {
     // For each specified request
     for (auto it = requests.begin(); it != requests.end();) {
@@ -65,6 +63,7 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
       all_dl_size += downloaded.size();
 
       // Only choose the files not present in the DB
+      list<shared_ptr<File>> partial_res;
       for (const auto &el : downloaded) {
         if (!el->api_id_exists()) {
           partial_res.push_back(el);
@@ -75,13 +74,9 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
       storage.store_files(partial_res);
 
       // Index the downloaded data
-      bool inserted;
       for (auto it = partial_res.begin(); it != partial_res.end();) {
         try {
-          inserted = (*it)->insert();
-          if (inserted) {
-            inserted_count++;
-          }
+          (*it)->insert();
           ++it;
         } catch (const std::exception &e) {
           logger::error("Error while parsing a file");
@@ -89,7 +84,7 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
           it = partial_res.erase(it);
         }
       }
-      
+
       // Add freshly downloaded data to the return list
       res.splice(res.end(), partial_res);
     }
@@ -98,15 +93,8 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
 
   } while (number > 0 && res.size() < number && requests.size() > 0);
 
-  logger::info(std::to_string(partial_res.size()) + " file" +
-                was_or_were(partial_res.size()) +
-                " stored in the file system");
-
-  logger::info(inserted_count + " file" + was_or_were(inserted_count) +
-                   " inserted in the database");
-
-  logger::info(std::to_string(all_dl_size) + " file" +
-               was_or_were(all_dl_size) + " downloaded");
+  logger::info("Downloaded " + std::to_string(all_dl_size) + " and inserted " +
+               std::to_string(res.size()) + " new files with user request");
 
   return res;
 }

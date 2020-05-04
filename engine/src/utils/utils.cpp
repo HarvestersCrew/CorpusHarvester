@@ -113,10 +113,3 @@ std::list<string> split(const string &str, char delimiter) {
   }
   return elements;
 }
-
-std::string was_or_were(int count) {
-  if (count == 1) {
-    return " was";
-  } else
-    return "s were";
-}
