@@ -43,7 +43,7 @@ SearchBuilder Indexer::get_search_builder() {
   return sb;
 }
 
-void Indexer::init_ith_member(int i, int32_t value, db_statistics *stats) {
+void Indexer::init_ith_member(int i, int value, db_statistics *stats) {
   if (i == 0) {
     stats->file_count = value;
   } else if (i == 1) {
@@ -61,14 +61,15 @@ void Indexer::get_statistics(db_statistics *stats) {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
   auto con = PoolDB::borrow_from_pool();
-
   int i = 0;
+  int value;
   for (string &request : _stats_requests) {
     prep_stmt = con->prepareStatement(request);
     res = prep_stmt->executeQuery();
     res->next();
     delete prep_stmt;
-    init_ith_member(i, res->getInt("stat"), stats);
+    value = res->getInt("stat");
+    init_ith_member(i, value, stats);
     delete res;
     i++;
   }

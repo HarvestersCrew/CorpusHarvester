@@ -84,7 +84,7 @@ public:
    */
   SearchBuilder get_search_builder();
 
-  void init_ith_member(int i, int32_t value, db_statistics *stats);
+  void init_ith_member(int i, int value, db_statistics *stats);
 
   /**
    * Computes every needed statistics from the database

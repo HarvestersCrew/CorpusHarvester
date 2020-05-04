@@ -383,13 +383,13 @@ void test_insert_existing_setting() {
 }
 
 void test_get_statistics() {
-  db_statistics *stats;
-  Indexer().get_statistics(stats);
-  Assertion::assert_equals(__FUNCTION__, 51, stats->file_count);
-  Assertion::assert_equals(__FUNCTION__, 3, stats->corpus_count);
-  Assertion::assert_equals(__FUNCTION__, 50, stats->text_count);
-  Assertion::assert_equals(__FUNCTION__, 1, stats->image_count);
-  Assertion::assert_equals(__FUNCTION__, 6375, stats->total_size);
+  db_statistics stats;
+  Indexer().get_statistics(&stats);
+  Assertion::assert_equals(__FUNCTION__, 51, stats.file_count);
+  Assertion::assert_equals(__FUNCTION__, 3, stats.corpus_count);
+  Assertion::assert_equals(__FUNCTION__, 50, stats.text_count);
+  Assertion::assert_equals(__FUNCTION__, 1, stats.image_count);
+  Assertion::assert_equals(__FUNCTION__, 6375, stats.total_size);
 }
 
 void indexation_test() {
