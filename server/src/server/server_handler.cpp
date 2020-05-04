@@ -141,7 +141,8 @@ pair<string, json> server_handler::api_builder_query(ConnectionData &con,
 
     for (auto &[key, value] : request.at("values").items()) {
       con._mr.api_builder_add_request_parameter(is_web, idx, key,
-                                                value.get<string>(), "=");
+                                                value.at("val").get<string>(),
+                                                value.at("op").get<string>());
     }
   }
 

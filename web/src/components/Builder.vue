@@ -237,8 +237,7 @@ export default {
             req.values[key] !== undefined &&
             req.values[key] !== ""
           ) {
-            req_parsed.values[key] = req.values[key];
-            req_parsed.ops[key] = req.ops[key];
+            req_parsed.values[key] = { val: req.values[key], op: req.ops[key] };
           }
         });
         query.push(req_parsed);
