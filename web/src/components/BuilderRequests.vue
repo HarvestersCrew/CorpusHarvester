@@ -4,7 +4,7 @@
       <v-expansion-panel-header>{{ request.api }}</v-expansion-panel-header>
       <v-expansion-panel-content eager>
         <v-container>
-          <v-row align="center">
+          <v-row align="start">
             <v-col
               cols="12"
               md="6"
@@ -21,7 +21,7 @@
                 @op_change="request.ops[name] = $event"
               ></ApiParamInput>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="12" md="6" lg="3" class="mt-4 text-right">
               <v-btn
                 :disabled="disabled"
                 color="red"

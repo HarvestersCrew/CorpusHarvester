@@ -1,36 +1,33 @@
 <template>
   <v-row dense>
     <v-col v-if="builder_type !== 'web'" cols="auto">
-      <v-speed-dial direction="bottom" v-model="op_down">
-        <template v-slot:activator>
-          <v-btn class="px-0">
-            <div class="font-weight-bold">{{ input_op }}</div>
-            <div class="ml-2">
-              <v-icon dense>
-                {{ op_down ? "mdi-menu-up" : "mdi-menu-down" }}
-              </v-icon>
-            </div>
-          </v-btn>
-        </template>
-        <v-btn
-          small
-          rounded
-          v-for="val in logical_symbols"
-          :key="val"
-          :color="val === input_op ? 'blue' : undefined"
-          :dark="val === input_op"
-          @click="change_op(val)"
-        >
-          {{ val }}
-        </v-btn>
-      </v-speed-dial>
+      <v-card outlined>
+        <v-list dense>
+          <v-list-group v-model="op_down">
+            <template v-slot:activator>
+              <v-list-item-title>{{ input_op }}</v-list-item-title>
+            </template>
+            <v-list-item
+              dense
+              v-for="(val, idx) in logical_symbols"
+              :key="val"
+              link
+              v-model="active_op[idx]"
+              @click="change_op(val)"
+            >
+              <v-list-item-subtitle>
+                {{ val }}
+              </v-list-item-subtitle>
+            </v-list-item>
+          </v-list-group>
+        </v-list>
+      </v-card>
     </v-col>
 
     <v-col>
       <v-text-field
         :label="label"
         outlined
-        dense
         clearable
         v-if="param.values === undefined || param.values.length === 0"
         :placeholder="param.default_value"
@@ -45,7 +42,6 @@
       <v-select
         :label="label"
         outlined
-        dense
         clearable
         v-else
         :placeholder="param.default_value"
@@ -98,11 +94,16 @@ export default {
         arr.push("<", ">", "<=", ">=");
       }
       return arr;
+    },
+    active_op() {
+      let arr = this.logical_symbols;
+      return arr.map(el => this.input_op === el);
     }
   },
   methods: {
     change_op(val) {
       this.input_op = val;
+      this.op_down = false;
       this.$emit("op_change", this.input_op);
     },
     validation(data) {
