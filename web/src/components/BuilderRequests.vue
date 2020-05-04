@@ -5,7 +5,13 @@
       <v-expansion-panel-content eager>
         <v-container>
           <v-row align="center">
-            <v-col cols="3" v-for="(param, name) in request.params" :key="name">
+            <v-col
+              cols="12"
+              md="6"
+              lg="3"
+              v-for="(param, name) in request.params"
+              :key="name"
+            >
               <ApiParamInput
                 :param="param"
                 :disabled="disabled"
