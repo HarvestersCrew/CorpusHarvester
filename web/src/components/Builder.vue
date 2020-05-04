@@ -228,15 +228,18 @@ export default {
       this.requests.forEach(req => {
         let req_parsed = {
           name: req.api,
-          values: {}
+          values: {},
+          ops: {}
         };
         Object.keys(req.values).forEach(key => {
           if (
             req.values[key] !== null &&
             req.values[key] !== undefined &&
             req.values[key] !== ""
-          )
+          ) {
             req_parsed.values[key] = req.values[key];
+            req_parsed.ops[key] = req.ops[key];
+          }
         });
         query.push(req_parsed);
       });
@@ -253,6 +256,7 @@ export default {
       let api = this.$store.getters.api_by_name(this.api_list_selection);
       let params = {};
       let values = {};
+      let ops = {};
       let param_type = this.builder_type === "web" ? "requests" : "responses";
       api[param_type].forEach(req => {
         if (
@@ -261,12 +265,14 @@ export default {
         ) {
           params[req.name] = req;
           values[req.name] = undefined;
+          ops[req.name] = "=";
         }
       });
       this.requests.unshift({
         api: this.api_list_selection,
         params,
-        values
+        values,
+        ops
       });
       this.api_list_selection = undefined;
     },

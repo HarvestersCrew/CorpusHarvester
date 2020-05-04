@@ -10,7 +10,9 @@
                 :param="param"
                 :disabled="disabled"
                 :builder_type="builder_type"
+                :op="request.ops[name]"
                 v-model="request.values[name]"
+                @op_change="request.ops[name] = $event"
               ></ApiParamInput>
             </v-col>
             <v-col cols="3">
