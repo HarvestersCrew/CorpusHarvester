@@ -217,9 +217,6 @@ export default {
         ? "An error occurred during the download, check the logs for further informations"
         : "An error occurred during the fetching, check the logs for further informations";
     },
-    server_method() {
-      return this.builder_type === "web" ? "download_query" : "";
-    },
     server_query() {
       let query = [];
       this.requests.forEach(req => {
@@ -275,14 +272,17 @@ export default {
     send_query() {
       this.global_disable = true;
       this.$store.commit("add_notification", this.notif_sent_message);
-      let data = { builder: this.server_query };
+      let data = {
+        builder: this.server_query,
+        is_web: this.builder_type === "web"
+      };
 
       if (this.specified_number !== "" && this.specified_number !== undefined) {
         data.number = parseInt(this.specified_number);
       }
 
       this.$store.dispatch("send_tokenized_request", {
-        type: this.server_method,
+        type: "api_builder_query",
         data,
         callback: this.query_response
       });

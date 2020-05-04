@@ -12,7 +12,7 @@ void server_handler::fill_available_functions(
 
   functions_data.emplace("update_logger", &update_logger);
   functions_data.emplace("storage_migration", &storage_migration);
-  functions_data.emplace("download_query", &download_query);
+  functions_data.emplace("api_builder_query", &api_builder_query);
   functions_data.emplace("get_corpuses", &get_corpuses);
   functions_data.emplace("add_build_to_corpus", &add_build_to_corpus);
 }
@@ -115,25 +115,30 @@ pair<string, json> server_handler::storage_migration(ConnectionData &con,
   return make_pair("storage_migration", json::object());
 }
 
-pair<string, json> server_handler::download_query(ConnectionData &con,
-                                                  const json &j) {
+pair<string, json> server_handler::api_builder_query(ConnectionData &con,
+                                                     const json &j) {
   if (!j.contains("builder") || !j.at("builder").is_array())
     throw wss_invalid_request();
 
-  con._mr.api_builder_clear_all(true);
+  if (!j.contains("is_web") || !j.at("is_web").is_boolean())
+    throw wss_invalid_request();
+
+  bool is_web = j.at("is_web").get<bool>();
+
+  con._mr.api_builder_clear_all(is_web);
 
   for (const auto &request : j.at("builder")) {
     if (!request.contains("name") || !request.at("name").is_string())
       throw wss_invalid_request();
 
-    unsigned long idx =
-        con._mr.api_builder_add_request(true, request.at("name").get<string>());
+    unsigned long idx = con._mr.api_builder_add_request(
+        is_web, request.at("name").get<string>());
 
     if (!request.contains("values") || !request.at("values").is_object())
       throw wss_invalid_request();
 
     for (auto &[key, value] : request.at("values").items()) {
-      con._mr.api_builder_add_request_parameter(true, idx, key,
+      con._mr.api_builder_add_request_parameter(is_web, idx, key,
                                                 value.get<string>(), "=");
     }
   }
@@ -143,7 +148,7 @@ pair<string, json> server_handler::download_query(ConnectionData &con,
     nbr = j.at("number").get<unsigned int>();
   }
 
-  auto files = con._mr.api_builder_build(true, nbr);
+  auto files = con._mr.api_builder_build(is_web, nbr);
 
   json result = json::object();
   result["files"] = json::array();
@@ -152,7 +157,7 @@ pair<string, json> server_handler::download_query(ConnectionData &con,
     result.at("files").push_back(file->serialize());
   }
 
-  return make_pair("download_query", result);
+  return make_pair("api_builder_query", result);
 }
 
 pair<string, json> server_handler::get_corpuses(ConnectionData &con,

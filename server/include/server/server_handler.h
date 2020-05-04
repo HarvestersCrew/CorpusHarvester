@@ -98,12 +98,13 @@ pair<string, json> update_logger(ConnectionData &con, const json &j);
 pair<string, json> storage_migration(ConnectionData &con, const json &j);
 
 /**
- * Queries a download with the DL builder
+ * Queries a download or a search with an API builder
  * @param builder array of object requests following this pattern:
  * {name:"API_NAME", values:{PARAM1:"VAL1",PARAM2:"VAL2"...}}
+ * @param is_web boolean to decide if it is the web or DB builder to use
  * @param number optional, specifies the number of files wanted
  */
-pair<string, json> download_query(ConnectionData &con, const json &j);
+pair<string, json> api_builder_query(ConnectionData &con, const json &j);
 
 /**
  * Retrieve corpuses
