@@ -47,8 +47,9 @@ void test_indexation() {
   for (int i = 0; i < FILE_COUNT; i++) {
     std::string i_str = std::to_string(i);
     std::string i_plus_50_str = std::to_string(i + 50);
-    shared_ptr<File> up_file = std::make_shared<File>(File(
-        "/stockage/file" + i_str, "file" + i_str, i + 100, "Tweeter", ".txt"));
+    shared_ptr<File> up_file =
+        std::make_shared<File>(File("/stockage/file" + i_str, "file" + i_str,
+                                    i + 100, "Tweeter", ".txt", "text"));
     fill_file_randomly(up_file, i < TWEET_COUNT, i % 2 == 0);
     up_file->add_tag("retweet", i_plus_50_str);
     up_file->add_tag("_api_id", i_str);
@@ -73,7 +74,7 @@ void test_indexation() {
 
 void test_api_id_exists() {
   shared_ptr<File> file = std::make_shared<File>(
-      File("api_id_exists", "api_id_exists", 100, "Tweeter", ".txt"));
+      File("api_id_exists", "api_id_exists", 100, "Tweeter", ".png", "image"));
   file->add_tag("_api_id", "0");
   auto con = PoolDB::borrow_from_pool();
   bool inserted = Indexer().insert_file(file);
@@ -82,8 +83,8 @@ void test_api_id_exists() {
 }
 
 void test_same_api_id_different_source() {
-  shared_ptr<File> file =
-      std::make_shared<File>(File("path", "name", 150, "Tmdb", ".txt"));
+  shared_ptr<File> file = std::make_shared<File>(
+      File("path", "name", 150, "Tmdb", ".jpg", "image"));
   file->add_tag("_api_id", "0");
   auto con = PoolDB::borrow_from_pool();
   bool inserted = Indexer().insert_file(file);
@@ -381,6 +382,16 @@ void test_insert_existing_setting() {
                                existing_setting.get_value());
 }
 
+void test_get_statistics() {
+  db_statistics *stats;
+  Indexer().get_statistics(stats);
+  Assertion::assert_equals(__FUNCTION__, 51, stats->file_count);
+  Assertion::assert_equals(__FUNCTION__, 3, stats->corpus_count);
+  Assertion::assert_equals(__FUNCTION__, 50, stats->text_count);
+  Assertion::assert_equals(__FUNCTION__, 1, stats->image_count);
+  Assertion::assert_equals(__FUNCTION__, 6375, stats->total_size);
+}
+
 void indexation_test() {
   std::cout << std::endl << "Indexation tests : " << std::endl;
   Assertion::test(test_create_database, "test_create_database");
@@ -406,4 +417,5 @@ void indexation_test() {
   Assertion::test(test_update_setting, "test_update_setting");
   Assertion::test(test_insert_setting, "test_insert_setting");
   Assertion::test(test_insert_existing_setting, "test_insert_existing_setting");
+  Assertion::test(test_get_statistics, "test_get_statistics");
 }

@@ -1,7 +1,7 @@
 #include "test/storage_test.h"
 
-shared_ptr<File> file =
-    std::make_shared<File>(File("null", "storage", 100, "twitter", ".txt"));
+shared_ptr<File> file = std::make_shared<File>(
+    File("null", "storage", 100, "twitter", ".txt", "text"));
 
 void test_file_destination() {
 
@@ -80,8 +80,8 @@ void test_export_corpus_zip() {
 
   std::list<shared_ptr<File>> files;
   files.push_back(file);
-  shared_ptr<File> file2 =
-      std::make_shared<File>(File("null", "test2", 100, "twitter", ".txt"));
+  shared_ptr<File> file2 = std::make_shared<File>(
+      File("null", "test2", 100, "twitter", ".txt", "text"));
   storage.store_file(file2);
   files.push_back(file2);
   logger::set_level(logger::DEBUG);

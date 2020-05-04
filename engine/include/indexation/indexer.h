@@ -5,6 +5,7 @@
 #include "indexation/corpus.h"
 #include "indexation/file.h"
 #include "indexation/search_builder.h"
+#include "utils/exceptions.h"
 #include "utils/logger.h"
 #include <cppconn/driver.h>
 #include <cppconn/prepared_statement.h>
@@ -15,6 +16,14 @@
 
 using std::shared_ptr;
 
+typedef struct {
+  int file_count;
+  int corpus_count;
+  int text_count;
+  int image_count;
+  int total_size;
+} db_statistics;
+
 /**
  * Indexer class provides methods to manage the indexation of the files in the
  * database
@@ -22,6 +31,9 @@ using std::shared_ptr;
 class Indexer {
 
 public:
+  /** A list containing the available stat requests */
+  static list<string> _stats_requests;
+
   /**
    * Creates an Indexer object that uses the given database
    */
@@ -71,6 +83,14 @@ public:
    * @return a search builder
    */
   SearchBuilder get_search_builder();
+
+  void init_ith_member(int i, int32_t value, db_statistics *stats);
+
+  /**
+   * Computes every needed statistics from the database
+   * @param stats the struct to fill with statistics
+   */
+  void get_statistics(db_statistics *stats);
 };
 
 #endif

@@ -16,7 +16,7 @@
 #define FILE_CREATE_STATEMENT                                                  \
   "CREATE TABLE IF NOT EXISTS File(id INTEGER NOT NULL AUTO_INCREMENT,path "   \
   "TEXT NOT NULL,name TEXT NOT NULL,size INTEGER, source TEXT NOT NULL, "      \
-  "format TEXT NOT NULL, PRIMARY KEY (id));"
+  "format TEXT NOT NULL, type TEXT NOT NULL, PRIMARY KEY (id));"
 #define GET_FILES_FROM_TAG                                                     \
   "SELECT f.* FROM File f, Tag t WHERE f.id = t.file_id AND t.name "           \
   "= "                                                                         \
@@ -27,12 +27,14 @@
   "t.name = "                                                                  \
   "'_api_id'"
 #define INSERT_FILE_STATEMENT                                                  \
-  "INSERT INTO File (path, name, size, source, format) VALUES(?, ?, ?, ?, ?)"
+  "INSERT INTO File (path, name, size, source, format, type) VALUES(?, ?, ?, " \
+  "?, ?, ?)"
 #define DROP_FILE_STATEMENT "DROP TABLE IF EXISTS File;"
 #define GET_FILE_FROM_ID "SELECT * FROM File WHERE id = ?"
 
 using nlohmann::json;
 using std::shared_ptr;
+using std::string;
 using std::unique_ptr;
 
 /**
@@ -41,22 +43,25 @@ using std::unique_ptr;
 class File : public DatabaseItem {
 
   /** The path of the file */
-  std::string _path;
+  string _path;
 
   /** The name of the file */
-  std::string _name;
+  string _name;
 
   /** The size of the file */
   int _size;
 
   /** The source of the file */
-  std::string _source;
+  string _source;
 
   /** The format of the file */
-  std::string _format;
+  string _format;
 
   /** The content of the file (not a database attribute) */
-  std::string _content;
+  string _content;
+
+  /** The type of the file */
+  string _type;
 
   /** Binary content of file */
   std::vector<char> _bin_content;
@@ -80,12 +85,13 @@ public:
    * @param size the size of the file
    * @param source the source of the file
    * @param format the format of the file
+   * @param type the type of the file
    * @param id the id of the file in the database
    */
-  File(std::string path, std::string name, int size, std::string source,
-       std::string format, int id = -1);
+  File(string path, string name, int size, string source, string format,
+       string type, int id = -1);
 
-  std::string to_string() const;
+  string to_string() const;
 
   /**
    * Checks if the api Id of this file exists
@@ -106,37 +112,37 @@ public:
    * Gets the metadata with the corresponding format for extraction
    * return the formated metadata
    */
-  std::string get_extraction_metadata();
+  string get_extraction_metadata();
 
   /**
    * Adds a tag in the list of tags
    * @param name the name of the tag
    * @param value the value of the tag
    */
-  void add_tag(std::string name, std::string value);
+  void add_tag(string name, string value);
 
-  std::string get_tag_value(std::string name);
+  string get_tag_value(string name);
 
-  std::string get_full_path() const { return _path + "/" + _name + _format; }
-  std::string get_path() const { return _path; }
-  std::string get_name() const { return _name; }
-  std::string get_source() const { return _source; }
-  std::string get_format() const { return _format; }
+  string get_full_path() const { return _path + "/" + _name + _format; }
+  string get_path() const { return _path; }
+  string get_name() const { return _name; }
+  string get_source() const { return _source; }
+  string get_format() const { return _format; }
   bool get_binary() const { return _binary; }
   std::vector<char> get_content_bin() const { return _bin_content; }
-  std::string get_content_str() const { return _content; }
+  string get_content_str() const { return _content; }
   int get_size() const { return _size; }
 
-  void set_format(std::string format) { _format = format; }
-  void set_path(std::string path) { _path = path; }
-  void set_name(std::string name) { _name = name; }
-  void set_source(std::string source) { _source = source; }
+  void set_format(string format) { _format = format; }
+  void set_path(string path) { _path = path; }
+  void set_name(string name) { _name = name; }
+  void set_source(string source) { _source = source; }
   void set_binary(bool bin) { _binary = bin; }
-  void set_content(std::string content);
+  void set_content(string content);
   void set_bin_content(std::vector<char> content);
   void set_size(int size) { _size = size; }
 
-  void store(const std::string &path) const;
+  void store(const string &path) const;
 
   /**
    * Get a file based on his id

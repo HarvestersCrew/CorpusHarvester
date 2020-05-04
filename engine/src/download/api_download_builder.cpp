@@ -38,6 +38,11 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
     }
   }
 
+<<<<<<< HEAD
+=======
+  int inserted_count;
+  list<shared_ptr<File>> partial_res;
+>>>>>>> Add database statistics getter
   do {
     // For each specified request
     for (auto it = requests.begin(); it != requests.end();) {
@@ -93,9 +98,20 @@ list<shared_ptr<File>> &ApiDownloadBuilder::build(unsigned int number) {
 
   } while (number > 0 && res.size() < number && requests.size() > 0);
 
+<<<<<<< HEAD
   logger::info("Downloaded " + std::to_string(all_dl_size) +
                " from the web and inserted " + std::to_string(res.size()) +
                " new files in local database with user request");
+=======
+  logger::info(std::to_string(partial_res.size()) + " file" +
+               was_or_were(partial_res.size()) + " stored in the file system");
+
+  logger::info(inserted_count + " file" + was_or_were(inserted_count) +
+               " inserted in the database");
+
+  logger::info(std::to_string(all_dl_size) + " file" +
+               was_or_were(all_dl_size) + " downloaded");
+>>>>>>> Add database statistics getter
 
   return res;
 }

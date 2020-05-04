@@ -2,18 +2,18 @@
 // Put here to avoid circuling inclusion, do not put in header
 #include "database/pool_db.h"
 
-File::File(std::string path, std::string name, int size, std::string source,
-           std::string format, int id)
+File::File(string path, string name, int size, string source, string format,
+           string type, int id)
     : DatabaseItem(id), _path(path), _name(name), _size(size), _source(source),
-      _format(format) {}
+      _format(format), _type(type) {}
 
 File::File() : DatabaseItem(-1) {}
 
-std::string File::to_string() const {
+string File::to_string() const {
   std::ostringstream out;
   out << "File{_id=" << _id << ", _path=" << _path << ", _name=" << _name
       << ", _size=" << _size << ", _source=" << _source
-      << ", _format=" << _format << ", _tags=[\n\t";
+      << ", _format=" << _format << ", _type=" << _type << ", _tags=[\n\t";
   for (const auto &tag : _tags) {
     out << tag->to_string() << "\n\t";
   }
@@ -24,7 +24,7 @@ std::string File::to_string() const {
 bool File::api_id_exists() {
   sql::Statement *stmt;
   sql::ResultSet *res;
-  std::string api_id = get_tag_value("_api_id");
+  string api_id = get_tag_value("_api_id");
   bool api_id_exists = false;
   if (api_id == "") {
     return api_id_exists;
@@ -35,8 +35,8 @@ bool File::api_id_exists() {
   res = stmt->executeQuery(GET_FILE_API_ID);
   PoolDB::unborrow_from_pool(con);
 
-  std::string curr_api_id = "";
-  std::string curr_source = "";
+  string curr_api_id = "";
+  string curr_source = "";
   while (res->next()) {
     curr_source = res->getString("source");
     curr_api_id = res->getString("value");
@@ -61,6 +61,7 @@ bool File::insert() {
     prep_stmt->setInt(3, _size);
     prep_stmt->setString(4, _source);
     prep_stmt->setString(5, _format);
+    prep_stmt->setString(6, _type);
     prep_stmt->execute();
     delete prep_stmt;
 
@@ -100,19 +101,20 @@ void File::fill_from_statement(sql::ResultSet *res) {
   this->_size = res->getInt("size");
   this->_source = res->getString("source");
   this->_format = res->getString("format");
+  this->_type = res->getString("type");
   fetch_tags();
 }
 
-std::string File::get_extraction_metadata() {
+string File::get_extraction_metadata() {
   // TEMPORARY
   return _name;
 }
 
-void File::add_tag(std::string name, std::string value) {
+void File::add_tag(string name, string value) {
   _tags.push_back(std::make_unique<Tag>(Tag(name, value)));
 }
 
-void File::set_content(std::string content) {
+void File::set_content(string content) {
   _content = content;
   this->set_size(content.size() + 1);
 }
@@ -122,7 +124,7 @@ void File::set_bin_content(std::vector<char> content) {
   this->set_size(content.size());
 }
 
-void File::store(const std::string &path) const {
+void File::store(const string &path) const {
   if (!this->get_binary()) {
 
     std::ofstream outfile(path);
@@ -142,8 +144,8 @@ void File::store(const std::string &path) const {
   }
 }
 
-std::string File::get_tag_value(std::string name) {
-  std::string value = "";
+string File::get_tag_value(string name) {
+  string value = "";
   for (auto &tag : _tags) {
     if (tag->get_name() == name) {
       value = tag->get_value();
@@ -187,6 +189,7 @@ json File::serialize() const {
   j["size"] = this->_size;
   j["source"] = this->_source;
   j["format"] = this->_format;
+  j["type"] = this->_type;
   j["tags"] = json::object();
   for (const auto &tag : _tags) {
     j.at("tags")[tag->get_name()] = tag->get_value();
