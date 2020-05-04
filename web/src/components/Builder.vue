@@ -27,7 +27,7 @@
           dark
           hide-details
           dense
-          label="Approximate number to retrieve"
+          :label="number_input_placeholder"
           :disabled="global_disable"
           type="number"
           prepend-icon="mdi-numeric"
@@ -41,6 +41,7 @@
         @remove_request="remove_request"
         :requests="requests"
         :disabled="global_disable"
+        :builder_type="builder_type"
       ></BuilderRequests>
     </v-form>
 
@@ -216,6 +217,11 @@ export default {
       return this.builder_type === "web"
         ? "An error occurred during the download, check the logs for further informations"
         : "An error occurred during the fetching, check the logs for further informations";
+    },
+    number_input_placeholder() {
+      return this.builder_type === "web"
+        ? "Approximate number to retrieve"
+        : "Number to retrieve";
     },
     server_query() {
       let query = [];

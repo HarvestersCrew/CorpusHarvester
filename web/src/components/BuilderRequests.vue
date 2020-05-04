@@ -9,6 +9,7 @@
               <ApiParamInput
                 :param="param"
                 :disabled="disabled"
+                :builder_type="builder_type"
                 v-model="request.values[name]"
               ></ApiParamInput>
             </v-col>
@@ -42,7 +43,8 @@ export default {
     disabled: {
       type: Boolean,
       required: true
-    }
+    },
+    builder_type: { required: true, type: String }
   }
 };
 </script>

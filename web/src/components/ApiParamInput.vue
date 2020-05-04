@@ -1,35 +1,48 @@
 <template>
-  <div>
-    <v-text-field
-      :label="label"
-      outlined
-      dense
-      clearable
-      v-if="param.values === undefined || param.values.length === 0"
-      :placeholder="param.default_value"
-      :hint="hint_text"
-      persistent-hint
-      :value="value"
-      @input="$emit('input', $event)"
-      :rules="[validation]"
-      :disabled="disabled"
-    ></v-text-field>
+  <v-row dense>
+    <v-col v-if="builder_type !== 'web'" cols="auto">
+      <v-speed-dial direction="bottom">
+        <template v-slot:activator>
+          <v-btn fab small>=</v-btn>
+        </template>
+        <v-btn small rounded v-for="val in logical_symbols" :key="val">{{
+          val
+        }}</v-btn>
+      </v-speed-dial>
+    </v-col>
 
-    <v-select
-      :label="label"
-      outlined
-      dense
-      clearable
-      v-else
-      :placeholder="param.default_value"
-      :hint="hint_text"
-      persistent-hint
-      :items="param.values"
-      :value="value"
-      @input="$emit('input', $event)"
-      :disabled="disabled"
-    ></v-select>
-  </div>
+    <v-col>
+      <v-text-field
+        :label="label"
+        outlined
+        dense
+        clearable
+        v-if="param.values === undefined || param.values.length === 0"
+        :placeholder="param.default_value"
+        :hint="hint_text"
+        persistent-hint
+        :value="value"
+        @input="$emit('input', $event)"
+        :rules="[validation]"
+        :disabled="disabled"
+      ></v-text-field>
+
+      <v-select
+        :label="label"
+        outlined
+        dense
+        clearable
+        v-else
+        :placeholder="param.default_value"
+        :hint="hint_text"
+        persistent-hint
+        :items="param.values"
+        :value="value"
+        @input="$emit('input', $event)"
+        :disabled="disabled"
+      ></v-select>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -37,7 +50,8 @@ export default {
   props: {
     param: { type: Object, required: true },
     value: [String, Number],
-    disabled: { type: Boolean, required: true }
+    disabled: { type: Boolean, required: true },
+    builder_type: { required: true, type: String }
   },
   name: "ApiParamInput",
   computed: {
@@ -51,6 +65,13 @@ export default {
     },
     label() {
       return this.param.required ? this.param.name + "*" : this.param.name;
+    },
+    logical_symbols() {
+      let arr = ["=", "!="];
+      if (this.type === "number") {
+        arr.push("<", ">", "<=", ">=");
+      }
+      return arr;
     }
   },
   methods: {
