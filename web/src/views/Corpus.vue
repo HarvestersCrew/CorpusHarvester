@@ -2,7 +2,7 @@
   <Bar>
     <div>
       <SelectCard>
-        <v-col cols="auto">
+        <v-col cols="5" lg="auto">
           <v-form @submit.prevent="search">
             <v-text-field
               dark
@@ -18,7 +18,7 @@
           </v-form>
         </v-col>
         <v-divider vertical dark></v-divider>
-        <v-col cols="auto">
+        <v-col cols="5" lg="auto">
           <v-select
             dark
             outlined
@@ -36,7 +36,9 @@
       <v-container v-if="$store.state.corpuses.results.length > 0">
         <v-row>
           <v-col
-            cols="3"
+            cols="6"
+            md="4"
+            lg="3"
             v-for="(corpus, idx) in $store.state.corpuses.results"
             :key="idx"
           >
