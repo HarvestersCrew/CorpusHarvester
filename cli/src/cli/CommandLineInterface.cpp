@@ -412,13 +412,13 @@ void CommandLineInterface::corpus_create() {
   if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
     string type = itSubCommand->second;
 
-    if (type == "image" || type == "video" || type == "text") {
+    if (type == "image" || type == "text") {
       params.insert({"type", type});
     } else {
       logger::error("The value " + type +
                     " for the type attribute is not valid. Please check "
                     "with the different values present : \n" +
-                    "- image \n" + +"- text \n" + +"- video \n");
+                    "- image \n" + +"- text \n");
       exit(-1);
     }
   }

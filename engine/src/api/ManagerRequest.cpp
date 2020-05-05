@@ -130,6 +130,18 @@ int ManagerRequest::create_corpus(
     }
   }
 
+  // Set the type
+  if (params.find("type") != params.end()) {
+    string type = params.find("type")->second;
+    if (type == "image") {
+      builder.add_type(api_loader::api_type::IMAGE);
+      logger::debug("Set image type.");
+    } else if (type == "text") {
+      builder.add_type(api_loader::api_type::TEXT);
+      logger::debug("Set text type.");
+    }
+  }
+
   // Set the order
   if (params.find("order") != params.end()) {
     string order = params.find("order")->second;
