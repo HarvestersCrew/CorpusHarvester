@@ -43,46 +43,64 @@
             :key="idx"
           >
             <v-card>
-              <v-card-title>
-                <template v-if="editing_corpus_name != corpus.id">
-                  {{ corpus.title }}
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    :disabled="editing_corpus_name_loading"
-                    icon
-                    @click="open_editing_corpus_name(corpus.id)"
-                  >
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                </template>
-
-                <template v-else>
-                  <v-text-field
+              <v-card-title class="mb-2">
+                <v-slide-x-transition hide-on-leave>
+                  <v-row
                     dense
-                    :placeholder="corpus.title"
-                    outlined
-                    hide-details
-                    v-model="editing_corpus_name_val"
-                    :loading="editing_corpus_name_loading"
-                    :disabled="editing_corpus_name_loading"
-                  ></v-text-field>
-                  <v-row justify="end">
-                    <v-btn
-                      icon
-                      @click="close_editing_corpus_name"
-                      :disabled="editing_corpus_name_loading"
-                    >
-                      <v-icon color="red">mdi-close</v-icon>
-                    </v-btn>
-                    <v-btn
-                      icon
-                      @click="send_editing_corpus_name(corpus.id)"
-                      :disabled="editing_corpus_name_loading"
-                    >
-                      <v-icon color="green">mdi-check</v-icon>
-                    </v-btn>
+                    no-gutters
+                    v-show="editing_corpus_name !== corpus.id"
+                    class="ml-0"
+                  >
+                    <v-col>
+                      {{ corpus.title }}
+                    </v-col>
+                    <v-col cols="auto">
+                      <v-btn
+                        :disabled="editing_corpus_name_loading"
+                        icon
+                        @click="open_editing_corpus_name(corpus.id)"
+                      >
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn>
+                    </v-col>
                   </v-row>
-                </template>
+                </v-slide-x-transition>
+
+                <v-slide-x-transition hide-on-leave>
+                  <v-row
+                    dense
+                    no-gutters
+                    v-show="editing_corpus_name === corpus.id"
+                  >
+                    <v-col>
+                      <v-text-field
+                        dense
+                        :placeholder="corpus.title"
+                        outlined
+                        hide-details
+                        v-model="editing_corpus_name_val"
+                        :loading="editing_corpus_name_loading"
+                        :disabled="editing_corpus_name_loading"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="auto" class="ml-2">
+                      <v-btn
+                        icon
+                        @click="close_editing_corpus_name"
+                        :disabled="editing_corpus_name_loading"
+                      >
+                        <v-icon color="red">mdi-close</v-icon>
+                      </v-btn>
+                      <v-btn
+                        icon
+                        @click="send_editing_corpus_name(corpus.id)"
+                        :disabled="editing_corpus_name_loading"
+                      >
+                        <v-icon color="green">mdi-check</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-slide-x-transition>
               </v-card-title>
 
               <v-card-subtitle class="pb-0">
