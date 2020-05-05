@@ -237,7 +237,14 @@ pair<string, json> server_handler::set_corpus_title(ConnectionData &con,
   if (!j.contains("title") || !j.at("title").is_string())
     throw wss_invalid_request();
 
-  con._mr.set_corpus_title(j.at("id").get<int>(), j.at("title").get<string>());
+  int id = j.at("id").get<int>();
+  string name = j.at("title").get<string>();
 
-  return make_pair("set_corpus_title", json::object());
+  con._mr.set_corpus_title(id, name);
+
+  json res = json::object();
+  res["id"] = id;
+  res["title"] = name;
+
+  return make_pair("set_corpus_title", res);
 }

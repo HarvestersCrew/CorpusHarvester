@@ -135,6 +135,8 @@ pair<string, json> add_build_to_corpus(ConnectionData &con, const json &j);
  * @param id ID of the corpus
  * @param title new title to set
  * @throw db_id_not_found if corpus wasn't found
+ * @return id ID of the corpus the modification was applied to
+ * @return title Title applied
  */
 pair<string, json> set_corpus_title(ConnectionData &con, const json &j);
 

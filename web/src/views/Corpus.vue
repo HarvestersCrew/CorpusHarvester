@@ -64,6 +64,7 @@
                     hide-details
                     v-model="editing_corpus_name_val"
                     :loading="editing_corpus_name_loading"
+                    :disabled="editing_corpus_name_loading"
                   ></v-text-field>
                   <v-row justify="end">
                     <v-btn

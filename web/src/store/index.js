@@ -137,6 +137,14 @@ export default new Vuex.Store({
             state.corpuses.results = obj.data.corpuses;
             break;
 
+          case "set_corpus_title":
+            if (obj.type !== undefined && obj.type !== "error") {
+              state.corpuses.results.forEach(corp => {
+                if (corp.id === obj.data.id) corp.title = obj.data.title;
+              });
+            }
+            break;
+
           default:
             break;
         }
