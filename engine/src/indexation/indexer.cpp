@@ -5,7 +5,9 @@ list<string> Indexer::_stats_requests = {
     "SELECT COUNT(*) as stat FROM Corpus;",
     "SELECT COUNT(*) as stat FROM File WHERE type=\"text\";",
     "SELECT COUNT(*) as stat FROM File WHERE type=\"image\";",
-    "SELECT SUM(size) as stat FROM File;"};
+    "SELECT SUM(size) as stat FROM File;",
+    "SELECT AVG(size) as stat FROM File WHERE type = \"text\";",
+    "SELECT AVG(size) as stat FROM File WHERE type = \"image\";"};
 
 Indexer::Indexer() {}
 
@@ -54,6 +56,10 @@ void Indexer::init_ith_member(int i, int value, db_statistics &stats) {
     stats.image_count = value;
   } else if (i == 4) {
     stats.total_size = value;
+  } else if (i == 5) {
+    stats.average_text_size = value;
+  } else if (i == 6) {
+    stats.average_image_size = value;
   }
 }
 

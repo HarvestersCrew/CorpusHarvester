@@ -42,9 +42,16 @@ public:
   std::string get_folder_path(std::string file_name) const;
 
   /**
+   * Deletes a file given its path
+   * @param file_path the path of the file
+   * @return true if the file was deleted, false otherwise
+   */
+  bool delete_file_in_root(std::string file_path) const;
+
+  /**
    * Creates the missing folder in the given path from the root folder
    * @param folder_path the path to create from the root folder
-   * @return 0 if something went wrong, 1 otherwise
+   * @return true if the folders were deleted, false otherwise
    */
   bool create_folders_in_root(std::string folder_path) const;
 
@@ -89,6 +96,13 @@ public:
    * @throw StorageMigrationException if new path can't be used
    */
   void migrate(std::string new_path);
+
+  /**
+   * Deletes the archive corresponding to the given corpus in the storage
+   * @param extraction_path the extraction_path of the corpus to delete
+   * @throw StorageFileDeletionException if something went wrong during deletion
+   */
+  void delete_corpus(string extraction_path);
 
   std::string get_corpus_path() const {
     return _root_folder_name.get_value() + CORPUS_FOLDER;

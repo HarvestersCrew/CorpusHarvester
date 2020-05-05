@@ -1,7 +1,7 @@
 <template>
   <div>
     <SelectCard>
-      <v-col cols="auto">
+      <v-col cols="5" lg="auto">
         <v-autocomplete
           :items="$store.state.apis"
           v-model="api_list_selection"
@@ -20,7 +20,7 @@
         </v-autocomplete>
       </v-col>
       <v-divider vertical dark></v-divider>
-      <v-col cols="auto">
+      <v-col cols="5" lg="auto">
         <v-text-field
           v-model="specified_number"
           outlined

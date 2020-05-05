@@ -22,6 +22,8 @@ typedef struct {
   int text_count;
   int image_count;
   int total_size;
+  int average_text_size;
+  int average_image_size;
 } db_statistics;
 
 /**

@@ -59,6 +59,13 @@ public:
       : ExceptionWrapper(error_message, "CommandException") {}
 };
 
+class StorageFileDeletionException : public ExceptionWrapper {
+
+public:
+  StorageFileDeletionException(const std::string &error_message)
+      : ExceptionWrapper(error_message, "StorageFileDeletionException") {}
+};
+
 class StorageMigrationException : public ExceptionWrapper {
 
 public:
@@ -71,6 +78,14 @@ class ClosedDatabaseException : public ExceptionWrapper {
 public:
   ClosedDatabaseException()
       : ExceptionWrapper("Database is closed", "ClosedDatabaseException") {}
+};
+
+class ExtractionPathMissingException : public ExceptionWrapper {
+
+public:
+  ExtractionPathMissingException()
+      : ExceptionWrapper("The extraction path of the corpus is missing",
+                         "ExtractionPathMissingException") {}
 };
 
 class api_no_setting_exception : public ExceptionWrapper {
