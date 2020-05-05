@@ -47,6 +47,7 @@
 #define CORPUS_ORDER_BY_TITLE_DESC " ORDER BY title DESC"
 #define CORPUS_ORDER_BY_DATE_ASC " ORDER BY creation_date ASC"
 #define CORPUS_ORDER_BY_DATE_DESC " ORDER BY creation_date DESC"
+#define DELETE_CORPUS_BY_ID "DELETE FROM Corpus WHERE id = ?;"
 
 using nlohmann::json;
 using std::list;
@@ -128,6 +129,8 @@ public:
    */
   std::string header_string() const;
 
+  bool delete_();
+
   bool insert();
 
   void fill_from_statement(sql::ResultSet *res);
@@ -144,14 +147,14 @@ public:
   virtual int get_id() const { return this->_id; };
 
   /**
-   * Get a list of all the corpus.
+   * Gets a list of all the corpus.
    *
    * @return List of Corpus.
    */
   static std::list<shared_ptr<Corpus>> get_all_corpuses(ordering_method order);
 
   /**
-   * Get a corpus based on his ID.
+   * Gets a corpus based on his ID.
    *
    * @param id ID of the corpus
    *
@@ -161,7 +164,13 @@ public:
   static shared_ptr<Corpus> get_corpus_from_id(const int id);
 
   /**
-   * Search corpuses based on a string.
+   * Deletes a corpus based on his ID
+   * @param id the ID of the corpus
+   */
+  static void delete_from_id(const int id);
+
+  /**
+   * Searches corpuses based on a string.
    *
    * @param str string to search
    *

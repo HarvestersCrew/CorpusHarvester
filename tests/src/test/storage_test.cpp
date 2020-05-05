@@ -63,14 +63,19 @@ void test_store_one_file() {
 void test_export_methods() {
   std::list<shared_ptr<File>> files;
   files.push_back(file);
+  string corpus_path = Storage().get_corpus_path();
   string path = ExportMethod::compressed_export(files, "test_indirect",
                                                 ExportMethod::methods::ZIP);
-  Assertion::assert_true(__FUNCTION__, std::filesystem::exists(path));
+  Assertion::assert_true(__FUNCTION__,
+                         std::filesystem::exists(corpus_path + path));
 
   shared_ptr<ZipExport> z = std::make_shared<ZipExport>();
   path = z->compressed_export(files, "test_direct");
-  Assertion::assert_true(__FUNCTION__, std::filesystem::exists(path));
+  Assertion::assert_true(__FUNCTION__,
+                         std::filesystem::exists(corpus_path + path));
 }
+
+Corpus corpus;
 
 void test_export_corpus_zip() {
 
@@ -89,16 +94,16 @@ void test_export_corpus_zip() {
   for (auto &file : files) {
     file->insert();
   }
-  Corpus corpus = Corpus("corpus_test", files, "something");
+  corpus = Corpus("corpus_test", files, "something");
   corpus.insert();
   corpus.export_(ExportMethod::methods::ZIP);
-  std::string new_extraction_path =
-      storage.get_corpus_path() + std::to_string(corpus.get_id()) + ".zip";
+  std::string new_extraction_path = std::to_string(corpus.get_id()) + ".zip";
   Assertion::assert_equals(__FUNCTION__, new_extraction_path,
                            corpus.get_extraction_path().value_or(""));
   Assertion::assert_true(
       __FUNCTION__,
-      std::filesystem::exists(corpus.get_extraction_path().value_or("")));
+      std::filesystem::exists(storage.get_corpus_path() +
+                              corpus.get_extraction_path().value_or("")));
 
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
@@ -109,6 +114,32 @@ void test_export_corpus_zip() {
   Assertion::assert_equals(__FUNCTION__, new_extraction_path,
                            res->getString("extraction_path"));
   PoolDB::unborrow_from_pool(con);
+}
+
+void test_delete_corpus() {
+  Storage storage;
+  storage.delete_corpus(corpus.get_extraction_path().value_or(""));
+  Assertion::assert_false(
+      __FUNCTION__,
+      std::filesystem::exists(corpus.get_extraction_path().value_or("")));
+}
+
+void test_delete_corpus_error() {
+  Storage storage;
+  Corpus c = Corpus();
+  try {
+    storage.delete_corpus(c.get_extraction_path().value_or(""));
+    Assertion::assert_throw(__FUNCTION__, "ExtractionPathMissingException");
+  } catch (ExtractionPathMissingException &e) {
+  }
+
+  c.set_extraction_path("error");
+  try {
+    storage.delete_corpus(c.get_extraction_path().value_or(""));
+    Assertion::assert_throw(__FUNCTION__, "StorageFileDeletionException");
+  } catch (StorageFileDeletionException &e) {
+    return;
+  }
 }
 
 void test_migration_not_exists() {
@@ -159,6 +190,8 @@ void storage_test() {
   Assertion::test(test_store_one_file, "test_store_one_file");
   Assertion::test(test_export_methods, "test_export_methods");
   Assertion::test(test_export_corpus_zip, "test_export_corpus_zip");
+  Assertion::test(test_delete_corpus, "test_delete_corpus");
+  Assertion::test(test_delete_corpus_error, "test_delete_corpus_error");
   Assertion::test(test_migration_not_exists, "test_migration_not_exists");
   Assertion::test(test_migration_already_exists,
                   "test_migration_already_exists");

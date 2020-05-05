@@ -1,4 +1,5 @@
 #include "indexation/corpus.h"
+#include "storage/storage.h"
 
 unordered_map<Corpus::ordering_method, string> Corpus::_ordering_queries = {
     {Corpus::ordering_method::DATE_ASC, CORPUS_ORDER_BY_DATE_ASC},
@@ -181,6 +182,29 @@ shared_ptr<Corpus> Corpus::get_corpus_from_id(const int id) {
 
   // Based on the result, we return an optional
   return corpus;
+}
+
+bool Corpus::delete_() {
+  sql::PreparedStatement *prep_stmt;
+  auto con = PoolDB::borrow_from_pool();
+
+  prep_stmt = con->prepareStatement(DELETE_CORPUS_BY_ID);
+  prep_stmt->setInt(1, _id);
+  prep_stmt->execute();
+  delete prep_stmt;
+  PoolDB::unborrow_from_pool(con);
+  return true;
+}
+
+void delete_from_id(const int id) {
+  shared_ptr<Corpus> corpus = Corpus::get_corpus_from_id(id);
+  corpus->delete_();
+  Storage storage = Storage();
+  std::optional<string> extraction_path = corpus->get_extraction_path();
+  if (!extraction_path.has_value()) {
+    throw ExtractionPathMissingException();
+  }
+  storage.delete_corpus(extraction_path.value());
 }
 
 std::list<shared_ptr<Corpus>>

@@ -324,6 +324,18 @@ void test_fetch_corpuses() {
                            corpuses_vec.at(2)->get_title());
 }
 
+void test_delete_corpuss() {
+  Corpus c = Corpus("Imacorpus");
+  c.insert();
+  c.delete_();
+  try {
+    Corpus::get_corpus_from_id(c.get_id());
+    Assertion::assert_throw(__FUNCTION__, "db_id_not_found");
+  } catch (db_id_not_found &e) {
+    return;
+  }
+}
+
 void test_wrong_search() {
   try {
     auto con = PoolDB::borrow_from_pool();
@@ -411,6 +423,7 @@ void indexation_test() {
   Assertion::test(test_fetch_specific_files3, "test_fetch_specific_files3");
   Assertion::test(test_create_corpus, "test_create_corpus");
   Assertion::test(test_fetch_corpuses, "test_fetch_corpuses");
+  Assertion::test(test_delete_corpuss, "test_delete_corpuss");
   Assertion::test(test_wrong_search, "test_wrong_search");
   Assertion::test(test_wrong_search2, "test_wrong_search2");
   Assertion::test(test_update_setting, "test_update_setting");

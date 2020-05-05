@@ -9,6 +9,11 @@ void Storage::init_root() {
   }
 }
 
+bool Storage::delete_file_in_root(std::string file_path) const {
+  std::string dest_file_name = _root_folder_name.get_value() + file_path;
+  return std::filesystem::remove(dest_file_name);
+}
+
 bool Storage::create_folders_in_root(std::string folder_path) const {
   std::string dest_folder_name = _root_folder_name.get_value() + folder_path;
   return std::filesystem::create_directories(dest_folder_name);
@@ -79,4 +84,14 @@ void Storage::migrate(std::string new_path) {
   _root_folder_name.set_value(new_storage_path);
   _root_folder_name.update();
   logger::info("Storage root migrated to " + new_storage_path);
+}
+
+void Storage::delete_corpus(string extraction_path) {
+  if (extraction_path == "") {
+    throw ExtractionPathMissingException();
+  }
+  if (!delete_file_in_root(CORPUS_FOLDER + extraction_path)) {
+    throw StorageFileDeletionException("Corpus deletion failed with path : " +
+                                       get_corpus_path() + extraction_path);
+  }
 }
