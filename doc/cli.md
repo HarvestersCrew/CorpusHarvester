@@ -76,6 +76,12 @@ files: Files function.
 ## Build commands example:
 The options specified by the builders must be written in the same order as described by the doc.
 
+## Corpuses 
+Creation of a corpus based on two different apis with specific params related to the api
+- `harvester corpus create --name "DataScience" --source Twitter --retweet 50 --op ">" --text "data science" --source Flickr --title "data science"`
+- `harvester corpus create --name "DataScience" --number 20 --page 1 --type "image" --source Twitter --retweet 50 --op ">" --text "data science" --source Flickr --title "data science"`
+
+
 ### DB
 These commands work with both the `files list` and `corpus create`.
 

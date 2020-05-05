@@ -62,7 +62,8 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
   }
 
   sourceHelp += res.str() + ").";
-  createCorpus.add_option("source", sourceHelp, false);
+  // TODO :: Remove the source option
+  //  createCorpus.add_option("source", sourceHelp, false);
 
   // List of corpus
   cli_command &listCorpus = corpusCommand.add_command(
@@ -422,30 +423,23 @@ void CommandLineInterface::corpus_create() {
     }
   }
 
-  // Check if we have a value for the source
-  itSubCommand = this->string_inputs.find("source");
-  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
-    // Get the source
-    string source = itSubCommand->second;
-
-    // Check the source
-    vector<string> apiNames = ApiFactory::get_api_names();
-    if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
-      logger::error("Le nom de la source n'est pas valide ! ");
-      exit(-1);
-    } else {
-      params.insert({"source", source});
+  // Get the source available
+  vector<string> apiNames = ApiFactory::get_api_names();
+  // Check the source
+  for (const pair<string, string> &param : this->unspecified_inputs) {
+    if (param.first == "source") {
+      if (find(apiNames.begin(), apiNames.end(), param.second) ==
+          apiNames.end()) {
+        logger::error(
+            "Le nom de la source n'est pas valide !\n Source invalide : " +
+            param.second);
+        exit(-1);
+      }
     }
   }
 
-  // TODO :: Manage param name parameter
-
-  // TODO :: Op parameter
-
-  // TODO :: Manage multiple type and souce parameter
-
   // Create the corpus and show it
-  int corpusID = mr.create_corpus(corpusName, params);
+  int corpusID = mr.create_corpus(corpusName, params, this->unspecified_inputs);
   logger::info(to_string(corpusID));
 }
 

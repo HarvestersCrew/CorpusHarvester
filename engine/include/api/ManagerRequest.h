@@ -110,7 +110,8 @@ public:
    * @param params Parameters for the selection of files.
    * @return ID in the DB of the corpus.
    */
-  int create_corpus(const string &name, const map<string, string> params);
+  int create_corpus(const string &name, const map<string, string> params,
+                    vector<pair<string, string>> unspecified_inputs);
 
   /**
    * Appends a list of files to a corpus

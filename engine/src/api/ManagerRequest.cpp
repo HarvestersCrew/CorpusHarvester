@@ -88,8 +88,9 @@ int ManagerRequest::create_corpus(const string &name,
   return corpus.get_id();
 }
 
-int ManagerRequest::create_corpus(const string &name,
-                                  const map<string, string> params) {
+int ManagerRequest::create_corpus(
+    const string &name, const map<string, string> params,
+    vector<pair<string, string>> unspecified_inputs) {
   list<shared_ptr<File>> files;
   ApiDatabaseBuilder builder;
 
@@ -97,20 +98,41 @@ int ManagerRequest::create_corpus(const string &name,
   ApiDatabaseBuilder::ordering_method method =
       ApiDatabaseBuilder::ordering_method::NONE;
 
-  // Get the source
-  if (params.find("source") != params.end()) {
-    // Found
-    builder.add_request(params.find("source")->second);
+  // Define if a source is describe in order to had new parameter
+  int current_source = -1;
 
-    // TODO :: For a given source, what are the step to do ?
+  // We add to our builder all the parameter not taken into account
+  for (vector<pair<string, string>>::iterator it_param =
+           unspecified_inputs.begin();
+       it_param != unspecified_inputs.end(); it_param++) {
 
-  } else {
-    // TODO :: Iterate on all apis ???
+    // We have a source
+    if (it_param->first == "source") {
+      current_source = builder.add_request(it_param->second);
+    }
+    // We have define a source and we have a parameter
+    else if (current_source != -1 && it_param->first != "op") {
+
+      // We get the next parameter and check if it's an "op"
+      auto it_next_param = std::next(it_param, 1);
+      if (it_next_param != unspecified_inputs.end() &&
+          it_next_param->first == "op") {
+
+        logger::debug("We have an op parameter.");
+        builder.add_request_parameter(current_source, it_param->first,
+                                      it_param->second, it_next_param->second);
+
+      } else {
+        logger::debug("We have not an op parameter.");
+        builder.add_request_parameter(current_source, it_param->first,
+                                      it_param->second, "=");
+      }
+    }
   }
 
   // Set the order
-  if (params.find("source") != params.end()) {
-    string order = params.find("source")->second;
+  if (params.find("order") != params.end()) {
+    string order = params.find("order")->second;
     if (order == "none") {
       method = ApiDatabaseBuilder::ordering_method::NONE;
     } else if (order == "api_asc") {
