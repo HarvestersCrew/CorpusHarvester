@@ -184,6 +184,11 @@ string ManagerRequest::export_corpus(const int id, const string &method) const {
   return this->export_corpus(id, method_parsed);
 }
 
+void ManagerRequest::set_corpus_title(const int id, const string &name) {
+  auto corpus = this->get_corpus_from_id(id);
+  corpus->set_title(name);
+}
+
 /*
  * ------------------------------------------
  * METHODS RELATING TO FILES MANAGEMENT
