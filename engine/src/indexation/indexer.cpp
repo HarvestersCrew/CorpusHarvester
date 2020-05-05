@@ -43,23 +43,24 @@ SearchBuilder Indexer::get_search_builder() {
   return sb;
 }
 
-void Indexer::init_ith_member(int i, int value, db_statistics *stats) {
+void Indexer::init_ith_member(int i, int value, db_statistics &stats) {
   if (i == 0) {
-    stats->file_count = value;
+    stats.file_count = value;
   } else if (i == 1) {
-    stats->corpus_count = value;
+    stats.corpus_count = value;
   } else if (i == 2) {
-    stats->text_count = value;
+    stats.text_count = value;
   } else if (i == 3) {
-    stats->image_count = value;
+    stats.image_count = value;
   } else if (i == 4) {
-    stats->total_size = value;
+    stats.total_size = value;
   }
 }
 
-void Indexer::get_statistics(db_statistics *stats) {
+db_statistics Indexer::get_statistics() {
   sql::PreparedStatement *prep_stmt;
   sql::ResultSet *res;
+  db_statistics stats;
   auto con = PoolDB::borrow_from_pool();
   int i = 0;
   int value;
@@ -75,4 +76,5 @@ void Indexer::get_statistics(db_statistics *stats) {
   }
 
   PoolDB::unborrow_from_pool(con);
+  return stats;
 }

@@ -84,13 +84,13 @@ public:
    */
   SearchBuilder get_search_builder();
 
-  void init_ith_member(int i, int value, db_statistics *stats);
+  static void init_ith_member(int i, int value, db_statistics &stats);
 
   /**
    * Computes every needed statistics from the database
-   * @param stats the struct to fill with statistics
+   * @return the db_stats
    */
-  void get_statistics(db_statistics *stats);
+  static db_statistics get_statistics();
 };
 
 #endif

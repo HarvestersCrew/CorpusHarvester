@@ -383,8 +383,7 @@ void test_insert_existing_setting() {
 }
 
 void test_get_statistics() {
-  db_statistics stats;
-  Indexer().get_statistics(&stats);
+  db_statistics stats = Indexer::get_statistics();
   Assertion::assert_equals(__FUNCTION__, 51, stats.file_count);
   Assertion::assert_equals(__FUNCTION__, 3, stats.corpus_count);
   Assertion::assert_equals(__FUNCTION__, 50, stats.text_count);
