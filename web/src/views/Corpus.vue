@@ -44,12 +44,46 @@
           >
             <v-card>
               <v-card-title>
-                {{ corpus.title }}
-                <v-spacer></v-spacer>
-                <v-btn icon
-                  ><v-icon color="grey lighten-1">mdi-pencil</v-icon></v-btn
-                >
+                <template v-if="editing_corpus_name != corpus.id">
+                  {{ corpus.title }}
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    :disabled="editing_corpus_name_loading"
+                    icon
+                    @click="open_editing_corpus_name(corpus.id)"
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+
+                <template v-else>
+                  <v-text-field
+                    dense
+                    :placeholder="corpus.title"
+                    outlined
+                    hide-details
+                    v-model="editing_corpus_name_val"
+                    :loading="editing_corpus_name_loading"
+                  ></v-text-field>
+                  <v-row justify="end">
+                    <v-btn
+                      icon
+                      @click="close_editing_corpus_name"
+                      :disabled="editing_corpus_name_loading"
+                    >
+                      <v-icon color="red">mdi-close</v-icon>
+                    </v-btn>
+                    <v-btn
+                      icon
+                      @click="send_editing_corpus_name(corpus.id)"
+                      :disabled="editing_corpus_name_loading"
+                    >
+                      <v-icon color="green">mdi-check</v-icon>
+                    </v-btn>
+                  </v-row>
+                </template>
               </v-card-title>
+
               <v-card-subtitle class="pb-0">
                 #{{ corpus.id }}
                 <br />
@@ -60,31 +94,25 @@
               <v-card-actions>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on"
-                      ><v-icon color="grey lighten-1">mdi-delete</v-icon></v-btn
-                    >
+                    <v-btn icon v-on="on"><v-icon>mdi-delete</v-icon></v-btn>
                   </template>
                   <span>Delete corpus</span>
                 </v-tooltip>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
                     <v-btn icon v-on="on"
-                      ><v-icon color="grey lighten-1"
-                        >mdi-folder-move</v-icon
-                      ></v-btn
+                      ><v-icon>mdi-folder-move</v-icon></v-btn
                     >
                   </template>
                   <span>Export corpus</span>
                 </v-tooltip>
                 <v-spacer></v-spacer>
-                <v-btn icon @click="open_corpus(corpus.id)"
-                  ><v-icon v-if="selected_corpus === corpus.id" color="blue">
-                    mdi-chevron-double-down</v-icon
-                  >
-                  <v-icon color="grey lighten-1" v-else>
-                    mdi-chevron-double-right</v-icon
-                  ></v-btn
-                >
+                <v-btn icon @click="open_corpus(corpus.id)">
+                  <v-icon v-if="selected_corpus === corpus.id" color="blue">
+                    mdi-chevron-double-down
+                  </v-icon>
+                  <v-icon v-else>mdi-chevron-double-right</v-icon>
+                </v-btn>
               </v-card-actions>
               <v-expand-transition>
                 <v-card-text
@@ -180,7 +208,10 @@ export default {
       order: this.$store.state.corpuses.order,
       search_text: this.$store.state.corpuses.search_text,
       disabled: this.$store.state.corpuses.disabled,
-      selected_corpus: undefined
+      selected_corpus: undefined,
+      editing_corpus_name: undefined,
+      editing_corpus_name_val: undefined,
+      editing_corpus_name_loading: false
     };
   },
   methods: {
@@ -219,6 +250,19 @@ export default {
         default:
           return "mdi-file";
       }
+    },
+    open_editing_corpus_name(idx) {
+      this.editing_corpus_name = idx;
+      this.editing_corpus_name_val = undefined;
+    },
+    close_editing_corpus_name() {
+      this.editing_corpus_name = undefined;
+    },
+    send_editing_corpus_name(idx) {
+      this.editing_corpus_name_loading = true;
+      console.log(
+        "editing corpus " + idx + " name to " + this.editing_corpus_name_val
+      );
     }
   }
 };
