@@ -127,6 +127,7 @@ void Corpus::set_title(const std::string title) {
     sql::PreparedStatement *prep_stmt =
         con->prepareStatement("UPDATE Corpus SET title = ? WHERE id = ?;");
     prep_stmt->setString(1, title);
+    prep_stmt->setInt(2, _id);
     prep_stmt->execute();
     delete prep_stmt;
     PoolDB::unborrow_from_pool(con);
