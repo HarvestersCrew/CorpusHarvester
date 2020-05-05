@@ -74,6 +74,11 @@ pair<string, json> clear_logfile(ConnectionData &con);
 pair<string, json> refresh_apis(ConnectionData &con);
 
 /**
+ * Get stats about the DB
+ */
+pair<string, json> get_db_stats(ConnectionData &con);
+
+/**
  * ---------------------
  * METHODS WITH DATA
  * ---------------------
