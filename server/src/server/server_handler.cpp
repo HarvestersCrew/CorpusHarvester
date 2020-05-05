@@ -16,6 +16,7 @@ void server_handler::fill_available_functions(
   functions_data.emplace("api_builder_query", &api_builder_query);
   functions_data.emplace("get_corpuses", &get_corpuses);
   functions_data.emplace("add_build_to_corpus", &add_build_to_corpus);
+  functions_data.emplace("set_corpus_title", &set_corpus_title);
 }
 
 pair<string, json> server_handler::dispatch_request(ConnectionData &con,
@@ -226,4 +227,17 @@ pair<string, json> server_handler::add_build_to_corpus(ConnectionData &con,
   json res = {{"id", id}};
 
   return make_pair("add_build_to_corpus", res);
+}
+
+pair<string, json> server_handler::set_corpus_title(ConnectionData &con,
+                                                    const json &j) {
+  if (!j.contains("id") || !j.at("id").is_number_unsigned())
+    throw wss_invalid_request();
+
+  if (!j.contains("title") || !j.at("title").is_string())
+    throw wss_invalid_request();
+
+  con._mr.set_corpus_title(j.at("id").get<int>(), j.at("title").get<string>());
+
+  return make_pair("set_corpus_title", json::object());
 }

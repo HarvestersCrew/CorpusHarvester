@@ -130,6 +130,14 @@ pair<string, json> get_corpuses(ConnectionData &con, const json &j);
  */
 pair<string, json> add_build_to_corpus(ConnectionData &con, const json &j);
 
+/**
+ * Edits a corpus title
+ * @param id ID of the corpus
+ * @param title new title to set
+ * @throw db_id_not_found if corpus wasn't found
+ */
+pair<string, json> set_corpus_title(ConnectionData &con, const json &j);
+
 } // namespace server_handler
 
 #endif
