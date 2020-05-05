@@ -9,7 +9,10 @@
               Currently, {{ files }} files are stored in the database.
             </v-card-subtitle>
             <v-card-text>
-              <DonutChart :chart-data="files_dataset"></DonutChart>
+              <DonutChart
+                :chart-data="files_dataset"
+                :options="files_options"
+              ></DonutChart>
             </v-card-text>
           </v-card>
         </v-col>
@@ -55,7 +58,8 @@ export default {
       images: 0,
       texts: 0,
       bytes: 0,
-      files_dataset: {}
+      files_dataset: {},
+      files_options: { legend: { labels: { padding: 50 } } }
     };
   },
   mounted() {
@@ -88,7 +92,7 @@ export default {
         datasets: [
           {
             data: [this.images, this.texts],
-            backgroundColor: ["#00BCD4", "#009688"]
+            backgroundColor: ["#77aadd", "#ee8866"]
           }
         ]
       };
