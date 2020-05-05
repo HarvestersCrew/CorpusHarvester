@@ -366,3 +366,13 @@ string ManagerRequest::migrate_storage(const string &new_path) const {
   storage.migrate(new_path);
   return storage.get_root_folder_name();
 }
+
+/*
+ * ------------------------------------------
+ * OTHER METHODS
+ * ------------------------------------------
+ */
+
+db_statistics ManagerRequest::get_app_stats() const {
+  return Indexer::get_statistics();
+}

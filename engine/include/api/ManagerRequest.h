@@ -362,6 +362,17 @@ public:
    * @throw StorageMigrationException if the new path can't be used
    */
   string migrate_storage(const string &new_path) const;
+
+  /*
+   * ------------------------------------------
+   * OTHER METHODS
+   * ------------------------------------------
+   */
+
+  /**
+   * @return stats about the DB
+   */
+  db_statistics get_app_stats() const;
 };
 
 #endif // CORPUSHARVESTER_CLENT_REQUEST_H
