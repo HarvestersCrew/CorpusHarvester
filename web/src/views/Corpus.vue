@@ -260,9 +260,23 @@ export default {
     },
     send_editing_corpus_name(idx) {
       this.editing_corpus_name_loading = true;
-      console.log(
-        "editing corpus " + idx + " name to " + this.editing_corpus_name_val
-      );
+      let data = { id: idx, title: this.editing_corpus_name_val };
+      this.$store.dispatch("send_tokenized_request", {
+        type: "set_corpus_title",
+        data,
+        callback: this.callback_editing_corpus_name
+      });
+    },
+    callback_editing_corpus_name(data) {
+      this.editing_corpus_name_loading = false;
+      if (data.type !== undefined && data.type === "error") {
+        this.$store.commit(
+          "add_error_notification",
+          "An error occurred while editing the corpus name, please check the logs"
+        );
+        return;
+      }
+      this.close_editing_corpus_name();
     }
   }
 };
