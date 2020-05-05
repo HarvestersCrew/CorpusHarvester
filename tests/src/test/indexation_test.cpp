@@ -401,6 +401,8 @@ void test_get_statistics() {
   Assertion::assert_equals(__FUNCTION__, 50, stats.text_count);
   Assertion::assert_equals(__FUNCTION__, 1, stats.image_count);
   Assertion::assert_equals(__FUNCTION__, 6375, stats.total_size);
+  Assertion::assert_equals(__FUNCTION__, 124, stats.average_text_size);
+  Assertion::assert_equals(__FUNCTION__, 150, stats.average_image_size);
 }
 
 void indexation_test() {
