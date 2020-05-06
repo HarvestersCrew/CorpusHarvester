@@ -257,7 +257,9 @@ Corpus::get_corpus_from_name(const std::string str, ordering_method order) {
 }
 
 void Corpus::export_(ExportMethod::methods method) {
-  if (!_extraction_path || !std::filesystem::exists(_extraction_path.value())) {
+  Storage storage;
+  string full_path = storage.get_corpus_path() + _extraction_path.value_or("");
+  if (!_extraction_path || !std::filesystem::exists(full_path)) {
     string new_path =
         ExportMethod::compressed_export(_files, std::to_string(_id), method);
     set_extraction_path(new_path);
