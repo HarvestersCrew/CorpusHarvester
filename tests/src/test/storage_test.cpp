@@ -131,6 +131,9 @@ void test_export_corpus_zip() {
   res->next();
   Assertion::assert_equals(__FUNCTION__, new_extraction_path,
                            res->getString("extraction_path"));
+  Assertion::assert_false(
+      __FUNCTION__,
+      std::filesystem::exists(storage.get_corpus_path() + "metadata.csv"));
   PoolDB::unborrow_from_pool(con);
 }
 

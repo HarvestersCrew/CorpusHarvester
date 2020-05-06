@@ -105,13 +105,12 @@ string ExportMethod::get_metadata_content(std::list<shared_ptr<File>> files) {
 
 void ExportMethod::add_metadata(std::list<shared_ptr<File>> files,
                                 std::string tmp_path) {
-  string metadata_name = "metadata.csv";
-  string metadata_path = tmp_path + metadata_name;
+  string metadata_path = tmp_path + METADATA_FILE_NAME;
   ofstream metadata(metadata_path);
   if (!metadata.is_open()) {
     return;
   }
   metadata << get_metadata_content(files);
   metadata.close();
-  add_file(metadata_path, metadata_name);
+  add_file(metadata_path, METADATA_FILE_NAME);
 }

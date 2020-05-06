@@ -29,5 +29,6 @@ string ZipExport::compressed_export(std::list<shared_ptr<File>> files,
     add_file(storage_file_path, file_path);
   }
   zip_close(_corpus);
+  std::filesystem::remove(corpus_path + METADATA_FILE_NAME);
   return archive_name + ".zip";
 }

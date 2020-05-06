@@ -10,6 +10,8 @@
 #include <vector>
 #include <zip.h>
 
+#define METADATA_FILE_NAME "metadata.csv"
+
 using std::ofstream;
 using std::shared_ptr;
 using std::string;
