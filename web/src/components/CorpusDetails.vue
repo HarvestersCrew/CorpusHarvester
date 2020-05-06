@@ -2,7 +2,7 @@
   <v-card>
     <v-toolbar dark color="blue">
       <slot></slot>
-      <v-toolbar-title>{{ corpus.title }}</v-toolbar-title>
+      <v-toolbar-title>Corpus {{ corpus.title }}</v-toolbar-title>
     </v-toolbar>
     <v-container>
       <v-row justify="center" class="my-4">
@@ -54,12 +54,31 @@
         </v-col>
 
         <v-col cols="12" sm="8" md="7" lg="6" xl="4">
-          <v-card>
-            <v-card-title>Files list</v-card-title>
-            <v-card-text>
-              <FilesListing :files="corpus.files"></FilesListing>
-            </v-card-text>
-          </v-card>
+          <v-row>
+            <v-col cols="12" class="pt-0">
+              <v-card>
+                <v-card-title>Corpus exportation</v-card-title>
+                <v-card-subtitle>Estimated file size :</v-card-subtitle>
+                <v-card-text class="text-center">
+                  <v-btn
+                    dark
+                    color="blue"
+                    v-if="corpus.extraction_path === null"
+                    >Export</v-btn
+                  >
+                  <span v-else>{{ corpus.extraction_path }}</span>
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col cols="12">
+              <v-card>
+                <v-card-title>Files list</v-card-title>
+                <v-card-text>
+                  <FilesListing :files="corpus.files"></FilesListing>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
