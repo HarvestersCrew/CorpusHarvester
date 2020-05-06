@@ -179,8 +179,10 @@ public:
    *
    * @return List of files
    */
-  list<shared_ptr<File>> get_files(std::map<string, string> &filters,
-                                   Corpus::ordering_method order) const;
+  list<shared_ptr<File>>
+  get_files(std::map<string, string> &filters,
+            ApiDatabaseBuilder::ordering_method order,
+            vector<pair<string, string>> unspecified_inputs) const;
 
   /**
    * Get a file from his id.

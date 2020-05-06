@@ -81,6 +81,10 @@ Creation of a corpus based on two different apis with specific params related to
 - `harvester corpus create --name "DataScience" --source Twitter --retweet 50 --op ">" --text "data science" --source Flickr --title "data science"`
 - `harvester corpus create --name "DataScience" --number 20 --page 1 --type "image" --source Twitter --retweet 50 --op ">" --text "data science" --source Flickr --title "data science"`
 
+## Files
+
+- `harvester files list --number 1 --page 1 --source Twitter --retweet 50 --op ">" --text "data science" --source Flickr --title "data science"`
+
 
 ### DB
 These commands work with both the `files list` and `corpus create`.

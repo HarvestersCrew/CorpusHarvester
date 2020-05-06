@@ -470,7 +470,7 @@ void CommandLineInterface::files_list() {
   ManagerRequest mr;
   vector<string> apis = mr.get_apis();
 
-  std::vector<string> fileType{"image", "video", "text"};
+  std::vector<string> fileType{"image", "text"};
 
   map<string, string>::iterator itSubCommand;
 
@@ -478,7 +478,8 @@ void CommandLineInterface::files_list() {
   int number = 100;
   string api = "";
   string type = "";
-  Corpus::ordering_method orderingMethod = Corpus::ordering_method::NONE;
+  ApiDatabaseBuilder::ordering_method orderingMethod =
+      ApiDatabaseBuilder::ordering_method::NONE;
 
   std::map<string, string> filters;
 
@@ -573,30 +574,30 @@ void CommandLineInterface::files_list() {
   }
 
   // Check if the user wants a specific order
-  itSubCommand = this->string_inputs.find("order");
-  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
-
-    string order = itSubCommand->second;
-
-    if (order == "date_asc") {
-      orderingMethod = Corpus::ordering_method::DATE_ASC;
-    } else if (order == "date_desc") {
-      orderingMethod = Corpus::ordering_method::DATE_DESC;
-    } else if (order == "name_asc") {
-      orderingMethod = Corpus::ordering_method::NAME_ASC;
-    } else if (order == "name_desc") {
-      orderingMethod = Corpus::ordering_method::NAME_DESC;
+  if (filters.find("order") != filters.end()) {
+    string order = filters.find("order")->second;
+    if (order == "none") {
+      orderingMethod = ApiDatabaseBuilder::ordering_method::NONE;
+    } else if (order == "api_asc") {
+      orderingMethod = ApiDatabaseBuilder::ordering_method::API_ASC;
+    } else if (order == "api_desc") {
+      orderingMethod = ApiDatabaseBuilder::ordering_method::API_DESC;
+    } else if (order == "size_asc") {
+      orderingMethod = ApiDatabaseBuilder::ordering_method::SIZE_ASC;
+    } else if (order == "size_desc") {
+      orderingMethod = ApiDatabaseBuilder::ordering_method::SIZE_DESC;
     } else {
       logger::error("The value " + order +
                     " for the order attribute is not valid. Please check "
                     "with the different values present : \n" +
-                    "- date_asc \n" + +"- date_desc \n" + +"- name_asc \n" +
-                    +"- name_desc \n");
+                    "- date_asc \n" + +"- date_desc \n" + +"- api_asc \n" +
+                    +"- api_desc \n");
       exit(-1);
     }
   }
 
-  list<shared_ptr<File>> files = mr.get_files(filters, orderingMethod);
+  list<shared_ptr<File>> files =
+      mr.get_files(filters, orderingMethod, this->unspecified_inputs);
   logger::info("Number of files available : " + std::to_string(files.size()));
 
   for (const auto file : files) {
