@@ -91,11 +91,11 @@ These commands work with both the `files list` and `corpus create`.
 
 - `harvester files list --number 150 --page 2 --type image` : will get all files from image APIs in the DB starting from the 301st to the 450th
 - `harvester files list --number 50 --order size_desc` : will get the 50 heaviest files in the DB
-- `harvester files list --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : will retrieve all tweets with more than 50 retweets and all posters from TMDB in default order
-- `harvester files list --type image --source Twitter --retweets 50 --op ">" --source TMDB_Poster` : same as above, but will only retrieve the posters
+- `harvester files list --source Twitter --retweets 50 --op ">" --source Flickr` : will retrieve all tweets with more than 50 retweets and all posters from TMDB in default order
+- `harvester files list --type image --source Twitter --retweets 50 --op ">" --source Flickr` : same as above, but will only retrieve the posters
 - `harvester files list --number 1000 --source Twitter` : retrieves the 1000 first tweets in the DB
 
 ### Web
 It works the same as the commands above, but the page is omitted from the global query and passed as parameters to API supporting it as a starting page. Requests must also be specified, it can't search only based on type. Also, comparison operators aren't supported as the only one is "=".
 
-- `harvester web download --source Twitter --query "cats" --source TMDB_Poster --query "cats"` : retrieves cat tweets and movie posters on cat movies, on a single query for each.
+- `harvester web download --source Twitter --query "cats" --source Flickr --query "cats"` : retrieves cat tweets and movie posters on cat movies, on a single query for each.

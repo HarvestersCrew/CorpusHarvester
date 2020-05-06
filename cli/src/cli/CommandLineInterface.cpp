@@ -140,14 +140,6 @@ CommandLineInterface::CommandLineInterface(int argc, char **argv)
       "Will intersect the specified requests with the specified types, can "
       "appear multiple times (text, image).",
       false);
-  downloadWeb.add_option(
-      "source",
-      "Specifies a request on this source name, can also appear many times.",
-      false);
-  downloadWeb.add_option("param_name",
-                         "Specifies a parameter on the nearest source on the "
-                         "left, can also appear many times.",
-                         false);
 
   // Transform our array to a vector of string
   std::vector<string> allArgs(argv + 1, argv + argc);
@@ -870,8 +862,6 @@ void CommandLineInterface::web_download() {
   logger::debug("Download web.");
   int number = 0;
   string type = "";
-  string source;
-  //  map<string, string> params;
 
   // Number parameter
   itSubCommand = this->string_inputs.find("number");
@@ -913,24 +903,17 @@ void CommandLineInterface::web_download() {
     }
   }
 
-  // Check if we have a value for the source
-  itSubCommand = this->string_inputs.find("source");
-  if (itSubCommand != this->string_inputs.end() && itSubCommand->second != "") {
-    // Get the source
-    source = itSubCommand->second;
+  // Download the data
+  list<shared_ptr<File>> files =
+      mr.download_new_data(number, type, this->unspecified_inputs);
 
-    // Check the source
-    vector<string> apiNames = ApiFactory::get_api_names();
-    if (find(apiNames.begin(), apiNames.end(), source) == apiNames.end()) {
-      logger::error("Le nom de la source n'est pas valide ! ");
-      exit(-1);
-    }
+  logger::info("Number of files available : " + std::to_string(files.size()));
+
+  for (const auto file : files) {
+    cout << file->to_string() << endl;
   }
 
-  // TODO :: Manage the param value
-
-  // TODO :: Call with all that the api manager request
-  // TODO :: Need to check which function
+  exit(0);
 }
 
 void CommandLineInterface::web_manager() {

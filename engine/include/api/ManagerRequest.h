@@ -231,6 +231,17 @@ public:
   const vector<shared_ptr<api_parameter_response>> &
   get_api_db_parameters(const string &api_name);
 
+  /**
+   * Download new data from the api download.
+   * @param number
+   * @param type
+   * @param unspecified_inputs
+   * @return files download
+   */
+  list<shared_ptr<File>>
+  download_new_data(const int number, const string type,
+                    vector<pair<string, string>> unspecified_inputs);
+
   /*
    * ------------------------------------------
    * METHODS RELATING TO API BUILDERS
