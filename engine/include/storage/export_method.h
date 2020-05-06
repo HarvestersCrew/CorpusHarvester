@@ -7,6 +7,7 @@
 #include <list>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 #include <zip.h>
 
 using std::ofstream;
@@ -41,6 +42,43 @@ public:
    */
   virtual string compressed_export(std::list<shared_ptr<File>> files,
                                    string archive_name) = 0;
+
+  /**
+   * Inits the given ExtractionApiTags with the Apis of the exported files
+   * @param api_tags the variable to fill
+   * @param files the exported files
+   */
+  void init_api_tags(ExtractionApiTags &api_tags,
+                     std::list<shared_ptr<File>> &files);
+
+  /**
+   * Gets a CSV line representing the Apis and their tags name contained in the
+   * given ExtractionApiTags return the CSV line representing the Apis and their
+   * tags name
+   */
+  string get_api_tags_titles(ExtractionApiTags api_tags);
+
+  /**
+   * Gets a CSV line representing the Apis and their tags value contained in the
+   * given ExtractionApiTags
+   * @param api_tags the apis with their tags
+   * @param source the source of the file which filled the tags values
+   * return the CSV line representing the Apis and their tags name
+   */
+  string get_api_tags_values(ExtractionApiTags api_tags, string source);
+
+  /**
+   * Clears the api tags values in the given ExtractionApiTags
+   * @param api_tags the apis and their tags
+   */
+  void clear_api_tags(ExtractionApiTags &api_tags);
+
+  /**
+   * Gets the content of the metadata file baised on the given file list
+   * @param files the file list
+   * return the content of the metadata file
+   */
+  string get_metadata_content(std::list<shared_ptr<File>> files);
 
   /**
    * Adds a file in the archive describing the metadata of all given files

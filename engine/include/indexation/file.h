@@ -10,6 +10,7 @@
 #include <fstream>
 #include <memory>
 #include <mysql_connection.h>
+#include <set>
 #include <sstream>
 #include <vector>
 
@@ -36,6 +37,8 @@ using nlohmann::json;
 using std::shared_ptr;
 using std::string;
 using std::unique_ptr;
+
+typedef std::map<string, std::list<Tag>> ExtractionApiTags;
 
 /**
  * File class describes a File table in the database
@@ -109,10 +112,22 @@ public:
   void fetch_tags();
 
   /**
-   * Gets the metadata with the corresponding format for extraction
-   * return the formated metadata
+   * Gets the file metadata titles (no tags) as one CSV string
+   * return the metadata titles
    */
-  string get_extraction_metadata();
+  string get_metadata_titles();
+
+  /**
+   * Gets the metadata values (no tags) as one CSV string
+   * return the metadata titles
+   */
+  string get_metadata_values();
+
+  /**
+   * Fills the given ExtractionApiTags with the tag values this file owns
+   * @param extraction_tags ExtractionApiTags
+   */
+  void fill_extraction_tags(ExtractionApiTags &extraction_tags);
 
   /**
    * Adds a tag in the list of tags

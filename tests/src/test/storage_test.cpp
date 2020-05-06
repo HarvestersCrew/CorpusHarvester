@@ -1,7 +1,7 @@
 #include "test/storage_test.h"
 
 shared_ptr<File> file = std::make_shared<File>(
-    File("null", "storage", 100, "twitter", ".txt", "text"));
+    File("null", "storage", 100, "Twitter", ".txt", "text"));
 
 void test_file_destination() {
 
@@ -12,7 +12,7 @@ void test_file_destination() {
   std::string fileDest = storage.file_destination(file);
   Assertion::assert_equals(
       __FUNCTION__,
-      STORED_PATH + "download/twitter/dd/ec/ebdea58b5f264d27f1f7909bab74.txt",
+      STORED_PATH + "download/Twitter/dd/ec/ebdea58b5f264d27f1f7909bab74.txt",
       fileDest);
   file->set_source("wikicommons");
   file->set_name("harvester");
@@ -42,13 +42,16 @@ void test_store_one_file() {
   std::string STORED_PATH = storage.get_root_folder_name();
   std::string TEMP_FILES_PATH = STORED_PATH + "storage_data/";
 
-  file->set_source("tmdb");
+  file->set_source("Flickr");
   file->set_name("test");
   file->set_format(".png");
+  file->add_tag("title", "Zero");
+  file->add_tag("_api_id", "1561618");
+  file->add_tag("picture", "https://url.com");
   std::string content = "Bien le bonjour je suis un fichier de test";
   file->set_content(content);
   std::string file_dest = storage.store_file(file);
-  std::string expected_path = "download/tmdb/09/8f/";
+  std::string expected_path = "download/Flickr/09/8f/";
   std::string expected_name = "6bcd4621d373cade4e832627b4f6";
   std::string expected_destination =
       STORED_PATH + expected_path + expected_name + ".png";
@@ -86,7 +89,13 @@ void test_export_corpus_zip() {
   std::list<shared_ptr<File>> files;
   files.push_back(file);
   shared_ptr<File> file2 = std::make_shared<File>(
-      File("null", "test2", 100, "twitter", ".txt", "text"));
+      File("null", "test2", 100, "Twitter", ".txt", "text"));
+  file2->add_tag("_api_id", "2136518");
+  file2->add_tag("date", "today");
+  file2->add_tag("text", "something");
+  file2->add_tag("retweet", "125");
+  file2->add_tag("favorite", "25");
+  file2->add_tag("language", "en");
   storage.store_file(file2);
   files.push_back(file2);
   logger::set_level(logger::DEBUG);
@@ -96,6 +105,12 @@ void test_export_corpus_zip() {
   }
   corpus = Corpus("corpus_test", files, "something");
   corpus.insert();
+  string expected_metadata_content =
+      "Flickr,title,_api_id,picture,Twitter,_api_id,date,text,retweet,favorite,"
+      "language\n1,Zero,1561618,https://"
+      "url.com,0,,,,,,\n0,,,,1,2136518,today,something,125,25,en\n";
+  Assertion::assert_equals(__FUNCTION__, expected_metadata_content,
+                           ZipExport().get_metadata_content(files));
   corpus.export_(ExportMethod::methods::ZIP);
   std::string new_extraction_path = std::to_string(corpus.get_id()) + ".zip";
   Assertion::assert_equals(__FUNCTION__, new_extraction_path,
