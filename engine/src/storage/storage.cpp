@@ -51,7 +51,7 @@ std::string Storage::file_destination(shared_ptr<File> file) const {
       throw CommandException(error_message);
     }
   }
-  return _root_folder_name.get_value() + dest_folder_path + file_name +
+  return _root_folder_name.get_value() + dest_folder_path + file_name + "." +
          file->get_format();
 }
 

@@ -138,7 +138,7 @@ public:
 
   string get_tag_value(string name);
 
-  string get_full_path() const { return _path + _name + _format; }
+  string get_full_path() const { return _path + _name + "." + _format; }
   string get_path() const { return _path; }
   string get_name() const { return _name; }
   string get_source() const { return _source; }

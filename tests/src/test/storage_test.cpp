@@ -1,7 +1,7 @@
 #include "test/storage_test.h"
 
 shared_ptr<File> file = std::make_shared<File>(
-    File("null", "storage", 100, "Twitter", ".txt", "text"));
+    File("null", "storage", 100, "Twitter", "txt", "text"));
 
 void test_file_destination() {
 
@@ -16,7 +16,7 @@ void test_file_destination() {
       fileDest);
   file->set_source("wikicommons");
   file->set_name("harvester");
-  file->set_format(".jpg");
+  file->set_format("jpg");
   fileDest = storage.file_destination(file);
   Assertion::assert_equals(
       __FUNCTION__,
@@ -44,7 +44,7 @@ void test_store_one_file() {
 
   file->set_source("Flickr");
   file->set_name("test");
-  file->set_format(".png");
+  file->set_format("png");
   file->add_tag("title", "Zero");
   file->add_tag("_api_id", "1561618");
   file->add_tag("picture", "https://url.com");
@@ -89,7 +89,7 @@ void test_export_corpus_zip() {
   std::list<shared_ptr<File>> files;
   files.push_back(file);
   shared_ptr<File> file2 = std::make_shared<File>(
-      File("null", "test2", 100, "Twitter", ".txt", "text"));
+      File("null", "test2", 100, "Twitter", "txt", "text"));
   file2->add_tag("_api_id", "2136518");
   file2->add_tag("date", "today");
   file2->add_tag("text", "something");
