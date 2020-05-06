@@ -92,10 +92,12 @@ string ExportMethod::get_metadata_content(std::list<shared_ptr<File>> files) {
   stringstream content;
   ExtractionApiTags api_tags;
   init_api_tags(api_tags, files);
-  content << get_api_tags_titles(api_tags) << endl;
+  content << File::get_metadata_titles() << "," << get_api_tags_titles(api_tags)
+          << endl;
   for (auto &file : files) {
     file->fill_extraction_tags(api_tags);
-    content << get_api_tags_values(api_tags, file->get_source()) << endl;
+    content << file->get_metadata_values() << ","
+            << get_api_tags_values(api_tags, file->get_source()) << endl;
     clear_api_tags(api_tags);
   }
   return content.str();
@@ -103,14 +105,13 @@ string ExportMethod::get_metadata_content(std::list<shared_ptr<File>> files) {
 
 void ExportMethod::add_metadata(std::list<shared_ptr<File>> files,
                                 std::string tmp_path) {
-  string metadata_name = "metadata.txt";
+  string metadata_name = "metadata.csv";
   string metadata_path = tmp_path + metadata_name;
   ofstream metadata(metadata_path);
   if (!metadata.is_open()) {
     return;
   }
-  string metadata_content = get_metadata_content(files);
-  metadata << metadata_content;
+  metadata << get_metadata_content(files);
   metadata.close();
   add_file(metadata_path, metadata_name);
 }
