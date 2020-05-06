@@ -57,6 +57,13 @@ using std::shared_ptr;
 using std::string;
 using std::unordered_map;
 
+struct corpus_statistics {
+  int file_count;
+  int text_count;
+  int image_count;
+  int total_size;
+};
+
 /**
  * Corpus class describes a Corpus table in the database
  */
@@ -146,6 +153,12 @@ public:
   std::string get_title() const { return _title; }
   void set_title(const std::string title);
   virtual int get_id() const { return this->_id; };
+
+  /**
+   * Gets statistics of corpus
+   * @return corpus_statistics structure
+   */
+  corpus_statistics get_statistics() const;
 
   /**
    * Gets a list of all the corpus.

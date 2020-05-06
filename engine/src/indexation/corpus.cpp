@@ -44,6 +44,12 @@ json Corpus::serialize() const {
   j["extraction_path"] = nullptr;
   if (_extraction_path)
     j["extraction_path"] = _extraction_path.value();
+  auto stats = this->get_statistics();
+  j["stats"] = json::object();
+  j["stats"]["files"] = stats.file_count;
+  j["stats"]["images"] = stats.image_count;
+  j["stats"]["texts"] = stats.text_count;
+  j["stats"]["size"] = stats.total_size;
   j["files"] = json::array();
   for (const auto &file : _files) {
     j.at("files").push_back(file->serialize());
@@ -132,6 +138,19 @@ void Corpus::set_title(const std::string title) {
     delete prep_stmt;
     PoolDB::unborrow_from_pool(con);
   }
+}
+
+corpus_statistics Corpus::get_statistics() const {
+  corpus_statistics stats = {0, 0, 0, 0};
+  stats.file_count = _files.size();
+  for (const auto &file : _files) {
+    if (file->get_type() == "text")
+      ++stats.text_count;
+    else
+      ++stats.image_count;
+    stats.total_size += file->get_size();
+  }
+  return stats;
 }
 
 std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(ordering_method order) {

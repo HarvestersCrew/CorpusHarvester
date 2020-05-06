@@ -116,6 +116,18 @@ pair<string, json> api_builder_query(ConnectionData &con, const json &j);
  * @param title not required, to filter by name
  * @param order not required, to order (none, date_asc, date_desc, name_asc,
  * name_desc)
+ * @return array of corpuses as is:
+ * id ID of the corpus
+ * title Title of the corpus
+ * creation_date Creation date
+ * extraction_path NULL if it isn't available as an archive,
+ * the relative path if it is
+ * files Array of serialized files
+ * stats Object with those attributes :
+ * - files Number of files
+ * - images Number of images
+ * - texts Number of texts
+ * - size Size in bytes taken by its files
  */
 pair<string, json> get_corpuses(ConnectionData &con, const json &j);
 
