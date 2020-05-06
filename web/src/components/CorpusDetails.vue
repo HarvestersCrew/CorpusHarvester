@@ -2,7 +2,7 @@
   <v-card>
     <v-toolbar dark color="blue">
       <slot></slot>
-      <v-toolbar-title>Corpus #TITLE</v-toolbar-title>
+      <v-toolbar-title>{{ corpus.title }}</v-toolbar-title>
     </v-toolbar>
     <v-container>
       <v-row justify="center" class="my-4">
@@ -12,10 +12,10 @@
               <v-card>
                 <v-card-title>Description</v-card-title>
                 <v-card-text class="px-4">
-                  <b>ID</b> #ID
+                  <b>ID</b> #{{ corpus.id }}
                   <br />
                   <b>Creation date :</b>
-                  #DATE
+                  {{ corpus.creation_date }}
                   <br />
                   <b>Source(s) :</b>
                   <br />
@@ -34,9 +34,9 @@
                 </v-card-subtitle>
                 <v-card-text class="px-4">
                   <div class="display-2">
-                    ~ 2 MB
+                    ~ TBD
                   </div>
-                  (#FILES files in total)
+                  ({{ corpus.files.length }} files in total)
                 </v-card-text>
               </v-card>
             </v-col>
@@ -57,7 +57,7 @@
           <v-card>
             <v-card-title>Files list</v-card-title>
             <v-card-text>
-              <FilesListing :files="[]"></FilesListing>
+              <FilesListing :files="corpus.files"></FilesListing>
             </v-card-text>
           </v-card>
         </v-col>
@@ -71,6 +71,7 @@ import DonutChart from "@/components/donut_chart.js";
 import FilesListing from "@/components/FilesListing.vue";
 export default {
   name: "CorpusDetails",
-  components: { DonutChart, FilesListing }
+  components: { DonutChart, FilesListing },
+  props: { corpus: { required: true, type: Object } }
 };
 </script>

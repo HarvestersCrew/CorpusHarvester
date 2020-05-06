@@ -212,7 +212,7 @@
       persistent
       transition="dialog-bottom-transition"
     >
-      <CorpusDetails>
+      <CorpusDetails :corpus="corpus_dialog_data">
         <v-btn icon dark @click="corpus_dialog_data = undefined">
           <v-icon>mdi-close</v-icon>
         </v-btn>
