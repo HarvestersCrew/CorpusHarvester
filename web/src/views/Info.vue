@@ -33,7 +33,7 @@
               <v-card>
                 <v-card-title>Storage size</v-card-title>
                 <v-card-text class="px-4">
-                  <div class="display-2">{{ storage_size }}</div>
+                  <div class="display-2">~ {{ storage_size }}</div>
                   taken on disk by the storage
                 </v-card-text>
               </v-card>

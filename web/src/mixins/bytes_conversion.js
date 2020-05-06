@@ -3,7 +3,7 @@ export const bytes_conversion = {
     bytes_conversion_string(bytes) {
       let units = ["B", "KB", "MB", "GB", "TB"];
       let divided_size = bytes;
-      let str = "~ ";
+      let str = "";
       let i;
       for (i = 0; i < units.length - 1; ++i) {
         if (divided_size < 1000) break;
