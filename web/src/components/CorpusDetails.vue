@@ -34,7 +34,7 @@
                 </v-card-subtitle>
                 <v-card-text class="px-4">
                   <div class="display-2">
-                    ~ TBD
+                    ~ {{ bytes_conversion_string(corpus.stats.size) }}
                   </div>
                   ({{ corpus.files.length }} files in total)
                 </v-card-text>
@@ -109,9 +109,11 @@
 <script>
 import DonutChart from "@/components/donut_chart.js";
 import FilesListing from "@/components/FilesListing.vue";
+import { bytes_conversion } from "@/mixins/bytes_conversion.js";
 export default {
   name: "CorpusDetails",
   components: { DonutChart, FilesListing },
+  mixins: [bytes_conversion],
   props: { corpus: { required: true, type: Object } },
   data() {
     return {
