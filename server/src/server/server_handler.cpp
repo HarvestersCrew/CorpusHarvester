@@ -264,3 +264,17 @@ pair<string, json> server_handler::delete_corpus(ConnectionData &con,
 
   return make_pair("delete_corpus", res);
 }
+
+pair<string, json> server_handler::export_corpus(ConnectionData &con,
+                                                 const json &j) {
+  if (!j.contains("id") || !j.at("id").is_number_unsigned())
+    throw wss_invalid_request();
+
+  int id = j.at("id").get<int>();
+
+  json res = json::object();
+  res["id"] = id;
+  res["path"] = con._mr.export_corpus(id, "zip");
+
+  return make_pair("delete_corpus", res);
+}

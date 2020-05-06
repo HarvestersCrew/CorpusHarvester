@@ -160,6 +160,15 @@ pair<string, json> set_corpus_title(ConnectionData &con, const json &j);
  */
 pair<string, json> delete_corpus(ConnectionData &con, const json &j);
 
+/**
+ * Export a corpus to a ZIP (if necessary) and returns the relative path to it
+ * @param id ID of the corpus
+ * @throw db_id_not_found if corpus wasn't found
+ * @return id ID of the exported corpus
+ * @return path Relative path of the archive
+ */
+pair<string, json> export_corpus(ConnectionData &con, const json &j);
+
 } // namespace server_handler
 
 #endif
