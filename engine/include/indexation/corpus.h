@@ -31,7 +31,8 @@
 #define CORPUS_FILES_CREATE_STATEMENT                                          \
   "CREATE TABLE IF NOT EXISTS CorpusFiles(corpus_id INTEGER NOT NULL, "        \
   "file_id INTEGER NOT NULL, FOREIGN KEY (corpus_id) "                         \
-  "REFERENCES Corpus(id), FOREIGN KEY (file_id) REFERENCES File(id), UNIQUE "  \
+  "REFERENCES Corpus(id) ON DELETE CASCADE, FOREIGN KEY (file_id) REFERENCES " \
+  "File(id), UNIQUE "                                                          \
   "KEY(file_id, corpus_id));"
 #define INSERT_CORPUS_FILES_STATEMENT                                          \
   "INSERT IGNORE INTO CorpusFiles (corpus_id, file_id) VALUES(?, ?)"
