@@ -77,7 +77,7 @@
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-btn icon v-on="on">
+                      <v-btn icon v-on="on" x-large>
                         <v-icon>mdi-download</v-icon>
                       </v-btn>
                     </template>
