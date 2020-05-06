@@ -36,7 +36,8 @@
       <v-container v-if="$store.state.corpuses.results.length > 0">
         <v-row>
           <v-col
-            cols="6"
+            cols="12"
+            sm="6"
             md="4"
             lg="3"
             v-for="(corpus, idx) in $store.state.corpuses.results"
@@ -123,14 +124,6 @@
                     </v-btn>
                   </template>
                   <span>Delete corpus</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on" :disabled="disabled"
-                      ><v-icon>mdi-folder-move</v-icon></v-btn
-                    >
-                  </template>
-                  <span>Export corpus</span>
                 </v-tooltip>
 
                 <v-spacer></v-spacer>
