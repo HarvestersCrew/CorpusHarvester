@@ -58,7 +58,9 @@
             <v-col cols="12" class="pt-0">
               <v-card>
                 <v-card-title>Corpus exportation</v-card-title>
-                <v-card-subtitle>Estimated file size :</v-card-subtitle>
+                <v-card-subtitle v-if="corpus.extraction_path !== null"
+                  >Estimated file size :</v-card-subtitle
+                >
                 <v-card-text class="text-center">
                   <v-btn
                     dark
