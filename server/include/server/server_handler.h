@@ -140,6 +140,14 @@ pair<string, json> add_build_to_corpus(ConnectionData &con, const json &j);
  */
 pair<string, json> set_corpus_title(ConnectionData &con, const json &j);
 
+/**
+ * Delete a corpus by its ID
+ * @param id ID of the corpus
+ * @throw db_id_not_found if corpus wasn't found
+ * @return id ID of the deleted corpus
+ */
+pair<string, json> delete_corpus(ConnectionData &con, const json &j);
+
 } // namespace server_handler
 
 #endif

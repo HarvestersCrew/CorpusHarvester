@@ -17,6 +17,7 @@ void server_handler::fill_available_functions(
   functions_data.emplace("get_corpuses", &get_corpuses);
   functions_data.emplace("add_build_to_corpus", &add_build_to_corpus);
   functions_data.emplace("set_corpus_title", &set_corpus_title);
+  functions_data.emplace("delete_corpus", &delete_corpus);
 }
 
 pair<string, json> server_handler::dispatch_request(ConnectionData &con,
@@ -247,4 +248,19 @@ pair<string, json> server_handler::set_corpus_title(ConnectionData &con,
   res["title"] = name;
 
   return make_pair("set_corpus_title", res);
+}
+
+pair<string, json> server_handler::delete_corpus(ConnectionData &con,
+                                                 const json &j) {
+  if (!j.contains("id") || !j.at("id").is_number_unsigned())
+    throw wss_invalid_request();
+
+  int id = j.at("id").get<int>();
+
+  con._mr.delete_corpus(id);
+
+  json res = json::object();
+  res["id"] = id;
+
+  return make_pair("delete_corpus", res);
 }
