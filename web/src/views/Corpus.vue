@@ -132,101 +132,22 @@
                   </template>
                   <span>Export corpus</span>
                 </v-tooltip>
+
                 <v-spacer></v-spacer>
-                <v-dialog
-                  v-model="dialog"
-                  fullscreen
-                  hide-overlay
-                  persistent
-                  transition="dialog-bottom-transition"
-                >
-                  <template v-slot:activator="{ on: dialog }">
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on: tooltip }">
-                        <v-btn
-                          icon
-                          v-on="{ ...tooltip, ...dialog }"
-                          :disabled="disabled"
-                        >
-                          <v-icon>mdi-dots-horizontal</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>View more</span>
-                    </v-tooltip>
+
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      icon
+                      :disabled="disabled"
+                      v-on="on"
+                      @click="corpus_dialog_data = corpus"
+                    >
+                      <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
                   </template>
-                  <v-card>
-                    <v-toolbar dark color="blue">
-                      <v-btn icon dark @click="dialog = false">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                      <v-toolbar-title
-                        >Corpus {{ corpus.title }}</v-toolbar-title
-                      >
-                    </v-toolbar>
-                    <v-container>
-                      <v-row justify="center" class="my-4">
-                        <v-col cols="12" sm="8" md="7" lg="6" xl="4">
-                          <v-row>
-                            <v-col cols="12" class="pt-0">
-                              <v-card>
-                                <v-card-title>Criteria</v-card-title>
-                                <v-card-text class="px-4">
-                                  <b>ID</b> #{{ corpus.id }}
-                                  <br />
-                                  <b>Creation date :</b>
-                                  {{ corpus.creation_date }}
-                                  <br />
-                                  <b>Source(s) :</b>
-                                  <br />
-                                  <b>Type(s) :</b>
-                                  <br />
-                                </v-card-text>
-                              </v-card>
-                            </v-col>
-
-                            <v-col cols="12">
-                              <v-card>
-                                <v-card-title>Corpus size</v-card-title>
-                                <v-card-subtitle
-                                  >Sum of the size of all corpus files (the
-                                  corpus itself does not take up storage
-                                  space)</v-card-subtitle
-                                >
-                                <v-card-text class="px-4">
-                                  <div class="display-2">
-                                    ~ 2 MB
-                                  </div>
-                                  ({{ corpus.files.length }} files in total)
-                                </v-card-text>
-                              </v-card>
-                            </v-col>
-
-                            <v-col cols="12">
-                              <v-card>
-                                <v-card-title>Distribution</v-card-title>
-                                <v-card-text>
-                                  <DonutChart></DonutChart>
-                                  File types proportions in this corpus
-                                </v-card-text>
-                              </v-card>
-                            </v-col>
-                          </v-row>
-                        </v-col>
-
-                        <v-col cols="12" sm="8" md="7" lg="6" xl="4">
-                          <v-card>
-                            <v-card-title>Files list</v-card-title>
-                            <v-card-text
-                              ><FilesListing
-                                :files="corpus.files"
-                              ></FilesListing
-                            ></v-card-text>
-                          </v-card>
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </v-card>
-                </v-dialog>
+                  <span>See more</span>
+                </v-tooltip>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -283,6 +204,83 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog
+      v-model="corpus_dialog"
+      fullscreen
+      hide-overlay
+      persistent
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <v-toolbar dark color="blue">
+          <v-btn icon dark @click="corpus_dialog_data = undefined">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>Corpus #TITLE</v-toolbar-title>
+        </v-toolbar>
+        <v-container>
+          <v-row justify="center" class="my-4">
+            <v-col cols="12" sm="8" md="7" lg="6" xl="4">
+              <v-row>
+                <v-col cols="12" class="pt-0">
+                  <v-card>
+                    <v-card-title>Description</v-card-title>
+                    <v-card-text class="px-4">
+                      <b>ID</b> #ID
+                      <br />
+                      <b>Creation date :</b>
+                      #DATE
+                      <br />
+                      <b>Source(s) :</b>
+                      <br />
+                      <b>Type(s) :</b>
+                      <br />
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-card>
+                    <v-card-title>Corpus size</v-card-title>
+                    <v-card-subtitle>
+                      Sum of the size of all corpus files (the corpus itself
+                      does not take up storage space)
+                    </v-card-subtitle>
+                    <v-card-text class="px-4">
+                      <div class="display-2">
+                        ~ 2 MB
+                      </div>
+                      (#FILES files in total)
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-card>
+                    <v-card-title>Distribution</v-card-title>
+                    <v-card-text>
+                      <DonutChart></DonutChart>
+                      File types proportions in this corpus
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-col>
+
+            <v-col cols="12" sm="8" md="7" lg="6" xl="4">
+              <v-card>
+                <v-card-title>Files list</v-card-title>
+                <v-card-text>
+                  <FilesListing :files="[]"></FilesListing>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card>
+    </v-dialog>
+    <DonutChart></DonutChart>
   </Bar>
 </template>
 
@@ -316,8 +314,13 @@ export default {
       editing_corpus_name_val: undefined,
       deleting_corpus_modal: false,
       deleting_corpus_val: undefined,
-      dialog: false
+      corpus_dialog_data: undefined
     };
+  },
+  computed: {
+    corpus_dialog() {
+      return this.corpus_dialog_data !== undefined;
+    }
   },
   methods: {
     search() {
