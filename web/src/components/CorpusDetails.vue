@@ -68,7 +68,11 @@
                     v-if="corpus.extraction_path === null"
                     >Export</v-btn
                   >
-                  <span v-else>{{ corpus.extraction_path }}</span>
+                  <div v-else>
+                    {{ corpus.extraction_path }}
+                    <br />
+                    <v-btn dark color="blue">Download</v-btn>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>
