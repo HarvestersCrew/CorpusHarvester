@@ -133,128 +133,101 @@
                   <span>Export corpus</span>
                 </v-tooltip>
                 <v-spacer></v-spacer>
-                <v-btn
-                  icon
-                  @click="open_corpus(corpus.id)"
-                  :disabled="disabled"
+                <v-dialog
+                  v-model="dialog"
+                  fullscreen
+                  hide-overlay
+                  persistent
+                  transition="dialog-bottom-transition"
                 >
-                  <v-icon v-if="selected_corpus === corpus.id" color="blue">
-                    mdi-chevron-double-down
-                  </v-icon>
-                  <v-icon v-else>mdi-chevron-double-right</v-icon>
-                </v-btn>
-              </v-card-actions>
-              <v-expand-transition>
-                <v-card-text
-                  v-show="selected_corpus === corpus.id"
-                  class="pt-0"
-                >
-                  <v-row class="text-center">
-                    <v-col
-                      cols="3"
-                      v-for="(file, index) in corpus.files.slice(0, 11)"
-                      :key="index"
-                    >
-                      <v-tooltip right>
-                        <template v-slot:activator="{ on }">
-                          <v-icon v-on="on">{{
-                            file_icon(file.format)
-                          }}</v-icon>
-                        </template>
-                        <span> {{ file.name }} </span>
-                      </v-tooltip>
-                    </v-col>
-                    <v-dialog
-                      v-if="corpus.files.length > 11"
-                      v-model="dialog"
-                      fullscreen
-                      hide-overlay
-                      persistent
-                      transition="dialog-bottom-transition"
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-col cols="3" class="">
-                          <v-btn icon v-on="on">
-                            <v-icon>mdi-dots-horizontal</v-icon>
-                          </v-btn>
-                        </v-col>
+                  <template v-slot:activator="{ on: dialog }">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on: tooltip }">
+                        <v-btn
+                          icon
+                          v-on="{ ...tooltip, ...dialog }"
+                          :disabled="disabled"
+                        >
+                          <v-icon>mdi-dots-horizontal</v-icon>
+                        </v-btn>
                       </template>
-                      <v-card>
-                        <v-toolbar dark color="blue">
-                          <v-btn icon dark @click="dialog = false">
-                            <v-icon>mdi-close</v-icon>
-                          </v-btn>
-                          <v-toolbar-title
-                            >Corpus {{ corpus.title }}</v-toolbar-title
-                          >
-                        </v-toolbar>
-                        <v-container>
-                          <v-row justify="center" class="my-4">
-                            <v-col cols="12" sm="8" md="7" lg="6" xl="4">
-                              <v-row>
-                                <v-col cols="12" class="pt-0">
-                                  <v-card>
-                                    <v-card-title>Criteria</v-card-title>
-                                    <v-card-text class="px-4">
-                                      <b>ID</b> #{{ corpus.id }}
-                                      <br />
-                                      <b>Creation date :</b>
-                                      {{ corpus.creation_date }}
-                                      <br />
-                                      <b>Source(s) :</b>
-                                      <br />
-                                      <b>Type(s) :</b>
-                                      <br />
-                                    </v-card-text>
-                                  </v-card>
-                                </v-col>
-
-                                <v-col cols="12">
-                                  <v-card>
-                                    <v-card-title>Corpus size</v-card-title>
-                                    <v-card-subtitle
-                                      >Sum of the size of all corpus files (the
-                                      corpus itself does not take up storage
-                                      space)</v-card-subtitle
-                                    >
-                                    <v-card-text class="px-4">
-                                      <div class="display-2">
-                                        ~ 2 MB
-                                      </div>
-                                      ({{ corpus.files.length }} files in total)
-                                    </v-card-text>
-                                  </v-card>
-                                </v-col>
-
-                                <v-col cols="12">
-                                  <v-card>
-                                    <v-card-title>Distribution</v-card-title>
-                                    <v-card-text>
-                                      <DonutChart></DonutChart>
-                                      File types proportions in this corpus
-                                    </v-card-text>
-                                  </v-card>
-                                </v-col>
-                              </v-row>
+                      <span>View more</span>
+                    </v-tooltip>
+                  </template>
+                  <v-card>
+                    <v-toolbar dark color="blue">
+                      <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+                      <v-toolbar-title
+                        >Corpus {{ corpus.title }}</v-toolbar-title
+                      >
+                    </v-toolbar>
+                    <v-container>
+                      <v-row justify="center" class="my-4">
+                        <v-col cols="12" sm="8" md="7" lg="6" xl="4">
+                          <v-row>
+                            <v-col cols="12" class="pt-0">
+                              <v-card>
+                                <v-card-title>Criteria</v-card-title>
+                                <v-card-text class="px-4">
+                                  <b>ID</b> #{{ corpus.id }}
+                                  <br />
+                                  <b>Creation date :</b>
+                                  {{ corpus.creation_date }}
+                                  <br />
+                                  <b>Source(s) :</b>
+                                  <br />
+                                  <b>Type(s) :</b>
+                                  <br />
+                                </v-card-text>
+                              </v-card>
                             </v-col>
 
-                            <v-col cols="12" sm="8" md="7" lg="6" xl="4">
+                            <v-col cols="12">
                               <v-card>
-                                <v-card-title>Files list</v-card-title>
-                                <v-card-text
-                                  ><FilesListing
-                                    :files="corpus.files"
-                                  ></FilesListing
-                                ></v-card-text>
+                                <v-card-title>Corpus size</v-card-title>
+                                <v-card-subtitle
+                                  >Sum of the size of all corpus files (the
+                                  corpus itself does not take up storage
+                                  space)</v-card-subtitle
+                                >
+                                <v-card-text class="px-4">
+                                  <div class="display-2">
+                                    ~ 2 MB
+                                  </div>
+                                  ({{ corpus.files.length }} files in total)
+                                </v-card-text>
+                              </v-card>
+                            </v-col>
+
+                            <v-col cols="12">
+                              <v-card>
+                                <v-card-title>Distribution</v-card-title>
+                                <v-card-text>
+                                  <DonutChart></DonutChart>
+                                  File types proportions in this corpus
+                                </v-card-text>
                               </v-card>
                             </v-col>
                           </v-row>
-                        </v-container>
-                      </v-card>
-                    </v-dialog>
-                  </v-row>
-                </v-card-text>
-              </v-expand-transition>
+                        </v-col>
+
+                        <v-col cols="12" sm="8" md="7" lg="6" xl="4">
+                          <v-card>
+                            <v-card-title>Files list</v-card-title>
+                            <v-card-text
+                              ><FilesListing
+                                :files="corpus.files"
+                              ></FilesListing
+                            ></v-card-text>
+                          </v-card>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card>
+                </v-dialog>
+              </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
@@ -347,11 +320,6 @@ export default {
     };
   },
   methods: {
-    open_corpus(idx) {
-      this.selected_corpus === idx
-        ? (this.selected_corpus = undefined)
-        : (this.selected_corpus = idx);
-    },
     search() {
       this.disabled = true;
       let data = { order: this.order };
