@@ -166,6 +166,9 @@ public:
   /**
    * Deletes a corpus based on his ID
    * @param id the ID of the corpus
+   * @throw db_id_not_found if corpus wasn't found
+   * @throw StorageFileDeletionException if something went wrong during deletion
+   * @throw ExtractionPathMissingException if given path is empty
    */
   static void delete_from_id(const int id);
 

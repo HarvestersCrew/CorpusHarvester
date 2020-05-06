@@ -202,10 +202,9 @@ void delete_from_id(const int id) {
   corpus->delete_();
   Storage storage = Storage();
   std::optional<string> extraction_path = corpus->get_extraction_path();
-  if (!extraction_path.has_value()) {
-    throw ExtractionPathMissingException();
+  if (extraction_path.has_value()) {
+    storage.delete_corpus(extraction_path.value());
   }
-  storage.delete_corpus(extraction_path.value());
 }
 
 std::list<shared_ptr<Corpus>>

@@ -101,6 +101,7 @@ public:
    * Deletes the archive corresponding to the given corpus in the storage
    * @param extraction_path the extraction_path of the corpus to delete
    * @throw StorageFileDeletionException if something went wrong during deletion
+   * @throw ExtractionPathMissingException if given path is empty
    */
   void delete_corpus(string extraction_path);
 
