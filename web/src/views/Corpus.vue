@@ -188,50 +188,62 @@
                             >Corpus {{ corpus.title }}</v-toolbar-title
                           >
                         </v-toolbar>
-                        <v-list>
-                          <v-subheader>Criteria</v-subheader>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <v-list-item-title
-                                >ID : #{{ corpus.id }}</v-list-item-title
-                              >
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <v-list-item-title>Types(s) :</v-list-item-title>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <v-list-item-title>Source(s) :</v-list-item-title>
-                            </v-list-item-content>
-                          </v-list-item>
-                          <v-list-item>
-                            <v-list-item-content>
-                              <v-list-item-title
-                                >Creation date :
-                                {{ corpus.creation_date }}</v-list-item-title
-                              >
-                            </v-list-item-content>
-                          </v-list-item>
-                        </v-list>
-                        <v-divider></v-divider>
-                        <v-subheader>Corpus files</v-subheader>
-                        <v-row class="mx-3" style="text-align: center">
-                          <v-col
-                            cols="1"
-                            v-for="(file, index) in corpus.files"
-                            :key="index"
-                          >
-                            <div>
-                              <v-icon x-large>{{
-                                file_icon(file.format)
-                              }}</v-icon>
-                            </div>
-                            <span> {{ file.name }}.{{ file.format }} </span>
-                          </v-col>
-                        </v-row>
+                        <v-container>
+                          <v-row justify="center" class="my-4">
+                            <v-col cols="12" sm="8" md="7" lg="6" xl="4">
+                              <v-row>
+                                <v-col cols="12" class="pt-0">
+                                  <v-card>
+                                    <v-card-title>Criteria</v-card-title>
+                                    <v-card-text class="px-4">
+                                      ID #{{ corpus.id }}
+                                      <br />
+                                      Creation date : {{ corpus.creation_date }}
+                                      <br />
+                                      Source(s) :
+                                      <br />
+                                      Type(s) :
+                                      <br />
+                                    </v-card-text>
+                                  </v-card>
+                                </v-col>
+
+                                <v-col cols="12">
+                                  <v-card>
+                                    <v-card-title>Corpus size</v-card-title>
+                                    <v-card-text class="px-4">
+                                      <div class="display-2">
+                                        ~ 2 MB
+                                      </div>
+                                      ({{ corpus.files.length }} files in total)
+                                    </v-card-text>
+                                  </v-card>
+                                </v-col>
+
+                                <v-col cols="12">
+                                  <v-card>
+                                    <v-card-title>Distribution</v-card-title>
+                                    <v-card-text>
+                                      <DonutChart></DonutChart>
+                                      File types proportions in this corpus
+                                    </v-card-text>
+                                  </v-card>
+                                </v-col>
+                              </v-row>
+                            </v-col>
+
+                            <v-col cols="12" sm="8" md="7" lg="6" xl="4">
+                              <v-card>
+                                <v-card-title>Files list</v-card-title>
+                                <v-card-text
+                                  ><FilesListing
+                                    :files="corpus.files"
+                                  ></FilesListing
+                                ></v-card-text>
+                              </v-card>
+                            </v-col>
+                          </v-row>
+                        </v-container>
                       </v-card>
                     </v-dialog>
                   </v-row>
@@ -298,9 +310,11 @@
 <script>
 import Bar from "@/components/Bar.vue";
 import SelectCard from "@/components/SelectCard.vue";
+import DonutChart from "@/components/donut_chart.js";
+import FilesListing from "@/components/FilesListing.vue";
 export default {
   name: "Corpus",
-  components: { Bar, SelectCard },
+  components: { Bar, SelectCard, DonutChart, FilesListing },
   beforeDestroy() {
     this.$store.state.corpuses.order = this.order;
     this.$store.state.corpuses.search_text = this.search_text;
