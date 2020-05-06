@@ -161,6 +161,11 @@ public:
   corpus_statistics get_statistics() const;
 
   /**
+   * Deletes if it exists the extracted archive
+   */
+  void delete_associated_extraction();
+
+  /**
    * Gets a list of all the corpus.
    *
    * @return List of Corpus.

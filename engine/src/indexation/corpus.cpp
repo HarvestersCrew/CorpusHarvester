@@ -92,6 +92,8 @@ void Corpus::add_files(const list<shared_ptr<File>> &files) {
     PoolDB::unborrow_from_pool(con);
   }
   _files.insert(_files.end(), files.begin(), files.end());
+  if (_extraction_path)
+    delete_associated_extraction();
 }
 
 void Corpus::fetch_files() {
@@ -205,6 +207,9 @@ shared_ptr<Corpus> Corpus::get_corpus_from_id(const int id) {
 }
 
 bool Corpus::delete_() {
+
+  delete_associated_extraction();
+
   sql::PreparedStatement *prep_stmt;
   auto con = PoolDB::borrow_from_pool();
 
@@ -219,10 +224,12 @@ bool Corpus::delete_() {
 void Corpus::delete_from_id(const int id) {
   shared_ptr<Corpus> corpus = Corpus::get_corpus_from_id(id);
   corpus->delete_();
-  Storage storage = Storage();
-  std::optional<string> extraction_path = corpus->get_extraction_path();
-  if (extraction_path.has_value()) {
-    storage.delete_corpus(extraction_path.value());
+}
+
+void Corpus::delete_associated_extraction() {
+  Storage storage;
+  if (_extraction_path) {
+    storage.delete_corpus(_extraction_path.value());
   }
 }
 
