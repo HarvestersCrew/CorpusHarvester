@@ -26,11 +26,8 @@
       <v-expansion-panel-content>
         <v-row>
           <v-col
-            cols="6"
-            sm="4"
-            md="3"
-            lg="2"
-            xl="1"
+            cols="auto"
+            class="mx-4"
             v-for="(tag, key) in item.tags"
             :key="tag"
           >
