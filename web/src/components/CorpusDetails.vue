@@ -43,10 +43,12 @@
 
             <v-col cols="12">
               <v-card>
-                <v-card-title>Distribution</v-card-title>
+                <v-card-title>Files distribution</v-card-title>
+                <v-card-subtitle
+                  >Files type proportions in this corpus</v-card-subtitle
+                >
                 <v-card-text>
-                  <DonutChart></DonutChart>
-                  File types proportions in this corpus
+                  <DonutChart :chart-data="dataset"></DonutChart>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -110,6 +112,19 @@ import FilesListing from "@/components/FilesListing.vue";
 export default {
   name: "CorpusDetails",
   components: { DonutChart, FilesListing },
-  props: { corpus: { required: true, type: Object } }
+  props: { corpus: { required: true, type: Object } },
+  data() {
+    return {
+      dataset: {
+        labels: ["Images", "Texts"],
+        datasets: [
+          {
+            data: [this.corpus.stats.images, this.corpus.stats.texts],
+            backgroundColor: ["#77aadd", "#ee8866"]
+          }
+        ]
+      }
+    };
+  }
 };
 </script>
