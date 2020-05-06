@@ -196,13 +196,14 @@
                                   <v-card>
                                     <v-card-title>Criteria</v-card-title>
                                     <v-card-text class="px-4">
-                                      ID #{{ corpus.id }}
+                                      <b>ID</b> #{{ corpus.id }}
                                       <br />
-                                      Creation date : {{ corpus.creation_date }}
+                                      <b>Creation date :</b>
+                                      {{ corpus.creation_date }}
                                       <br />
-                                      Source(s) :
+                                      <b>Source(s) :</b>
                                       <br />
-                                      Type(s) :
+                                      <b>Type(s) :</b>
                                       <br />
                                     </v-card-text>
                                   </v-card>
@@ -211,6 +212,11 @@
                                 <v-col cols="12">
                                   <v-card>
                                     <v-card-title>Corpus size</v-card-title>
+                                    <v-card-subtitle
+                                      >Sum of the size of all corpus files (the
+                                      corpus itself does not take up storage
+                                      space)</v-card-subtitle
+                                    >
                                     <v-card-text class="px-4">
                                       <div class="display-2">
                                         ~ 2 MB
