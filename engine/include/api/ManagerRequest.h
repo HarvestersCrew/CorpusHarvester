@@ -151,6 +151,13 @@ public:
    */
   void set_corpus_title(const int id, const string &name);
 
+  /**
+   * Deletes a corpus by its ID
+   * @param id ID of the corpus
+   * @throw db_id_not_found if corpus wasn't found
+   */
+  void delete_corpus(const int id);
+
   /*
    * ------------------------------------------
    * METHODS RELATING TO FILES MANAGEMENT

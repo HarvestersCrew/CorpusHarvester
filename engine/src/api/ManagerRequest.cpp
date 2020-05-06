@@ -189,6 +189,18 @@ void ManagerRequest::set_corpus_title(const int id, const string &name) {
   corpus->set_title(name);
 }
 
+void ManagerRequest::delete_corpus(const int id) {
+  try {
+    Corpus::delete_from_id(id);
+  } catch (const StorageFileDeletionException &e) {
+    logger::warning(
+        "Corpus #" + to_string(id) +
+        " was deleted from DB, but the supposed existing extracted archive "
+        "wasn't found");
+  } catch (const ExtractionPathMissingException &e) {
+  }
+}
+
 /*
  * ------------------------------------------
  * METHODS RELATING TO FILES MANAGEMENT
