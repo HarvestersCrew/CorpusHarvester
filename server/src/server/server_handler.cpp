@@ -18,6 +18,7 @@ void server_handler::fill_available_functions(
   functions_data.emplace("add_build_to_corpus", &add_build_to_corpus);
   functions_data.emplace("set_corpus_title", &set_corpus_title);
   functions_data.emplace("delete_corpus", &delete_corpus);
+  functions_data.emplace("export_corpus", &export_corpus);
 }
 
 pair<string, json> server_handler::dispatch_request(ConnectionData &con,
@@ -276,5 +277,5 @@ pair<string, json> server_handler::export_corpus(ConnectionData &con,
   res["id"] = id;
   res["path"] = con._mr.export_corpus(id, "zip");
 
-  return make_pair("delete_corpus", res);
+  return make_pair("export_corpus", res);
 }
