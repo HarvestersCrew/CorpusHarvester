@@ -54,6 +54,11 @@ private:
    */
   static void discover_from_path(const string &path);
 
+  /**
+   * Private constructor to avoid instantiating it
+   */
+  ApiFactory();
+
 public:
   /**
    * Refresh APIs from the disk
