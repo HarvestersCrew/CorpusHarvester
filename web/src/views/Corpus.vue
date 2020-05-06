@@ -117,7 +117,7 @@
                       icon
                       v-on="on"
                       :disabled="disabled"
-                      @click="delete_corpus(corpus.id)"
+                      @click="open_delete_corpus_modal(corpus.id)"
                     >
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
@@ -212,6 +212,28 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
     </div>
+
+    <v-dialog v-model="deleting_corpus_modal" max-width="500">
+      <v-card>
+        <v-card-title>Deleting corpus #{{ deleting_corpus_val }}</v-card-title>
+        <v-card-text class="text-left">
+          You are going to delete corpus #{{ deleting_corpus_val }} from the
+          database. All files in it will be kept. Are you sure?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            @click="deleting_corpus_modal = false"
+            :disabled="disabled"
+            >Cancel</v-btn
+          >
+          <v-btn text color="red" :loading="disabled" @click="delete_corpus"
+            >Proceed</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </Bar>
 </template>
 
@@ -240,7 +262,9 @@ export default {
       disabled: this.$store.state.corpuses.disabled,
       selected_corpus: undefined,
       editing_corpus_name: undefined,
-      editing_corpus_name_val: undefined
+      editing_corpus_name_val: undefined,
+      deleting_corpus_modal: false,
+      deleting_corpus_val: undefined
     };
   },
   methods: {
@@ -307,9 +331,13 @@ export default {
       }
       this.close_editing_corpus_name();
     },
-    delete_corpus(id) {
+    open_delete_corpus_modal(id) {
+      this.deleting_corpus_modal = true;
+      this.deleting_corpus_val = id;
+    },
+    delete_corpus() {
       this.disabled = true;
-      let data = { id };
+      let data = { id: this.deleting_corpus_val };
       this.$store.dispatch("send_tokenized_request", {
         type: "delete_corpus",
         data,
@@ -318,6 +346,7 @@ export default {
     },
     callback_delete_corpus(data) {
       this.disabled = false;
+      this.deleting_corpus_modal = false;
       if (data.type !== undefined && data.type === "error") {
         this.$store.commit(
           "add_error_notification",
