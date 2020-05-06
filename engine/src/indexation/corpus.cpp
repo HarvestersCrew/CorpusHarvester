@@ -197,7 +197,7 @@ bool Corpus::delete_() {
   return true;
 }
 
-void delete_from_id(const int id) {
+void Corpus::delete_from_id(const int id) {
   shared_ptr<Corpus> corpus = Corpus::get_corpus_from_id(id);
   corpus->delete_();
   Storage storage = Storage();
