@@ -145,6 +145,14 @@ export default new Vuex.Store({
             }
             break;
 
+          case "delete_corpus":
+            if (obj.type !== undefined && obj.type !== "error") {
+              state.corpuses.results = state.corpuses.results.filter(
+                corp => corp.id !== obj.data.id
+              );
+            }
+            break;
+
           default:
             break;
         }

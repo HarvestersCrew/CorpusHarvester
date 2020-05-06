@@ -113,9 +113,14 @@
               <v-card-actions>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on" :disabled="disabled"
-                      ><v-icon>mdi-delete</v-icon></v-btn
+                    <v-btn
+                      icon
+                      v-on="on"
+                      :disabled="disabled"
+                      @click="delete_corpus(corpus.id)"
                     >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
                   </template>
                   <span>Delete corpus</span>
                 </v-tooltip>
@@ -301,6 +306,25 @@ export default {
         return;
       }
       this.close_editing_corpus_name();
+    },
+    delete_corpus(id) {
+      this.disabled = true;
+      let data = { id };
+      this.$store.dispatch("send_tokenized_request", {
+        type: "delete_corpus",
+        data,
+        callback: this.callback_delete_corpus
+      });
+    },
+    callback_delete_corpus(data) {
+      this.disabled = false;
+      if (data.type !== undefined && data.type === "error") {
+        this.$store.commit(
+          "add_error_notification",
+          "An error occurred while deleting a corpus, please check the logs"
+        );
+        return;
+      }
     }
   }
 };
