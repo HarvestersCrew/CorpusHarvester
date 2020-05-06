@@ -56,7 +56,7 @@
                     </v-col>
                     <v-col cols="auto">
                       <v-btn
-                        :disabled="editing_corpus_name_loading"
+                        :disabled="disabled"
                         icon
                         @click="open_editing_corpus_name(corpus.id)"
                       >
@@ -79,22 +79,22 @@
                         outlined
                         hide-details
                         v-model="editing_corpus_name_val"
-                        :loading="editing_corpus_name_loading"
-                        :disabled="editing_corpus_name_loading"
+                        :loading="disabled"
+                        :disabled="disabled"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="auto" class="ml-2">
                       <v-btn
                         icon
                         @click="close_editing_corpus_name"
-                        :disabled="editing_corpus_name_loading"
+                        :disabled="disabled"
                       >
                         <v-icon color="red">mdi-close</v-icon>
                       </v-btn>
                       <v-btn
                         icon
                         @click="send_editing_corpus_name(corpus.id)"
-                        :disabled="editing_corpus_name_loading"
+                        :disabled="disabled"
                       >
                         <v-icon color="green">mdi-check</v-icon>
                       </v-btn>
@@ -113,20 +113,26 @@
               <v-card-actions>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on"><v-icon>mdi-delete</v-icon></v-btn>
+                    <v-btn icon v-on="on" :disabled="disabled"
+                      ><v-icon>mdi-delete</v-icon></v-btn
+                    >
                   </template>
                   <span>Delete corpus</span>
                 </v-tooltip>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on"
+                    <v-btn icon v-on="on" :disabled="disabled"
                       ><v-icon>mdi-folder-move</v-icon></v-btn
                     >
                   </template>
                   <span>Export corpus</span>
                 </v-tooltip>
                 <v-spacer></v-spacer>
-                <v-btn icon @click="open_corpus(corpus.id)">
+                <v-btn
+                  icon
+                  @click="open_corpus(corpus.id)"
+                  :disabled="disabled"
+                >
                   <v-icon v-if="selected_corpus === corpus.id" color="blue">
                     mdi-chevron-double-down
                   </v-icon>
@@ -229,8 +235,7 @@ export default {
       disabled: this.$store.state.corpuses.disabled,
       selected_corpus: undefined,
       editing_corpus_name: undefined,
-      editing_corpus_name_val: undefined,
-      editing_corpus_name_loading: false
+      editing_corpus_name_val: undefined
     };
   },
   methods: {
@@ -278,7 +283,7 @@ export default {
       this.editing_corpus_name = undefined;
     },
     send_editing_corpus_name(idx) {
-      this.editing_corpus_name_loading = true;
+      this.disabled = true;
       let data = { id: idx, title: this.editing_corpus_name_val };
       this.$store.dispatch("send_tokenized_request", {
         type: "set_corpus_title",
@@ -287,7 +292,7 @@ export default {
       });
     },
     callback_editing_corpus_name(data) {
-      this.editing_corpus_name_loading = false;
+      this.disabled = false;
       if (data.type !== undefined && data.type === "error") {
         this.$store.commit(
           "add_error_notification",
