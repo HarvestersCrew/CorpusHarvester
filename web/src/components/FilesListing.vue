@@ -1,5 +1,5 @@
 <template>
-  <v-list>
+  <!-- <v-list>
     <div v-for="(item, index) in files" :key="index">
       <v-list-item>
         <v-row dense>
@@ -10,13 +10,31 @@
       </v-list-item>
       <v-divider v-if="index + 1 < files.length"></v-divider>
     </div>
-  </v-list>
+  </v-list> -->
+  <v-expansion-panels accordion hover :flat="flat" class="mt-4">
+    <v-expansion-panel v-for="(item, index) in files" :key="index">
+      <v-expansion-panel-header>
+        <v-row dense>
+          <v-col cols="auto" align-self="center">
+            {{ item.name }}.{{ item.format }}
+          </v-col>
+          <v-col class="caption" align-self="center">#{{ item.id }}</v-col>
+        </v-row>
+      </v-expansion-panel-header>
+      <v-expansion-panel-content>
+        <v-row> </v-row>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 <script>
 import { bytes_conversion } from "@/mixins/bytes_conversion.js";
 export default {
   name: "FilesListing",
-  props: { files: { required: true, type: Array } },
+  props: {
+    files: { required: true, type: Array },
+    flat: { type: Boolean, default: false }
+  },
   mixins: [bytes_conversion],
   methods: {
     api_type(api_name) {

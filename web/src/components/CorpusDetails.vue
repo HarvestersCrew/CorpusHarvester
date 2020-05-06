@@ -77,6 +77,7 @@
                   16 first files
                   <FilesListing
                     :files="corpus.files.slice(0, 16)"
+                    :flat="true"
                   ></FilesListing>
                 </v-card-text>
               </v-card>
