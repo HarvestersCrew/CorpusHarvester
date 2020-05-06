@@ -18,11 +18,26 @@
           <v-col cols="auto" align-self="center">
             {{ item.name }}.{{ item.format }}
           </v-col>
-          <v-col class="caption" align-self="center">#{{ item.id }}</v-col>
+          <v-col class="font-weight-light" align-self="center"
+            >#{{ item.id }}</v-col
+          >
         </v-row>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
-        <v-row> </v-row>
+        <v-row>
+          <v-col
+            cols="6"
+            sm="4"
+            md="3"
+            lg="2"
+            xl="1"
+            v-for="(tag, key) in item.tags"
+            :key="tag"
+          >
+            <div class="font-weight-bold">{{ key }}</div>
+            <div>{{ tag }}</div>
+          </v-col>
+        </v-row>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
