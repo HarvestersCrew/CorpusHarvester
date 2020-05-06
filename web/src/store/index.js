@@ -153,6 +153,23 @@ export default new Vuex.Store({
             }
             break;
 
+          case "export_corpus":
+            if (obj.type !== undefined && obj.type !== "error") {
+              state.corpuses.results.forEach(corp => {
+                if (corp.id === obj.data.id)
+                  corp.extraction_path = obj.data.path;
+              });
+            }
+            state.notifications.push({
+              msg:
+                "Corpus #" +
+                obj.data.id +
+                " has been successfully exported, you can now download it",
+              color: "green",
+              dark: true
+            });
+            break;
+
           default:
             break;
         }

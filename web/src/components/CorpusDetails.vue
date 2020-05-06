@@ -2,7 +2,7 @@
   <v-card>
     <v-toolbar dark color="blue">
       <slot></slot>
-      <v-toolbar-title>Corpus {{ corpus.title }}</v-toolbar-title>
+      <v-toolbar-title>{{ corpus.title }}</v-toolbar-title>
     </v-toolbar>
     <v-container>
       <v-row justify="center" class="my-4">
@@ -60,19 +60,18 @@
             <v-col cols="12" class="pt-0">
               <v-card>
                 <v-card-title>Corpus exportation</v-card-title>
-                <v-card-subtitle v-if="corpus.extraction_path !== null"
-                  >Estimated file size :</v-card-subtitle
-                >
+                <v-card-subtitle v-if="corpus.extraction_path !== null">
+                  Estimated file size :
+                </v-card-subtitle>
                 <v-card-text class="text-center">
                   <v-btn
                     dark
                     color="blue"
                     v-if="corpus.extraction_path === null"
-                    >Export</v-btn
+                    @click="export_corpus"
                   >
-                  <span v-else>
-                    {{ corpus.extraction_path }}
-                  </span>
+                    Export
+                  </v-btn>
                 </v-card-text>
                 <v-card-actions v-if="corpus.extraction_path !== null">
                   <v-spacer></v-spacer>
@@ -127,6 +126,28 @@ export default {
         ]
       }
     };
+  },
+  methods: {
+    export_corpus() {
+      let data = { id: this.corpus.id };
+      this.$store.commit(
+        "add_notification",
+        "Exportation started, you will be notified when the archive is ready"
+      );
+      this.$store.dispatch("send_tokenized_request", {
+        type: "export_corpus",
+        data,
+        callback: data => {
+          if (data.type !== undefined && data.type === "error") {
+            this.$store.commit(
+              "add_error_notification",
+              "An error occurred while exporting the corpus, please check the logs"
+            );
+            return;
+          }
+        }
+      });
+    }
   }
 };
 </script>
