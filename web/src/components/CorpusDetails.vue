@@ -68,12 +68,21 @@
                     v-if="corpus.extraction_path === null"
                     >Export</v-btn
                   >
-                  <div v-else>
+                  <span v-else>
                     {{ corpus.extraction_path }}
-                    <br />
-                    <v-btn dark color="blue">Download</v-btn>
-                  </div>
+                  </span>
                 </v-card-text>
+                <v-card-actions v-if="corpus.extraction_path !== null">
+                  <v-spacer></v-spacer>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon v-on="on">
+                        <v-icon>mdi-download</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Download corpus</span>
+                  </v-tooltip>
+                </v-card-actions>
               </v-card>
             </v-col>
             <v-col cols="12">
