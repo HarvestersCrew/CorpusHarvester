@@ -1,16 +1,4 @@
 <template>
-  <!-- <v-list>
-    <div v-for="(item, index) in files" :key="index">
-      <v-list-item>
-        <v-row dense>
-          <v-col>{{ item.name }}.{{ item.format }}</v-col>
-          <v-col>{{ item_size(item.size) }}</v-col>
-          <v-col>{{ item.source }} ({{ api_type(item.source) }})</v-col>
-        </v-row>
-      </v-list-item>
-      <v-divider v-if="index + 1 < files.length"></v-divider>
-    </div>
-  </v-list> -->
   <v-expansion-panels accordion hover :flat="flat" class="mt-4">
     <v-expansion-panel v-for="(item, index) in files" :key="index">
       <v-expansion-panel-header>
