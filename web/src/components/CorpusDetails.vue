@@ -74,7 +74,10 @@
               <v-card>
                 <v-card-title>Files list</v-card-title>
                 <v-card-text>
-                  <FilesListing :files="corpus.files"></FilesListing>
+                  16 first files
+                  <FilesListing
+                    :files="corpus.files.slice(0, 16)"
+                  ></FilesListing>
                 </v-card-text>
               </v-card>
             </v-col>
