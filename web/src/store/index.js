@@ -137,6 +137,39 @@ export default new Vuex.Store({
             state.corpuses.results = obj.data.corpuses;
             break;
 
+          case "set_corpus_title":
+            if (obj.type !== undefined && obj.type !== "error") {
+              state.corpuses.results.forEach(corp => {
+                if (corp.id === obj.data.id) corp.title = obj.data.title;
+              });
+            }
+            break;
+
+          case "delete_corpus":
+            if (obj.type !== undefined && obj.type !== "error") {
+              state.corpuses.results = state.corpuses.results.filter(
+                corp => corp.id !== obj.data.id
+              );
+            }
+            break;
+
+          case "export_corpus":
+            if (obj.type !== undefined && obj.type !== "error") {
+              state.corpuses.results.forEach(corp => {
+                if (corp.id === obj.data.id)
+                  corp.extraction_path = obj.data.path;
+              });
+            }
+            state.notifications.push({
+              msg:
+                "Corpus #" +
+                obj.data.id +
+                " has been successfully exported, you can now download it",
+              color: "green",
+              dark: true
+            });
+            break;
+
           default:
             break;
         }

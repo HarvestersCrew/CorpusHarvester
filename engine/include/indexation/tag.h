@@ -16,6 +16,8 @@
 #define INSERT_TAG_STATEMENT                                                   \
   "INSERT INTO Tag (file_id, name, value) VALUES(?, ?, ?)"
 
+using std::string;
+
 /**
  * Tag class describe a Tag table in the database
  */
@@ -29,12 +31,12 @@ class Tag : public DatabaseItem {
   /**
    * The name of the tag
    */
-  std::string _name;
+  string _name;
 
   /**
    * The value of the tag
    */
-  std::string _value;
+  string _value;
 
 public:
   /**
@@ -49,22 +51,23 @@ public:
    * @param id the id of the tag
    * @param file_id the id of the file this tag is linked to
    */
-  Tag(std::string name, std::string value, int id = -1, int file_id = -1);
+  Tag(string name, string value, int id = -1, int file_id = -1);
 
   /**
    * Default destructor
    */
   ~Tag();
 
-  std::string to_string() const;
+  string to_string() const;
 
   bool insert();
 
   void fill_from_statement(sql::ResultSet *res);
 
   int get_file_id() const { return _file_id; }
-  std::string get_name() const { return _name; }
-  std::string get_value() const { return _value; }
+  string get_name() const { return _name; }
+  string get_value() const { return _value; }
+  void set_value(string value) { _value = value; }
 
   void set_file_id(int file_id) { _file_id = file_id; }
 };

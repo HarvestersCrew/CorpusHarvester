@@ -105,9 +105,24 @@ void File::fill_from_statement(sql::ResultSet *res) {
   fetch_tags();
 }
 
-string File::get_extraction_metadata() {
-  // TEMPORARY
-  return _name;
+string File::get_metadata_titles() { return "path,size,type,is_binary"; }
+
+string File::get_metadata_values() {
+  return get_full_path() + "," + std::to_string(_size) + "," + _type + "," +
+         std::to_string(_binary);
+}
+
+void File::fill_extraction_tags(ExtractionApiTags &extraction_tags) {
+  std::list<Tag> extraction_file_tags = extraction_tags.at(_source);
+  for (auto &tag : _tags) {
+    for (auto &extraction_tag : extraction_file_tags) {
+      if (tag->get_name() == extraction_tag.get_name()) {
+        extraction_tag.set_value(tag->get_value());
+        break;
+      }
+    }
+  }
+  extraction_tags[_source] = extraction_file_tags;
 }
 
 void File::add_tag(string name, string value) {
@@ -126,13 +141,10 @@ void File::set_bin_content(std::vector<char> content) {
 
 void File::store(const string &path) const {
   if (!this->get_binary()) {
-
     std::ofstream outfile(path);
     outfile << this->get_content_str() << std::endl;
     outfile.close();
-
   } else {
-
     std::vector<char> vec_content = this->get_content_bin();
     char buf[vec_content.size()];
     for (size_t i = 0; i < vec_content.size(); ++i) {

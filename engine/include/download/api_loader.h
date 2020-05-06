@@ -194,6 +194,8 @@ public:
   /** Gets the enum value representing the API type */
   api_loader::api_type get_api_type() const;
 
+  string get_name() { return _name; }
+
   /**
    * Queries and parses
    * @param params map parameters to insert in place of the default ones
@@ -234,6 +236,12 @@ public:
    */
   const vector<shared_ptr<api_parameter_response>> &
   get_response_parameters() const;
+
+  /**
+   * Gets vector of relevant response parameters (those inserted in DB)
+   */
+  const vector<shared_ptr<api_parameter_response>>
+  get_relevant_response_parameters() const;
 };
 
 #endif

@@ -36,20 +36,74 @@
       <v-container v-if="$store.state.corpuses.results.length > 0">
         <v-row>
           <v-col
-            cols="6"
+            cols="12"
+            sm="6"
             md="4"
             lg="3"
             v-for="(corpus, idx) in $store.state.corpuses.results"
             :key="idx"
           >
             <v-card>
-              <v-card-title>
-                {{ corpus.title }}
-                <v-spacer></v-spacer>
-                <v-btn icon
-                  ><v-icon color="grey lighten-1">mdi-pencil</v-icon></v-btn
-                >
+              <v-card-title class="mb-2">
+                <v-slide-x-transition hide-on-leave>
+                  <v-row
+                    dense
+                    no-gutters
+                    v-show="editing_corpus_name !== corpus.id"
+                    class="ml-0"
+                  >
+                    <v-col>
+                      {{ corpus.title }}
+                    </v-col>
+                    <v-col cols="auto">
+                      <v-btn
+                        :disabled="disabled"
+                        icon
+                        @click="open_editing_corpus_name(corpus.id)"
+                      >
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-slide-x-transition>
+
+                <v-slide-x-transition hide-on-leave>
+                  <v-row
+                    dense
+                    no-gutters
+                    v-show="editing_corpus_name === corpus.id"
+                  >
+                    <v-col>
+                      <v-text-field
+                        dense
+                        :placeholder="corpus.title"
+                        outlined
+                        hide-details
+                        v-model="editing_corpus_name_val"
+                        :loading="disabled"
+                        :disabled="disabled"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="auto" class="ml-2">
+                      <v-btn
+                        icon
+                        @click="close_editing_corpus_name"
+                        :disabled="disabled"
+                      >
+                        <v-icon color="red">mdi-close</v-icon>
+                      </v-btn>
+                      <v-btn
+                        icon
+                        @click="send_editing_corpus_name(corpus.id)"
+                        :disabled="disabled"
+                      >
+                        <v-icon color="green">mdi-check</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-slide-x-transition>
               </v-card-title>
+
               <v-card-subtitle class="pb-0">
                 #{{ corpus.id }}
                 <br />
@@ -60,67 +114,34 @@
               <v-card-actions>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on"
-                      ><v-icon color="grey lighten-1">mdi-delete</v-icon></v-btn
+                    <v-btn
+                      icon
+                      v-on="on"
+                      :disabled="disabled"
+                      @click="open_delete_corpus_modal(corpus.id)"
                     >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
                   </template>
                   <span>Delete corpus</span>
                 </v-tooltip>
+
+                <v-spacer></v-spacer>
+
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on"
-                      ><v-icon color="grey lighten-1"
-                        >mdi-folder-move</v-icon
-                      ></v-btn
+                    <v-btn
+                      icon
+                      :disabled="disabled"
+                      v-on="on"
+                      @click="corpus_dialog_data = corpus"
                     >
+                      <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
                   </template>
-                  <span>Export corpus</span>
+                  <span>See more</span>
                 </v-tooltip>
-                <v-spacer></v-spacer>
-                <v-btn icon @click="open_corpus(corpus.id)"
-                  ><v-icon v-if="selected_corpus === corpus.id" color="blue">
-                    mdi-chevron-double-down</v-icon
-                  >
-                  <v-icon color="grey lighten-1" v-else>
-                    mdi-chevron-double-right</v-icon
-                  ></v-btn
-                >
               </v-card-actions>
-              <v-expand-transition>
-                <v-card-text
-                  v-show="selected_corpus === corpus.id"
-                  class="pt-0"
-                >
-                  <v-row class="text-center">
-                    <v-col
-                      cols="3"
-                      v-for="(file, index) in corpus.files.slice(0, 11)"
-                      :key="index"
-                    >
-                      <v-tooltip right>
-                        <template v-slot:activator="{ on }">
-                          <v-icon v-on="on">{{
-                            file_icon(file.format)
-                          }}</v-icon>
-                        </template>
-                        <span> {{ file.name }} </span>
-                      </v-tooltip>
-                    </v-col>
-                    <v-tooltip right v-if="corpus.files.length > 11">
-                      <template v-slot:activator="{ on }">
-                        <v-col cols="3" class="">
-                          <v-btn icon>
-                            <v-icon v-on="on"
-                              >mdi-dots-horizontal</v-icon
-                            ></v-btn
-                          ></v-col
-                        >
-                      </template>
-                      <span>+ {{ corpus.files.length - 11 }} files</span>
-                    </v-tooltip>
-                  </v-row>
-                </v-card-text>
-              </v-expand-transition>
             </v-card>
           </v-col>
         </v-row>
@@ -154,15 +175,52 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
     </div>
+
+    <v-dialog v-model="deleting_corpus_modal" max-width="500">
+      <v-card>
+        <v-card-title>Deleting corpus #{{ deleting_corpus_val }}</v-card-title>
+        <v-card-text class="text-left">
+          You are going to delete corpus #{{ deleting_corpus_val }} from the
+          database. All files in it will be kept. Are you sure?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            @click="deleting_corpus_modal = false"
+            :disabled="disabled"
+            >Cancel</v-btn
+          >
+          <v-btn text color="red" :loading="disabled" @click="delete_corpus"
+            >Proceed</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-model="corpus_dialog"
+      fullscreen
+      hide-overlay
+      persistent
+      transition="dialog-bottom-transition"
+    >
+      <CorpusDetails :corpus="corpus_dialog_data">
+        <v-btn icon dark @click="corpus_dialog_data = undefined">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </CorpusDetails>
+    </v-dialog>
   </Bar>
 </template>
 
 <script>
 import Bar from "@/components/Bar.vue";
 import SelectCard from "@/components/SelectCard.vue";
+import CorpusDetails from "@/components/CorpusDetails.vue";
 export default {
   name: "Corpus",
-  components: { Bar, SelectCard },
+  components: { Bar, SelectCard, CorpusDetails },
   beforeDestroy() {
     this.$store.state.corpuses.order = this.order;
     this.$store.state.corpuses.search_text = this.search_text;
@@ -180,15 +238,20 @@ export default {
       order: this.$store.state.corpuses.order,
       search_text: this.$store.state.corpuses.search_text,
       disabled: this.$store.state.corpuses.disabled,
-      selected_corpus: undefined
+      selected_corpus: undefined,
+      editing_corpus_name: undefined,
+      editing_corpus_name_val: undefined,
+      deleting_corpus_modal: false,
+      deleting_corpus_val: undefined,
+      corpus_dialog_data: undefined
     };
   },
+  computed: {
+    corpus_dialog() {
+      return this.corpus_dialog_data !== undefined;
+    }
+  },
   methods: {
-    open_corpus(idx) {
-      this.selected_corpus === idx
-        ? (this.selected_corpus = undefined)
-        : (this.selected_corpus = idx);
-    },
     search() {
       this.disabled = true;
       let data = { order: this.order };
@@ -218,6 +281,57 @@ export default {
           return "mdi-file-image";
         default:
           return "mdi-file";
+      }
+    },
+    open_editing_corpus_name(idx) {
+      this.editing_corpus_name = idx;
+      this.editing_corpus_name_val = undefined;
+    },
+    close_editing_corpus_name() {
+      this.editing_corpus_name = undefined;
+    },
+    send_editing_corpus_name(idx) {
+      this.disabled = true;
+      let data = { id: idx, title: this.editing_corpus_name_val };
+      this.$store.dispatch("send_tokenized_request", {
+        type: "set_corpus_title",
+        data,
+        callback: this.callback_editing_corpus_name
+      });
+    },
+    callback_editing_corpus_name(data) {
+      this.disabled = false;
+      if (data.type !== undefined && data.type === "error") {
+        this.$store.commit(
+          "add_error_notification",
+          "An error occurred while editing the corpus name, please check the logs"
+        );
+        return;
+      }
+      this.close_editing_corpus_name();
+    },
+    open_delete_corpus_modal(id) {
+      this.deleting_corpus_modal = true;
+      this.deleting_corpus_val = id;
+    },
+    delete_corpus() {
+      this.disabled = true;
+      let data = { id: this.deleting_corpus_val };
+      this.$store.dispatch("send_tokenized_request", {
+        type: "delete_corpus",
+        data,
+        callback: this.callback_delete_corpus
+      });
+    },
+    callback_delete_corpus(data) {
+      this.disabled = false;
+      this.deleting_corpus_modal = false;
+      if (data.type !== undefined && data.type === "error") {
+        this.$store.commit(
+          "add_error_notification",
+          "An error occurred while deleting a corpus, please check the logs"
+        );
+        return;
       }
     }
   }

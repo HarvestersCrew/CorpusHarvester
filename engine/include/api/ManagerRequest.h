@@ -143,6 +143,21 @@ public:
    */
   string export_corpus(const int id, const string &method) const;
 
+  /**
+   * Changes a corpus title
+   * @param id ID of the corpus
+   * @param name new title to apply
+   * @throw db_id_not_found if corpus wasn't found
+   */
+  void set_corpus_title(const int id, const string &name);
+
+  /**
+   * Deletes a corpus by its ID
+   * @param id ID of the corpus
+   * @throw db_id_not_found if corpus wasn't found
+   */
+  void delete_corpus(const int id);
+
   /*
    * ------------------------------------------
    * METHODS RELATING TO FILES MANAGEMENT

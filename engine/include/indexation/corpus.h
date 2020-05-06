@@ -31,7 +31,8 @@
 #define CORPUS_FILES_CREATE_STATEMENT                                          \
   "CREATE TABLE IF NOT EXISTS CorpusFiles(corpus_id INTEGER NOT NULL, "        \
   "file_id INTEGER NOT NULL, FOREIGN KEY (corpus_id) "                         \
-  "REFERENCES Corpus(id), FOREIGN KEY (file_id) REFERENCES File(id), UNIQUE "  \
+  "REFERENCES Corpus(id) ON DELETE CASCADE, FOREIGN KEY (file_id) REFERENCES " \
+  "File(id), UNIQUE "                                                          \
   "KEY(file_id, corpus_id));"
 #define INSERT_CORPUS_FILES_STATEMENT                                          \
   "INSERT IGNORE INTO CorpusFiles (corpus_id, file_id) VALUES(?, ?)"
@@ -55,6 +56,13 @@ using std::optional;
 using std::shared_ptr;
 using std::string;
 using std::unordered_map;
+
+struct corpus_statistics {
+  int file_count;
+  int text_count;
+  int image_count;
+  int total_size;
+};
 
 /**
  * Corpus class describes a Corpus table in the database
@@ -147,6 +155,17 @@ public:
   virtual int get_id() const { return this->_id; };
 
   /**
+   * Gets statistics of corpus
+   * @return corpus_statistics structure
+   */
+  corpus_statistics get_statistics() const;
+
+  /**
+   * Deletes if it exists the extracted archive
+   */
+  void delete_associated_extraction();
+
+  /**
    * Gets a list of all the corpus.
    *
    * @return List of Corpus.
@@ -166,6 +185,9 @@ public:
   /**
    * Deletes a corpus based on his ID
    * @param id the ID of the corpus
+   * @throw db_id_not_found if corpus wasn't found
+   * @throw StorageFileDeletionException if something went wrong during deletion
+   * @throw ExtractionPathMissingException if given path is empty
    */
   static void delete_from_id(const int id);
 

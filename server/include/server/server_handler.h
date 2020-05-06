@@ -116,6 +116,18 @@ pair<string, json> api_builder_query(ConnectionData &con, const json &j);
  * @param title not required, to filter by name
  * @param order not required, to order (none, date_asc, date_desc, name_asc,
  * name_desc)
+ * @return array of corpuses as is:
+ * id ID of the corpus
+ * title Title of the corpus
+ * creation_date Creation date
+ * extraction_path NULL if it isn't available as an archive,
+ * the relative path if it is
+ * files Array of serialized files
+ * stats Object with those attributes :
+ * - files Number of files
+ * - images Number of images
+ * - texts Number of texts
+ * - size Size in bytes taken by its files
  */
 pair<string, json> get_corpuses(ConnectionData &con, const json &j);
 
@@ -129,6 +141,33 @@ pair<string, json> get_corpuses(ConnectionData &con, const json &j);
  * @return "id" ID affected or created
  */
 pair<string, json> add_build_to_corpus(ConnectionData &con, const json &j);
+
+/**
+ * Edits a corpus title
+ * @param id ID of the corpus
+ * @param title new title to set
+ * @throw db_id_not_found if corpus wasn't found
+ * @return id ID of the corpus the modification was applied to
+ * @return title Title applied
+ */
+pair<string, json> set_corpus_title(ConnectionData &con, const json &j);
+
+/**
+ * Delete a corpus by its ID
+ * @param id ID of the corpus
+ * @throw db_id_not_found if corpus wasn't found
+ * @return id ID of the deleted corpus
+ */
+pair<string, json> delete_corpus(ConnectionData &con, const json &j);
+
+/**
+ * Export a corpus to a ZIP (if necessary) and returns the relative path to it
+ * @param id ID of the corpus
+ * @throw db_id_not_found if corpus wasn't found
+ * @return id ID of the exported corpus
+ * @return path Relative path of the archive
+ */
+pair<string, json> export_corpus(ConnectionData &con, const json &j);
 
 } // namespace server_handler
 

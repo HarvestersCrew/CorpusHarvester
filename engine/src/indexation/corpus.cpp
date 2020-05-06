@@ -44,6 +44,12 @@ json Corpus::serialize() const {
   j["extraction_path"] = nullptr;
   if (_extraction_path)
     j["extraction_path"] = _extraction_path.value();
+  auto stats = this->get_statistics();
+  j["stats"] = json::object();
+  j["stats"]["files"] = stats.file_count;
+  j["stats"]["images"] = stats.image_count;
+  j["stats"]["texts"] = stats.text_count;
+  j["stats"]["size"] = stats.total_size;
   j["files"] = json::array();
   for (const auto &file : _files) {
     j.at("files").push_back(file->serialize());
@@ -86,6 +92,8 @@ void Corpus::add_files(const list<shared_ptr<File>> &files) {
     PoolDB::unborrow_from_pool(con);
   }
   _files.insert(_files.end(), files.begin(), files.end());
+  if (_extraction_path)
+    delete_associated_extraction();
 }
 
 void Corpus::fetch_files() {
@@ -116,6 +124,9 @@ void Corpus::fill_from_statement(sql::ResultSet *res) {
     this->_extraction_path = std::nullopt;
   } else {
     this->_extraction_path = res->getString("extraction_path");
+    if (!std::filesystem::exists(_extraction_path.value())) {
+      set_extraction_path(std::nullopt);
+    }
   }
   fetch_files();
 }
@@ -127,10 +138,24 @@ void Corpus::set_title(const std::string title) {
     sql::PreparedStatement *prep_stmt =
         con->prepareStatement("UPDATE Corpus SET title = ? WHERE id = ?;");
     prep_stmt->setString(1, title);
+    prep_stmt->setInt(2, _id);
     prep_stmt->execute();
     delete prep_stmt;
     PoolDB::unborrow_from_pool(con);
   }
+}
+
+corpus_statistics Corpus::get_statistics() const {
+  corpus_statistics stats = {0, 0, 0, 0};
+  stats.file_count = _files.size();
+  for (const auto &file : _files) {
+    if (file->get_type() == "text")
+      ++stats.text_count;
+    else
+      ++stats.image_count;
+    stats.total_size += file->get_size();
+  }
+  return stats;
 }
 
 std::list<shared_ptr<Corpus>> Corpus::get_all_corpuses(ordering_method order) {
@@ -185,6 +210,9 @@ shared_ptr<Corpus> Corpus::get_corpus_from_id(const int id) {
 }
 
 bool Corpus::delete_() {
+
+  delete_associated_extraction();
+
   sql::PreparedStatement *prep_stmt;
   auto con = PoolDB::borrow_from_pool();
 
@@ -196,15 +224,16 @@ bool Corpus::delete_() {
   return true;
 }
 
-void delete_from_id(const int id) {
+void Corpus::delete_from_id(const int id) {
   shared_ptr<Corpus> corpus = Corpus::get_corpus_from_id(id);
   corpus->delete_();
-  Storage storage = Storage();
-  std::optional<string> extraction_path = corpus->get_extraction_path();
-  if (!extraction_path.has_value()) {
-    throw ExtractionPathMissingException();
+}
+
+void Corpus::delete_associated_extraction() {
+  Storage storage;
+  if (_extraction_path) {
+    storage.delete_corpus(_extraction_path.value());
   }
-  storage.delete_corpus(extraction_path.value());
 }
 
 std::list<shared_ptr<Corpus>>
@@ -231,7 +260,9 @@ Corpus::get_corpus_from_name(const std::string str, ordering_method order) {
 }
 
 void Corpus::export_(ExportMethod::methods method) {
-  if (!_extraction_path || !std::filesystem::exists(_extraction_path.value())) {
+  Storage storage;
+  string full_path = storage.get_corpus_path() + _extraction_path.value_or("");
+  if (!_extraction_path || !std::filesystem::exists(full_path)) {
     string new_path =
         ExportMethod::compressed_export(_files, std::to_string(_id), method);
     set_extraction_path(new_path);

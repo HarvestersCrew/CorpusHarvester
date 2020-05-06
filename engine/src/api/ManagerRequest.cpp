@@ -196,6 +196,23 @@ string ManagerRequest::export_corpus(const int id, const string &method) const {
   return this->export_corpus(id, method_parsed);
 }
 
+void ManagerRequest::set_corpus_title(const int id, const string &name) {
+  auto corpus = this->get_corpus_from_id(id);
+  corpus->set_title(name);
+}
+
+void ManagerRequest::delete_corpus(const int id) {
+  try {
+    Corpus::delete_from_id(id);
+  } catch (const StorageFileDeletionException &e) {
+    logger::warning(
+        "Corpus #" + to_string(id) +
+        " was deleted from DB, but the supposed existing extracted archive "
+        "wasn't found");
+  } catch (const ExtractionPathMissingException &e) {
+  }
+}
+
 /*
  * ------------------------------------------
  * METHODS RELATING TO FILES MANAGEMENT

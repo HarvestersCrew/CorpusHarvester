@@ -33,7 +33,7 @@
               <v-card>
                 <v-card-title>Storage size</v-card-title>
                 <v-card-text class="px-4">
-                  <div class="display-2">{{ storage_size }}</div>
+                  <div class="display-2">~ {{ storage_size }}</div>
                   taken on disk by the storage
                 </v-card-text>
               </v-card>
@@ -48,9 +48,11 @@
 <script>
 import Bar from "@/components/Bar.vue";
 import DonutChart from "@/components/donut_chart.js";
+import { bytes_conversion } from "@/mixins/bytes_conversion.js";
 export default {
   name: "Info",
   components: { Bar, DonutChart },
+  mixins: [bytes_conversion],
   data() {
     return {
       corpus: 0,
@@ -71,18 +73,7 @@ export default {
   },
   computed: {
     storage_size() {
-      let units = ["B", "KB", "MB", "GB", "TB"];
-      let divided_size = this.bytes;
-      let str = "~ ";
-      let i;
-      for (i = 0; i < units.length - 1; ++i) {
-        if (divided_size < 1000) {
-          break;
-        }
-        divided_size /= 1000;
-      }
-      str += Math.round(divided_size * 100) / 100 + " " + units[i];
-      return str;
+      return this.bytes_conversion_string(this.bytes);
     }
   },
   methods: {

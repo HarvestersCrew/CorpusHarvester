@@ -18,7 +18,7 @@ string ZipExport::compressed_export(std::list<shared_ptr<File>> files,
   string archive_path = corpus_path + archive_name + ".zip";
   _corpus = zip_open(archive_path.c_str(), ZIP_EXCL | ZIP_CREATE, &error);
   if (error == ZIP_ER_EXISTS) {
-    return archive_path;
+    return archive_name + ".zip";
   }
   add_metadata(files, corpus_path);
   string storage_file_path;
