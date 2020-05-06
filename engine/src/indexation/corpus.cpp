@@ -124,6 +124,9 @@ void Corpus::fill_from_statement(sql::ResultSet *res) {
     this->_extraction_path = std::nullopt;
   } else {
     this->_extraction_path = res->getString("extraction_path");
+    if (!std::filesystem::exists(_extraction_path.value())) {
+      set_extraction_path(std::nullopt);
+    }
   }
   fetch_files();
 }
