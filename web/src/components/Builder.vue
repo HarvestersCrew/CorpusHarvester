@@ -45,7 +45,22 @@
       ></BuilderRequests>
     </v-form>
 
-    <FilesListing :builder_type="builder_type"></FilesListing>
+    <FilesListing
+      :builder_type="builder_type"
+      v-if="files_listing.length > 0"
+      :files="files_listing"
+    ></FilesListing>
+
+    <v-container v-else>
+      <v-row justify="center">
+        <v-col cols="10" md="6">
+          <v-card>
+            <v-card-title>{{ empty_title }}</v-card-title>
+            <v-card-text class="text-left">{{ empty_text }}</v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
 
     <v-dialog v-model="corpus_export" max-width="600px" persistent>
       <v-card>
@@ -208,21 +223,41 @@ export default {
     tooltip_retrieve() {
       return this.builder_type === "web" ? "Start download" : "Fetch from DB";
     },
+
     notif_sent_message() {
       return this.builder_type === "web"
         ? "Download request sent"
         : "Database request sent";
     },
+
     notif_error_message() {
       return this.builder_type === "web"
         ? "An error occurred during the download, check the logs for further informations"
         : "An error occurred during the fetching, check the logs for further informations";
     },
+
     number_input_placeholder() {
       return this.builder_type === "web"
         ? "Approximate number to retrieve"
         : "Number to retrieve";
     },
+
+    empty_title() {
+      return this.builder_type === "web"
+        ? "How to download"
+        : "How to search in the database";
+    },
+
+    empty_text() {
+      return this.builder_type === "web"
+        ? "Start by adding requests and filling needed parameters. Once you validate it, the download will start and you'll just have to wait."
+        : "Start by adding requests and filling parameters. Once you validate it, they will be executed against the database.";
+    },
+
+    files_listing() {
+      return this.$store.state.builders.files[this.builder_type];
+    },
+
     server_query() {
       let query = [];
       this.requests.forEach(req => {
