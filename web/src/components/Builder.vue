@@ -390,6 +390,7 @@ export default {
           "add_success_notification",
           "Successfully added files to corpus #" + data.data.id
         );
+        this.corpus_name = undefined;
         this.corpus_export = false;
       }
     }
