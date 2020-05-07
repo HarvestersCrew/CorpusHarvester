@@ -2,8 +2,18 @@
 CS Engineering School Project
 
 ## Requirements
-- MySql Connection/C++ : `sudo apt install libmysqlcppconn-dev`
-- libcurl : `sudo apt install libcurl4-openssl-dev`
+
+### Engine libraries
+- MySQL Connection/C++ : `apt install libmysqlcppconn-dev`
+- libcurl : `apt install libcurl4-openssl-dev`
+- libzip : `apt install libzip-dev`
+
+### Server libraries
+- libasio : `apt install libasio-dev`
+- websocketpp : `apt install libwebsocketpp-dev`
+
+### Web client
+Node needs to be installed to build the web client. A simple HTTP server can be used to serve those compiled files.
 
 ## Makefile
 
