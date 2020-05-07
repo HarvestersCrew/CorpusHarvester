@@ -11,10 +11,6 @@
 #include <unordered_map>
 #include <vector>
 
-#define API_PARAMETER_INT "int"
-#define API_PARAMETER_STRING "string"
-#define API_PARAMETER_IMAGE_LINK "image_link"
-
 using std::optional;
 using std::string;
 using std::unordered_map;
@@ -40,6 +36,8 @@ class api_parameter_base {
 public:
   /** Value describing the type of the parameter */
   enum value_type { STRING, INT, IMAGE_LINK };
+
+  static unordered_map<value_type, string> _value_type_strings;
 
   /**
    * String of current state

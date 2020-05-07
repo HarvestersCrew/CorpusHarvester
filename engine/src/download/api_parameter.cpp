@@ -1,5 +1,11 @@
 #include "download/api_parameter.h"
 
+unordered_map<api_parameter_base::value_type, string>
+    api_parameter_base::_value_type_strings{
+        {api_parameter_base::value_type::IMAGE_LINK, "image_link"},
+        {api_parameter_base::value_type::INT, "int"},
+        {api_parameter_base::value_type::STRING, "string"}};
+
 unordered_map<string, string> api_parameter_base::_default_descriptions{
     {"_api_id", "Unique ID of an element for this API"},
     {"_page", "Page number to use or start at for queries"},
@@ -25,15 +31,15 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
     _description = _default_descriptions.at(_name);
   }
 
-  if (json.at("type").get<string>() == API_PARAMETER_STRING) {
-    this->_value_type = value_type::STRING;
-  } else if (json.at("type").get<string>() == API_PARAMETER_INT) {
-    this->_value_type = value_type::INT;
-  } else if (json.at("type").get<string>() == API_PARAMETER_IMAGE_LINK) {
-    this->_value_type = value_type::IMAGE_LINK;
-  } else {
-    throw std::runtime_error("Unrecognized type for parameter.");
+  bool value_type_found = false;
+  for (const auto &el : _value_type_strings) {
+    if (el.second == json.at("type").get<string>()) {
+      _value_type = el.first;
+      value_type_found = true;
+    }
   }
+  if (!value_type_found)
+    throw std::runtime_error("Unrecognized type for parameter.");
 }
 
 string api_parameter_base::to_string() const {
@@ -59,20 +65,10 @@ nlohmann::json api_parameter_base::serialize() const {
 }
 
 string api_parameter_base::get_value_type_string() const {
-  switch (this->_value_type) {
-  case api_parameter_base::value_type::INT:
-    return API_PARAMETER_INT;
-    break;
-  case api_parameter_base::value_type::STRING:
-    return API_PARAMETER_STRING;
-    break;
-  case api_parameter_base::value_type::IMAGE_LINK:
-    return API_PARAMETER_IMAGE_LINK;
-    break;
-  default:
+  if (_value_type_strings.find(_value_type) != _value_type_strings.end())
+    return _value_type_strings.at(_value_type);
+  else
     throw std::runtime_error("Unsupported parameter type to string.");
-    break;
-  }
 }
 
 api_parameter_base::value_type api_parameter_base::get_value_type() const {
