@@ -1,7 +1,7 @@
 #include "indexation/api_database_builder.h"
 
 ApiDatabaseBuilder::ApiDatabaseBuilder()
-    : _order(ordering_method::NONE), _page(0), ApiRequestBuilder() {
+    : ApiRequestBuilder(), _order(ordering_method::NONE), _page(0) {
   _order_queries = {{ordering_method::NONE, DB_BUILDER_ORDER_NONE},
                     {ordering_method::API_ASC, DB_BUILDER_ORDER_API_ASC},
                     {ordering_method::API_DESC, DB_BUILDER_ORDER_API_DESC},
