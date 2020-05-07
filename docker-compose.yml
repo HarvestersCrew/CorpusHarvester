@@ -34,9 +34,11 @@ services:
           source: ./
           target: /project
         - harvester_bin:/project/bin/
+        - harvester_data:/tmp/stored
     depends_on:
         - db
 
 volumes:
     harvester_bin:
     harvester_db:
+    harvester_data:
