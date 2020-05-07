@@ -238,10 +238,9 @@ public:
   get_response_parameters() const;
 
   /**
-   * Gets vector of relevant response parameters (those inserted in DB)
+   * Gets vector of relevant parameters (those inserted in DB)
    */
-  const vector<shared_ptr<api_parameter_response>>
-  get_relevant_response_parameters() const;
+  const vector<shared_ptr<api_parameter_base>> get_relevant_parameters() const;
 };
 
 #endif

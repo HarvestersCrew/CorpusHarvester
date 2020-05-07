@@ -335,10 +335,14 @@ api_loader::get_response_parameters() const {
   return this->_responses;
 }
 
-const vector<shared_ptr<api_parameter_response>>
-api_loader::get_relevant_response_parameters() const {
-  vector<shared_ptr<api_parameter_response>> resp;
+const vector<shared_ptr<api_parameter_base>>
+api_loader::get_relevant_parameters() const {
+  vector<shared_ptr<api_parameter_base>> resp;
   for (auto param : _responses) {
+    if (param->_relevant)
+      resp.push_back(param);
+  }
+  for (auto param : _requests) {
     if (param->_relevant)
       resp.push_back(param);
   }

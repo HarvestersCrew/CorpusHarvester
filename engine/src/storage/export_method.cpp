@@ -22,11 +22,11 @@ void ExportMethod::init_api_tags(ExtractionApiTags &api_tags,
   }
 
   std::shared_ptr<api_loader> loader;
-  vector<shared_ptr<api_parameter_response>> curr_api_tags;
+  vector<shared_ptr<api_parameter_base>> curr_api_tags;
   string curr_api_tag_name;
   for (auto &api_name : api_names) {
     loader = ApiFactory::get_api(api_name);
-    curr_api_tags = loader->get_relevant_response_parameters();
+    curr_api_tags = loader->get_relevant_parameters();
     for (auto &curr_api_tag : curr_api_tags) {
       curr_api_tag_name = curr_api_tag->get_name();
       api_tags[api_name].push_back(Tag(curr_api_tag_name, ""));
