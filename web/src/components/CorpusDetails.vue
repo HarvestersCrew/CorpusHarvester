@@ -61,7 +61,7 @@
               <v-card>
                 <v-card-title>Corpus exportation</v-card-title>
                 <v-card-subtitle v-if="corpus.extraction_path !== null">
-                  Estimated file size :
+                  ~ {{ bytes_conversion_string(corpus.extraction_size) }}
                 </v-card-subtitle>
                 <v-card-text class="text-center">
                   <v-btn

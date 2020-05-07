@@ -42,8 +42,12 @@ json Corpus::serialize() const {
   j["title"] = _title;
   j["creation_date"] = _creation_date;
   j["extraction_path"] = nullptr;
-  if (_extraction_path)
-    j["extraction_path"] = _extraction_path.value();
+  j["extraction_size"] = 0;
+  if (_extraction_path) {
+    j["extraction_path"] = CORPUS_FOLDER + _extraction_path.value();
+    j["extraction_size"] = std::filesystem::file_size(
+        Storage().get_corpus_path() + _extraction_path.value());
+  }
   auto stats = this->get_statistics();
   j["stats"] = json::object();
   j["stats"]["files"] = stats.file_count;
