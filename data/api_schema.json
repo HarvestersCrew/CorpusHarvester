@@ -107,7 +107,8 @@
                         "enum": [
                             "string",
                             "int",
-                            "datetime"
+                            "datetime",
+                            "date"
                         ]
                     },
                     "date_format": {
@@ -207,7 +208,8 @@
                             "string",
                             "int",
                             "image_link",
-                            "datetime"
+                            "datetime",
+                            "date"
                         ]
                     },
                     "date_format": {

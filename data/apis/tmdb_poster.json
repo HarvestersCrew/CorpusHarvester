@@ -74,7 +74,8 @@
             ]
         },
         {
-            "type": "string",
+            "type": "date",
+            "date_format": "%Y-%m-%d",
             "api_name": "release_date",
             "name": "date",
             "relevant": true

@@ -13,6 +13,7 @@
 #include <vector>
 
 #define API_PARAMETER_DATETIME_FORMAT "%Y-%m-%d %T"
+#define API_PARAMETER_DATE_FORMAT "%Y-%m-%d"
 
 using std::optional;
 using std::string;
@@ -38,7 +39,7 @@ class api_parameter_base {
 
 public:
   /** Value describing the type of the parameter */
-  enum value_type { STRING, INT, IMAGE_LINK, DATETIME };
+  enum value_type { STRING, INT, IMAGE_LINK, DATETIME, DATE };
 
   static unordered_map<value_type, string> _value_type_strings;
 
