@@ -169,8 +169,10 @@ export default new Vuex.Store({
           case "export_corpus":
             if (obj.type !== undefined && obj.type !== "error") {
               state.corpuses.results.forEach(corp => {
-                if (corp.id === obj.data.id)
+                if (corp.id === obj.data.id) {
                   corp.extraction_path = obj.data.path;
+                  corp.extraction_size = obj.data.size;
+                }
               });
             }
             state.notifications.push({
