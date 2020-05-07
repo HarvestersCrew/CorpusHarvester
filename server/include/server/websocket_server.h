@@ -7,6 +7,7 @@
 #include "server/broadcast_log_output.h"
 #include "server/server_handler.h"
 #include "server/wss_logstream.h"
+#include "storage/storage.h"
 #include "utils/exceptions.h"
 #include "utils/logger.h"
 #include "utils/nlohmann/json.hpp"
@@ -15,6 +16,8 @@
 #include <mutex>
 #include <optional>
 #include <ostream>
+#include <seasocks/PrintfLogger.h>
+#include <seasocks/Server.h>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -52,8 +55,9 @@ struct ConnectionData {
  */
 class WebsocketServer {
 public:
-  static bool init(unsigned int port);
+  static bool init(unsigned int port, unsigned int file_port);
   static void run();
+  static void run_file_server();
   static void stop();
 
   static bool send_error_json(const connection_hdl &hdl,
@@ -77,6 +81,11 @@ private:
   static mutex _connections_mut;
   static WssLogstream _ls;
   static ostream _os;
+
+  static shared_ptr<seasocks::PrintfLogger> _file_server_logger;
+  static shared_ptr<seasocks::Server> _file_server;
+  static unsigned int _file_server_port;
+  static thread _file_server_thread;
 
   static ConnectionData &get_data_ref(const connection_hdl &hdl);
 

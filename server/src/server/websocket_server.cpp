@@ -7,8 +7,13 @@ unsigned int WebsocketServer::_port;
 mutex WebsocketServer::_connections_mut;
 WssLogstream WebsocketServer::_ls;
 ostream WebsocketServer::_os(&WebsocketServer::_ls);
+shared_ptr<seasocks::PrintfLogger> WebsocketServer::_file_server_logger =
+    make_shared<seasocks::PrintfLogger>();
+shared_ptr<seasocks::Server> WebsocketServer::_file_server;
+unsigned int WebsocketServer::_file_server_port;
+thread WebsocketServer::_file_server_thread;
 
-bool WebsocketServer::init(unsigned int port) {
+bool WebsocketServer::init(unsigned int port, unsigned int file_port) {
   _server.init_asio();
   _server.set_reuse_addr(true);
 
@@ -28,6 +33,9 @@ bool WebsocketServer::init(unsigned int port) {
 
   _server.start_accept();
 
+  _file_server_port = file_port;
+  _file_server = make_shared<seasocks::Server>(_file_server_logger);
+
   return true;
 }
 
@@ -38,7 +46,17 @@ void WebsocketServer::run() {
     std::cout << "Logger is now outputting to " << logger::get_output_path()
               << std::endl;
   }
+
+  _file_server_thread = thread{WebsocketServer::run_file_server};
+  logger::info("Started file server on port " + to_string(_file_server_port));
+
   _server.run();
+}
+
+void WebsocketServer::run_file_server() {
+  Storage storage;
+  string path = storage.get_root_folder_name();
+  _file_server->serve(path.c_str(), _file_server_port);
 }
 
 bool WebsocketServer::send_error_json(const connection_hdl &hdl,

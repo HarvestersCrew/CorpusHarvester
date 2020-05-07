@@ -13,14 +13,19 @@ using std::endl;
 using std::get;
 
 #define SERVER_PORT 9002
+#define FILE_SERVER_PORT 9003
 
 int main(int argc, char **argv) {
 
   cli_command cli_root(argv[0], "Harvester server");
-  cli_root.add_option("port", "Port to be used by the server", false);
+  cli_root.add_option("port", "Port to be used by the websockets server",
+                      false);
+  cli_root.add_option("file_server_port", "Port to be used by the file server",
+                      false);
 
   std::vector<string> all_args(argv + 1, argv + argc);
   unsigned int port = SERVER_PORT;
+  unsigned int file_port = FILE_SERVER_PORT;
 
   try {
     const auto cli_res = cli_parser::parse(cli_root, all_args);
@@ -29,6 +34,17 @@ int main(int argc, char **argv) {
       std::string port_str = get<1>(cli_res).at("port");
       try {
         port = std::stoul(port_str);
+      } catch (const std::invalid_argument &e) {
+        std::cerr << "Invalid port argument, must be an unsigned int"
+                  << std::endl;
+        exit(-1);
+      }
+    }
+
+    if (get<1>(cli_res).find("file_server_port") != get<1>(cli_res).end()) {
+      std::string port_str = get<1>(cli_res).at("file_server_port");
+      try {
+        file_port = std::stoul(port_str);
       } catch (const std::invalid_argument &e) {
         std::cerr << "Invalid port argument, must be an unsigned int"
                   << std::endl;
@@ -51,6 +67,6 @@ int main(int argc, char **argv) {
     }
   } while (!db_ready);
 
-  WebsocketServer::init(port);
+  WebsocketServer::init(port, file_port);
   WebsocketServer::run();
 }
