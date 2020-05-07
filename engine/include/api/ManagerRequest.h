@@ -23,10 +23,12 @@
 #include <string>
 #include <tuple>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 using std::get;
 using std::list;
+using std::pair;
 using std::shared_ptr;
 using std::string;
 using std::unordered_map;
@@ -125,10 +127,11 @@ public:
    * Exports a given corpus ID with a certain format
    * @param id ID of the corpus
    * @param method Export method
-   * @return Path to the exported corpus
+   * @return Pair: first: exportation path, second: exportation size in bytes
    * @throw db_id_not_found if corpus wasn't found
    */
-  string export_corpus(const int id, ExportMethod::methods method) const;
+  pair<string, unsigned int> export_corpus(const int id,
+                                           ExportMethod::methods method) const;
 
   /**
    * Exports a given corpus ID with a certain format
@@ -136,12 +139,13 @@ public:
    * @param method Export method as a string
    * "zip" available
    * "zip" by default
-   * @return Path to the exported corpus
+   * @return Pair: first: exportation path, second: exportation size in bytes
    * @throw db_id_not_found if corpus wasn't found
    * @throw manager_request_unhandled_exception if no exportation path is found
    * after the exportation, shouldn't happen
    */
-  string export_corpus(const int id, const string &method) const;
+  pair<string, unsigned int> export_corpus(const int id,
+                                           const string &method) const;
 
   /**
    * Changes a corpus title

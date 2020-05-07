@@ -281,7 +281,9 @@ pair<string, json> server_handler::export_corpus(ConnectionData &con,
 
   json res = json::object();
   res["id"] = id;
-  res["path"] = con._mr.export_corpus(id, "zip");
+  auto export_response = con._mr.export_corpus(id, "zip");
+  res["path"] = export_response.first;
+  res["size"] = export_response.second;
 
   return make_pair("export_corpus", res);
 }

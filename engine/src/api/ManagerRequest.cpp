@@ -177,18 +177,23 @@ void ManagerRequest::add_to_corpus(const int id,
   corpus->add_files(files);
 }
 
-string ManagerRequest::export_corpus(const int id,
-                                     ExportMethod::methods method) const {
+pair<string, unsigned int>
+ManagerRequest::export_corpus(const int id,
+                              ExportMethod::methods method) const {
   const auto corpus = this->get_corpus_from_id(id);
   corpus->export_(method);
   if (!corpus->get_extraction_path()) {
     throw manager_request_unhandled_exception(
         "No corpus exportation path even though there should be one");
   }
-  return corpus->get_extraction_path().value();
+  pair<string, unsigned int> res;
+  res.first = corpus->get_extraction_path().value();
+  res.second = corpus->get_extraction_size();
+  return res;
 }
 
-string ManagerRequest::export_corpus(const int id, const string &method) const {
+pair<string, unsigned int>
+ManagerRequest::export_corpus(const int id, const string &method) const {
   ExportMethod::methods method_parsed = ExportMethod::methods::ZIP;
   if (method != "zip") {
     logger::warning("Export method not supported, using zip");

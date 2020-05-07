@@ -45,8 +45,7 @@ json Corpus::serialize() const {
   j["extraction_size"] = 0;
   if (_extraction_path) {
     j["extraction_path"] = CORPUS_FOLDER + _extraction_path.value();
-    j["extraction_size"] = std::filesystem::file_size(
-        Storage().get_corpus_path() + _extraction_path.value());
+    j["extraction_size"] = get_extraction_size();
   }
   auto stats = this->get_statistics();
   j["stats"] = json::object();
@@ -59,6 +58,14 @@ json Corpus::serialize() const {
     j.at("files").push_back(file->serialize());
   }
   return j;
+}
+
+unsigned int Corpus::get_extraction_size() const {
+  if (_extraction_path)
+    return std::filesystem::file_size(Storage().get_corpus_path() +
+                                      _extraction_path.value());
+  else
+    return 0;
 }
 
 bool Corpus::insert() {

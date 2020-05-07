@@ -150,6 +150,8 @@ public:
   void set_extraction_path(optional<string> path);
   optional<std::string> get_extraction_path() const { return _extraction_path; }
 
+  unsigned int get_extraction_size() const;
+
   std::string get_title() const { return _title; }
   void set_title(const std::string title);
   virtual int get_id() const { return this->_id; };
