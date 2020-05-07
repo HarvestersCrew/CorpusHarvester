@@ -106,7 +106,16 @@
                         "title": "Parameter's type",
                         "enum": [
                             "string",
-                            "int"
+                            "int",
+                            "date"
+                        ]
+                    },
+                    "date_format": {
+                        "$id": "#/properties/request/items/properties/date_format",
+                        "type": "string",
+                        "title": "C++ date format to parse",
+                        "examples": [
+                            "%a %B %d %H:%M:%S +0000 %Y"
                         ]
                     },
                     "api_name": {
@@ -197,7 +206,16 @@
                         "enum": [
                             "string",
                             "int",
-                            "image_link"
+                            "image_link",
+                            "date"
+                        ]
+                    },
+                    "date_format": {
+                        "$id": "#/properties/response/items/properties/date_format",
+                        "type": "string",
+                        "title": "C++ date format to parse",
+                        "examples": [
+                            "%a %B %d %H:%M:%S +0000 %Y"
                         ]
                     },
                     "api_name": {

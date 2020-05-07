@@ -4,7 +4,8 @@ unordered_map<api_parameter_base::value_type, string>
     api_parameter_base::_value_type_strings{
         {api_parameter_base::value_type::IMAGE_LINK, "image_link"},
         {api_parameter_base::value_type::INT, "int"},
-        {api_parameter_base::value_type::STRING, "string"}};
+        {api_parameter_base::value_type::STRING, "string"},
+        {api_parameter_base::value_type::DATE, "date"}};
 
 unordered_map<string, string> api_parameter_base::_default_descriptions{
     {"_api_id", "Unique ID of an element for this API"},
@@ -40,6 +41,9 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
   }
   if (!value_type_found)
     throw std::runtime_error("Unrecognized type for parameter.");
+
+  if (_value_type == value_type::DATE)
+    _date_format = json.at("date_format");
 }
 
 string api_parameter_base::to_string() const {
@@ -48,6 +52,7 @@ string api_parameter_base::to_string() const {
   out << "name: " << this->_name << std::endl;
   out << "desc: " << this->_description.value_or("none") << std::endl;
   out << "value_type: " << this->get_value_type_string() << std::endl;
+  out << "date_format: " << _date_format.value_or("none") << std::endl;
   out << "relevant: " << this->_relevant;
   return out.str();
 }
@@ -57,6 +62,9 @@ nlohmann::json api_parameter_base::serialize() const {
   j["api_name"] = this->_api_name;
   j["name"] = this->_name;
   j["value_type"] = this->get_value_type_string();
+  j["date_format"] = nullptr;
+  if (_date_format)
+    j["date_format"] = _date_format.value();
   j["relevant"] = this->_relevant;
   j["description"] = nullptr;
   if (_description)
@@ -85,6 +93,13 @@ api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
       result = val.get<string>();
     } else if (this->_value_type == value_type::IMAGE_LINK) {
       result = val.get<string>();
+    } else if (_value_type == value_type::DATE) {
+      struct tm time_parsed;
+      strptime(val.get<string>().c_str(), _date_format.value().c_str(),
+               &time_parsed);
+      char buffer[70];
+      strftime(buffer, 70, API_PARAMETER_DATE_FORMAT, &time_parsed);
+      result = buffer;
     }
   } catch (const nlohmann::json::exception &e) {
     logger::error("Error parsing a JSON value to a string");
@@ -197,6 +212,12 @@ bool api_parameter_request::is_value_correctly_typed(const string &val) const {
 
   } else if (this->_value_type == value_type::STRING) {
   } else if (this->_value_type == value_type::IMAGE_LINK) {
+  } else if (_value_type == value_type::DATE) {
+    struct tm t;
+    if (strptime(val.c_str(), _date_format.value().c_str(), &t))
+      return true;
+    else
+      return false;
   }
 
   return true;

@@ -190,7 +190,13 @@ The `request` object in the JSON is a list of different request objects, as desc
 
 Type of the parameter to use.
 
-*possible values:* `"string"`, `"int"`
+*possible values:* `"string"`, `"int"`, `"date"`
+
+**Note:** if date is chosen, please specify a `date_format`
+
+### date_format
+
+C++ format to parse the date, [see this](http://man7.org/linux/man-pages/man3/strptime.3.html). The string and format are passed to the C++ `strptime` function to then be saved in DB.
 
 ### api_name
 **required**
@@ -336,7 +342,7 @@ Parameter which represents a language with the ISO norm (en, fr...).
 
 ### date
 
-Parameter to describe what date the element was created. No parsing is done on it for now.
+Parameter to describe what date the element was created in the API.
 
 ## Note on sensitive values
 

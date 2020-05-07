@@ -8,8 +8,11 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <time.h>
 #include <unordered_map>
 #include <vector>
+
+#define API_PARAMETER_DATE_FORMAT "%Y-%m-%d %T"
 
 using std::optional;
 using std::string;
@@ -35,7 +38,7 @@ class api_parameter_base {
 
 public:
   /** Value describing the type of the parameter */
-  enum value_type { STRING, INT, IMAGE_LINK };
+  enum value_type { STRING, INT, IMAGE_LINK, DATE };
 
   static unordered_map<value_type, string> _value_type_strings;
 
@@ -91,6 +94,8 @@ protected:
   bool _relevant;
   /** Description of the parameter, optional */
   optional<string> _description;
+  /** C++ format to parse the date */
+  optional<string> _date_format;
 
   /**
    * Is filled with default descriptions to be used
