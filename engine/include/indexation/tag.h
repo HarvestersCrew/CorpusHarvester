@@ -11,7 +11,7 @@
   "CREATE TABLE IF NOT EXISTS Tag(id INTEGER NOT NULL AUTO_INCREMENT,file_id " \
   "INTEGER NOT NULL,name "                                                     \
   "TEXT NOT NULL,value TEXT NOT NULL,PRIMARY KEY (id),FOREIGN KEY (file_id) "  \
-  "REFERENCES File(id));"
+  "REFERENCES File(id) ON DELETE CASCADE);"
 #define DROP_TAG_STATEMENT "DROP TABLE IF EXISTS Tag;"
 #define INSERT_TAG_STATEMENT                                                   \
   "INSERT INTO Tag (file_id, name, value) VALUES(?, ?, ?)"
