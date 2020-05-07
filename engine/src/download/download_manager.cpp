@@ -44,6 +44,7 @@ std::vector<char> download_manager::download(const download_item &dli) const {
 
   if (response_code != 200) {
     throw download_no_200_exception(response_code, url);
+    logger::debug(vec_to_string(read_buffer));
   }
 
   if (dli.get_truncate_before() > 0) {

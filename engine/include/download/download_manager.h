@@ -4,6 +4,7 @@
 #include "download/download_item.h"
 #include "utils/exceptions.h"
 #include "utils/nlohmann/json.hpp"
+#include "utils/utils.h"
 #include <curl/curl.h>
 #include <fstream>
 #include <iostream>
