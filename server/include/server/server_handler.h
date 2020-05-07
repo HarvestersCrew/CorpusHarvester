@@ -59,15 +59,11 @@ pair<string, json> get_apis_infos(ConnectionData &con);
 pair<string, json> get_logger_infos(ConnectionData &con);
 
 /**
- * Gets the current storage path
+ * Gets the current storage informations
+ * @return storage_path
+ * @return file_server_port
  */
-pair<string, json> get_storage_path(ConnectionData &con);
-
-/**
- * Retrieves the port which the file server is operating on
- * @return port Port of the file server
- */
-pair<string, json> get_file_server_port(ConnectionData &con);
+pair<string, json> get_storage_infos(ConnectionData &con);
 
 /**
  * Clears logfile
@@ -103,7 +99,7 @@ pair<string, json> update_logger(ConnectionData &con, const json &j);
 /**
  * Storage migration
  * @param new_path new path to migrate to
- * @return get_storage_path
+ * @return get_storage_infos
  * @throw StorageMigrationException if the new path can't be used
  */
 pair<string, json> storage_migration(ConnectionData &con, const json &j);

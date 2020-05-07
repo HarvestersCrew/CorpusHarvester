@@ -125,11 +125,6 @@ export default new Vuex.Store({
             state.apis = obj.data;
             break;
 
-          case "get_file_server_port":
-            console.log(obj.data);
-            state.storage.file_server_port = obj.data.port;
-            break;
-
           case "logger":
             state.logs.messages.push(obj.data.message);
             state.logs.unread++;
@@ -141,8 +136,9 @@ export default new Vuex.Store({
             state.logger_settings.output_path = obj.data.output_path;
             break;
 
-          case "get_storage_path":
+          case "get_storage_infos":
             state.storage.path = obj.data.storage_path;
+            state.storage.file_server_port = obj.data.port;
             break;
 
           case "api_builder_query":
