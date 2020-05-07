@@ -187,7 +187,7 @@ ManagerRequest::export_corpus(const int id,
         "No corpus exportation path even though there should be one");
   }
   pair<string, unsigned int> res;
-  res.first = corpus->get_extraction_path().value();
+  res.first = corpus->get_relative_extraction_path().value();
   res.second = corpus->get_extraction_size();
   return res;
 }

@@ -150,6 +150,7 @@ public:
   void set_extraction_path(optional<string> path);
   optional<std::string> get_extraction_path() const { return _extraction_path; }
 
+  optional<std::string> get_relative_extraction_path() const;
   unsigned int get_extraction_size() const;
 
   std::string get_title() const { return _title; }

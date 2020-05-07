@@ -44,7 +44,7 @@ json Corpus::serialize() const {
   j["extraction_path"] = nullptr;
   j["extraction_size"] = 0;
   if (_extraction_path) {
-    j["extraction_path"] = CORPUS_FOLDER + _extraction_path.value();
+    j["extraction_path"] = get_relative_extraction_path().value();
     j["extraction_size"] = get_extraction_size();
   }
   auto stats = this->get_statistics();
@@ -58,6 +58,13 @@ json Corpus::serialize() const {
     j.at("files").push_back(file->serialize());
   }
   return j;
+}
+
+optional<std::string> Corpus::get_relative_extraction_path() const {
+  if (_extraction_path)
+    return CORPUS_FOLDER + _extraction_path.value();
+  else
+    return std::nullopt;
 }
 
 unsigned int Corpus::get_extraction_size() const {
