@@ -61,7 +61,7 @@
     ],
     "response": [
         {
-            "type": "int",
+            "type": "int64",
             "api_name": "id",
             "name": "_api_id",
             "relevant": true,

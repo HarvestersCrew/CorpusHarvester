@@ -39,7 +39,7 @@ class api_parameter_base {
 
 public:
   /** Value describing the type of the parameter */
-  enum value_type { STRING, INT, IMAGE_LINK, DATETIME, DATE };
+  enum value_type { STRING, INT, IMAGE_LINK, DATETIME, DATE, INT64 };
 
   static unordered_map<value_type, string> _value_type_strings;
 

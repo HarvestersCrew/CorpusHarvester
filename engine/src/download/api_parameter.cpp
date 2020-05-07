@@ -6,7 +6,8 @@ unordered_map<api_parameter_base::value_type, string>
         {api_parameter_base::value_type::INT, "int"},
         {api_parameter_base::value_type::STRING, "string"},
         {api_parameter_base::value_type::DATETIME, "datetime"},
-        {api_parameter_base::value_type::DATE, "date"}};
+        {api_parameter_base::value_type::DATE, "date"},
+        {api_parameter_base::value_type::INT64, "int64"}};
 
 unordered_map<string, string> api_parameter_base::_default_descriptions{
     {"_api_id", "Unique ID of an element for this API"},
@@ -92,6 +93,8 @@ api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
   try {
     if (this->_value_type == value_type::INT) {
       result = std::to_string(val.get<int>());
+    } else if (_value_type == value_type::INT64) {
+      result = std::to_string(val.get<long long int>());
     } else if (this->_value_type == value_type::STRING) {
       result = val.get<string>();
     } else if (this->_value_type == value_type::IMAGE_LINK) {
@@ -131,6 +134,9 @@ api_parameter_base::get_sql_cast_prepared_string(const string &param) const {
   switch (this->get_value_type()) {
   case api_parameter_base::value_type::INT:
     res += "CAST(" + param + " as INT)";
+    break;
+  case value_type::INT64:
+    res += "CAST(" + param + " as BIGINT)";
     break;
   default:
     res += param;
@@ -217,6 +223,15 @@ bool api_parameter_request::is_value_correctly_typed(const string &val) const {
   if (this->_value_type == value_type::INT) {
     try {
       std::stoi(val);
+    } catch (const std::invalid_argument &e) {
+      return false;
+    } catch (const std::out_of_range &e) {
+      return false;
+    }
+
+  } else if (_value_type == value_type::INT64) {
+    try {
+      std::stoll(val);
     } catch (const std::invalid_argument &e) {
       return false;
     } catch (const std::out_of_range &e) {

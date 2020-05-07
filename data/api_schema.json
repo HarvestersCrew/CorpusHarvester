@@ -108,7 +108,8 @@
                             "string",
                             "int",
                             "datetime",
-                            "date"
+                            "date",
+                            "int64"
                         ]
                     },
                     "date_format": {
@@ -209,7 +210,8 @@
                             "int",
                             "image_link",
                             "datetime",
-                            "date"
+                            "date",
+                            "int64"
                         ]
                     },
                     "date_format": {
