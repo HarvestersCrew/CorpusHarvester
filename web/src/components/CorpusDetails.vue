@@ -77,7 +77,13 @@
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-btn icon v-on="on" x-large :href="corpus_dl_url">
+                      <v-btn
+                        icon
+                        v-on="on"
+                        x-large
+                        :href="corpus_dl_url"
+                        target="_blank"
+                      >
                         <v-icon>mdi-download</v-icon>
                       </v-btn>
                     </template>
