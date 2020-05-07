@@ -72,8 +72,7 @@
             "date_format": "%a %B %d %H:%M:%S +0000 %Y",
             "name": "date",
             "api_name": "created_at",
-            "relevant": true,
-            "description": "Tweet creation date"
+            "relevant": true
         },
         {
             "type": "string",
