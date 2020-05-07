@@ -1,6 +1,15 @@
 version: '3.7'
 services:
 
+    db:
+        image: mariadb
+        container_name: db
+        volumes:
+            - harvester_build_db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 1234
+            MYSQL_DATABASE: harvester
+
     web:
         build: web/
         image: harvester_web
@@ -16,6 +25,13 @@ services:
         container_name: harvester
         ports:
             - 9002:9002
+            - 9003:9003
         tty: true
+        volumes:
+            - harvester_build_data:/tmp/stored
         depends_on:
             - db
+
+volumes:
+    harvester_build_data:
+    harvester_build_db:
