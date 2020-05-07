@@ -34,7 +34,6 @@ bool WebsocketServer::init(unsigned int port, unsigned int file_port) {
   _server.start_accept();
 
   _file_server_port = file_port;
-  _file_server = make_shared<seasocks::Server>(_file_server_logger);
 
   return true;
 }
@@ -48,15 +47,23 @@ void WebsocketServer::run() {
   }
 
   _file_server_thread = thread{WebsocketServer::run_file_server};
-  logger::info("Started file server on port " + to_string(_file_server_port));
 
   _server.run();
 }
 
 void WebsocketServer::run_file_server() {
+  _file_server = make_shared<seasocks::Server>(_file_server_logger);
   Storage storage;
   string path = storage.get_root_folder_name();
+  logger::info("Serving files from " + path + " on port " +
+               to_string(_file_server_port));
   _file_server->serve(path.c_str(), _file_server_port);
+}
+
+void WebsocketServer::restart_file_server() {
+  _file_server->terminate();
+  _file_server_thread.join();
+  _file_server_thread = thread{WebsocketServer::run_file_server};
 }
 
 bool WebsocketServer::send_error_json(const connection_hdl &hdl,

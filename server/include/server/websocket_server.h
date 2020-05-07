@@ -58,6 +58,7 @@ public:
   static bool init(unsigned int port, unsigned int file_port);
   static void run();
   static void run_file_server();
+  static void restart_file_server();
   static void stop();
 
   static bool send_error_json(const connection_hdl &hdl,
