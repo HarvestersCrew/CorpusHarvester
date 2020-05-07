@@ -68,7 +68,8 @@
             "description": "ID of the tweet"
         },
         {
-            "type": "string",
+            "type": "datetime",
+            "date_format": "%a %B %d %H:%M:%S +0000 %Y",
             "name": "date",
             "api_name": "created_at",
             "relevant": true,

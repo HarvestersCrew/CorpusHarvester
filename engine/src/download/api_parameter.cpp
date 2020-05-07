@@ -5,7 +5,7 @@ unordered_map<api_parameter_base::value_type, string>
         {api_parameter_base::value_type::IMAGE_LINK, "image_link"},
         {api_parameter_base::value_type::INT, "int"},
         {api_parameter_base::value_type::STRING, "string"},
-        {api_parameter_base::value_type::DATE, "date"}};
+        {api_parameter_base::value_type::DATETIME, "datetime"}};
 
 unordered_map<string, string> api_parameter_base::_default_descriptions{
     {"_api_id", "Unique ID of an element for this API"},
@@ -42,7 +42,7 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
   if (!value_type_found)
     throw std::runtime_error("Unrecognized type for parameter.");
 
-  if (_value_type == value_type::DATE)
+  if (_value_type == value_type::DATETIME)
     _date_format = json.at("date_format");
 }
 
@@ -93,12 +93,12 @@ api_parameter_base::json_value_to_string(const nlohmann::json &val) const {
       result = val.get<string>();
     } else if (this->_value_type == value_type::IMAGE_LINK) {
       result = val.get<string>();
-    } else if (_value_type == value_type::DATE) {
+    } else if (_value_type == value_type::DATETIME) {
       struct tm time_parsed;
       strptime(val.get<string>().c_str(), _date_format.value().c_str(),
                &time_parsed);
       char buffer[70];
-      strftime(buffer, 70, API_PARAMETER_DATE_FORMAT, &time_parsed);
+      strftime(buffer, 70, API_PARAMETER_DATETIME_FORMAT, &time_parsed);
       result = buffer;
     }
   } catch (const nlohmann::json::exception &e) {
@@ -212,7 +212,7 @@ bool api_parameter_request::is_value_correctly_typed(const string &val) const {
 
   } else if (this->_value_type == value_type::STRING) {
   } else if (this->_value_type == value_type::IMAGE_LINK) {
-  } else if (_value_type == value_type::DATE) {
+  } else if (_value_type == value_type::DATETIME) {
     struct tm t;
     if (strptime(val.c_str(), _date_format.value().c_str(), &t))
       return true;

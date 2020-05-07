@@ -190,9 +190,9 @@ The `request` object in the JSON is a list of different request objects, as desc
 
 Type of the parameter to use.
 
-*possible values:* `"string"`, `"int"`, `"date"`
+*possible values:* `"string"`, `"int"`, `"datetime"`
 
-**Note:** if date is chosen, please specify a `date_format`
+**Note:** if date/time is chosen, please specify a `date_format`
 
 ### date_format
 
