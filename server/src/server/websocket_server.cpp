@@ -109,6 +109,10 @@ bool WebsocketServer::send_msg(const connection_hdl &hdl, const string &msg) {
   return true;
 }
 
+unsigned int WebsocketServer::get_file_server_port() {
+  return _file_server_port;
+}
+
 ConnectionData &WebsocketServer::get_data_ref(const connection_hdl &hdl) {
   if (_websockets.find(hdl) == _websockets.end()) {
     throw wss_cant_find_handler();

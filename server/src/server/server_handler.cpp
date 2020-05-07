@@ -8,6 +8,7 @@ void server_handler::fill_available_functions(
   functions_no_data.emplace("get_apis_infos", &get_apis_infos);
   functions_no_data.emplace("get_logger_infos", &get_logger_infos);
   functions_no_data.emplace("get_storage_path", &get_storage_path);
+  functions_no_data.emplace("get_file_server_port", &get_file_server_port);
   functions_no_data.emplace("clear_logfile", &clear_logfile);
   functions_no_data.emplace("refresh_apis", &refresh_apis);
   functions_no_data.emplace("get_db_stats", &get_db_stats);
@@ -71,6 +72,12 @@ pair<string, json> server_handler::get_storage_path(ConnectionData &con) {
   json j;
   j["storage_path"] = path;
   return make_pair("get_storage_path", j);
+}
+
+pair<string, json> server_handler::get_file_server_port(ConnectionData &con) {
+  json j;
+  j["port"] = WebsocketServer::get_file_server_port();
+  return make_pair("get_file_server_port", j);
 }
 
 pair<string, json> server_handler::clear_logfile(ConnectionData &con) {

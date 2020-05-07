@@ -64,6 +64,12 @@ pair<string, json> get_logger_infos(ConnectionData &con);
 pair<string, json> get_storage_path(ConnectionData &con);
 
 /**
+ * Retrieves the port which the file server is operating on
+ * @return port Port of the file server
+ */
+pair<string, json> get_file_server_port(ConnectionData &con);
+
+/**
  * Clears logfile
  */
 pair<string, json> clear_logfile(ConnectionData &con);

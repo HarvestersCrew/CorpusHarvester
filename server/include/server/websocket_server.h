@@ -71,6 +71,8 @@ public:
 
   static bool send_msg(const connection_hdl &hdl, const string &msg);
 
+  static unsigned int get_file_server_port();
+
 private:
   WebsocketServer() {}
 
