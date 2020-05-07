@@ -12,6 +12,7 @@ export default new Vuex.Store({
 
     socket: {
       url: undefined,
+      port: 80,
       is_connected: false,
       connecting: false,
       error: false
@@ -61,7 +62,8 @@ export default new Vuex.Store({
     },
 
     storage: {
-      path: undefined
+      path: undefined,
+      file_server_port: undefined
     },
 
     apis: []
@@ -69,14 +71,23 @@ export default new Vuex.Store({
 
   getters: {
     api_types: state => [...new Set(state.apis.map(api => api.api_type))],
-    api_by_name: state => name => state.apis.find(el => el.name === name)
+    api_by_name: state => name => state.apis.find(el => el.name === name),
+    file_server_url: state =>
+      "http://" + state.socket.url + ":" + state.storage.file_server_port + "/"
   },
 
   mutations: {
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;
-      state.socket.url = event.currentTarget.url;
-      localStorage.harvester_socket = state.socket.url;
+
+      let regex = /^ws:\/\/([^:/]+)(:(\d+))*\/*$/g;
+      let match = regex.exec(event.currentTarget.url);
+      state.socket.url = match[1];
+      if (match[3] !== undefined) {
+        state.socket.port = match[3];
+      }
+
+      localStorage.harvester_socket = event.currentTarget.url;
       state.socket.is_connected = true;
       state.socket.connecting = false;
       state.socket.error = false;
@@ -91,6 +102,7 @@ export default new Vuex.Store({
       state.socket.is_connected = false;
       state.socket.connecting = false;
       state.socket.url = undefined;
+      state.socket.port = 80;
     },
     SOCKET_ONERROR(state, event) {
       console.error(state, event);
@@ -111,6 +123,11 @@ export default new Vuex.Store({
 
           case "get_apis":
             state.apis = obj.data;
+            break;
+
+          case "get_file_server_port":
+            console.log(obj.data);
+            state.storage.file_server_port = obj.data.port;
             break;
 
           case "logger":

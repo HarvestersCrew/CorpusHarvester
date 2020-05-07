@@ -103,6 +103,10 @@ export default {
         type: "get_storage_path",
         data: {}
       });
+      this.$store.dispatch("send_request", {
+        type: "get_file_server_port",
+        data: {}
+      });
       this.$store.commit("set_first_init_done", true);
     }
   },

@@ -77,7 +77,7 @@
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <v-btn icon v-on="on" x-large>
+                      <v-btn icon v-on="on" x-large :href="corpus_dl_url">
                         <v-icon>mdi-download</v-icon>
                       </v-btn>
                     </template>
@@ -126,6 +126,11 @@ export default {
         ]
       }
     };
+  },
+  computed: {
+    corpus_dl_url() {
+      return this.$store.getters.file_server_url + this.corpus.extraction_path;
+    }
   },
   methods: {
     export_corpus() {
