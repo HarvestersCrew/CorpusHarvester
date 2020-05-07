@@ -22,9 +22,9 @@
             "required": false,
             "default_value": "en",
             "position": "body",
-            "relevant": false,
+            "relevant": true,
             "api_name": "lang",
-            "description": "Language of tweet"
+            "name": "language_iso"
         },
         {
             "type": "string",
@@ -94,13 +94,6 @@
             "api_name": "favorite_count",
             "relevant": true,
             "description": "Favorite count"
-        },
-        {
-            "type": "string",
-            "name": "language",
-            "api_name": "lang",
-            "relevant": true,
-            "description": "Language of the tweet"
         }
     ]
 }

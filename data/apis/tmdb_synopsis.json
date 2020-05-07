@@ -20,9 +20,9 @@
             "api_name": "language",
             "required": false,
             "relevant": true,
-            "name": "language",
+            "name": "language_iso",
             "position": "body",
-            "default_value": "en-us"
+            "default_value": "en"
         },
         {
             "type": "string",

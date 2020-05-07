@@ -330,9 +330,9 @@ Number of elements in a page to retrieve.
 
 Name to use to represent a string query in a request (or response).
 
-### language
+### language_iso
 
-Parameter which represents a language. No parsing is done on it, so you can get `english` or `en` values.
+Parameter which represents a language with the ISO norm (en, fr...).
 
 ### date
 
