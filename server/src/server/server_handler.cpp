@@ -1,4 +1,5 @@
 #include "server/server_handler.h"
+#include "server/websocket_server.h"
 
 void server_handler::fill_available_functions(
     unordered_map<string, handler_function_data> &functions_data,
@@ -128,6 +129,10 @@ pair<string, json> server_handler::storage_migration(ConnectionData &con,
     throw wss_invalid_request();
   }
   con._mr.migrate_storage(j.at("new_path").get<string>());
+
+  // Restart file server to load new file path
+  WebsocketServer::restart_file_server();
+
   auto to_return = get_storage_path(con);
   WebsocketServer::broadcast_json(to_return);
   return make_pair("storage_migration", json::object());
