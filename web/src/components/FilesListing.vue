@@ -17,7 +17,7 @@
             cols="auto"
             class="mx-4"
             v-for="(tag, key) in item.tags"
-            :key="tag"
+            :key="key"
             align-self="center"
           >
             <div class="font-weight-bold">{{ key }}</div>

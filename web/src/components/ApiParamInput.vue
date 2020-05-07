@@ -82,7 +82,8 @@ export default {
       return hint;
     },
     type() {
-      if (this.param.value_type === "int") return "number";
+      if (this.param.value_type === "int" || this.param.value_type === "int64")
+        return "number";
       else return this.param.value_type;
     },
     label() {
