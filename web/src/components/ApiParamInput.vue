@@ -25,25 +25,11 @@
     </v-col>
 
     <v-col>
-      <v-text-field
-        :label="label"
-        outlined
-        clearable
-        v-if="param.values === undefined || param.values.length === 0"
-        :placeholder="param.default_value"
-        :hint="hint_text"
-        persistent-hint
-        :value="value"
-        @input="$emit('input', $event)"
-        :rules="[validation]"
-        :disabled="disabled"
-      ></v-text-field>
-
       <v-select
         :label="label"
         outlined
         clearable
-        v-else
+        v-if="param.values !== undefined && param.values.length > 0"
         :placeholder="param.default_value"
         :hint="hint_text"
         persistent-hint
@@ -52,6 +38,20 @@
         @input="$emit('input', $event)"
         :disabled="disabled"
       ></v-select>
+
+      <v-text-field
+        v-else
+        :label="label"
+        outlined
+        clearable
+        :placeholder="param.default_value"
+        :hint="hint_text"
+        persistent-hint
+        :value="value"
+        @input="$emit('input', $event)"
+        :rules="[validation]"
+        :disabled="disabled"
+      ></v-text-field>
     </v-col>
   </v-row>
 </template>
@@ -83,14 +83,14 @@ export default {
     },
     type() {
       if (this.param.value_type === "int") return "number";
-      else return "text";
+      else return this.param.value_type;
     },
     label() {
       return this.param.required ? this.param.name + "*" : this.param.name;
     },
     logical_symbols() {
       let arr = ["=", "!="];
-      if (this.type === "number") {
+      if (this.type !== "string") {
         arr.push("<", ">", "<=", ">=");
       }
       return arr;
