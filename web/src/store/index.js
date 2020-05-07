@@ -73,7 +73,9 @@ export default new Vuex.Store({
     api_types: state => [...new Set(state.apis.map(api => api.api_type))],
     api_by_name: state => name => state.apis.find(el => el.name === name),
     file_server_url: state =>
-      "http://" + state.socket.url + ":" + state.storage.file_server_port + "/"
+      "http://" + state.socket.url + ":" + state.storage.file_server_port + "/",
+    full_file_server_url: (state, getters) => relative_path =>
+      getters.file_server_url + relative_path
   },
 
   mutations: {

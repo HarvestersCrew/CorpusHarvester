@@ -135,7 +135,9 @@ export default {
   },
   computed: {
     corpus_dl_url() {
-      return this.$store.getters.file_server_url + this.corpus.extraction_path;
+      return this.$store.getters.full_file_server_url(
+        this.corpus.extraction_path
+      );
     }
   },
   methods: {
