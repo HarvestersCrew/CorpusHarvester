@@ -37,11 +37,7 @@ std::string random_str(const unsigned int len) {
 }
 
 std::string vec_to_string(const std::vector<char> &vec) {
-  std::string str;
-  for (char c : vec) {
-    str += c;
-  }
-  return str;
+  return std::string(vec.begin(), vec.end());
 }
 
 void fill_file_randomly(shared_ptr<File> file, bool tweet, bool is_even) {

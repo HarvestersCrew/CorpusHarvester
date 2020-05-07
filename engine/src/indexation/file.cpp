@@ -141,7 +141,7 @@ void File::set_bin_content(std::vector<char> content) {
 
 void File::store(const string &path) const {
   if (!this->get_binary()) {
-    std::ofstream outfile(path);
+    std::ofstream outfile(path, std::ios::binary);
     outfile << this->get_content_str() << std::endl;
     outfile.close();
   } else {
