@@ -11,6 +11,7 @@ CS Engineering School Project
 ### Server libraries
 - libasio : `apt install libasio-dev`
 - websocketpp : `apt install libwebsocketpp-dev`
+- seasocks : [Github](https://github.com/mattgodbolt/seasocks)
 
 ### Web client
 Node needs to be installed to build the web client. A simple HTTP server can be used to serve those compiled files.

@@ -13,7 +13,7 @@ DOCKERS := $(patsubst %, docker/%, $(EXES))
 
 INCLUDES := $(patsubst %,-I%,$(shell find ../ -maxdepth 2 -type d -name $(INCDIR)))
 LFLAGS := -Llib
-LIBS := -lcurl -lmysqlcppconn -lpthread -lzip
+LIBS := -lcurl -lmysqlcppconn -lpthread -lzip -lseasocks
 
 SRCS := $(shell find -type f -name "*.cpp")
 INCS := $(shell find -type f -name "*.h")

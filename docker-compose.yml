@@ -27,6 +27,7 @@ services:
     container_name: harvester
     ports:
         - 9002:9002
+        - 9003:9003
     tty: true
     volumes:
         - type: bind
