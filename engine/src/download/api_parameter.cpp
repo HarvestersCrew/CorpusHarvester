@@ -52,8 +52,8 @@ api_parameter_base::api_parameter_base(const nlohmann::json &json) {
 
 string api_parameter_base::to_string() const {
   std::stringstream out;
-  out << "------- api_name: " << this->_api_name << " -------" << std::endl;
-  out << "name: " << this->_name << std::endl;
+  out << "------- name: " << this->_name << " -------" << std::endl;
+  out << "api_name: " << this->_api_name << std::endl;
   out << "desc: " << this->_description.value_or("none") << std::endl;
   out << "value_type: " << this->get_value_type_string() << std::endl;
   out << "date_format: " << _date_format.value_or("none") << std::endl;
