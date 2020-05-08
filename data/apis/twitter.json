@@ -1,0 +1,99 @@
+{
+    "name": "Twitter",
+    "url": "https://api.twitter.com/1.1/search/tweets.json",
+    "method": "GET",
+    "api_type": "text",
+    "response_main_item": "text",
+    "path_to_results": [
+        "statuses"
+    ],
+    "request": [
+        {
+            "type": "string",
+            "required": true,
+            "position": "body",
+            "relevant": false,
+            "api_name": "q",
+            "name": "query",
+            "description": "Search query"
+        },
+        {
+            "type": "string",
+            "required": false,
+            "default_value": "en",
+            "position": "body",
+            "relevant": true,
+            "api_name": "lang",
+            "name": "language_iso"
+        },
+        {
+            "type": "string",
+            "values": [
+                "mixed",
+                "recent",
+                "popular"
+            ],
+            "required": false,
+            "default_value": "recent",
+            "position": "body",
+            "relevant": false,
+            "api_name": "result_type",
+            "description": "Type of tweets to retrieve"
+        },
+        {
+            "type": "int",
+            "required": false,
+            "default_value": "15",
+            "position": "body",
+            "relevant": false,
+            "api_name": "count",
+            "name": "_page_count",
+            "description": "Number of elements per query page"
+        },
+        {
+            "type": "string",
+            "required": true,
+            "position": "header",
+            "relevant": false,
+            "api_name": "Authorization",
+            "description": "API token"
+        }
+    ],
+    "response": [
+        {
+            "type": "int64",
+            "api_name": "id",
+            "name": "_api_id",
+            "relevant": true,
+            "description": "ID of the tweet"
+        },
+        {
+            "type": "datetime",
+            "date_format": "%a %B %d %H:%M:%S +0000 %Y",
+            "name": "date",
+            "api_name": "created_at",
+            "relevant": true
+        },
+        {
+            "type": "string",
+            "name": "text",
+            "api_name": "text",
+            "relevant": true,
+            "description": "Tweet content"
+        },
+        {
+            "type": "int",
+            "name": "retweet",
+            "api_name": "retweet_count",
+            "relevant": true,
+            "description": "Retweets count"
+        },
+        {
+            "type": "int",
+            "name": "favorite",
+            "api_name": "favorite_count",
+            "relevant": true,
+            "description": "Favorite count"
+        }
+    ]
+}

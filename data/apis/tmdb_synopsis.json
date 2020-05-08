@@ -1,0 +1,78 @@
+{
+    "name": "TheMovieDB_Synopsis",
+    "url": "https://api.themoviedb.org/3/search/movie",
+    "method": "GET",
+    "api_type": "text",
+    "response_main_item": "synopsis",
+    "path_to_results": [
+        "results"
+    ],
+    "request": [
+        {
+            "type": "string",
+            "required": true,
+            "position": "body",
+            "relevant": false,
+            "api_name": "api_key"
+        },
+        {
+            "type": "string",
+            "api_name": "language",
+            "required": false,
+            "relevant": true,
+            "name": "language_iso",
+            "position": "body",
+            "default_value": "en"
+        },
+        {
+            "type": "string",
+            "api_name": "query",
+            "required": true,
+            "position": "body",
+            "relevant": false
+        },
+        {
+            "type": "int",
+            "api_name": "page",
+            "name": "_page",
+            "default_value": "1",
+            "required": false,
+            "position": "body",
+            "relevant": false
+        },
+        {
+            "type": "int",
+            "api_name": "primary_release_year",
+            "required": false,
+            "position": "body",
+            "relevant": false
+        }
+    ],
+    "response": [
+        {
+            "type": "int",
+            "api_name": "id",
+            "name": "_api_id",
+            "relevant": true
+        },
+        {
+            "type": "string",
+            "api_name": "title",
+            "name": "title",
+            "relevant": true
+        },
+        {
+            "type": "string",
+            "api_name": "overview",
+            "name": "synopsis",
+            "relevant": true
+        },
+        {
+            "type": "date",
+            "date_format": "%Y-%m-%d",
+            "api_name": "release_date",
+            "name": "date",
+            "relevant": true
+        }
+    ]
+}
