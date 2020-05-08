@@ -15,6 +15,7 @@ Currently, it is composed of four modules:
 Two `docker-compose` files are provided to help setup the CorpusHarvester. The default one will build everything and run an image of MariaDB for the database, a container with the server running and the CLI available, and a container with the web client. The `devel` one is there to simplify development, assure that the setup is the same across the contributors and storing object files to avoid rebuilding everything each time.
 
 ## Requirements
+These requirements are only needed where you plan to build the project. If using Docker, the provided Dockerfiles will take care of that.
 
 ### Engine libraries
 - MySQL Connection/C++: `apt install libmysqlcppconn-dev`, connection to the MariaDB server
@@ -35,11 +36,12 @@ Using Docker, a web interface is running to play with the MySQL server from outs
 
 ### Others
 - clang-format : `apt install clang-format`, used to lint the code at compile time (we are using LLVM format)
-- docker, docker-compose:
 
 ## Docker usage
 
 ### Production
+First download the web git submodule with these commands: `git submodule init` and `git submodule update`.
+
 Run `docker-compose build` then `docker-compose up` to have the full non-development suite started. The web client is on the port `8080`. Afterhand, do not forget to run `docker-compose down` to free the resources.
 
 ### Development
@@ -71,12 +73,6 @@ Both the classic `make` and `make docker` methods resolve in making an executabl
 
 ## How to use the command line interface
 Please refer to the documentation in [doc/cli.md](doc/cli.md).
-
-## Web client
-The web client is made with Node in Vue.js. If you wish to run it, you have the possibility to build it yourself (or fire up the dev server) if you have Node installed, or through Docker.
-
-### Node installed
-Go into the web folder, type `npm install` and `npx vue-cli-service build`. You then have a `dist/` folder you can distribute via a HTTP server. For the convenience, a dev package is also given with the packages. Run it with `npx dist/ -p 8080 --proxy "http://localhost:8080?"` (by adapting the two ports if necessary). You'll need to have the server running, either via Docker or natively.
 
 ## Add your own APIs
 The Harvester will look for API descritpion files in the `apis` subfolder of its storage root. By default we include a few of them which can be found in [data/apis/](data/apis/) and are copied to the application folder at compile time. To make your own, you can take inspiration from those existing and use the documentation written in [doc/api_json.md](doc/api_json.md).
