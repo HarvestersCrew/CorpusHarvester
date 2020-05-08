@@ -210,8 +210,7 @@ public:
   /**
    * Gets a request parameter named as
    * @param name API name to search for
-   * @return optional<api_parameter_request *> optional containing maybe
-   * the parameter pointer
+   * @return optional containing maybe the parameter pointer
    */
   optional<shared_ptr<api_parameter_request>>
   find_request_parameter(const string &name) const;
@@ -219,11 +218,18 @@ public:
   /**
    * Gets a response parameter named as
    * @param name API name to search for
-   * @return optional<api_parameter_request *> optional containing maybe
-   * the parameter pointer
+   * @return optional containing maybe the parameter pointer
    */
   optional<shared_ptr<api_parameter_response>>
   find_response_parameter(const string &name) const;
+
+  /**
+   * Gets a relevant parameter named as
+   * @param name API name to search for
+   * @return optional containing maybe the parameter pointer
+   */
+  optional<shared_ptr<api_parameter_base>>
+  find_relevant_parameter(const string &name) const;
 
   /**
    * Gets vector of available request parameters

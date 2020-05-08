@@ -325,6 +325,15 @@ api_loader::find_response_parameter(const string &name) const {
   return {};
 }
 
+optional<shared_ptr<api_parameter_base>>
+api_loader::find_relevant_parameter(const string &name) const {
+  for (auto &el : get_relevant_parameters()) {
+    if (el->_name == name)
+      return el;
+  }
+  return {};
+}
+
 const vector<shared_ptr<api_parameter_request>> &
 api_loader::get_request_parameters() const {
   return this->_requests;
