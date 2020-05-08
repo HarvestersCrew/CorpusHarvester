@@ -716,9 +716,9 @@ void CommandLineInterface::detail_api() {
     if (apiNameUser == "") {
       for (string api : apis) {
         std::cout << "Database parameter for : " << api << "\n" << std::endl;
-        vector<shared_ptr<api_parameter_response>> db_parameters =
+        vector<shared_ptr<api_parameter_base>> db_parameters =
             mr.get_api_db_parameters(api);
-        for (shared_ptr<api_parameter_response> parameter : db_parameters) {
+        for (shared_ptr<api_parameter_base> parameter : db_parameters) {
           std::cout << parameter.get()->to_string() << std::endl;
         }
         std::cout << "\n" << std::endl;
@@ -727,9 +727,9 @@ void CommandLineInterface::detail_api() {
       std::cout << "Database parameter for : " << apiNameUser << "\n"
                 << std::endl;
       // Get specific parameter from the name
-      vector<shared_ptr<api_parameter_response>> db_parameters =
+      vector<shared_ptr<api_parameter_base>> db_parameters =
           mr.get_api_db_parameters(apiNameUser);
-      for (shared_ptr<api_parameter_response> parameter : db_parameters) {
+      for (shared_ptr<api_parameter_base> parameter : db_parameters) {
         std::cout << parameter.get()->to_string() << std::endl;
       }
       std::cout << "\n" << std::endl;

@@ -75,8 +75,8 @@ list<shared_ptr<File>> &ApiDatabaseBuilder::build(unsigned int number) {
       // Retrieving the API parameter request in order to apply proper casting
       // to the values, and we consider its existence was checked when adding
       // the request
-      const shared_ptr<api_parameter_response> api_param =
-          api->find_response_parameter(param_it->first).value();
+      const shared_ptr<api_parameter_base> api_param =
+          api->find_relevant_parameter(param_it->first).value();
 
       // This is the query to select the entry corresponding to the parameter
       // name and value
@@ -139,7 +139,7 @@ void ApiDatabaseBuilder::add_request_parameter(long unsigned int request_id,
     throw api_builder_incompatible_operator(op, "database");
   }
   shared_ptr<api_loader> &api = this->_requests[request_id].first;
-  if (!api->find_response_parameter(param_name).has_value()) {
+  if (!api->find_relevant_parameter(param_name).has_value()) {
     throw api_no_setting_exception(param_name);
   }
   ApiRequestBuilder::add_request_parameter(request_id, param_name, param_value,

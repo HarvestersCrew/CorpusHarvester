@@ -103,13 +103,13 @@ json api_loader::serialize() const {
   j["path_to_results"] = this->_path_to_results;
   j["truncate_before"] = this->_truncate_before.value_or(0);
   j["truncate_after"] = this->_truncate_after.value_or(0);
-  j["requests"] = json::array();
-  j["responses"] = json::array();
+  j["web"] = json::array();
+  j["db"] = json::array();
   for (const auto &param : this->get_request_parameters()) {
-    j["requests"].push_back(param->serialize());
+    j["web"].push_back(param->serialize());
   }
-  for (const auto &param : this->get_response_parameters()) {
-    j["responses"].push_back(param->serialize());
+  for (const auto &param : this->get_relevant_parameters()) {
+    j["db"].push_back(param->serialize());
   }
   return j;
 }

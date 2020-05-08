@@ -179,6 +179,7 @@ string api_parameter_request::to_string() const {
   string base = api_parameter_base::to_string();
   std::stringstream out;
   out << base << std::endl;
+  out << "parameter_type: request" << std::endl;
   out << "position: " << this->_position << std::endl;
   out << "required: " << this->_required << std::endl;
   out << "public: " << this->_is_public << std::endl;
@@ -193,6 +194,7 @@ string api_parameter_request::to_string() const {
 
 nlohmann::json api_parameter_request::serialize() const {
   nlohmann::json j = api_parameter_base::serialize();
+  j["parameter_type"] = "request";
   j["position"] = this->_position;
   j["required"] = this->_required;
   j["is_public"] = this->_is_public;
@@ -293,6 +295,7 @@ string api_parameter_response::to_string() const {
   string base = api_parameter_base::to_string();
   std::stringstream out;
   out << base << std::endl;
+  out << "parameter_type: response" << std::endl;
   out << "name: " << this->_name << std::endl;
   out << "string prepend: [" << std::endl;
   for (std::pair<string, bool> el : this->_string_prepends) {
@@ -312,6 +315,7 @@ string api_parameter_response::to_string() const {
 
 nlohmann::json api_parameter_response::serialize() const {
   nlohmann::json j = api_parameter_base::serialize();
+  j["parameter_type"] = "response";
   j["string_prepends"] = this->_string_prepends;
   j["string_appends"] = this->_string_appends;
   return j;

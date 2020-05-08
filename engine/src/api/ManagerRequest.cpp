@@ -315,9 +315,9 @@ ManagerRequest::get_api_web_parameters(const string &api_name) {
   return ApiFactory::get_api(api_name)->get_request_parameters();
 }
 
-const vector<shared_ptr<api_parameter_response>> &
+const vector<shared_ptr<api_parameter_base>>
 ManagerRequest::get_api_db_parameters(const string &api_name) {
-  return ApiFactory::get_api(api_name)->get_response_parameters();
+  return ApiFactory::get_api(api_name)->get_relevant_parameters();
 }
 
 list<shared_ptr<File>> ManagerRequest::download_new_data(

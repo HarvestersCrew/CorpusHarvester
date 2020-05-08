@@ -232,7 +232,7 @@ public:
    * @return vector of parameters
    * @throw api_factory_name_not_found if the given API isn't found
    */
-  const vector<shared_ptr<api_parameter_response>> &
+  const vector<shared_ptr<api_parameter_base>>
   get_api_db_parameters(const string &api_name);
 
   /**
