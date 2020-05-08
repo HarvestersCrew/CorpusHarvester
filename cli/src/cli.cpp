@@ -5,6 +5,8 @@
 #include <iostream>
 #include <thread>
 
+#define POOL_DB_CLI_SIZE 3
+
 /**
  * Get the command of the user.
  *
@@ -17,7 +19,7 @@ int main(int argc, char **argv) {
   bool db_ready = false;
   do {
     try {
-      PoolDB::init(10);
+      PoolDB::init(POOL_DB_CLI_SIZE);
       db_ready = true;
     } catch (const sql::SQLException &e) {
       std::cout << "Failure connecting to DB, will retry in 10 seconds"

@@ -16,7 +16,9 @@
 #include <set>
 
 #define POOL_DB_NAME "harvester"
-#define POOL_DB_SIZE 1
+#define POOL_DB_USERNAME "root"
+#define POOL_DB_PASS "1234"
+#define POOL_DB_HOSTNAME "db"
 
 using sql::Connection;
 using std::lock_guard;

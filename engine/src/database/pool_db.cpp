@@ -3,10 +3,11 @@
 queue<shared_ptr<Connection>> PoolDB::_available_pool;
 set<shared_ptr<Connection>> PoolDB::_borrowed_pool;
 mutex PoolDB::_pool_mut;
-sql::ConnectOptionsMap PoolDB::_connection_props = {{"hostName", "db"},
-                                                    {"userName", "root"},
-                                                    {"password", "1234"},
-                                                    {"OPT_RECONNECT", true}};
+sql::ConnectOptionsMap PoolDB::_connection_props = {
+    {"hostName", POOL_DB_HOSTNAME},
+    {"userName", POOL_DB_USERNAME},
+    {"password", POOL_DB_PASS},
+    {"OPT_RECONNECT", true}};
 
 Connection *PoolDB::get_connection() {
   sql::Driver *driver = get_driver_instance();

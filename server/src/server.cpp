@@ -12,6 +12,7 @@ using std::cout;
 using std::endl;
 using std::get;
 
+#define POOL_DB_SERVER_SIZE 10
 #define SERVER_PORT 9002
 #define FILE_SERVER_PORT 9003
 
@@ -59,7 +60,7 @@ int main(int argc, char **argv) {
   bool db_ready = false;
   do {
     try {
-      PoolDB::init(10);
+      PoolDB::init(POOL_DB_SERVER_SIZE);
       db_ready = true;
     } catch (const sql::SQLException &e) {
       cout << "Failure connecting to DB, will retry in 10 seconds" << endl;
