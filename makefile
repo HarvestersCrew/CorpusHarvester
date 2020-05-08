@@ -64,24 +64,24 @@ docker: $(DOCKERS)
 docker/up:
 	@mkdir -p $(BINDIR)
 	@chmod -R a+w $(BINDIR)
-	docker-compose up -d --remove-orphans
+	docker-compose -f docker-compose.devel.yml up -d --remove-orphans
 
 docker/down:
-	docker-compose down
+	docker-compose -f docker-compose.devel.yml down
 
 docker/clean: docker/up clean
-	docker-compose exec harvester $(MAKE) clean
+	docker-compose -f docker-compose.devel.yml exec harvester $(MAKE) clean
 
 docker/%: docker/up docker/movejson
-	docker-compose exec harvester $(MAKE) ${BINDIR}/$*
+	docker-compose -f docker-compose.devel.yml exec harvester $(MAKE) ${BINDIR}/$*
 	@echo "#!/bin/bash" > ${BINDIR}/$*
-	@echo "docker-compose exec harvester ${BINDIR}/$* \"\$${@:1}\"" >> ${BINDIR}/$*
+	@echo "docker-compose -f docker-compose.devel.yml exec harvester ${BINDIR}/$* \"\$${@:1}\"" >> ${BINDIR}/$*
 	@chmod a+wx ${BINDIR}/$*
 
 docker/bash: docker/up
 	docker exec -it harvester bash
 
 docker/movejson: docker/up
-	@docker-compose exec harvester mkdir -p $(APPDIR)
-	@docker-compose exec harvester cp -r /project/data/apis $(APPDIR)/
-	@docker-compose exec harvester cp /project/data/api_schema.json $(APPDIR)/
+	@docker-compose -f docker-compose.devel.yml exec harvester mkdir -p $(APPDIR)
+	@docker-compose -f docker-compose.devel.yml exec harvester cp -r /project/data/apis $(APPDIR)/
+	@docker-compose -f docker-compose.devel.yml exec harvester cp /project/data/api_schema.json $(APPDIR)/

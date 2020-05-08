@@ -1,44 +1,37 @@
 version: '3.7'
 services:
 
-  db:
-    image: mariadb
-    container_name: db
-    volumes:
-        - harvester_db:/var/lib/mysql
-    environment:
-        MYSQL_ROOT_PASSWORD: 1234
-        MYSQL_DATABASE: harvester
+    db:
+        image: mariadb
+        container_name: db
+        volumes:
+            - harvester_build_db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 1234
+            MYSQL_DATABASE: harvester
 
+    web:
+        build: web/
+        image: harvester_web
+        container_name: harvester_web
+        ports:
+            - 8080:8080
 
-  adminer:
-    image: adminer
-    container_name: adminer
-    ports:
-        - 8080:8080
-    depends_on:
-        - db
-
-  harvester:
-    build:
-        context: .
-        target: gcc_debug
-    image: harvester
-    container_name: harvester
-    ports:
-        - 9002:9002
-        - 9003:9003
-    tty: true
-    volumes:
-        - type: bind
-          source: ./
-          target: /project
-        - harvester_bin:/project/bin/
-        - harvester_data:/tmp/stored
-    depends_on:
-        - db
+    harvester:
+        build:
+            context: .
+            target: gcc_build
+        image: harvester_build
+        container_name: harvester
+        ports:
+            - 9002:9002
+            - 9003:9003
+        tty: true
+        volumes:
+            - harvester_build_data:/tmp/stored
+        depends_on:
+            - db
 
 volumes:
-    harvester_bin:
-    harvester_db:
-    harvester_data:
+    harvester_build_data:
+    harvester_build_db:
