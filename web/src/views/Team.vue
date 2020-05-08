@@ -4,6 +4,13 @@
       <v-row justify="center" class="my-4">
         <v-col cols="12" sm="8" md="7" lg="6">
           <v-card>
+            <v-row justify="center">
+              <v-img
+                src="../assets/moissonneuse.png"
+                contain
+                max-width="237px"
+              ></v-img>
+            </v-row>
             <v-card-title>Corpus Harvester</v-card-title>
             <v-card-text>
               <div class="mb-4">
