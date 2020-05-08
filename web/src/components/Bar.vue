@@ -119,8 +119,9 @@ export default {
         }
       ],
       items2: [
+        { title: "Info", icon: "mdi-information-outline" },
         { title: "Settings", icon: "mdi-cog" },
-        { title: "Info", icon: "mdi-information-outline" }
+        { title: "Team", icon: "mdi-github" }
       ]
     };
   },
