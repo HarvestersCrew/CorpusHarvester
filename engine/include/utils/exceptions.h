@@ -88,6 +88,13 @@ public:
                          "ExtractionPathMissingException") {}
 };
 
+class ApiParameterNameTwiceException : public ExceptionWrapper {
+public:
+  ApiParameterNameTwiceException(const string &name)
+      : ExceptionWrapper("Parameter name in API appearing twice: " + name,
+                         "ApiParameterNameTwiceException") {}
+};
+
 class api_no_setting_exception : public ExceptionWrapper {
 public:
   api_no_setting_exception(const std::string &key)

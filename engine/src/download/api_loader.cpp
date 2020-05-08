@@ -50,22 +50,33 @@ void api_loader::init(const json &j) {
   }
 
   this->_truncate_before = {};
-  if (j.contains("truncate_before")) {
+  if (j.contains("truncate_before"))
     this->_truncate_before = j.at("truncate_before").get<int>();
-  }
 
   this->_truncate_after = {};
-  if (j.contains("truncate_after")) {
+  if (j.contains("truncate_after"))
     this->_truncate_after = j.at("truncate_after").get<int>();
-  }
 
-  for (auto &el : j.at("path_to_results")) {
+  for (auto &el : j.at("path_to_results"))
     this->_path_to_results.emplace_back(el.get<string>());
-  }
+
   for (auto &el : j.at("request"))
     this->_requests.emplace_back(make_shared<api_parameter_request>(el));
   for (auto &el : j.at("response"))
     this->_responses.emplace_back(make_shared<api_parameter_response>(el));
+
+  unordered_set<string> name_list;
+  vector<shared_ptr<api_parameter_base>> all_parameters;
+  all_parameters.insert(all_parameters.end(), _requests.begin(),
+                        _requests.end());
+  all_parameters.insert(all_parameters.end(), _responses.begin(),
+                        _responses.end());
+  for (const auto &req : all_parameters) {
+    if (name_list.find(req->get_name()) == name_list.end())
+      name_list.emplace(req->get_name());
+    else
+      throw ApiParameterNameTwiceException(req->get_name());
+  }
 
   bool main_attribute_found = false;
   for (const shared_ptr<const api_parameter_response> el : this->_responses) {

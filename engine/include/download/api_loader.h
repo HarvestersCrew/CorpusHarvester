@@ -22,6 +22,7 @@
 #include <string>
 #include <typeinfo>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -39,6 +40,7 @@ using std::shared_ptr;
 using std::string;
 using std::stringstream;
 using std::unordered_map;
+using std::unordered_set;
 using std::vector;
 
 /**
