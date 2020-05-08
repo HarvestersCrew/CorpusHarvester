@@ -28,7 +28,7 @@ These requirements are only needed where you plan to build the project. If using
 - seasocks: [Github](https://github.com/mattgodbolt/seasocks), HTTP server to distribute files
 
 ### Web client
-Node needs to be installed to build the web client. A simple HTTP server can be used to serve those compiled files.
+Node needs to be installed to build the web client. A simple HTTP server can be used to serve those compiled files. You can find the web client repo [here](https://github.com/HarvestersCrew/CorpusHarvesterWeb).
 
 ### Database
 You'll need to run your own MariaDB / MySQL server if you do not use the bundled Docker version.
