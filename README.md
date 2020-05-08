@@ -1,4 +1,9 @@
 # CorpusHarvester
+
+<p align="center">
+    <img src="img/moissonneuse.png"/>
+</p>
+
 The CorpusHarvester is a tool suite used to easily and quickly retrieve and create corpus of data from different websites. It can download from many default and user-described public APIs (Twitter, Flickr...) and export them as an archive. It can be used as a CLI tool to automate process, or as a web app for a more intuitive usage.
 
 Currently, it is composed of four modules:
