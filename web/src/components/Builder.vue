@@ -291,7 +291,7 @@ export default {
       let params = {};
       let values = {};
       let ops = {};
-      let param_type = this.builder_type === "web" ? "requests" : "responses";
+      let param_type = this.builder_type === "web" ? "web" : "db";
       api[param_type].forEach(req => {
         if (
           this.builder_type === "db" ||
