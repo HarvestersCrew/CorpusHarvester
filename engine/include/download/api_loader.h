@@ -249,6 +249,14 @@ public:
    * Gets vector of relevant parameters (those inserted in DB)
    */
   const vector<shared_ptr<api_parameter_base>> get_relevant_parameters() const;
+
+  /**
+   * Gets type of one api paremeter baised on its name
+   * @param parameter_name the name of the parameter
+   * @return the type of the parameter
+   */
+  api_parameter_base::value_type
+  get_relevant_parameter_type(string parameter_name) const;
 };
 
 #endif
