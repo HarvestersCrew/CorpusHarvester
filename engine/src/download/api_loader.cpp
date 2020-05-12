@@ -369,14 +369,12 @@ api_loader::get_relevant_parameters() const {
   return resp;
 }
 
-api_parameter_base::value_type
-api_loader::get_relevant_parameter_type(string parameter_name) const {
-  api_parameter_base::value_type parameter_type;
+shared_ptr<api_parameter_base>
+api_loader::get_relevant_parameter(string parameter_name) const {
   for (auto &parameter : get_relevant_parameters()) {
     if (parameter->get_name() == parameter_name) {
-      parameter_type = parameter->get_value_type();
-      break;
+      return parameter;
     }
   }
-  return parameter_type;
+  throw api_unrecognized_settings_exception();
 }

@@ -251,12 +251,13 @@ public:
   const vector<shared_ptr<api_parameter_base>> get_relevant_parameters() const;
 
   /**
-   * Gets type of one api paremeter baised on its name
+   * Gets relevant parameter based on its name
    * @param parameter_name the name of the parameter
-   * @return the type of the parameter
+   * @return the parameter
+   * @throw api_unrecognized_settings_exception if name isn't found
    */
-  api_parameter_base::value_type
-  get_relevant_parameter_type(string parameter_name) const;
+  shared_ptr<api_parameter_base>
+  get_relevant_parameter(string parameter_name) const;
 };
 
 #endif

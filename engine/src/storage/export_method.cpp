@@ -66,11 +66,11 @@ string ExportMethod::get_api_tags_values(ExtractionApiTags api_tags,
     } else {
       values += "0,";
     }
-    api_parameter_base::value_type parameter_type;
     for (auto &tag : tags) {
-      parameter_type =
-          ApiFactory::get_api(api_name)->get_relevant_parameter_type(
-              tag.get_name());
+      api_parameter_base::value_type parameter_type =
+          ApiFactory::get_api(api_name)
+              ->get_relevant_parameter(tag.get_name())
+              ->get_value_type();
       if ((parameter_type == api_parameter_base::value_type::STRING ||
            parameter_type == api_parameter_base::value_type::IMAGE_LINK) &&
           tag.get_value() != "") {
