@@ -368,3 +368,13 @@ api_loader::get_relevant_parameters() const {
   }
   return resp;
 }
+
+shared_ptr<api_parameter_base>
+api_loader::get_relevant_parameter(string parameter_name) const {
+  for (auto &parameter : get_relevant_parameters()) {
+    if (parameter->get_name() == parameter_name) {
+      return parameter;
+    }
+  }
+  throw api_unrecognized_settings_exception();
+}

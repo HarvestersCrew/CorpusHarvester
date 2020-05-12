@@ -41,10 +41,10 @@ string ExportMethod::get_api_tags_titles(ExtractionApiTags api_tags) {
   std::list<Tag> tags;
   while (it != api_tags.end()) {
     api_name = it->first;
-    titles += api_name + ",";
+    titles += "\"" + api_name + "\"" + ",";
     tags = it->second;
     for (auto &tag : tags) {
-      titles += tag.get_name() + ",";
+      titles += "\"" + tag.get_name() + "\"" + ",";
     }
     it++;
   }
@@ -67,7 +67,17 @@ string ExportMethod::get_api_tags_values(ExtractionApiTags api_tags,
       values += "0,";
     }
     for (auto &tag : tags) {
-      values += tag.get_value() + ",";
+      api_parameter_base::value_type parameter_type =
+          ApiFactory::get_api(api_name)
+              ->get_relevant_parameter(tag.get_name())
+              ->get_value_type();
+      if ((parameter_type == api_parameter_base::value_type::STRING ||
+           parameter_type == api_parameter_base::value_type::IMAGE_LINK) &&
+          tag.get_value() != "") {
+        values += "\"" + tag.get_value() + "\"" + ",";
+      } else {
+        values += tag.get_value() + ",";
+      }
     }
     it++;
   }

@@ -106,13 +106,16 @@ void test_export_corpus_zip() {
   corpus = Corpus("corpus_test", files, "something");
   corpus.insert();
   string expected_metadata_content =
-      "path,size,type,is_binary,Flickr,title,_api_id,picture,query,Twitter,_"
-      "api_id,"
-      "date,text,retweet,favorite,language_iso\ndownload/Flickr/09/8f/"
-      "6bcd4621d373cade4e832627b4f6.png,43,text,0,1,Zero,1561618,https://"
-      "url.com,,0,,,,,,\ndownload/Twitter/ad/02/"
-      "34829205b9033196ba818f7a872b.txt,100,text,0,0,,,,,1,2136518,today,"
-      "something,125,25,en\n";
+      "\"path\",\"size\",\"type\",\"is_binary\",\"Flickr\",\"title\",\"_api_"
+      "id\",\"picture\",\"query\",\"Twitter\",\"_"
+      "api_id\","
+      "\"date\",\"text\",\"retweet\",\"favorite\",\"language_iso\"\n\"download/"
+      "Flickr/09/8f/"
+      "6bcd4621d373cade4e832627b4f6.png\",43,\"text\",0,1,\"Zero\",\"1561618\","
+      "\"https://"
+      "url.com\",,0,,,,,,\n\"download/Twitter/ad/02/"
+      "34829205b9033196ba818f7a872b.txt\",100,\"text\",0,0,,,,,1,2136518,today,"
+      "\"something\",125,25,\"en\"\n";
   Assertion::assert_equals(__FUNCTION__, expected_metadata_content,
                            ZipExport().get_metadata_content(files));
   corpus.export_(ExportMethod::methods::ZIP);

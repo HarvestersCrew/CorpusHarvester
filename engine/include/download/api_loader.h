@@ -249,6 +249,15 @@ public:
    * Gets vector of relevant parameters (those inserted in DB)
    */
   const vector<shared_ptr<api_parameter_base>> get_relevant_parameters() const;
+
+  /**
+   * Gets relevant parameter based on its name
+   * @param parameter_name the name of the parameter
+   * @return the parameter
+   * @throw api_unrecognized_settings_exception if name isn't found
+   */
+  shared_ptr<api_parameter_base>
+  get_relevant_parameter(string parameter_name) const;
 };
 
 #endif

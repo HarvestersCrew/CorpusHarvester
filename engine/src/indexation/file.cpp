@@ -105,10 +105,13 @@ void File::fill_from_statement(sql::ResultSet *res) {
   fetch_tags();
 }
 
-string File::get_metadata_titles() { return "path,size,type,is_binary"; }
+string File::get_metadata_titles() {
+  return "\"path\",\"size\",\"type\",\"is_binary\"";
+}
 
 string File::get_metadata_values() {
-  return get_full_path() + "," + std::to_string(_size) + "," + _type + "," +
+  return "\"" + _path + _name + "." + _format + "\"" + "," +
+         std::to_string(_size) + "," + "\"" + _type + "\"" + "," +
          std::to_string(_binary);
 }
 
