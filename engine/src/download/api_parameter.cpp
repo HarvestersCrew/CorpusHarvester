@@ -15,8 +15,8 @@ unordered_map<string, string> api_parameter_base::_default_descriptions{
     {"_page_count", "Number of elements per page"},
     {"query", "Search query"},
     {"language_iso", "Language code in ISO form"},
-    {"date", "Date in format DD/MM/YYY"},
-    {"datetime", "Datetime in format DD/MM/YYYY HH:MM::SS"}};
+    {"date", "Date in format YYYY-MM-DD"},
+    {"datetime", "Datetime in format YYYY-MM-DD HH:MM:SS"}};
 
 api_parameter_base::api_parameter_base(const nlohmann::json &json) {
 
